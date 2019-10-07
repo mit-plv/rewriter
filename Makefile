@@ -2,6 +2,7 @@
 
 MOD_NAME := Crypto
 SRC_DIR  := src
+PLUGINS_DIR := $(SRC_DIR)/Util/plugins
 TIMED?=
 TIMECMD?=
 STDTIME?=/usr/bin/time -f "$@ (real: %e, user: %U, sys: %S, mem: %M ko)"
@@ -41,7 +42,7 @@ include etc/coq-scripts/Makefile.vo_closure
 SORT_COQPROJECT = sed 's,[^/]*/,~&,g' | env LC_COLLATE=C sort | sed 's,~,,g' | uniq
 update-_CoqProject::
 	$(SHOW)'ECHO > _CoqProject'
-	$(HIDE)(echo '-R $(SRC_DIR) $(MOD_NAME)'; (git ls-files 'src/*.v' | $(GREP_EXCLUDE_SPECIAL_VOFILES) | $(SORT_COQPROJECT))) > _CoqProject
+	$(HIDE)(echo '-R $(SRC_DIR) $(MOD_NAME)'; echo '-I $(PLUGINS_DIR)'; (git ls-files 'src/*.v' 'src/*.mlg' 'src/*.mllib' 'src/*.ml' 'src/*.mli' | $(GREP_EXCLUDE_SPECIAL_VOFILES) | $(SORT_COQPROJECT))) > _CoqProject
 
 # coq .vo files that are not compiled using coq_makefile
 SPECIAL_VOFILES := \
