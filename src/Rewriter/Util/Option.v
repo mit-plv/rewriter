@@ -5,7 +5,14 @@ Require Import Rewriter.Util.Tactics.DestructHead.
 Require Import Rewriter.Util.Notations.
 
 Scheme Equality for option.
+Scheme Minimality for option Sort Type.
 Arguments option_beq {_} _ _ _.
+Arguments option_rect_nodep {_ _} _ _ _.
+
+Module Thunked.
+  Definition option_rect {A} P (S_case : A -> P) (N_case : unit -> P) (o : option A) : P
+    := Datatypes.option_rect (fun _ => P) S_case (N_case tt) o.
+End Thunked.
 
 Definition option_beq_hetero {A B} (AB_beq : A -> B -> bool) (x : option A) (y : option B) : bool
   := match x, y with

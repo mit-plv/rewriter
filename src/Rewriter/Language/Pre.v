@@ -12,30 +12,7 @@ Module ident.
   Definition literal {T} (v : T) := v.
   Definition eagerly {T} (v : T) := v.
   Definition gets_inlined (real_val : bool) {T} (v : T) : bool := real_val.
-
-  Module Thunked.
-    Definition bool_rect P (t f : Datatypes.unit -> P) (b : bool) : P
-      := Datatypes.bool_rect (fun _ => P) (t tt) (f tt) b.
-    Definition list_rect {A} P (N : Datatypes.unit -> P) (C : A -> list A -> P -> P) (ls : list A) : P
-      := Datatypes.list_rect (fun _ => P) (N tt) C ls.
-    Definition list_case {A} P (N : Datatypes.unit -> P) (C : A -> list A -> P) (ls : list A) : P
-      := ListUtil.list_case (fun _ => P) (N tt) C ls.
-    Definition nat_rect P (O_case : unit -> P) (S_case : nat -> P -> P) (n : nat) : P
-      := Datatypes.nat_rect (fun _ => P) (O_case tt) S_case n.
-    Definition option_rect {A} P (S_case : A -> P) (N_case : unit -> P) (o : option A) : P
-      := Datatypes.option_rect (fun _ => P) S_case (N_case tt) o.
-  End Thunked.
 End ident.
-
-Local Set Implicit Arguments.
-Scheme Minimality for bool Sort Type.
-Scheme Minimality for prod Sort Type.
-Scheme Minimality for nat Sort Type.
-Scheme Minimality for list Sort Type.
-Scheme Minimality for option Sort Type.
-
-Definition nat_rect_arrow_nodep P Q := @nat_rect_nodep (P -> Q).
-Definition list_rect_arrow_nodep A P Q := @list_rect_nodep A (P -> Q).
 
 Module GallinaIdentList.
   Inductive t := nil | cons {T : Type} (v : T) (vs : t).
@@ -64,26 +41,6 @@ Module GallinaIdentList.
 End GallinaIdentList.
 Export GallinaIdentList.Notations.
 
-Module TypeList.
-  Inductive t := nil | cons (T : Type) (vs : t).
-
-  Fixpoint nth (n : nat) (l : t) (default : Type) {struct l} :=
-    match n, l with
-    | O, cons x _ => x
-    | S m, cons _ l => nth m l default
-    | _, _ => default
-    end.
-
-  Module Export Notations.
-    Delimit Scope type_list_scope with type_list.
-    Bind Scope type_list_scope with t.
-    Notation "[ ]" := nil (format "[ ]") : type_list_scope.
-    Notation "[ x ]" := (cons x nil) : type_list_scope.
-    Notation "[ x ; y ; .. ; z ]" :=  (cons x (cons y .. (cons z nil) ..)) : type_list_scope.
-  End Notations.
-End TypeList.
-Export TypeList.Notations.
-
 Module Named.
   Local Set Primitive Projections.
   Inductive maybe_name := no_name | a_name (_ : forall P : Prop, P -> P).
@@ -91,10 +48,6 @@ Module Named.
 End Named.
 Notation with_name name v := (@Named.Build_t _ v (Named.a_name (fun (P : Prop) (name : P) => name))) (only parsing).
 Notation without_name v := (@Named.Build_t _ v Named.no_name) (only parsing).
-
-Module GallinaAndReifiedIdentList.
-  Inductive t := nil | cons {T1 T2 : Type} (v1 : T1) (v2 : T2) (vs : t).
-End GallinaAndReifiedIdentList.
 
 Module ScrapedData.
   Local Set Primitive Projections.

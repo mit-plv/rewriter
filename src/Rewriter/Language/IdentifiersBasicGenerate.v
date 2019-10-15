@@ -15,6 +15,7 @@ Require Import Rewriter.Util.ZUtil.Notations.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Bool.
 Require Import Rewriter.Util.Bool.Reflect.
+Require Rewriter.Util.TypeList.
 Require Rewriter.Util.PrimitiveHList.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.plugins.StrategyTactic.
@@ -264,12 +265,12 @@ Module Compilers.
           ; without_name (@Datatypes.None)
           ; without_name (@Datatypes.pair)
           ; without_name (@Datatypes.tt)
-          ; with_name ident_nat_rect (@ident.Thunked.nat_rect)
-          ; with_name ident_eager_nat_rect (ident.eagerly (@ident.Thunked.nat_rect))
+          ; with_name ident_nat_rect (@Thunked.nat_rect)
+          ; with_name ident_eager_nat_rect (ident.eagerly (@Thunked.nat_rect))
           ; with_name ident_nat_rect_arrow (@nat_rect_arrow_nodep)
           ; with_name ident_eager_nat_rect_arrow (ident.eagerly (@nat_rect_arrow_nodep))
-          ; with_name ident_list_rect (@ident.Thunked.list_rect)
-          ; with_name ident_eager_list_rect (ident.eagerly (@ident.Thunked.list_rect))
+          ; with_name ident_list_rect (@Thunked.list_rect)
+          ; with_name ident_eager_list_rect (ident.eagerly (@Thunked.list_rect))
           ; with_name ident_list_rect_arrow (@list_rect_arrow_nodep)
           ; with_name ident_eager_list_rect_arrow (ident.eagerly (@list_rect_arrow_nodep))
           ; with_name ident_List_nth_default (@nth_default)

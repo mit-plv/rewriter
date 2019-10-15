@@ -44,6 +44,7 @@ src/Rewriter/Util/Prod.v
 src/Rewriter/Util/Sigma.v
 src/Rewriter/Util/Sum.v
 src/Rewriter/Util/Tuple.v
+src/Rewriter/Util/TypeList.v
 src/Rewriter/Util/Bool/Equality.v
 src/Rewriter/Util/Bool/Reflect.v
 src/Rewriter/Util/FMapPositive/Equality.v

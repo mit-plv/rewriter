@@ -1,6 +1,13 @@
 (*** Boolean Utility Lemmas and Databases *)
 Require Import Coq.Bool.Bool.
 
+Scheme Minimality for bool Sort Type.
+Arguments bool_rect_nodep {_} _ _ _.
+Module Thunked.
+  Definition bool_rect P (t f : Datatypes.unit -> P) (b : bool) : P
+    := Datatypes.bool_rect (fun _ => P) (t tt) (f tt) b.
+End Thunked.
+
 (** For equalities of booleans *)
 Create HintDb bool_congr discriminated.
 (** For properties of booleans, with, e.g., [iff] *)

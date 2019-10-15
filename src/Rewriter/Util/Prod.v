@@ -15,6 +15,8 @@ Local Arguments snd {_ _} _.
 Local Arguments f_equal {_ _} _ {_ _} _.
 
 Scheme Equality for prod.
+Scheme Minimality for prod Sort Type.
+Arguments prod_rect_nodep {_ _ _} _ _.
 
 Definition fst_pair {A B} (a:A) (b:B) : fst (a,b) = a := eq_refl.
 Definition snd_pair {A B} (a:A) (b:B) : snd (a,b) = b := eq_refl.

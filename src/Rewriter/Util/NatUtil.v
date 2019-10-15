@@ -6,6 +6,15 @@ Require Import Coq.micromega.Lia.
 Import Nat.
 
 Scheme Equality for nat.
+Scheme Minimality for nat Sort Type.
+Arguments nat_rect_nodep {_} _ _ _.
+
+Definition nat_rect_arrow_nodep {P Q} := @nat_rect_nodep (P -> Q).
+
+Module Thunked.
+  Definition nat_rect P (O_case : unit -> P) (S_case : nat -> P -> P) (n : nat) : P
+    := Datatypes.nat_rect (fun _ => P) (O_case tt) S_case n.
+End Thunked.
 
 Create HintDb natsimplify discriminated.
 

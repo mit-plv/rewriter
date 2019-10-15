@@ -183,7 +183,7 @@ Module Compilers.
       (** Coq >= 8.9 is much better at [eapply] than Coq <= Coq 8.8 *)
       Ltac cbv_type_for_Coq88 T :=
         lazymatch eval hnf in T with
-        | @eq ?T ?A ?B => let A' := (eval cbv [ident.Thunked.bool_rect ident.Thunked.list_case ident.Thunked.list_rect ident.Thunked.nat_rect ident.Thunked.option_rect] in A) in
+        | @eq ?T ?A ?B => let A' := (eval cbv [Thunked.bool_rect Thunked.list_case Thunked.list_rect Thunked.nat_rect Thunked.option_rect] in A) in
                           constr:(@eq T A' B)
         | forall x : ?A, ?P
           => let P' := fresh in
@@ -195,7 +195,7 @@ Module Compilers.
                         end)
         end.
       Ltac cbv_for_Coq88_in H :=
-        cbv [ident.Thunked.bool_rect ident.Thunked.list_case ident.Thunked.list_rect ident.Thunked.nat_rect ident.Thunked.option_rect];
+        cbv [Thunked.bool_rect Thunked.list_case Thunked.list_rect Thunked.nat_rect Thunked.option_rect];
         let T := type of H in
         let T := cbv_type_for_Coq88 T in
         change T in H.
@@ -466,21 +466,21 @@ Module Compilers.
                             cbv [Classes.base Classes.ident Classes.ident_interp Classes.base_interp Classes.ident_interp]
 
                        | [ |- UnderLets.interp_related_gen ?ii ?R (UnderLets.Base (#_(*ident.ident_list_rect*) @ _ @ _ @ _)%expr) (@list_rect ?A (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@ident.Thunked.list_rect A P (fun _ => N) C ls)
+                         => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@Thunked.list_rect A P (fun _ => N) C ls)
                        | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_list_rect*) @ _ @ _ @ _)%expr (@list_rect ?A (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@ident.Thunked.list_rect A P (fun _ => N) C ls)
+                         => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@Thunked.list_rect A P (fun _ => N) C ls)
                        | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_eager_list_rect*) @ _ @ _ @ _)%expr (@list_rect ?A (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@ident.Thunked.list_rect A P (fun _ => N) C ls)
+                         => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@Thunked.list_rect A P (fun _ => N) C ls)
                        | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_list_case*) @ _ @ _ @ _)%expr (@list_case ?A (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@list_case A (fun _ => P) N C ls) with (@ident.Thunked.list_case A P (fun _ => N) C ls)
+                         => not_arrow P; progress change (@list_case A (fun _ => P) N C ls) with (@Thunked.list_case A P (fun _ => N) C ls)
                        | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_nat_rect*) @ _ @ _ @ _)%expr (@nat_rect (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@nat_rect (fun _ => P) N C ls) with (@ident.Thunked.nat_rect P (fun _ => N) C ls)
+                         => not_arrow P; progress change (@nat_rect (fun _ => P) N C ls) with (@Thunked.nat_rect P (fun _ => N) C ls)
                        | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_eager_nat_rect*) @ _ @ _ @ _)%expr (@nat_rect (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@nat_rect (fun _ => P) N C ls) with (@ident.Thunked.nat_rect P (fun _ => N) C ls)
+                         => not_arrow P; progress change (@nat_rect (fun _ => P) N C ls) with (@Thunked.nat_rect P (fun _ => N) C ls)
                        | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_bool_rect*) @ _ @ _ @ _)%expr (@bool_rect (fun _ => ?P) ?T ?F ?b) ]
-                         => not_arrow P; progress change (@bool_rect (fun _ => P) T F b) with (@ident.Thunked.bool_rect P (fun _ => T) (fun _ => F) b)
+                         => not_arrow P; progress change (@bool_rect (fun _ => P) T F b) with (@Thunked.bool_rect P (fun _ => T) (fun _ => F) b)
                        | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_option_rect*) @ _ @ _ @ _)%expr (@option_rect ?A (fun _ => ?P) ?S ?N ?o) ]
-                         => not_arrow P; progress change (@option_rect A (fun _ => P) S N o) with (@ident.Thunked.option_rect A P S (fun _ => N) o)
+                         => not_arrow P; progress change (@option_rect A (fun _ => P) S N o) with (@Thunked.option_rect A P S (fun _ => N) o)
 
                        | [ |- match ?x with pair _ _ => _ end = prod_rect _ _ _ ]
                          => cbv [prod_rect]; eta_expand

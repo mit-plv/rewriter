@@ -3139,7 +3139,7 @@ Module Compilers.
                              => rewrite expr.reify_list_interp_related_iff in H
                            | [ |- expr.interp_related_gen _ _ (reify_list _) _ ]
                              => rewrite expr.reify_list_interp_related_gen_iff
-                           | [ H : context[ident.Thunked.nat_rect _ _ _ _ = ?f _ _ _]
+                           | [ H : context[Thunked.nat_rect _ _ _ _ = ?f _ _ _]
                                |- UnderLets_interp_related (nat_rect _ _ _ _) (?f ?x ?y ?z) ]
                              => erewrite <- H;
                                 [ apply UnderLets.nat_rect_interp_related
@@ -3151,9 +3151,9 @@ Module Compilers.
                                 [ eapply UnderLets.nat_rect_arrow_interp_related
                                 | .. ];
                                 try solve [ fin_t ]; intros
-                           | [ H : context[ident.Thunked.list_rect _ _ _ _ = ?f _ _ _]
+                           | [ H : context[Thunked.list_rect _ _ _ _ = ?f _ _ _]
                                |- UnderLets_interp_related (@list_rect ?T (fun _ => ?P) ?N_case _ _) (?f _ _ _) ]
-                             => erewrite <- H; cbv [ident.Thunked.list_rect];
+                             => erewrite <- H; cbv [Thunked.list_rect];
                                 [ rapply uconstr:(UnderLets.list_rect_interp_related)
                                 | .. ]; try solve [ fin_t ]; intros
                            | [ H : context[list_rect _ _ _ _ _ = ?f _ _ _ _]

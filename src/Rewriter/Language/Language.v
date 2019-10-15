@@ -9,10 +9,14 @@ Require Import Rewriter.Util.ListUtil Coq.Lists.List Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.OptionList.
 Require Import Rewriter.Util.Prod.
+Require Import Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.ZUtil.Definitions.
 Require Import Rewriter.Util.ZUtil.Notations.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Bool.Reflect.
+Require Import Rewriter.Util.Bool.
+Require Import Rewriter.Util.ListUtil.
+Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.Tactics.RunTacticAsConstr.
 Require Import Rewriter.Util.Tactics.DebugPrint.
@@ -775,47 +779,47 @@ Module Compilers.
            end
       | @Datatypes.bool_rect ?T0 ?Ptrue ?Pfalse
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess (@ident.Thunked.bool_rect T (fun _ => Ptrue) (fun _ => Pfalse))
+           | fun _ => ?T => reify_ident_preprocess (@Thunked.bool_rect T (fun _ => Ptrue) (fun _ => Pfalse))
            | T0 => reify_ident_preprocess_extra term
            | ?T' => reify_ident_preprocess (@Datatypes.bool_rect T' Ptrue Pfalse)
            end
       | @Datatypes.nat_rect ?T0 ?P0
         => lazymatch (eval cbv beta in T0) with
            | fun _ => ?A -> ?B => reify_ident_preprocess (@nat_rect_arrow_nodep A B P0)
-           | fun _ => ?T => reify_ident_preprocess (@ident.Thunked.nat_rect T (fun _ => P0))
+           | fun _ => ?T => reify_ident_preprocess (@Thunked.nat_rect T (fun _ => P0))
            | T0 => reify_ident_preprocess_extra term
            | ?T' => reify_ident_preprocess (@Datatypes.nat_rect T' P0)
            end
       | ident.eagerly (@Datatypes.nat_rect) ?T0 ?P0
         => lazymatch (eval cbv beta in T0) with
            | fun _ => ?A -> ?B => reify_ident_preprocess (ident.eagerly (@nat_rect_arrow_nodep) A B P0)
-           | fun _ => ?T => reify_ident_preprocess (ident.eagerly (@ident.Thunked.nat_rect) T (fun _ => P0))
+           | fun _ => ?T => reify_ident_preprocess (ident.eagerly (@Thunked.nat_rect) T (fun _ => P0))
            | T0 => reify_ident_preprocess_extra term
            | ?T' => reify_ident_preprocess (ident.eagerly (@Datatypes.nat_rect) T' P0)
            end
       | @Datatypes.list_rect ?A ?T0 ?Pnil
         => lazymatch (eval cbv beta in T0) with
            | fun _ => ?P -> ?Q => reify_ident_preprocess (@list_rect_arrow_nodep A P Q Pnil)
-           | fun _ => ?T => reify_ident_preprocess (@ident.Thunked.list_rect A T (fun _ => Pnil))
+           | fun _ => ?T => reify_ident_preprocess (@Thunked.list_rect A T (fun _ => Pnil))
            | T0 => reify_ident_preprocess_extra term
            | ?T' => reify_ident_preprocess (@Datatypes.list_rect A T' Pnil)
            end
       | ident.eagerly (@Datatypes.list_rect) ?A ?T0 ?Pnil
         => lazymatch (eval cbv beta in T0) with
            | fun _ => ?P -> ?Q => reify_ident_preprocess (ident.eagerly (@list_rect_arrow_nodep) A P Q Pnil)
-           | fun _ => ?T => reify_ident_preprocess (ident.eagerly (@ident.Thunked.list_rect) A T (fun _ => Pnil))
+           | fun _ => ?T => reify_ident_preprocess (ident.eagerly (@Thunked.list_rect) A T (fun _ => Pnil))
            | T0 => reify_ident_preprocess_extra term
            | ?T' => reify_ident_preprocess (ident.eagerly (@Datatypes.list_rect) A T' Pnil)
            end
       | @ListUtil.list_case ?A ?T0 ?Pnil
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess (@ident.Thunked.list_case A T (fun _ => Pnil))
+           | fun _ => ?T => reify_ident_preprocess (@Thunked.list_case A T (fun _ => Pnil))
            | T0 => reify_ident_preprocess_extra term
            | ?T' => reify_ident_preprocess (@ListUtil.list_case A T' Pnil)
            end
       | @Datatypes.option_rect ?A ?T0 ?PSome ?PNone
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess (@ident.Thunked.option_rect A T PSome (fun _ => PNone))
+           | fun _ => ?T => reify_ident_preprocess (@Thunked.option_rect A T PSome (fun _ => PNone))
            | T0 => reify_ident_preprocess_extra term
            | ?T' => reify_ident_preprocess (@Datatypes.option_rect A T' PSome PNone)
            end
@@ -1111,7 +1115,7 @@ Module Compilers.
               interp_ident_nat_rect {P:base_type}
               : ident_interp _ (@ident_nat_rect _ P)
                 = (fun O_case S_case n
-                   => ident.Thunked.nat_rect (base_type_interp P) O_case (fun n => S_case (of_nat n)) (to_nat n))
+                   => Thunked.nat_rect (base_type_interp P) O_case (fun n => S_case (of_nat n)) (to_nat n))
                     :> ((Datatypes.unit -> _) -> (base_type_interp nat -> _ -> _) -> base_type_interp nat -> _)
 
               ; interp_ident_nat_rect_arrow {P Q:base_type}
@@ -1121,7 +1125,7 @@ Module Compilers.
                       :> ((base_type_interp P -> base_type_interp Q) -> (base_type_interp nat -> (base_type_interp P -> base_type_interp Q) -> base_type_interp P -> base_type_interp Q) -> base_type_interp nat -> base_type_interp P -> base_type_interp Q)
 
               ; interp_ident_list_rect {A P:base_type}
-                : ident_interp _ (@ident_list_rect _ A P) = ident.Thunked.list_rect _
+                : ident_interp _ (@ident_list_rect _ A P) = Thunked.list_rect _
               ; interp_ident_list_rect_arrow {A P Q:base_type}
                 : ident_interp _ (@ident_list_rect_arrow _ A P Q) = @list_rect_arrow_nodep _ (base_type_interp P) (base_type_interp Q)
               ; interp_ident_List_nth_default {T:base_type}
@@ -1132,19 +1136,19 @@ Module Compilers.
               ; interp_ident_eager_nat_rect {P:base_type}
                 : ident_interp _ (@ident_eager_nat_rect _ P)
                   = (fun O_case S_case n
-                     => ident.eagerly ident.Thunked.nat_rect (base_type_interp P) O_case (fun n => S_case (of_nat n)) (to_nat n))
+                     => ident.eagerly Thunked.nat_rect (base_type_interp P) O_case (fun n => S_case (of_nat n)) (to_nat n))
                       :> ((Datatypes.unit -> _) -> (base_type_interp nat -> _ -> _) -> base_type_interp nat -> _)
 
               ; interp_ident_eager_nat_rect_arrow {P Q:base_type}
                 : ident_interp _ (@ident_eager_nat_rect_arrow _ P Q)
                   = (fun O_case S_case n
-                     => ident.eagerly nat_rect_arrow_nodep _ _ O_case (fun n => S_case (of_nat n)) (to_nat n))
+                     => ident.eagerly (@nat_rect_arrow_nodep) _ _ O_case (fun n => S_case (of_nat n)) (to_nat n))
                       :> ((base_type_interp P -> base_type_interp Q) -> (base_type_interp nat -> (base_type_interp P -> base_type_interp Q) -> base_type_interp P -> base_type_interp Q) -> base_type_interp nat -> base_type_interp P -> base_type_interp Q)
 
               ; interp_ident_eager_list_rect {A P:base_type}
-                : ident_interp _ (@ident_eager_list_rect _ A P) = ident.eagerly ident.Thunked.list_rect _
+                : ident_interp _ (@ident_eager_list_rect _ A P) = ident.eagerly Thunked.list_rect _
               ; interp_ident_eager_list_rect_arrow {A P Q:base_type}
-                : ident_interp _ (@ident_eager_list_rect_arrow _ A P Q) = ident.eagerly list_rect_arrow_nodep _ (base_type_interp P) (base_type_interp Q)
+                : ident_interp _ (@ident_eager_list_rect_arrow _ A P Q) = ident.eagerly (@list_rect_arrow_nodep) _ (base_type_interp P) (base_type_interp Q)
               ; interp_ident_eager_List_nth_default {T:base_type}
                 : ident_interp _ (@ident_eager_List_nth_default _ T)
                   = (fun d ls n => ident.eagerly (@List.nth_default) _ d ls (to_nat n))

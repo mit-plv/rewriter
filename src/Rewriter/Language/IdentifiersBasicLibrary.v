@@ -9,6 +9,10 @@ Module Compilers.
   Import Language.Compilers.
   Import Inversion.Compilers.
   Module Basic.
+    Module GallinaAndReifiedIdentList.
+      Inductive t := nil | cons {T1 T2 : Type} (v1 : T1) (v2 : T2) (vs : t).
+    End GallinaAndReifiedIdentList.
+
     Module GoalType.
       Local Set Primitive Projections.
 

@@ -17,6 +17,8 @@ Import ListNotations.
 Local Open Scope list_scope.
 
 Scheme Equality for list.
+Scheme Minimality for list Sort Type.
+Arguments list_rect_nodep {_ _} _ _ _.
 
 Definition list_case
            {A} (P : list A -> Type) (N : P nil) (C : forall x xs, P (cons x xs))
@@ -36,6 +38,14 @@ Definition list_case_nodep
      | cons x xs => C x xs
      end.
 
+Definition list_rect_arrow_nodep {A P Q} := @list_rect_nodep A (P -> Q).
+
+Module Thunked.
+  Definition list_rect {A} P (N : Datatypes.unit -> P) (C : A -> list A -> P -> P) (ls : list A) : P
+    := Datatypes.list_rect (fun _ => P) (N tt) C ls.
+  Definition list_case {A} P (N : Datatypes.unit -> P) (C : A -> list A -> P) (ls : list A) : P
+    := list_case (fun _ => P) (N tt) C ls.
+End Thunked.
 
 Global Instance list_rect_Proper_dep_gen {A P} (RP : forall x : list A, P x -> P x -> Prop)
   : Proper (RP nil ==> forall_relation (fun x => forall_relation (fun xs => RP xs ==> RP (cons x xs))) ==> forall_relation RP) (@list_rect A P) | 10.
