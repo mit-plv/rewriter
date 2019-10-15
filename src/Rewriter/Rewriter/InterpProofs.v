@@ -149,9 +149,9 @@ Module Compilers.
                destruct (H ctx cont) as [H' | [? [? [H' ?] ] ] ]; rewrite H'
           end.
 
-        Local Hint Constructors eqlistA.
-        Local Hint Unfold rawexpr_equiv.
-        Local Hint Unfold rawexpr_equiv_expr.
+        Local Hint Constructors eqlistA : core.
+        Local Hint Unfold rawexpr_equiv : core.
+        Local Hint Unfold rawexpr_equiv_expr : core.
 
         Lemma eval_decision_tree_correct_Switch_cons
               {T} ctx icase icases app_case d cont
