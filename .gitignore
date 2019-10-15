@@ -46,15 +46,15 @@ nra.cache
 
 /*.out
 
-src/Util/plugins/*.annot
-src/Util/plugins/*.cmi
-src/Util/plugins/*.cmx
-src/Util/plugins/*.o
-src/Util/plugins/*.a
-src/Util/plugins/*.cmxs
-src/Util/plugins/*.cma
-src/Util/plugins/*.cmxa
-src/Util/plugins/definition_by_tactic_plugin.ml
-src/Util/plugins/inductive_from_elim_plugin.ml
-src/Util/plugins/rewriter_build_plugin.ml
-src/Util/plugins/strategy_tactic_plugin.ml
+src/Rewriter/Util/plugins/*.annot
+src/Rewriter/Util/plugins/*.cmi
+src/Rewriter/Util/plugins/*.cmx
+src/Rewriter/Util/plugins/*.o
+src/Rewriter/Util/plugins/*.a
+src/Rewriter/Util/plugins/*.cmxs
+src/Rewriter/Util/plugins/*.cma
+src/Rewriter/Util/plugins/*.cmxa
+src/Rewriter/Util/plugins/definition_by_tactic_plugin.ml
+src/Rewriter/Util/plugins/inductive_from_elim_plugin.ml
+src/Rewriter/Util/plugins/rewriter_build_plugin.ml
+src/Rewriter/Util/plugins/strategy_tactic_plugin.ml
