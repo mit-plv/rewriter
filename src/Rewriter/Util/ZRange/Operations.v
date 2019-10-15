@@ -1,8 +1,8 @@
 Require Import Coq.ZArith.ZArith.
-Require Import Crypto.Util.ZRange.
-Require Import Crypto.Util.ZUtil.Definitions.
+Require Import Rewriter.Util.ZRange.
+Require Import Rewriter.Util.ZUtil.Definitions.
 
-Require Import Crypto.Util.Notations.
+Require Import Rewriter.Util.Notations.
 
 Module ZRange.
   Local Open Scope Z_scope.

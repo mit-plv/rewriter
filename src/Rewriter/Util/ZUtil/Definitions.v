@@ -1,7 +1,7 @@
 Require Import Coq.ZArith.ZArith.
-Require Import Crypto.Util.Decidable.
-Require Import Crypto.Util.ZUtil.Notations.
-Require Import Crypto.Util.LetIn.
+Require Import Rewriter.Util.Decidable.
+Require Import Rewriter.Util.ZUtil.Notations.
+Require Import Rewriter.Util.LetIn.
 Local Open Scope Z_scope.
 
 Module Z.

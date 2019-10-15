@@ -1,18 +1,18 @@
-Require Import Crypto.Language.Language.
-Require Import Crypto.Util.Sigma.
-Require Import Crypto.Util.Option.
-Require Import Crypto.Util.Prod.
-Require Import Crypto.Util.Tactics.DestructHead.
-Require Import Crypto.Util.Tactics.BreakMatch.
-Require Import Crypto.Util.HProp.
-Require Import Crypto.Util.Decidable.
-Require Import Crypto.Util.Option.
-Require Import Crypto.Util.Bool.
-Require Import Crypto.Util.Bool.Reflect.
-Require Import Crypto.Util.CPSNotations.
-Require Import Crypto.Util.Tactics.RewriteHyp.
-Require Import Crypto.Util.Notations.
-Require Import Crypto.Util.FixCoqMistakes.
+Require Import Rewriter.Language.Language.
+Require Import Rewriter.Util.Sigma.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.Prod.
+Require Import Rewriter.Util.Tactics.DestructHead.
+Require Import Rewriter.Util.Tactics.BreakMatch.
+Require Import Rewriter.Util.HProp.
+Require Import Rewriter.Util.Decidable.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.Bool.
+Require Import Rewriter.Util.Bool.Reflect.
+Require Import Rewriter.Util.CPSNotations.
+Require Import Rewriter.Util.Tactics.RewriteHyp.
+Require Import Rewriter.Util.Notations.
+Require Import Rewriter.Util.FixCoqMistakes.
 
 Local Set Primitive Projections.
 Import EqNotations.

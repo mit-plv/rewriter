@@ -1,7 +1,7 @@
 Require Import Coq.ZArith.ZArith Coq.micromega.Lia.
-Require Import Crypto.Util.ZUtil.Hints.Core.
-Require Import Crypto.Util.ZUtil.Hints.ZArith.
-Require Import Crypto.Util.ZUtil.Tactics.DivModToQuotRem.
+Require Import Rewriter.Util.ZUtil.Hints.Core.
+Require Import Rewriter.Util.ZUtil.Hints.ZArith.
+Require Import Rewriter.Util.ZUtil.Tactics.DivModToQuotRem.
 Local Open Scope Z_scope.
 
 Module Z.

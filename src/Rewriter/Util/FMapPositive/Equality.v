@@ -1,6 +1,6 @@
 Require Import Coq.FSets.FMapPositive.
-Require Import Crypto.Util.Bool.Equality.
-Require Import Crypto.Util.Decidable.
+Require Import Rewriter.Util.Bool.Equality.
+Require Import Rewriter.Util.Decidable.
 
 Module PositiveMap.
   Scheme Induction for PositiveMap.tree Sort Type.

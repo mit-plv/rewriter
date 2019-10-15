@@ -1,4 +1,4 @@
-Require Import Crypto.Util.Notations.
+Require Import Rewriter.Util.Notations.
 Local Set Universe Polymorphism.
 
 (** [x <- f ; C] encodes a call to function [f] with [C] as the

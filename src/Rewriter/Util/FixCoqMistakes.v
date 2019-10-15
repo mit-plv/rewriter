@@ -1,6 +1,6 @@
 (** * Fixes *)
 Require Import Coq.Classes.Morphisms.
-Require Export Crypto.Util.GlobalSettings.
+Require Export Rewriter.Util.GlobalSettings.
 
 (** Coq is poorly designed in some ways.  We fix some of these issues
     in this file. *)

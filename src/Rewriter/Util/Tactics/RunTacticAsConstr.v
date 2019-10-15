@@ -1,4 +1,4 @@
-Require Export Crypto.Util.FixCoqMistakes.
+Require Export Rewriter.Util.FixCoqMistakes.
 
 (** Runs a tactic during expression evaluation phase, returns the constr [I] *)
 Ltac run_tactic tac :=

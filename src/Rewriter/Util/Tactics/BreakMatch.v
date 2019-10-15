@@ -1,5 +1,5 @@
-Require Export Crypto.Util.FixCoqMistakes.
-Require Import Crypto.Util.Tactics.Head.
+Require Export Rewriter.Util.FixCoqMistakes.
+Require Import Rewriter.Util.Tactics.Head.
 
 (** destruct discriminees of [match]es in the goal *)
 (* Prioritize breaking apart things in the context, then things which

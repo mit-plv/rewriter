@@ -1,7 +1,7 @@
-Require Export Crypto.Util.FixCoqMistakes.
+Require Export Rewriter.Util.FixCoqMistakes.
 
-Require Import Crypto.Util.Tactics.Head.
-Require Import Crypto.Util.Tactics.DestructHyps.
+Require Import Rewriter.Util.Tactics.Head.
+Require Import Rewriter.Util.Tactics.DestructHyps.
 
 Ltac destruct_head_matcher T HT :=
   match head HT with

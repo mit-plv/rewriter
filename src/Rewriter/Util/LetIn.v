@@ -1,7 +1,7 @@
-Require Import Crypto.Util.FixCoqMistakes.
+Require Import Rewriter.Util.FixCoqMistakes.
 Require Import Coq.Classes.Morphisms Coq.Relations.Relation_Definitions.
-Require Import Crypto.Util.Tactics.GetGoal.
-Require Import Crypto.Util.Notations.
+Require Import Rewriter.Util.Tactics.GetGoal.
+Require Import Rewriter.Util.Notations.
 
 Definition Let_In {A P} (x : A) (f : forall a : A, P a) : P x := let y := x in f y.
 Definition Let_In_pf {A P} (x : A) (f : forall a : A, a = x -> P a) : P x := let y := x in f y eq_refl.

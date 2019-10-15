@@ -58,7 +58,7 @@ basename name = if "src/"          `isPrefixOf` name then drop (length "src/") n
                 else name
 
 cryptoRenameCoqDoc :: String → String
-cryptoRenameCoqDoc p = if "src/"          `isPrefixOf` p then "Crypto." ++ drop (length "src/") p
+cryptoRenameCoqDoc p = if "src/"          `isPrefixOf` p then "Rewriter." ++ drop (length "src/") p
                      else p
 
 coqDocURL :: String → FilePath → String

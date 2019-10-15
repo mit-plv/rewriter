@@ -1,5 +1,5 @@
-Require Export Crypto.Util.FixCoqMistakes.
-Require Import Crypto.Util.Tactics.DoWithHyp.
+Require Export Rewriter.Util.FixCoqMistakes.
+Require Import Rewriter.Util.Tactics.DoWithHyp.
 
 
 (** Rewrite with any applicable hypothesis. *)

@@ -1,4 +1,4 @@
-Require Import Crypto.Util.Tactics.ConstrFail.
+Require Import Rewriter.Util.Tactics.ConstrFail.
 
 Ltac debuglevel := constr:(0%nat).
 

@@ -1,23 +1,23 @@
 Require Import Coq.Classes.Morphisms.
-Require Import Crypto.Language.Language.
-Require Import Crypto.Language.Inversion.
-Require Import Crypto.Language.Wf.
-Require Import Crypto.Language.UnderLetsProofs.
-Require Import Crypto.Language.IdentifiersLibrary.
-Require Import Crypto.Language.IdentifiersLibraryProofs.
-Require Import Crypto.Language.IdentifiersGenerate.
-Require Import Crypto.Language.IdentifiersGenerateProofs.
-Require Import Crypto.Language.IdentifiersBasicLibrary.
-Require Import Crypto.Language.IdentifiersBasicGenerate.
-Require Import Crypto.Rewriter.Rewriter.
-Require Import Crypto.Rewriter.Reify.
-Require Import Crypto.Rewriter.ProofsCommon.
-Require Import Crypto.Rewriter.ProofsCommonTactics.
-Require Import Crypto.Rewriter.Wf.
-Require Import Crypto.Rewriter.InterpProofs.
-Require Import Crypto.Util.Tactics.Head.
-Require Import Crypto.Util.Tactics.CacheTerm.
-Require Import Crypto.Util.Tactics.ConstrFail.
+Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.Inversion.
+Require Import Rewriter.Language.Wf.
+Require Import Rewriter.Language.UnderLetsProofs.
+Require Import Rewriter.Language.IdentifiersLibrary.
+Require Import Rewriter.Language.IdentifiersLibraryProofs.
+Require Import Rewriter.Language.IdentifiersGenerate.
+Require Import Rewriter.Language.IdentifiersGenerateProofs.
+Require Import Rewriter.Language.IdentifiersBasicLibrary.
+Require Import Rewriter.Language.IdentifiersBasicGenerate.
+Require Import Rewriter.Rewriter.Rewriter.
+Require Import Rewriter.Rewriter.Reify.
+Require Import Rewriter.Rewriter.ProofsCommon.
+Require Import Rewriter.Rewriter.ProofsCommonTactics.
+Require Import Rewriter.Rewriter.Wf.
+Require Import Rewriter.Rewriter.InterpProofs.
+Require Import Rewriter.Util.Tactics.Head.
+Require Import Rewriter.Util.Tactics.CacheTerm.
+Require Import Rewriter.Util.Tactics.ConstrFail.
 
 Module Compilers.
   Import Language.Wf.Compilers.

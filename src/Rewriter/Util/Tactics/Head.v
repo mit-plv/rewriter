@@ -1,4 +1,4 @@
-Require Export Crypto.Util.FixCoqMistakes.
+Require Export Rewriter.Util.FixCoqMistakes.
 
 (** find the head of the given expression *)
 Ltac head expr :=

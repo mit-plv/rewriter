@@ -1,19 +1,19 @@
 Require Import Coq.Lists.List.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Lists.SetoidList.
-Require Import Crypto.Language.Language.
-Require Import Crypto.Language.Inversion.
-Require Import Crypto.Language.Wf.
-Require Import Crypto.Language.UnderLets.
-Require Import Crypto.Util.Prod.
-Require Import Crypto.Util.Sigma.
-Require Import Crypto.Util.Option.
-Require Import Crypto.Util.ListUtil.Forall.
-Require Import Crypto.Util.Tactics.BreakMatch.
-Require Import Crypto.Util.Tactics.DestructHead.
-Require Import Crypto.Util.Tactics.SpecializeAllWays.
-Require Import Crypto.Util.Tactics.SpecializeBy.
-Require Import Crypto.Util.Tactics.SplitInContext.
+Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.Inversion.
+Require Import Rewriter.Language.Wf.
+Require Import Rewriter.Language.UnderLets.
+Require Import Rewriter.Util.Prod.
+Require Import Rewriter.Util.Sigma.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.ListUtil.Forall.
+Require Import Rewriter.Util.Tactics.BreakMatch.
+Require Import Rewriter.Util.Tactics.DestructHead.
+Require Import Rewriter.Util.Tactics.SpecializeAllWays.
+Require Import Rewriter.Util.Tactics.SpecializeBy.
+Require Import Rewriter.Util.Tactics.SplitInContext.
 Import Coq.Lists.List ListNotations. Local Open Scope list_scope.
 
 Import EqNotations.

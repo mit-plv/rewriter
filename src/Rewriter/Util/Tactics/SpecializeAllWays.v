@@ -1,5 +1,5 @@
-Require Export Crypto.Util.FixCoqMistakes.
-Require Export Crypto.Util.Tactics.UniquePose.
+Require Export Rewriter.Util.FixCoqMistakes.
+Require Export Rewriter.Util.Tactics.UniquePose.
 
 Ltac specialize_all_ways :=
   repeat match goal with

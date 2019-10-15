@@ -1,6 +1,6 @@
 Require Import Coq.Lists.List.
-Require Import Crypto.Util.Option.
-Require Import Crypto.Util.Notations.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.Notations.
 
 Module Option.
   Module List.

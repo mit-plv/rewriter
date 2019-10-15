@@ -1,4 +1,4 @@
-Require Export Crypto.Util.FixCoqMistakes.
+Require Export Rewriter.Util.FixCoqMistakes.
 
 (** find the head of the given expression, underneath [fun] and [forall] *)
 Ltac head_under_binders_gen redtac expr :=

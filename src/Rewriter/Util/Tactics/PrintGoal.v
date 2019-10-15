@@ -1,4 +1,4 @@
-Require Import Crypto.Util.Tactics.PrintContext.
+Require Import Rewriter.Util.Tactics.PrintContext.
 
 Ltac print_goal _ :=
   lazymatch goal with |- ?G => idtac G end.

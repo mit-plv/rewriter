@@ -1,10 +1,10 @@
 (* -*- coq-prog-args: ("-debug") -*- *)
-Require Import Crypto.Language.IdentifiersBasicLibrary.
-Require Import Crypto.Language.IdentifiersBasicGenerate.
-Require Import Crypto.Language.Pre.
-Require Import Crypto.Rewriter.ProofsCommon.
-Require Import Crypto.Rewriter.AllTactics.
-Require Import Crypto.Util.Notations.
+Require Import Rewriter.Language.IdentifiersBasicLibrary.
+Require Import Rewriter.Language.IdentifiersBasicGenerate.
+Require Import Rewriter.Language.Pre.
+Require Import Rewriter.Rewriter.ProofsCommon.
+Require Import Rewriter.Rewriter.AllTactics.
+Require Import Rewriter.Util.Notations.
 Import IdentifiersBasicLibrary.Compilers.
 Import IdentifiersBasicGenerate.Compilers.
 Import ProofsCommon.Compilers.

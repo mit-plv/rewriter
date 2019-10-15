@@ -5,8 +5,8 @@
     nicely with proofs of equality that come up in practice in this
     project. *)
 Require Import Coq.Classes.Morphisms.
-Require Import Crypto.Util.Isomorphism.
-Require Import Crypto.Util.HProp.
+Require Import Rewriter.Util.Isomorphism.
+Require Import Rewriter.Util.HProp.
 
 Import EqNotations.
 

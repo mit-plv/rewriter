@@ -2,14 +2,14 @@ Require Import Coq.Classes.Morphisms.
 Require Import Coq.Relations.Relation_Definitions.
 Require Import Coq.Lists.List.
 Require Import Coq.omega.Omega.
-Require Import Crypto.Util.Option.
-Require Import Crypto.Util.Prod.
-Require Import Crypto.Util.Tactics.DestructHead.
-Require Import Crypto.Util.Tactics.BreakMatch.
-Require Import Crypto.Util.Tactics.SpecializeBy.
-Require Import Crypto.Util.Decidable.
-Require Import Crypto.Util.ListUtil.
-Require Export Crypto.Util.FixCoqMistakes.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.Prod.
+Require Import Rewriter.Util.Tactics.DestructHead.
+Require Import Rewriter.Util.Tactics.BreakMatch.
+Require Import Rewriter.Util.Tactics.SpecializeBy.
+Require Import Rewriter.Util.Decidable.
+Require Import Rewriter.Util.ListUtil.
+Require Export Rewriter.Util.FixCoqMistakes.
 
 Fixpoint tuple' T n : Type :=
   match n with

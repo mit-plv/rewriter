@@ -1,9 +1,9 @@
-Require Import Crypto.Language.Pre.
-Require Import Crypto.Language.Language.
-Require Import Crypto.Language.Inversion.
-Require Import Crypto.Util.Bool.Reflect.
-Require Import Crypto.Util.Tactics.BreakMatch.
-Require Import Crypto.Util.Sigma.
+Require Import Rewriter.Language.Pre.
+Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.Inversion.
+Require Import Rewriter.Util.Bool.Reflect.
+Require Import Rewriter.Util.Tactics.BreakMatch.
+Require Import Rewriter.Util.Sigma.
 
 Module Compilers.
   Import Language.Compilers.

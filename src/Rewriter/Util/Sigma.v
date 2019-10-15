@@ -5,8 +5,8 @@
     an equality between two such pairs, or when we want such an
     equality, we have a systematic way of reducing such equalities to
     equalities at simpler types. *)
-Require Import Crypto.Util.Equality.
-Require Import Crypto.Util.GlobalSettings.
+Require Import Rewriter.Util.Equality.
+Require Import Rewriter.Util.GlobalSettings.
 
 Local Arguments projT1 {_ _} _.
 Local Arguments projT2 {_ _} _.

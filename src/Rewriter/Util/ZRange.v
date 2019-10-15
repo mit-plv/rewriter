@@ -1,10 +1,10 @@
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.ZArith.ZArith.
-Require Import Crypto.Util.Tuple.
-Require Import Crypto.Util.Decidable.
-Require Import Crypto.Util.Bool.Reflect.
-Require Import Crypto.Util.Tactics.BreakMatch.
-Require Import Crypto.Util.Notations.
+Require Import Rewriter.Util.Tuple.
+Require Import Rewriter.Util.Decidable.
+Require Import Rewriter.Util.Bool.Reflect.
+Require Import Rewriter.Util.Tactics.BreakMatch.
+Require Import Rewriter.Util.Notations.
 
 Delimit Scope zrange_scope with zrange.
 Local Set Nonrecursive Elimination Schemes.

@@ -2,12 +2,12 @@
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.micromega.Lia.
 Require Import Coq.Lists.List.
-Require Import Crypto.Rewriter.AllTactics.
-Require Import Crypto.Rewriter.AllTacticsExtra.
-Require Import Crypto.Language.Pre.
-Require Import Crypto.Util.LetIn.
-Require Import Crypto.Util.Notations.
-Require Crypto.Util.PrimitiveHList.
+Require Import Rewriter.Rewriter.AllTactics.
+Require Import Rewriter.Rewriter.AllTacticsExtra.
+Require Import Rewriter.Language.Pre.
+Require Import Rewriter.Util.LetIn.
+Require Import Rewriter.Util.Notations.
+Require Rewriter.Util.PrimitiveHList.
 Import ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
 
 Import Rewriter.AllTactics.Compilers.RewriteRules.GoalType.

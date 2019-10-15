@@ -4,12 +4,12 @@ Require Import Coq.Lists.List.
 Require Import Coq.Lists.SetoidList.
 Require Import Coq.MSets.MSetPositive.
 Require Import Coq.MSets.MSetFacts.
-Require Import Crypto.Util.Tactics.BreakMatch.
-Require Import Crypto.Util.Tactics.SplitInContext.
-Require Import Crypto.Util.Tactics.SpecializeBy.
-Require Import Crypto.Util.Tactics.DestructHead.
-Require Import Crypto.Util.ListUtil.SetoidList.
-Require Import Crypto.Util.Logic.ExistsEqAnd.
+Require Import Rewriter.Util.Tactics.BreakMatch.
+Require Import Rewriter.Util.Tactics.SplitInContext.
+Require Import Rewriter.Util.Tactics.SpecializeBy.
+Require Import Rewriter.Util.Tactics.DestructHead.
+Require Import Rewriter.Util.ListUtil.SetoidList.
+Require Import Rewriter.Util.Logic.ExistsEqAnd.
 
 Local Set Implicit Arguments.
 

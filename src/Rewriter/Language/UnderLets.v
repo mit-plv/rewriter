@@ -1,5 +1,5 @@
-Require Import Crypto.Language.Language.
-Require Import Crypto.Util.Notations.
+Require Import Rewriter.Language.Language.
+Require Import Rewriter.Util.Notations.
 
 Module Compilers.
   Export Language.Compilers.

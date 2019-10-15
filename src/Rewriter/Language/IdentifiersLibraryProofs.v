@@ -1,23 +1,23 @@
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.MSets.MSetPositive.
 Require Import Coq.FSets.FMapPositive.
-Require Import Crypto.Util.PrimitiveSigma.
-Require Import Crypto.Util.MSetPositive.Facts.
-Require Import Crypto.Util.CPSNotations.
-Require Import Crypto.Util.ZRange.
-Require Import Crypto.Util.Tactics.BreakMatch.
-Require Import Crypto.Util.Tactics.DestructHead.
-Require Import Crypto.Util.Option.
-Require Import Crypto.Util.Decidable.
-Require Import Crypto.Util.HProp.
-Require Import Crypto.Util.Equality.
-Require Import Crypto.Util.Tactics.SpecializeBy.
-Require Import Crypto.Util.Tactics.CacheTerm.
-Require Import Crypto.Language.Language.
-Require Import Crypto.Language.Inversion.
-Require Import Crypto.Language.IdentifiersBasicLibrary.
-Require Import Crypto.Language.IdentifiersLibrary.
-Require Import Crypto.Util.FixCoqMistakes.
+Require Import Rewriter.Util.PrimitiveSigma.
+Require Import Rewriter.Util.MSetPositive.Facts.
+Require Import Rewriter.Util.CPSNotations.
+Require Import Rewriter.Util.ZRange.
+Require Import Rewriter.Util.Tactics.BreakMatch.
+Require Import Rewriter.Util.Tactics.DestructHead.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.Decidable.
+Require Import Rewriter.Util.HProp.
+Require Import Rewriter.Util.Equality.
+Require Import Rewriter.Util.Tactics.SpecializeBy.
+Require Import Rewriter.Util.Tactics.CacheTerm.
+Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.Inversion.
+Require Import Rewriter.Language.IdentifiersBasicLibrary.
+Require Import Rewriter.Language.IdentifiersLibrary.
+Require Import Rewriter.Util.FixCoqMistakes.
 
 Import EqNotations.
 Module Compilers.

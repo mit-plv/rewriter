@@ -4,16 +4,16 @@ Require Import Coq.Bool.Bool.
 Require Import Coq.Arith.Arith.
 Require Import Coq.ZArith.BinInt Coq.ZArith.ZArith_dec.
 Require Import Coq.NArith.BinNat.
-Require Import Crypto.Util.HProp.
-Require Import Crypto.Util.Decidable.
-Require Import Crypto.Util.Prod.
-Require Import Crypto.Util.Option.
-Require Import Crypto.Util.Sigma.
-Require Import Crypto.Util.ListUtil.
-Require Import Crypto.Util.Sum.
-Require Import Crypto.Util.Comparison.
-Require Import Crypto.Util.Tactics.DestructHead.
-Require Crypto.Util.PrimitiveProd.
+Require Import Rewriter.Util.HProp.
+Require Import Rewriter.Util.Decidable.
+Require Import Rewriter.Util.Prod.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.Sigma.
+Require Import Rewriter.Util.ListUtil.
+Require Import Rewriter.Util.Sum.
+Require Import Rewriter.Util.Comparison.
+Require Import Rewriter.Util.Tactics.DestructHead.
+Require Rewriter.Util.PrimitiveProd.
 
 Lemma reflect_to_dec_iff {P b1 b2} : reflect P b1 -> (b1 = b2) <-> (if b2 then P else ~P).
 Proof.

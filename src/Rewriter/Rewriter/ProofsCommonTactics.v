@@ -5,42 +5,42 @@ Require Import Coq.Lists.List.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.MSets.MSetPositive.
 Require Import Coq.FSets.FMapPositive.
-Require Import Crypto.Language.Language.
-Require Import Crypto.Language.Inversion.
-Require Import Crypto.Language.Wf.
-Require Import Crypto.Language.UnderLetsProofs.
-Require Import Crypto.Language.IdentifiersLibrary.
-Require Import Crypto.Language.IdentifiersLibraryProofs.
-Require Import Crypto.Rewriter.Rewriter.
-Require Import Crypto.Rewriter.ProofsCommon.
-Require Import Crypto.Util.Tactics.BreakMatch.
-Require Import Crypto.Util.Tactics.SplitInContext.
-Require Import Crypto.Util.Tactics.SpecializeAllWays.
-Require Import Crypto.Util.Tactics.SpecializeBy.
-Require Import Crypto.Util.Tactics.RewriteHyp.
-Require Import Crypto.Util.Tactics.UniquePose.
-Require Import Crypto.Util.Tactics.Head.
-Require Import Crypto.Util.Tactics.RewriteHyp.
-Require Import Crypto.Util.Tactics.CPSId.
-Require Import Crypto.Util.Tactics.PrintGoal.
-Require Import Crypto.Util.FMapPositive.Equality.
-Require Import Crypto.Util.MSetPositive.Equality.
-Require Import Crypto.Util.MSetPositive.Facts.
-Require Import Crypto.Util.Prod.
-Require Import Crypto.Util.Sigma.
-Require Import Crypto.Util.Sigma.Related.
-Require Import Crypto.Util.ListUtil.SetoidList.
-Require Import Crypto.Util.ListUtil.Forall.
-Require Import Crypto.Util.ListUtil.
-Require Import Crypto.Util.Option.
-Require Import Crypto.Util.Logic.ExistsEqAnd.
-Require Import Crypto.Util.CPSNotations.
-Require Import Crypto.Util.Notations.
-Require Import Crypto.Util.HProp.
-Require Import Crypto.Util.Decidable.
-Require Import Crypto.Util.Bool.
-Require Import Crypto.Util.NatUtil.
-Require Crypto.Util.PrimitiveHList.
+Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.Inversion.
+Require Import Rewriter.Language.Wf.
+Require Import Rewriter.Language.UnderLetsProofs.
+Require Import Rewriter.Language.IdentifiersLibrary.
+Require Import Rewriter.Language.IdentifiersLibraryProofs.
+Require Import Rewriter.Rewriter.Rewriter.
+Require Import Rewriter.Rewriter.ProofsCommon.
+Require Import Rewriter.Util.Tactics.BreakMatch.
+Require Import Rewriter.Util.Tactics.SplitInContext.
+Require Import Rewriter.Util.Tactics.SpecializeAllWays.
+Require Import Rewriter.Util.Tactics.SpecializeBy.
+Require Import Rewriter.Util.Tactics.RewriteHyp.
+Require Import Rewriter.Util.Tactics.UniquePose.
+Require Import Rewriter.Util.Tactics.Head.
+Require Import Rewriter.Util.Tactics.RewriteHyp.
+Require Import Rewriter.Util.Tactics.CPSId.
+Require Import Rewriter.Util.Tactics.PrintGoal.
+Require Import Rewriter.Util.FMapPositive.Equality.
+Require Import Rewriter.Util.MSetPositive.Equality.
+Require Import Rewriter.Util.MSetPositive.Facts.
+Require Import Rewriter.Util.Prod.
+Require Import Rewriter.Util.Sigma.
+Require Import Rewriter.Util.Sigma.Related.
+Require Import Rewriter.Util.ListUtil.SetoidList.
+Require Import Rewriter.Util.ListUtil.Forall.
+Require Import Rewriter.Util.ListUtil.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.Logic.ExistsEqAnd.
+Require Import Rewriter.Util.CPSNotations.
+Require Import Rewriter.Util.Notations.
+Require Import Rewriter.Util.HProp.
+Require Import Rewriter.Util.Decidable.
+Require Import Rewriter.Util.Bool.
+Require Import Rewriter.Util.NatUtil.
+Require Rewriter.Util.PrimitiveHList.
 Import Coq.Lists.List ListNotations. Local Open Scope list_scope.
 Local Open Scope Z_scope.
 
@@ -178,7 +178,7 @@ Module Compilers.
     End WfTactics.
 
     Module InterpTactics.
-      Import Crypto.Util.ZRange.
+      Import Rewriter.Util.ZRange.
       Export Rewriter.ProofsCommon.Compilers.RewriteRules.InterpTactics.
 
       (** Coq >= 8.9 is much better at [eapply] than Coq <= Coq 8.8 *)

@@ -1,6 +1,6 @@
 Require Import Coq.Setoids.Setoid.
-Require Import Crypto.Util.FixCoqMistakes.
-Require Import Crypto.Util.Tactics.DestructHead.
+Require Import Rewriter.Util.FixCoqMistakes.
+Require Import Rewriter.Util.Tactics.DestructHead.
 
 Local Ltac t :=
   repeat first [ progress destruct_head'_ex

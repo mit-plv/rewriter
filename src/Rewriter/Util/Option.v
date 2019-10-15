@@ -1,8 +1,8 @@
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Relations.Relation_Definitions.
-Require Import Crypto.Util.Tactics.BreakMatch.
-Require Import Crypto.Util.Tactics.DestructHead.
-Require Import Crypto.Util.Notations.
+Require Import Rewriter.Util.Tactics.BreakMatch.
+Require Import Rewriter.Util.Tactics.DestructHead.
+Require Import Rewriter.Util.Notations.
 
 Scheme Equality for option.
 Arguments option_beq {_} _ _ _.

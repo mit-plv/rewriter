@@ -1,7 +1,7 @@
-Require Import Crypto.Rewriter.AllTactics.
-Require Import Crypto.Rewriter.ProofsCommon.
-Require Import Crypto.Language.IdentifiersBasicGENERATED.
-Require Import Crypto.Language.IdentifiersGENERATEDProofs.
+Require Import Rewriter.Rewriter.AllTactics.
+Require Import Rewriter.Rewriter.ProofsCommon.
+Require Import Rewriter.Language.IdentifiersBasicGENERATED.
+Require Import Rewriter.Language.IdentifiersGENERATEDProofs.
 
 Module Compilers.
   Import IdentifiersGENERATEDProofs.Compilers.pattern.ident.

@@ -1,4 +1,4 @@
-Require Export Crypto.Util.FixCoqMistakes.
+Require Export Rewriter.Util.FixCoqMistakes.
 
 (** [pose proof defn], but only if no hypothesis of the same type exists.
     most useful for proofs of a proposition *)

@@ -3,20 +3,20 @@ Require Import Coq.FSets.FMapPositive.
 Require Import Coq.MSets.MSetPositive.
 Require Import Coq.Lists.List.
 Require Import Coq.derive.Derive.
-Require Import Crypto.Util.CPSNotations.
-Require Import Crypto.Util.Option.
-Require Import Crypto.Util.ZRange.
-Require Import Crypto.Util.PrimitiveSigma.
-Require Import Crypto.Util.Bool.Reflect.
-Require Import Crypto.Util.Notations.
-Require Import Crypto.Language.Language.
-Require Import Crypto.Language.IdentifiersLibrary.
-Require Import Crypto.Language.IdentifiersBasicLibrary.
-Require Import Crypto.Util.Tactics.Head.
-Require Import Crypto.Util.Tactics.ConstrFail.
-Require Import Crypto.Util.Tactics.CacheTerm.
-Require Import Crypto.Util.Tactics.PrintGoal.
-Require Import Crypto.Util.Tactics.DebugPrint.
+Require Import Rewriter.Util.CPSNotations.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.ZRange.
+Require Import Rewriter.Util.PrimitiveSigma.
+Require Import Rewriter.Util.Bool.Reflect.
+Require Import Rewriter.Util.Notations.
+Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.IdentifiersLibrary.
+Require Import Rewriter.Language.IdentifiersBasicLibrary.
+Require Import Rewriter.Util.Tactics.Head.
+Require Import Rewriter.Util.Tactics.ConstrFail.
+Require Import Rewriter.Util.Tactics.CacheTerm.
+Require Import Rewriter.Util.Tactics.PrintGoal.
+Require Import Rewriter.Util.Tactics.DebugPrint.
 Import ListNotations. Local Open Scope list_scope.
 Import PrimitiveSigma.Primitive.
 

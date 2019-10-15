@@ -1,5 +1,5 @@
-Require Import Crypto.Util.Tactics.TransparentAssert.
-Require Import Crypto.Util.Tactics.EvarNormalize.
+Require Import Rewriter.Util.Tactics.TransparentAssert.
+Require Import Rewriter.Util.Tactics.EvarNormalize.
 
 Ltac cache_term_with_type_by_gen ty abstract_tac id :=
   let id' := fresh id in

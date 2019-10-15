@@ -1,7 +1,7 @@
 Require Import Coq.Lists.List.
 Require Import Coq.Setoids.Setoid.
 Require Import Coq.Lists.SetoidList.
-Require Import Crypto.Util.Option.
+Require Import Rewriter.Util.Option.
 
 Import ListNotations.
 

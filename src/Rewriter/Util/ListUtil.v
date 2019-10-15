@@ -3,16 +3,16 @@ Require Import Coq.omega.Omega Coq.micromega.Lia.
 Require Import Coq.Arith.Peano_dec.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Numbers.Natural.Peano.NPeano.
-Require Import Crypto.Util.NatUtil.
-Require Import Crypto.Util.Pointed.
-Require Import Crypto.Util.Prod.
-Require Import Crypto.Util.Decidable.
-Require Export Crypto.Util.FixCoqMistakes.
-Require Export Crypto.Util.Tactics.BreakMatch.
-Require Export Crypto.Util.Tactics.DestructHead.
-Require Import Crypto.Util.Tactics.SpecializeBy.
-Require Import Crypto.Util.Tactics.RewriteHyp.
-Require Import Crypto.Util.Tactics.ConstrFail.
+Require Import Rewriter.Util.NatUtil.
+Require Import Rewriter.Util.Pointed.
+Require Import Rewriter.Util.Prod.
+Require Import Rewriter.Util.Decidable.
+Require Export Rewriter.Util.FixCoqMistakes.
+Require Export Rewriter.Util.Tactics.BreakMatch.
+Require Export Rewriter.Util.Tactics.DestructHead.
+Require Import Rewriter.Util.Tactics.SpecializeBy.
+Require Import Rewriter.Util.Tactics.RewriteHyp.
+Require Import Rewriter.Util.Tactics.ConstrFail.
 Import ListNotations.
 Local Open Scope list_scope.
 

@@ -6,10 +6,10 @@
     systematic way of reducing such equalities to equalities at
     simpler types. *)
 Require Import Coq.Classes.Morphisms.
-Require Import Crypto.Util.IffT.
-Require Import Crypto.Util.Equality.
-Require Import Crypto.Util.GlobalSettings.
-Require Import Crypto.Util.Notations.
+Require Import Rewriter.Util.IffT.
+Require Import Rewriter.Util.Equality.
+Require Import Rewriter.Util.GlobalSettings.
+Require Import Rewriter.Util.Notations.
 
 Local Set Primitive Projections.
 

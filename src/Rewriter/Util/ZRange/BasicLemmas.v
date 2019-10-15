@@ -2,16 +2,16 @@ Require Import Coq.ZArith.ZArith.
 Require Import Coq.Classes.RelationClasses.
 Require Import Coq.omega.Omega.
 Require Import Coq.micromega.Lia.
-Require Import Crypto.Util.ZRange.
-Require Import Crypto.Util.ZRange.Operations.
-Require Import Crypto.Util.ZUtil.Hints.ZArith.
-Require Import Crypto.Util.ZUtil.Tactics.LtbToLt.
-Require Import Crypto.Util.ZUtil.Tactics.SplitMinMax.
-Require Import Crypto.Util.Tactics.SpecializeBy.
-Require Import Crypto.Util.Tactics.SpecializeAllWays.
-Require Import Crypto.Util.Tactics.BreakMatch.
-Require Import Crypto.Util.Notations.
-Require Import Crypto.Util.Tactics.DestructHead.
+Require Import Rewriter.Util.ZRange.
+Require Import Rewriter.Util.ZRange.Operations.
+Require Import Rewriter.Util.ZUtil.Hints.ZArith.
+Require Import Rewriter.Util.ZUtil.Tactics.LtbToLt.
+Require Import Rewriter.Util.ZUtil.Tactics.SplitMinMax.
+Require Import Rewriter.Util.Tactics.SpecializeBy.
+Require Import Rewriter.Util.Tactics.SpecializeAllWays.
+Require Import Rewriter.Util.Tactics.BreakMatch.
+Require Import Rewriter.Util.Notations.
+Require Import Rewriter.Util.Tactics.DestructHead.
 
 Module ZRange.
   Import Operations.ZRange.

@@ -1,5 +1,5 @@
 Require Import Coq.ZArith.ZArith.
-Require Import Crypto.Util.Bool.
+Require Import Rewriter.Util.Bool.
 Local Open Scope Z_scope.
 
 Module Z.

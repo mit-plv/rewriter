@@ -1,4 +1,4 @@
-Require Export Crypto.Util.FixCoqMistakes.
+Require Export Rewriter.Util.FixCoqMistakes.
 
 Ltac transparent_specialize_one H arg :=
   first [ let test := eval unfold H in H in idtac;

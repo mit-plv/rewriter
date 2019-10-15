@@ -1,5 +1,5 @@
 Require Import Coq.Lists.List.
-Require Import Crypto.Util.PrimitiveProd.
+Require Import Rewriter.Util.PrimitiveProd.
 
 Import Primitive.Notations.
 

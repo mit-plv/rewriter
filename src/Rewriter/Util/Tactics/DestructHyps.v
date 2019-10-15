@@ -1,4 +1,4 @@
-Require Export Crypto.Util.FixCoqMistakes.
+Require Export Rewriter.Util.FixCoqMistakes.
 
 (** given a [matcher] that succeeds on some hypotheses and fails on
     others, destruct any matching hypotheses, and then execute [tac]

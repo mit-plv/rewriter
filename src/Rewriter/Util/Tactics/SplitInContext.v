@@ -1,4 +1,4 @@
-Require Export Crypto.Util.FixCoqMistakes.
+Require Export Rewriter.Util.FixCoqMistakes.
 
 (* Coq's build in tactics don't work so well with things like [iff]
    so split them up into multiple hypotheses *)

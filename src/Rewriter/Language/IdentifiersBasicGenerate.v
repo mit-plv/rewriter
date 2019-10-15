@@ -3,31 +3,31 @@ Require Import Coq.FSets.FMapPositive.
 Require Import Coq.Bool.Bool.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Relations.Relation_Definitions.
-Require Import Crypto.Language.Pre.
-Require Import Crypto.Language.Language.
-Require Import Crypto.Language.IdentifiersBasicLibrary.
-Require Import Crypto.Util.Tuple Crypto.Util.Prod Crypto.Util.LetIn.
-Require Import Crypto.Util.ListUtil Coq.Lists.List Crypto.Util.NatUtil.
-Require Import Crypto.Util.Option.
-Require Import Crypto.Util.Prod.
-Require Import Crypto.Util.ZRange.
-Require Import Crypto.Util.ZRange.Operations.
-Require Import Crypto.Util.ZUtil.Definitions.
-Require Import Crypto.Util.ZUtil.Notations.
-Require Import Crypto.Util.CPSNotations.
-Require Import Crypto.Util.Bool.
-Require Import Crypto.Util.Bool.Reflect.
-Require Crypto.Util.PrimitiveHList.
-Require Import Crypto.Util.Notations.
-Require Import Crypto.Util.plugins.StrategyTactic.
-Require Import Crypto.Util.Tactics.RunTacticAsConstr.
-Require Import Crypto.Util.Tactics.DebugPrint.
-Require Import Crypto.Util.Tactics.ConstrFail.
-Require Import Crypto.Util.Tactics.Head.
-Require Import Crypto.Util.Tactics.HeadUnderBinders.
-Require Import Crypto.Util.Tactics.PrintGoal.
-Require Import Crypto.Util.Tactics.CacheTerm.
-Require Import Crypto.Util.HProp.
+Require Import Rewriter.Language.Pre.
+Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.IdentifiersBasicLibrary.
+Require Import Rewriter.Util.Tuple Rewriter.Util.Prod Rewriter.Util.LetIn.
+Require Import Rewriter.Util.ListUtil Coq.Lists.List Rewriter.Util.NatUtil.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.Prod.
+Require Import Rewriter.Util.ZRange.
+Require Import Rewriter.Util.ZRange.Operations.
+Require Import Rewriter.Util.ZUtil.Definitions.
+Require Import Rewriter.Util.ZUtil.Notations.
+Require Import Rewriter.Util.CPSNotations.
+Require Import Rewriter.Util.Bool.
+Require Import Rewriter.Util.Bool.Reflect.
+Require Rewriter.Util.PrimitiveHList.
+Require Import Rewriter.Util.Notations.
+Require Import Rewriter.Util.plugins.StrategyTactic.
+Require Import Rewriter.Util.Tactics.RunTacticAsConstr.
+Require Import Rewriter.Util.Tactics.DebugPrint.
+Require Import Rewriter.Util.Tactics.ConstrFail.
+Require Import Rewriter.Util.Tactics.Head.
+Require Import Rewriter.Util.Tactics.HeadUnderBinders.
+Require Import Rewriter.Util.Tactics.PrintGoal.
+Require Import Rewriter.Util.Tactics.CacheTerm.
+Require Import Rewriter.Util.HProp.
 Import Coq.Lists.List ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
 
 Import EqNotations.

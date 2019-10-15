@@ -1,6 +1,6 @@
-Require Import Crypto.Util.Tactics.Test.
-Require Import Crypto.Util.Tactics.Not.
-Require Export Crypto.Util.FixCoqMistakes.
+Require Import Rewriter.Util.Tactics.Test.
+Require Import Rewriter.Util.Tactics.Not.
+Require Export Rewriter.Util.FixCoqMistakes.
 
 (** Do something with every hypothesis. *)
 Ltac do_with_hyp' tac :=

@@ -6,9 +6,9 @@
     a systematic way of reducing such equalities to equalities at
     simpler types. *)
 Require Import Coq.Classes.Morphisms.
-Require Import Crypto.Util.IffT.
-Require Import Crypto.Util.Equality.
-Require Import Crypto.Util.GlobalSettings.
+Require Import Rewriter.Util.IffT.
+Require Import Rewriter.Util.Equality.
+Require Import Rewriter.Util.GlobalSettings.
 
 Local Arguments fst {_ _} _.
 Local Arguments snd {_ _} _.

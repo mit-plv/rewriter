@@ -1,11 +1,11 @@
 (** Definitions for use in pre-reified rewriter rules *)
 Require Import Coq.ZArith.BinInt.
-Require Import Crypto.Util.ZRange.
-Require Import Crypto.Util.ZRange.Operations.
-Require Import Crypto.Util.ZUtil.Definitions.
-Require Import Crypto.Util.ZUtil.Notations.
-Require Import Crypto.Util.Notations.
-Require Crypto.Util.PrimitiveHList.
+Require Import Rewriter.Util.ZRange.
+Require Import Rewriter.Util.ZRange.Operations.
+Require Import Rewriter.Util.ZUtil.Definitions.
+Require Import Rewriter.Util.ZUtil.Notations.
+Require Import Rewriter.Util.Notations.
+Require Rewriter.Util.PrimitiveHList.
 Local Open Scope bool_scope.
 Local Open Scope Z_scope.
 

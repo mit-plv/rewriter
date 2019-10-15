@@ -1,7 +1,7 @@
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Relations.Relation_Definitions.
-Require Import Crypto.Util.Decidable.
-Require Import Crypto.Util.GlobalSettings.
+Require Import Rewriter.Util.Decidable.
+Require Import Rewriter.Util.GlobalSettings.
 
 Scheme Equality for sum.
 
