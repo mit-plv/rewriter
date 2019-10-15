@@ -339,7 +339,7 @@ Definition set_nth {T} n x (xs:list T)
   := update_nth n (fun _ => x) xs.
 
 Definition splice_nth {T} n (x:T) xs := firstn n xs ++ x :: skipn (S n) xs.
-Hint Unfold splice_nth.
+Hint Unfold splice_nth : core.
 
 Fixpoint take_while {T} (f : T -> bool) (ls : list T) : list T
   := match ls with
@@ -444,7 +444,7 @@ Lemma nth_error_length_error : forall A i (xs:list A),
 Proof.
   induction i as [|? IHi]; destruct xs; nth_tac'; rewrite IHi by omega; auto.
 Qed.
-Hint Resolve nth_error_length_error.
+Hint Resolve nth_error_length_error : core.
 Hint Rewrite @nth_error_length_error using omega : simpl_nth_error.
 
 Lemma map_nth_default : forall (A B : Type) (f : A -> B) n x y l,

@@ -3,7 +3,6 @@ Require Import Coq.ZArith.ZArith.
 Require Import Coq.micromega.Lia.
 Require Import Coq.Lists.List.
 Require Import Rewriter.Rewriter.AllTactics.
-Require Import Rewriter.Rewriter.AllTacticsExtra.
 Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.Notations.
@@ -12,8 +11,6 @@ Import ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
 
 Import Rewriter.AllTactics.Compilers.RewriteRules.GoalType.
 Import Rewriter.AllTactics.Compilers.RewriteRules.Tactic.
-Import Rewriter.AllTacticsExtra.Compilers.RewriteRules.GoalType.
-Import Rewriter.AllTacticsExtra.Compilers.RewriteRules.Tactic.
 
 (** We first define some helper notations, and then define the list of
     types of theorems we want to rewrite with. *)
