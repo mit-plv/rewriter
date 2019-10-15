@@ -1692,7 +1692,7 @@ Lemma map2_nil_r : forall A B C (f : A -> B -> C) ls1,
 Proof.
   destruct ls1; reflexivity.
 Qed.
-Local Hint Resolve map2_nil_r map2_nil_l.
+Local Hint Resolve map2_nil_r map2_nil_l : core.
 
 Ltac simpl_list_lengths := repeat match goal with
                                   | H : context[length (@nil ?A)] |- _ => rewrite (@nil_length0 A) in H
