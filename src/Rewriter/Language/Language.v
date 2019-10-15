@@ -9,8 +9,6 @@ Require Import Rewriter.Util.ListUtil Coq.Lists.List Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.OptionList.
 Require Import Rewriter.Util.Prod.
-Require Import Rewriter.Util.ZRange.
-Require Import Rewriter.Util.ZRange.Operations.
 Require Import Rewriter.Util.ZUtil.Definitions.
 Require Import Rewriter.Util.ZUtil.Notations.
 Require Import Rewriter.Util.CPSNotations.
@@ -748,9 +746,6 @@ Module Compilers.
       | match ?x with Datatypes.pair a b => @?f a b end
         => let T := type of term in
            reify_preprocess (@prod_rect_nodep _ _ T f x)
-      | match ?x with ZRange.Build_zrange a b => @?f a b end
-        => let T := type of term in
-           reify_preprocess (@ZRange.zrange_rect_nodep T f x)
       | match ?x with nil => ?N | cons a b => @?C a b end
         => let T := type of term in
            reify_preprocess (@ListUtil.list_case _ (fun _ => T) N C x)
@@ -823,12 +818,6 @@ Module Compilers.
            | fun _ => ?T => reify_ident_preprocess (@ident.Thunked.option_rect A T PSome (fun _ => PNone))
            | T0 => reify_ident_preprocess_extra term
            | ?T' => reify_ident_preprocess (@Datatypes.option_rect A T' PSome PNone)
-           end
-      | @ZRange.zrange_rect ?T0
-        => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess (@ZRange.zrange_rect_nodep T)
-           | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess (@ZRange.zrange_rect T')
            end
       | ident.eagerly (?f ?x)
         => reify_ident_preprocess (ident.eagerly f x)

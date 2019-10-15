@@ -6,8 +6,6 @@ Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.OptionList.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Bool.Reflect.
-Require Import Rewriter.Util.ZRange.
-Require Import Rewriter.Util.ZRange.Operations.
 Require Import Rewriter.Util.ZUtil.Definitions.
 Require Import Rewriter.Util.ZUtil.Notations.
 Require Import Rewriter.Util.Tactics.ConstrFail.
@@ -473,8 +471,7 @@ Module Compilers.
              let term := adjust_if_negb term in
              term
         | dyncons ?v ?ctx
-          => let term := substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term zrange_beq v in
-             let term := substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term Z.eqb v in
+          => let term := substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term Z.eqb v in
              let term := match constr:(Set) with
                          | _ => let T := type of v in
                                 let beq := (eval cbv beta delta [Reflect.decb_rel] in (Reflect.decb_rel (@eq T))) in
