@@ -30,7 +30,7 @@ export OTHERFLAGS
 
 Makefile.coq: Makefile _CoqProject
 	$(SHOW)'COQ_MAKEFILE -f _CoqProject > $@'
-	$(HIDE)($(COQBIN)coq_makefile -f _CoqProject -o Makefile.coq-old && cat Makefile.coq-old | sed s'/OTHERFLAGS        :=/OTHERFLAGS        ?=/g' > $@) && rm Makefile.coq-old
+	$(HIDE)($(COQBIN)coq_makefile -f _CoqProject -o Makefile-old && cat Makefile-old | sed s'/OTHERFLAGS        :=/OTHERFLAGS        ?=/g' > $@) && rm Makefile-old
 
 clean::
 	$(MAKE) -f Makefile.coq clean
