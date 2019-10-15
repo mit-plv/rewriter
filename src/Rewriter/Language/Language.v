@@ -1060,10 +1060,10 @@ Module Compilers.
            end%expr.
 
       Section eager_rect.
-        Let type_base (x : base) : @base.type base := base.type.type_base x.
+        Let type_base' (x : base) : @base.type base := base.type.type_base x.
         Let base' {bt} (x : Compilers.base.type bt) : type.type _ := type.base x.
         Local Coercion base' : base.type >-> type.type.
-        Local Coercion type_base : base >-> base.type.
+        Local Coercion type_base' : base >-> base.type.
         Import base.type.
 
         Context {ident_interp : forall t, ident t -> type.interp (base.interp base_interp) t}.

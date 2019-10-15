@@ -2,6 +2,7 @@
 Require Import Coq.ZArith.BinInt.
 Require Import Rewriter.Util.ZUtil.Definitions.
 Require Import Rewriter.Util.ZUtil.Notations.
+Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Util.Notations.
 Require Rewriter.Util.PrimitiveHList.
 Local Open Scope bool_scope.
@@ -25,8 +26,6 @@ Module ident.
       := Datatypes.option_rect (fun _ => P) S_case (N_case tt) o.
   End Thunked.
 End ident.
-
-Global Opaque ident.cast. (* This should never be unfolded except in [Language.Wf] *)
 
 Local Set Implicit Arguments.
 Scheme Minimality for bool Sort Type.

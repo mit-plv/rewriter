@@ -391,7 +391,7 @@ Module Compilers.
                        => to_type (ident_infos_of pidc) (projT1 args) (Datatypes.fst (projT2 args)))).
 
             Definition folded_invert_bind_args : forall {t} (idc : cident t) (pidc : ident), Datatypes.option (full_types pidc)
-              := fun t idc pidc
+              := fun {t} idc pidc
                  => proj1_sig
                       (@eta_pattern_ident_cps_gen
                          _
@@ -564,7 +564,7 @@ Module Compilers.
                       { t : _ & { idc : ident t | @split_types _ idc = existT _ ridc (dt, idt) } }).
 
           Definition split_types_subst_default : forall {t} (idc : ident t) (evm : EvarMap), { ridc : raw_ident & type_of_list (dep_types (preinfos (raw_ident_infos_of ridc))) * full_type_of_list_of_kind (indep_types (preinfos (raw_ident_infos_of ridc))) }%type
-            := fun t idc evm
+            := fun {t} idc evm
                => let res := @split_types t idc in
                   existT _ (projT1 res) (Datatypes.fst (projT2 res),
                                          lift_type_of_list_map (@subst_default_kind_of_type evm) (Datatypes.snd (projT2 res))).
@@ -588,7 +588,7 @@ Module Compilers.
                       = type.relax t).
 
           Definition prearg_types : forall {t} (idc : ident t), list Type
-            := (fun t idc
+            := (fun {t} idc
                 => let st := @split_types t idc in
                    let pi := preinfos (raw_ident_infos_of (projT1 st)) in
                    indep_args pi (Datatypes.fst (projT2 st))).
@@ -602,7 +602,7 @@ Module Compilers.
             := proj1_sig (@eta_ident_cps_gen _ (@prearg_types)).
 
           Definition to_typed : forall {t} (idc : ident t) (evm : EvarMap), type_of_list (arg_types idc) -> cident (type.subst_default t evm)
-            := fun t (idc : ident t) (evm : EvarMap)
+            := fun {t} (idc : ident t) (evm : EvarMap)
                => proj1_sig
                     (@eta_ident_cps_gen2
                        _ (@prearg_types)
@@ -646,7 +646,7 @@ Module Compilers.
                     (fun t idc => Raw.ident.indep_args_reflect _ _)).
 
           Definition preof_typed_ident_sig : forall {t} (idc : cident t), _
-            := fun t idc
+            := fun {t} idc
                => add_types_from_raw_sig
                     (projT1 (split_raw_ident_gen t idc))
                     (projT1 (proj1_sig (projT2 (split_raw_ident_gen t idc))))
@@ -654,7 +654,7 @@ Module Compilers.
                        (@relax_kind_of_type)
                        (Datatypes.fst (projT2 (proj1_sig (projT2 (split_raw_ident_gen t idc)))))).
           Definition preof_typed_ident : forall {t} (idc : cident t), ident (type.relax t)
-            := fun t idc
+            := fun {t} idc
                => rew [ident] projT1_add_types_from_raw_sig_eq t idc in
                    proj1_sig
                      (projT2
@@ -691,7 +691,7 @@ Module Compilers.
           Local Notation raw_try_unify_split_args := (@Raw.ident.try_unify_split_args base cident raw_ident all_raw_idents raw_ident_index raw_ident_index_idempotent eta_raw_ident_cps_gen raw_ident_infos_of).
 
           Definition folded_unify : forall {t t'} (pidc : ident t) (idc : cident t') (*evm : EvarMap*), Datatypes.option (type_of_list (@arg_types t pidc))
-            := fun t t' (pidc : ident t) (idc : cident t') (*evm : EvarMap*)
+            := fun {t t'} (pidc : ident t) (idc : cident t') (*evm : EvarMap*)
                => proj1_sig
                     (eta_ident_cps_gen_expand_literal
                        _
