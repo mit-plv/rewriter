@@ -13,7 +13,6 @@ src/Rewriter/Language/UnderLets.v
 src/Rewriter/Language/UnderLetsProofs.v
 src/Rewriter/Language/Wf.v
 src/Rewriter/Rewriter/AllTactics.v
-src/Rewriter/Rewriter/AllTacticsExtra.v
 src/Rewriter/Rewriter/Examples.v
 src/Rewriter/Rewriter/InterpProofs.v
 src/Rewriter/Rewriter/ProofsCommon.v
