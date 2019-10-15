@@ -1,7 +1,7 @@
 .SUFFIXES:
 
 MOD_NAME := Rewriter
-SRC_DIR  := src
+SRC_DIR  := src/Rewriter
 PLUGINS_DIR := $(SRC_DIR)/Util/plugins
 
 PROFILE?=
