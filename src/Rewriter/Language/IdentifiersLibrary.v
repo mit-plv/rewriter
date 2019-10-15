@@ -6,7 +6,6 @@ Require Import Coq.Lists.List.
 Require Import Coq.derive.Derive.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Option.
-Require Import Rewriter.Util.ZRange.
 Require Import Rewriter.Util.PrimitiveSigma.
 Require Import Rewriter.Util.Bool.Reflect.
 Require Import Rewriter.Util.Notations.

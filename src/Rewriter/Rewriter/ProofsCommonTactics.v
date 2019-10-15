@@ -178,7 +178,6 @@ Module Compilers.
     End WfTactics.
 
     Module InterpTactics.
-      Import Rewriter.Util.ZRange.
       Export Rewriter.ProofsCommon.Compilers.RewriteRules.InterpTactics.
 
       (** Coq >= 8.9 is much better at [eapply] than Coq <= Coq 8.8 *)

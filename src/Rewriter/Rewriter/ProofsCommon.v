@@ -3378,8 +3378,6 @@ Module Compilers.
     End WfTactics.
 
     Module InterpTactics.
-      Import Rewriter.Util.ZRange.
-
       Module Export GoalType.
         Import pattern.ident.GoalType.
         Import Compilers.Classes.

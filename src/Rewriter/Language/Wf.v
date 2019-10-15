@@ -19,9 +19,6 @@ Require Import Rewriter.Util.ZUtil.Tactics.SplitMinMax.
 Require Import Rewriter.Util.ZUtil.Tactics.RewriteModSmall.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.NatUtil.
-Require Import Rewriter.Util.ZRange.
-Require Import Rewriter.Util.ZRange.Operations.
-Require Import Rewriter.Util.ZRange.BasicLemmas.
 Require Import Rewriter.Util.Sigma.
 Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Util.ListUtil.Forall.

@@ -10,8 +10,6 @@ Require Import Rewriter.Util.Tuple Rewriter.Util.Prod Rewriter.Util.LetIn.
 Require Import Rewriter.Util.ListUtil Coq.Lists.List Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.Prod.
-Require Import Rewriter.Util.ZRange.
-Require Import Rewriter.Util.ZRange.Operations.
 Require Import Rewriter.Util.ZUtil.Definitions.
 Require Import Rewriter.Util.ZUtil.Notations.
 Require Import Rewriter.Util.CPSNotations.

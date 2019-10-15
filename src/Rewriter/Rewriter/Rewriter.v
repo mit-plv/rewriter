@@ -6,8 +6,6 @@ Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.OptionList.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Bool.Reflect.
-Require Import Rewriter.Util.ZRange.
-Require Import Rewriter.Util.ZRange.Operations.
 Require Import Rewriter.Util.ZUtil.Definitions.
 Require Import Rewriter.Util.ZUtil.Notations.
 Require Import Rewriter.Util.Tactics.ConstrFail.

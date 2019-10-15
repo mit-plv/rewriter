@@ -4,7 +4,6 @@ Require Import Coq.FSets.FMapPositive.
 Require Import Rewriter.Util.PrimitiveSigma.
 Require Import Rewriter.Util.MSetPositive.Facts.
 Require Import Rewriter.Util.CPSNotations.
-Require Import Rewriter.Util.ZRange.
 Require Import Rewriter.Util.Tactics.BreakMatch.
 Require Import Rewriter.Util.Tactics.DestructHead.
 Require Import Rewriter.Util.Option.
