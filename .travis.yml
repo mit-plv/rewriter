@@ -14,7 +14,7 @@ addons:
 before_install:
   - if [ ! -z "$PPA" ]; then sudo add-apt-repository "$PPA" -y; fi
   - travis_retry ./etc/ci/sudo-apt-get-update.sh -q
-  - travis_retry sudo apt-get install findlib $COQ_PACKAGE -y --allow-unauthenticated
+  - travis_retry sudo apt-get install ocaml-findlib $COQ_PACKAGE -y --allow-unauthenticated
 
 
 before_script:
