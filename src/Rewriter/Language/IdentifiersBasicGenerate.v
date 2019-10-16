@@ -6,7 +6,7 @@ Require Import Coq.Relations.Relation_Definitions.
 Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.IdentifiersBasicLibrary.
-Require Import Rewriter.Util.Tuple Rewriter.Util.Prod Rewriter.Util.LetIn.
+Require Import Rewriter.Util.Prod Rewriter.Util.LetIn.
 Require Import Rewriter.Util.ListUtil Coq.Lists.List Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.Prod.
