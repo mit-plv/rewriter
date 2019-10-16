@@ -9,6 +9,7 @@ open Inductive_from_elim
 open Definition_by_tactic
 
 
+(*let r_scraped_data_ty () = Coqlib.lib_ref "rewriter.scraped_data.type"*)
 let r_scraped_data_with_args () = Coqlib.lib_ref "rewriter.scraped_data_with_args.type"
 let r_base_elim_with_args () = Coqlib.lib_ref "rewriter.base_elim_with_args.type"
 let r_ident_elim_with_args () = Coqlib.lib_ref "rewriter.ident_elim_with_args.type"
@@ -19,11 +20,6 @@ let r_ident_list_nil () = Coqlib.lib_ref "rewriter.ident_list.nil"
 let r_rules_proofs_with_args () = Coqlib.lib_ref "rewriter.rules_proofs_with_args.type"
 let r_true () = Coqlib.lib_ref "core.bool.true"
 let r_false () = Coqlib.lib_ref "core.bool.false"
-
-(* from https://github.com/coq/coq/blob/cc9856e33fa1a15fe699e8d9cd7b76086563683d/tactics/pfedit.ml#L115 *)
-let next = let n = ref 0 in fun () -> incr n; !n
-(* from https://github.com/coq/coq/blob/cc9856e33fa1a15fe699e8d9cd7b76086563683d/tactics/pfedit.ml#L135 *)
-let temp_name () = Id.of_string ("temporary_proof"^string_of_int (next()))
 
 let rewriter_path =
   DirPath.make (List.map Id.of_string ["RewriterBuildRegistry";"plugins";"Util";"Rewriter"])
@@ -64,8 +60,10 @@ let rewriter_heuristic_process_rules_proofs env sigma ~poly rules_proofs =
   let (sigma, rules_proofs_ty) = Typing.type_of env sigma rules_proofs in
   let (sigma, rules_proofs_with_args) = Evd.fresh_global env sigma (r_rules_proofs_with_args ()) in
   let rules_proofs_with_args = mkApp (rules_proofs_with_args, [|rules_proofs_ty; rules_proofs|]) in
-  let (rules_proofs_sig, sigma) =
-    Pfedit.refine_by_tactic env sigma ~poly ~name:(temp_name ()) rules_proofs_with_args rules_proofs_with_args_tac in
+  let uctx = Evd.evar_universe_context sigma in
+  let (rules_proofs_sig, _uses_unsafe_tactic, uctx) =
+    Pfedit.build_by_tactic env uctx ~poly rules_proofs_with_args rules_proofs_with_args_tac in
+  let sigma = Evd.from_ctx uctx in (* XXX IS THIS RIGHT? *)
   let rules_proofs_sig = EConstr.of_constr rules_proofs_sig in
   (sigma, projT2_skip_cast env sigma rules_proofs_sig)
 
@@ -82,8 +80,10 @@ let rewriter_scrape_data env sigma ~poly (rules_proofs : EConstr.t) =
   let (sigma, scraped_data_with_args) = Evd.fresh_global env sigma (r_scraped_data_with_args ()) in
   let rules_ty = rules_ty_of_rules_proofs env sigma rules_proofs in
   let scraped_data_ty = mkApp (scraped_data_with_args, [|rules_ty; rules_proofs|]) in
-  let (scraped_data, sigma) =
-    Pfedit.refine_by_tactic env sigma ~poly ~name:(temp_name ()) scraped_data_ty scraped_data_with_args_tac in
+  let uctx = Evd.evar_universe_context sigma in
+  let (scraped_data, _uses_unsafe_tactic, uctx) =
+    Pfedit.build_by_tactic env uctx ~poly scraped_data_ty scraped_data_with_args_tac in
+  let sigma = Evd.from_ctx uctx in (* XXX IS THIS RIGHT? *)
   (sigma, EConstr.of_constr scraped_data)
 
 let rewriter_emit_inductives sigma ~poly (scraped_data : EConstr.t) (base_name : Names.Id.t option) (ident_name : Names.Id.t option) (raw_ident_name : Names.Id.t option) (pattern_ident_name : Names.Id.t option) =
@@ -95,20 +95,24 @@ let rewriter_emit_inductives sigma ~poly (scraped_data : EConstr.t) (base_name :
   let (sigma, ident_elim_with_args) = Evd.fresh_global env sigma (r_ident_elim_with_args ()) in
   let (sigma, pattern_ident_elim_with_args) = Evd.fresh_global env sigma (r_pattern_ident_elim_with_args ()) in
   let (sigma, raw_ident_elim_with_args) = Evd.fresh_global env sigma (r_raw_ident_elim_with_args ()) in
-  let (base_elim, sigma) =
-    Pfedit.refine_by_tactic env sigma ~poly ~name:(temp_name ()) base_elim_ty base_elim_with_args_tac in
+  let uctx = Evd.evar_universe_context sigma in
+  let (base_elim, _uses_unsafe_tactic, uctx) =
+    Pfedit.build_by_tactic env uctx ~poly base_elim_ty base_elim_with_args_tac in
+  let sigma = Evd.from_ctx uctx in (* XXX IS THIS RIGHT? *)
   let base_name = name_or base_name "base" in
   let (sigma, base) = make_inductive_from_elim sigma (Some base_name) (EConstr.of_constr base_elim) in
   let base = mkInd base in
   let ident_elim_ty = mkApp (ident_elim_with_args, [|scraped_data;base|]) in
   let pattern_ident_elim_ty = mkApp (pattern_ident_elim_with_args, [|scraped_data;base|]) in
   let raw_ident_elim_ty = mkApp (raw_ident_elim_with_args, [|scraped_data;base|]) in
-  let (ident_elim, sigma) =
-    Pfedit.refine_by_tactic env sigma ~poly ~name:(temp_name ()) ident_elim_ty ident_elim_with_args_tac in
-  let (pattern_ident_elim, sigma) =
-    Pfedit.refine_by_tactic env sigma ~poly ~name:(temp_name ()) pattern_ident_elim_ty pattern_ident_elim_with_args_tac in
-  let (raw_ident_elim, sigma) =
-    Pfedit.refine_by_tactic env sigma ~poly ~name:(temp_name ()) raw_ident_elim_ty raw_ident_elim_with_args_tac in
+  let uctx = Evd.evar_universe_context sigma in
+  let (ident_elim, _uses_unsafe_tactic, uctx) =
+    Pfedit.build_by_tactic env uctx ~poly ident_elim_ty ident_elim_with_args_tac in
+  let (pattern_ident_elim, _uses_unsafe_tactic, uctx) =
+    Pfedit.build_by_tactic env uctx ~poly pattern_ident_elim_ty pattern_ident_elim_with_args_tac in
+  let (raw_ident_elim, _uses_unsafe_tactic, uctx) =
+    Pfedit.build_by_tactic env uctx ~poly raw_ident_elim_ty raw_ident_elim_with_args_tac in
+  let sigma = Evd.from_ctx uctx in (* XXX IS THIS RIGHT? *)
   let ident_name = name_or ident_name "ident" in
   let (sigma, ident) = make_inductive_from_elim sigma (Some ident_name) (EConstr.of_constr ident_elim) in
   let pattern_ident_name = name_or pattern_ident_name "pattern_ident" in
