@@ -67,5 +67,4 @@ let vernac_make_inductive_from_elim name elim_ty =
   let env = Global.env () in
   let sigma = Evd.from_env env in
   let (sigma, elim_ty) = Constrintern.interp_constr_evars env sigma elim_ty in
-  let (_sigma, _name) = make_inductive_from_elim sigma name elim_ty in
-  ()
+  ignore(make_inductive_from_elim sigma name elim_ty)
