@@ -22,7 +22,7 @@ let r_true () = Coqlib.lib_ref "core.bool.true"
 let r_false () = Coqlib.lib_ref "core.bool.false"
 
 let rewriter_path =
-  DirPath.make (List.map Id.of_string ["RewriterBuild";"plugins";"Util";"Rewriter"])
+  DirPath.make (List.map Id.of_string ["RewriterBuildRegistry";"plugins";"Util";"Rewriter"])
 
 (* taken from https://github.com/coq/coq/blob/b6dcb301a1a34df8e4586e8cde6618e7c895fa08/plugins/setoid_ring/newring.ml#L161-L163 *)
 (* Calling a global tactic *)

@@ -48,6 +48,8 @@ nra.cache
 
 .merlin
 
+src/Rewriter/Util/plugins/*.cmt
+src/Rewriter/Util/plugins/*.cmti
 src/Rewriter/Util/plugins/*.annot
 src/Rewriter/Util/plugins/*.cmi
 src/Rewriter/Util/plugins/*.cmx
@@ -61,6 +63,7 @@ src/Rewriter/Util/plugins/inductive_from_elim_plugin.ml
 src/Rewriter/Util/plugins/rewriter_build_plugin.ml
 src/Rewriter/Util/plugins/strategy_tactic_plugin.ml
 
+src/Rewriter/Util/plugins/RewriterBuildRegistry.v
 src/Rewriter/Util/plugins/definition_by_tactic.ml
 src/Rewriter/Util/plugins/definition_by_tactic.mli
 src/Rewriter/Util/plugins/definition_by_tactic_plugin.mlg
@@ -83,7 +86,5 @@ src/Rewriter/Util/plugins/rewriter_build_plugin.ml4
 src/Rewriter/Util/plugins/strategy_tactic_plugin.ml4
 
 /.coq-version
-
-src/Rewriter/Util/Compat.v
 
 /_CoqProject

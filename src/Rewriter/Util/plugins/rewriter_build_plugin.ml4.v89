@@ -1,38 +1,34 @@
-{
-
 open Stdarg
 open Rewriter_build
-
-}
 
 DECLARE PLUGIN "rewriter_build_plugin"
 
 VERNAC COMMAND EXTEND RewriterEmitInductives CLASSIFIED AS SIDEFF
-  | [ "Rewriter" "Emit" "Inductives" "From" "Scraped" constr(scraped_data) "As" ident(base_ind) ident(ident_ind) ident(raw_ident_ind) ident(pattern_ident_ind) ] -> {
+  | [ "Rewriter" "Emit" "Inductives" "From" "Scraped" constr(scraped_data) "As" ident(base_ind) ident(ident_ind) ident(raw_ident_ind) ident(pattern_ident_ind) ] -> [
     let poly = false in
     vernac_rewriter_emit_inductives ~poly scraped_data base_ind ident_ind raw_ident_ind pattern_ident_ind
-  }
+  ]
 END
 
 VERNAC COMMAND EXTEND MakeRewriter CLASSIFIED AS SIDEFF
-  | [ "Make" ident(package) ":=" "Rewriter" "For" constr(specs_proofs) ] -> {
+  | [ "Make" ident(package) ":=" "Rewriter" "For" constr(specs_proofs) ] -> [
     let poly = false in
     vernac_make_rewriter ~poly package specs_proofs
-  }
-  | [ "Make" ident(package) ":=" "Rewriter" "For" constr(specs_proofs) "(" "inlining" constr(var_like_idents) ")" ] -> {
+  ]
+  | [ "Make" ident(package) ":=" "Rewriter" "For" constr(specs_proofs) "(" "inlining" constr(var_like_idents) ")" ] -> [
     let poly = false in
     vernac_make_rewriter ~poly package specs_proofs ~var_like_idents:(Some var_like_idents)
-  }
-  | [ "Make" ident(package) ":=" "Rewriter" "For" constr(specs_proofs) "(" "inlining" constr(var_like_idents) ")" "(" "with" "delta" ")" ] -> {
+  ]
+  | [ "Make" ident(package) ":=" "Rewriter" "For" constr(specs_proofs) "(" "inlining" constr(var_like_idents) ")" "(" "with" "delta" ")" ] -> [
     let poly = false in
     vernac_make_rewriter ~poly package specs_proofs ~var_like_idents:(Some var_like_idents) ~include_interp:true
-  }
-  | [ "Make" ident(package) ":=" "Rewriter" "For" constr(specs_proofs) "(" "with" "delta" ")" "(" "inlining" constr(var_like_idents) ")" ] -> {
+  ]
+  | [ "Make" ident(package) ":=" "Rewriter" "For" constr(specs_proofs) "(" "with" "delta" ")" "(" "inlining" constr(var_like_idents) ")" ] -> [
     let poly = false in
     vernac_make_rewriter ~poly package specs_proofs ~var_like_idents:(Some var_like_idents) ~include_interp:true
-  }
-  | [ "Make" ident(package) ":=" "Rewriter" "For" constr(specs_proofs) "(" "with" "delta" ")" ] -> {
+  ]
+  | [ "Make" ident(package) ":=" "Rewriter" "For" constr(specs_proofs) "(" "with" "delta" ")" ] -> [
     let poly = false in
     vernac_make_rewriter ~poly package specs_proofs ~include_interp:true
-  }
+  ]
 END

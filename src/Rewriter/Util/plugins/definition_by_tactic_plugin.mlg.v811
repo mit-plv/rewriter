@@ -7,6 +7,8 @@ open Definition_by_tactic
 
 }
 
+DECLARE PLUGIN "definition_by_tactic_plugin"
+
 VERNAC COMMAND EXTEND DefinitionViaTactic CLASSIFIED AS SIDEFF
   | [ "Make" "Definition" ":" constr(ty) ":=" tactic(tac) ] -> {
     let poly = false in

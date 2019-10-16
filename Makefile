@@ -26,13 +26,14 @@ clean::
 # This target is used to update the _CoqProject file.
 SORT_COQPROJECT = sed 's,[^/]*/,~&,g' | env LC_COLLATE=C sort | sed 's,~,,g'
 EXISTING_COQPROJECT_CONTENTS:=$(shell cat _CoqProject 2>&1)
-NEW_COQPROJECT_CONTENTS:=$(shell echo '-R $(SRC_DIR) $(MOD_NAME)'; echo '-I $(PLUGINS_DIR)'; (git ls-files '$(SRC_DIR)/*.v' '$(SRC_DIR)/*.mlg' '$(SRC_DIR)/*.mllib' '$(SRC_DIR)/*.ml' '$(SRC_DIR)/*.mli' | $(SORT_COQPROJECT)); (echo '$(ML_COMPATIBILITY_FILES)' | tr ' ' '\n'))
+COQPROJECT_CMD:=echo '-R $(SRC_DIR) $(MOD_NAME)'; echo '-I $(PLUGINS_DIR)'; (git ls-files '$(SRC_DIR)/*.v' '$(SRC_DIR)/*.mlg' '$(SRC_DIR)/*.mllib' '$(SRC_DIR)/*.ml' '$(SRC_DIR)/*.mli' | $(SORT_COQPROJECT)); (echo '$(COMPATIBILITY_FILES)' | tr ' ' '\n')
+NEW_COQPROJECT_CONTENTS:=$(shell $(COQPROJECT_CMD))
 
 ifneq ($(EXISTING_COQPROJECT_CONTENTS),$(NEW_COQPROJECT_CONTENTS))
 .PHONY: _CoqProject
 _CoqProject:
 	$(SHOW)'ECHO > _CoqProject'
-	$(HIDE)echo '$(NEW_COQPROJECT_CONTENTS)' > $@
+	$(HIDE)($(COQPROJECT_CMD)) > $@
 endif
 
 clean::
@@ -53,6 +54,8 @@ endif
 Makefile.coq Makefile-old.conf: Makefile _CoqProject $(COQ_VERSION_FILE)
 	$(SHOW)'COQ_MAKEFILE -f _CoqProject > Makefile.coq'
 	$(HIDE)(($(COQBIN)coq_makefile -f _CoqProject -o Makefile-old && cat Makefile-old | sed s'/OTHERFLAGS        :=/OTHERFLAGS        ?=/g' | sed s'/Makefile-old.conf:/Makefile-old-old.conf:/g' | sed s'/Makefile-old.local/Makefile.local/g' $(EXTRA_SED_FOR_DEPS)); echo; echo 'include Makefile.local-late') > Makefile.coq && rm Makefile-old
+
+Makefile.coq: | Makefile-old.conf
 
 clean::
 	rm -f Makefile.coq

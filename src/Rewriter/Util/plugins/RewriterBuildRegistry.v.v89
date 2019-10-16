@@ -1,0 +1,10 @@
+Require Export Rewriter.Util.plugins.RewriterBuildRegistryImports.
+
+Ltac make_base_elim_with_args := Basic.PrintBase.make_base_elim.
+Ltac make_ident_elim_with_args := Basic.PrintIdent.make_ident_elim.
+Ltac make_pattern_ident_elim_with_args := Basic.PrintIdent.make_pattern_ident_elim.
+Ltac make_raw_ident_elim_with_args := Basic.PrintIdent.make_raw_ident_elim.
+Ltac make_basic_package_with_args := Basic.Tactic.make_package.
+Ltac make_scraped_data_with_args := Basic.ScrapeTactics.make_scrape_data.
+Ltac make_verified_rewriter_with_args := RewriteRules.Tactic.make_rewriter_all.
+Ltac make_rules_proofs_with_args := Basic.ScrapeTactics.make_rules_proofsT_with_args.

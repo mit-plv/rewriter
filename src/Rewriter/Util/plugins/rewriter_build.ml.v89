@@ -8,30 +8,40 @@ open Locus
 open Inductive_from_elim
 open Definition_by_tactic
 
-
-(*let r_scraped_data_ty () = Coqlib.lib_ref "rewriter.scraped_data.type"*)
-let r_scraped_data_with_args () = Coqlib.lib_ref "rewriter.scraped_data_with_args.type"
-let r_base_elim_with_args () = Coqlib.lib_ref "rewriter.base_elim_with_args.type"
-let r_ident_elim_with_args () = Coqlib.lib_ref "rewriter.ident_elim_with_args.type"
-let r_pattern_ident_elim_with_args () = Coqlib.lib_ref "rewriter.pattern_ident_elim_with_args.type"
-let r_raw_ident_elim_with_args () = Coqlib.lib_ref "rewriter.raw_ident_elim_with_args.type"
-let r_verified_rewriter_with_args () = Coqlib.lib_ref "rewriter.verified_rewriter_with_args.type"
-let r_ident_list_nil () = Coqlib.lib_ref "rewriter.ident_list.nil"
-let r_rules_proofs_with_args () = Coqlib.lib_ref "rewriter.rules_proofs_with_args.type"
-let r_true () = Coqlib.lib_ref "core.bool.true"
-let r_false () = Coqlib.lib_ref "core.bool.false"
+(*
+Register Basic.GoalType.package_with_args as rewriter.basic_package_with_args.type.
+Register Basic.GoalType.base_elim_with_args as rewriter.base_elim_with_args.type.
+Register Basic.GoalType.ident_elim_with_args as rewriter.ident_elim_with_args.type.
+Register Basic.GoalType.ident_elim_with_args as rewriter.pattern_ident_elim_with_args.type.
+Register Basic.GoalType.ident_elim_with_args as rewriter.raw_ident_elim_with_args.type.
+Register ScrapedData.t_with_args as rewriter.scraped_data_with_args.type.
+Register rules_proofsT_with_args as rewriter.rules_proofs_with_args.type.
+Register GallinaIdentList.nil as rewriter.ident_list.nil.
+Register RewriteRules.GoalType.VerifiedRewriter_with_ind_args as rewriter.verified_rewriter_with_args.type.
+*)
+let locstr = "rewriter_build.ml"
+let r_scraped_data_with_args () = Coqlib.find_reference locstr ["Rewriter";"Language";"Pre";"ScrapedData"] "t_with_args"
+let r_base_elim_with_args () = Coqlib.find_reference locstr ["Rewriter";"Language";"IdentifiersBasicLibrary";"Compilers";"Basic";"GoalType"] "base_elim_with_args"
+let r_ident_elim_with_args () = Coqlib.find_reference locstr ["Rewriter";"Language";"IdentifiersBasicLibrary";"Compilers";"Basic";"GoalType"] "ident_elim_with_args"
+let r_pattern_ident_elim_with_args () = Coqlib.find_reference locstr ["Rewriter";"Language";"IdentifiersBasicLibrary";"Compilers";"Basic";"GoalType"] "ident_elim_with_args"
+let r_raw_ident_elim_with_args () = Coqlib.find_reference locstr ["Rewriter";"Language";"IdentifiersBasicLibrary";"Compilers";"Basic";"GoalType"] "ident_elim_with_args"
+let r_verified_rewriter_with_args () = Coqlib.find_reference locstr ["Rewriter";"Rewriter";"ProofsCommon";"Compilers";"RewriteRules";"GoalType"] "VerifiedRewriter_with_ind_args"
+let r_ident_list_nil () = Coqlib.find_reference locstr ["Rewriter";"Language";"Pre";"GallinaIdentList"] "nil"
+let r_rules_proofs_with_args () = Coqlib.find_reference locstr ["Rewriter";"Language";"Pre"] "rules_proofsT_with_args"
+let r_true () = Coqlib.find_reference locstr ["Coq";"Init";"Datatypes"] "true"
+let r_false () = Coqlib.find_reference locstr ["Coq";"Init";"Datatypes"] "false"
 
 let rewriter_path =
-  DirPath.make (List.map Id.of_string ["RewriterBuild";"plugins";"Util";"Rewriter"])
+  DirPath.make (List.map Id.of_string ["RewriterBuildRegistry";"plugins";"Util";"Rewriter"])
 
 (* taken from https://github.com/coq/coq/blob/b6dcb301a1a34df8e4586e8cde6618e7c895fa08/plugins/setoid_ring/newring.ml#L161-L163 *)
 (* Calling a global tactic *)
 let ltac_call tac (args:glob_tactic_arg list) =
-  TacArg(CAst.make @@ TacCall (CAst.make (ArgArg(Loc.tag @@ tac),args)))
+  TacArg(Loc.tag @@ TacCall (Loc.tag (ArgArg(Loc.tag @@ tac),args)))
 
 let tactic_of_name (name : string) : unit Proofview.tactic =
   try
-    Tacinterp.eval_tactic (ltac_call (KerName.make (ModPath.MPfile rewriter_path) (Label.make name)) [])
+    Tacinterp.eval_tactic (ltac_call (KerName.make (ModPath.MPfile rewriter_path) DirPath.empty (Label.make name)) [])
   with Not_found -> CErrors.user_err Pp.(str "Not_found while trying to eval tactic " ++ str name)
 
 let base_elim_with_args_tac = tactic_of_name "make_base_elim_with_args"
@@ -157,7 +167,7 @@ let make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_l
   (* force a typecheck of the application, propogate universe constraints *)
   let (sigma, _) = Typing.type_of env sigma verified_rewriter_ty in
   (* add universe constraints to the global env *)
-  let _ = Evd.univ_entry ~poly sigma in
+  let _ = Evd.const_univ_entry ~poly sigma in
   let (sigma, verified_rewriter_name) = make_definition_by_tactic sigma ~poly (Some package_name) verified_rewriter_ty verified_rewriter_with_args_tac in
   let verified_rewriter = mkConst verified_rewriter_name in
   let sigma = set_strategy_of_package sigma (-1000) verified_rewriter in
