@@ -58,6 +58,11 @@ let make_inductive_from_elim sigma (name : Names.Id.t option) (elim_ty : EConstr
       mind_entry_variance = None;
       mind_entry_private = None;
     } in
+    let sigma =
+      let uctx = Evd.evar_universe_context sigma in
+      let uctx = UState.demote_seff_univs (fst (Evd.universe_context_set sigma)) in
+      Evd.set_universe_context sigma uctx
+    in
     (sigma,
      (ComInductive.declare_mutual_inductive_with_eliminations
         mie UnivNames.empty_binders [([], List.map (fun _ -> []) ctor_types)],
