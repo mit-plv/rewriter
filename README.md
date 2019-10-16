@@ -1,11 +1,11 @@
-Fiat-Crypto: Synthesizing Correct-by-Construction Code for Cryptographic Primitives
+Rewriter
 =====
 
 Building
 -----
 [![Build Status](https://travis-ci.com/mit-plv/rewriter.svg?branch=master)](https://travis-ci.com/mit-plv/rewriter)
 
-This repository requires Coq 8.9 or later. 8.7 may work, but we don't use it ourselves.
+This repository requires Coq 8.9 or later.
 
 Git submodules are used for some dependencies. If you did not clone with `--recursive`, run
 
@@ -13,74 +13,17 @@ Git submodules are used for some dependencies. If you did not clone with `--recu
 
 To build:
 
-       make
+    make
 
 Usage
 -----
 
-The Coq development builds binary compilers that generate code using some implementation strategy.
-The parameters (modulus, hardware multiplication input bitwidth, etc.) are are specified on the command line of the compiler.
-The generated C code is written to standard output.
-
-A collection of C files for popular curves can be made with
-
-    make c-files
-
-The C files will appear in the top-level directory.
-
-Just the compilers generating these C files can be made with
-
-    make standalone
-
-or `make standalone-haskell` or `make standalone-ocaml` for binaries generated with just one compiler.
-The binaries are located in `src/ExtractionOcaml/` and `src/ExtractionHaskell` respectively.
-
-There is a separate compiler binary for each implementation strategy:
-
- - `saturated_solinas`
- - `unsaturated_solinas`
- - `word_by_word_montgomery`
-
-Passing no arguments, or passing `-h` or `--help` (or any other invalid arguments) will result in a usage message being printed.  These binaries output C code on stdout.
-
-Here are some examples of ways to invoke the binaries (from the directories that they live in):
-
-    # Generate code for 2^255-19
-    ./unsaturated_solinas '25519' '5' '2^255 - 19' '64' carry_mul carry_square carry_scmul121666 carry add sub opp selectznz to_bytes from_bytes > curve25519_64.c
-    ./unsaturated_solinas '25519' '10' '2^255 - 19' '32' carry_mul carry_square carry_scmul121666 carry add sub opp selectznz to_bytes from_bytes > curve25519_32.c
-
-    # Generate code for NIST-P256 (2^256 - 2^224 + 2^192 + 2^96 - 1)
-    ./word_by_word_montgomery 'p256' '2^256 - 2^224 + 2^192 + 2^96 - 1' '32' > p256_32.c
-    ./word_by_word_montgomery 'p256' '2^256 - 2^224 + 2^192 + 2^96 - 1' '64' > p256_64.c
-
-You can find more examples in the `Makefile`.
-
-Reading About The Code
-----------------------
-
-- [Andres Erbsen, Jade Philipoom, Jason Gross, Robert Sloan, Adam Chlipala. Simple High-Level Code For Cryptographic Arithmetic -- With Proofs, Without Compromises. To Appear in Proceedings of the IEEE Symposium on Security & Privacy 2019 (S&P'19). May 2019.](http://adam.chlipala.net/papers/FiatCryptoSP19/FiatCryptoSP19.pdf). This paper describes multiple field arithmetic implementations, and an older version of the compilation pipeline (preserved [here](https://github.com/mit-plv/fiat-crypto/tree/sp2019latest)). It is somewhat space-constrained, so some details are best read about in theses below.
-- [Jade Philipoom. Correct-by-Construction Finite Field Arithmetic in Coq. MIT Master's Thesis. February 2018.](http://adam.chlipala.net/theses/jadep_meng.pdf) Chapters 3 and 4 contain a detailed walkthrough of the field arithmetic implementations (again, targeting the previous compilation pipeline).
-- [Andres Erbsen. Crafting Certified Elliptic CurveCryptography Implementations in Coq. MIT Master's Thesis. June 2017.](
-http://adam.chlipala.net/theses/andreser_meng.pdf) Section 3 contains a whirlwind introduction to synthesizing field arithmetic code using coq, without assuming Coq skills, but covering a tiny fraction of the overall library. Sections 5 and 6 contain the only write-up on the ellitpic-curve library in this repository.
-- The newest compilation pipeline does not have a separate document yet, but this README does go over it in some detail.
-
+The entry point is [`src/Rewriter/Util/plugins/RewriterBuild.v`](./src/Rewriter/Util/plugins/RewriterBuild.v).
+(Better entry point coming in the future.)
+There are some examples in [`src/Rewriter/Rewriter/Examples.v`](./src/Rewriter/Rewriter/Examples.v).
 
 Reading The Code
 ----------------
-
-### Demo of Synthesis
-
-The idea of the synthesis process is demoed in [`src/Demo.v`](./src/Demo.v).
-We strongly recommend reading this before studying the full-scale system.
-
-### Proofs About Elliptic Curves
-
-We have some about elliptic curves, for example:
-
-- [`src/Curves/Edwards/AffineProofs.v`](./src/Curves/Edwards/AffineProofs.v),
-- [`src/Curves/Edwards/XYZT/Basic.v`](./src/Curves/Edwards/XYZT/Basic.v),
-- [`src/Curves/Montgomery/AffineProofs.v`](./src/Curves/Montgomery/AffineProofs.v),
-- [`src/Curves/Montgomery/XZProofs.v`](src/Curves/Montgomery/XZProofs.v).
 
 ### Actual Synthesis Pipeline
 
@@ -94,81 +37,28 @@ The ordering of files (eliding `*Proofs.v` files) is:
 ```
 Language/*.v
     ↑
-    ├────────────────────────────────┬───────────────────────┬───────────────────────┐
-AbstractInterpretation/*.v     MiscCompilerPasses.v    Rewriter/*.v     PushButtonSynthesis/ReificationCache.v      Arithmetic.v
-    ↑                                ↑                       ↑                       ↑                                   ↑
-Stringification/*.v                  │                       │                       │                        COperationSpecifications.v
-    ↑                                │                       │                       │                                   ↑
-    └────────────┬───────────────────┴───────────────────────┴────────┬──────────────┘                                   │
-           BoundsPipeline.v                                  CompilersTestCases.v                                        │
-                 ↑                                                                                                       │
-                 └────────────┬──────────────────────────────────────────────────────────────────────────────────────────┘
-                     PushButtonSynthesis/*.v
-                              ↑
-                   ┌──────────┴────────────────┐
-                  CLI.v                SlowPrimeSynthesisExamples.v
-                   ↑
-        ┌──────────┴────────────────┐
-StandaloneHaskellMain.v   StandaloneOCamlMain.v
-        ↑                           ↑
-ExtractionHaskell.v          ExtractionOCaml.v
+Rewriter/*.v
 ```
 
 Within each directory, the dependency graphs (again eliding `*Proofs.v` and related files) are:
 
 Within `Language/`:
 ```
-  Pre.v ←──────────────────────────────────────────────────────────────────────── IdentifierParameters.v
-    ↑                                                                                        ↑
-Language.v ←── IdentifiersBasicLibrary.v ←──── IdentifiersBasicGenerate.v ←── IdentifiersBasicGENERATED.v ←───────────────────────────── API.v
-    ↑                        ↑                                                               ↑
-    ├────────────────┐       └────────────────────────────┐                                  │
-UnderLets.v    IdentifiersLibrary.v ←──────────── IdentifiersGenerate.v ←─────── IdentifiersGENERATED.v
-                     ↑                                       ↑                               ↑
-              IdentifiersLibraryProofs.v ←─── IdentifiersGenerateProofs.v ←─ IdentifersGENERATEDProofs.v
-```
-
-Within `Stringification/`:
-```
-Language.v
+  Pre.v
     ↑
-   IR.v
-    ↑
- ┌──┴───────┐
-C.v       Rust.v
+Language.v ←── IdentifiersBasicLibrary.v ←──── IdentifiersBasicGenerate.v
+    ↑                        ↑
+    ├────────────────┐       └────────────────────────────┐
+UnderLets.v    IdentifiersLibrary.v ←──────────── IdentifiersGenerate.v
+                     ↑                                       ↑
+              IdentifiersLibraryProofs.v ←─── IdentifiersGenerateProofs.v
 ```
 
 We will come back to the `Rewriter/*` files shortly.
 
 The files contain:
 
-- `Arithmetic.v`: All of the high-level field arithmetic stuff
-
-- `COperationSpecifications.v`: The specifications for the various
-  operations to be synthesized.
-  TODO: This file should probably be renamed.
-
-- `AbstractInterpretation/*.v`: type-code-based ZRange definitions, abstract
-  interpretation of identifiers (which does let-lifting, for historical reasons,
-  and the dependency on UnderLets should probably be removed), defines the
-  passes:
-  + PartialEvaluateWithBounds
-  + PartialEvaluateWithListInfoFromBounds
-  + CheckPartialEvaluateWithBounds
-
-- `MiscCompilerPasses.v`: Defines the passes:
-  + EliminateDead (dead code elimination)
-  + Subst01 (substitute let-binders used 0 or 1 times)
-
-- `Rewriter/*.v`: rewrite rules, rewriting.  See below for actual stucture
-  of files.  Defines the passes:
-  + RewriteNBE
-  + RewriteArith
-  + RewriteArithWithCasts
-  + RewriteStripLiteralCasts
-  + RewriteToFancy
-  + RewriteToFancyWithCasts
-  + PartialEvaluate (which is just a synonym for RewriteNBE)
+- `Rewriter/*.v`: rewrite rules, rewriting.
 
 - Inside `Language/`:
 
@@ -192,15 +82,6 @@ The files contain:
     . FromFlat
     . GeneralizeVar
 
-  + `API.v`: Specializes the type of PHOAS expressions to the
-    particular identifiers we're using, and defines convenience
-    notations, tactics, and definitions for some of the specialized
-    versions.
-
-  + `IdentifierParameters.v`: Defines a couple of definitions
-    determining the identifiers and types used by the language.  These
-    are used as input for the generation of identifier definitions.
-
   + `IdentifiersBasicLibrary.v`: Defines the package type holding basic
     identifier definitions.
 
@@ -208,12 +89,6 @@ The files contain:
     all of the identifier-list-specific definitions used by the PHOAS
     machinery, in addition to defining the tactics that do reification
     based on the generated package.
-
-  + `IdentifiersBasicGENERATED.v`: Basically autogenerated file that
-    defines the inductives of base type codes and identifier codes
-    (the first hand-written because it's short; the latter copy-pasted
-    from a tactic that prints out the inductive), and calls the
-    package-generation-tactic from `IdentifiersBasicGenerate.v`.
 
   + `UnderLets.v`: the UnderLets monad, a pass that does substitution
     of var-like things, a pass that inserts let-binders in the
@@ -245,125 +120,23 @@ The files contain:
   + `IdentifiersGenerateProofs.v`: tactics to prove lemmas to inhabit
     the package defined in `IdentifiersLibraryProofs.v`
 
-  + `IdentifiersGENERATE.v`: identifiers / inductives and definitions
-    generated by IdentifiersGenerate.
-
-  + `IdentifiersGENERATEProofs.v`: proofs generated by
-    IdentifiersGenerateProofs, about definitions in
-    IdentifiersGENERATE
-
-- Inside `Stringification/`:
-
-  + `Language.v`: defines a printer (Show instance) for the PHOAS
-    language, defines some common language-independent utilities for
-    conversion to output code, and defines the spec/API of conversion
-    from PHOAS to code in a language as strings.  (Depends on
-    `AbstractInterpretation.v` for ZRange utilities.)  Defines the
-    passes:
-    . ToString.LinesToString
-    . ToString.ToFunctionLines
-
-  + `IR.v`: Defines a common IR for C and Rust (and maybe eventually
-    other languages), and builds most of the infrastructure necessary
-    for instantiating the LanguageSpecification API for a language
-    with pointers and function calls
-
-  + `C.v`: conversion to C code as strings.  Instantiates the API
-    defined in `Stringification.Language`.
-
-  + `Rust.v`: conversion to Rust code as strings.  Instantiates the
-    API defined in `Stringification.Language`.
-
-- `CompilersTestCases.v`: Various test cases to ensure everything is working
-
-- `BoundsPipeline.v`: Assemble the various compiler passes together into
-  a composed pipeline.  It is the final interface for the compiler.
-  Also contains some tactics for applying the BoundsPipeline
-  correctness lemma.
-
-- `PushButtonSynthesis/ReificationCache.v`: Defines the cache that
-  holds reified versions of operations, as well as the tactics that
-  reify and apply things from the cache.
-
-- `PushButtonSynthesis/*`: Reifies the various operations from
-  `Arithmetic.v`, definies the compositions of the BoundsPipeline with
-  these operations, proves that their interpretations satisfies the
-  specs from `COperationSpecifications.v`, assembles the reified
-  post-bounds operations into synthesis targets.  These are the files
-  that `CLI.v` depends on:
-  + `ReificationCache.v`:
-      Defines the cache of pre-reified terms.  Splitting up
-      reification from uses of the pipeline allows us to not have to
-      re-reify big terms every time we change the pipeline or
-      intermediate stages thereof.
-  + `InvertHighLow.v`:
-      Defines some common definitions, around plitting apart high and
-      low bits of things, for Barrett and FancyMontgomeryReduction.
-  + `Primitives.v`:
-      Specializes the pipeline to basic "primitive" operations such as
-      cmovznz, addcarryx, subborrowx, etc.
-  + `SmallExamples.v`:
-      Some small examples of using the pipeline.  Nothing depends on
-      this file; it is for demonstration purposes only.
-  + `*ReificationCache.v`:
-      Holds the reified versions of the definitions used in the
-      corresponding file.
-  + `BarrettReduction.v`, `FancyMontgomeryReduction.v`,
-    `SaturatedSolinas.v`, `UnsaturatedSolinas.v`, `WordByWordMontgomery.v`:
-      Holds the instantiation of the pipeline to the corresponding
-      implementation choice, as well as any relevant correctness
-      proofs (such as that things assemble into a ring).
-
-- `SlowPrimeSynthesisExamples.v`: Additional uses of the pipeline for
-  primes that are kind-of slow, which I don't want extraction blocking
-  on.  Also contains some debugging examples.
-
-- `CLI.v`: Setting up all of the language-independent parts of extraction; relies
-  on having a list of strings-or-error-messages for each pipeline, and on the
-  arguments to that pipeline, and builds a parser for command line arguments for
-  that.
-
-- `StandaloneHaskellMain.v`, `StandaloneOCamlMain.v`, `ExtractionHaskell.v`,
-  `ExtractionOCaml.v`: Extraction of pipeline to various languages
-
-
 The files defined in `Rewriter/` are split up into the following
 dependency graph (including some files from `Language/` at the top):
 ```
-IdentifiersLibrary.v ←───────────────────────── IdentifiersGenerate.v ←──────────────────── IdentifiersGENERATED.v
-    ↑ ↑                                                   ↑                                        ↑
-    │ └──────────────── IdentifiersLibraryProofs.v ←──────┴─ IdentifiersGenerateProofs.v ←─ IdentifersGENERATEDProofs.v
-    │                                     ↑                                                        ↑
-    │                                     │                                                        │
-    │                                     │                                                        │
-    │                                     │                                                        │
-    │                                     │                                                        │
-Rewriter.v ←────────────────────── ProofsCommon.v ←──────────────────── ProofsCommonTactics.v      │
-    ↑                                 ↗        ↖                                ↑                  │
-Reify.v ←──────────────┐           Wf.v   InterpProofs.v                        │                  │
-                       │              ↖        ↗                                │                  │
-Rules.v                └──────────── AllTactics.v ──────────────────────────────┘                  │
-    ↑                                      ↑       ┌───────────────────────────────────────────────┘
-RulesProofs.v                         AllTacticsExtra.v
-    ↑                                      ↑
-    ├────────┬─────────────┬───────────────┴────────┬─────────────────────────────┐
-    │   Passes/NBE.v    Passes/Arith.v    Passes/ArithWithCasts.v    Passes/StripLiteralCasts.v
-    │        ↑             ↑                        ↑                             ↑
-    │        └─────────────┴────────────────────────┴─────────────────────────────┴─────────────┐
-    │                                                                                           │
-    └────────┬──────────────────────────┐                                                       │
-      Passes/ToFancy.v      Passes/ToFancyWithCasts.v                                           │
-             ↑                          ↑                                                       │
-             └───────┬──────────────────┴───────────────────────────────────────────────────────┘
-                     │
-                   All.v
+IdentifiersLibrary.v ←───────────────────────── IdentifiersGenerate.v
+    ↑ ↑                                                   ↑
+    │ └──────────────── IdentifiersLibraryProofs.v ←──────┴─ IdentifiersGenerateProofs.v
+    │                                     ↑
+    │                                     │
+    │                                     │
+    │                                     │
+    │                                     │
+Rewriter.v ←────────────────────── ProofsCommon.v ←──────────────────── ProofsCommonTactics.v
+    ↑                                 ↗        ↖                                ↑
+Reify.v ←──────────────┐           Wf.v   InterpProofs.v                        │
+                       │              ↖        ↗                                │
+                       └──────────── AllTactics.v ──────────────────────────────┘
 ```
-
-- `Rules.v`: Defines the list of types of the rewrite rules that
-  will be reified.  Largely independent of the expression language.
-
-- `RulesProofs.v`: Proves all of the Gallina versions of the
-  rewrite rules correct.
 
 - `Rewriter.v`: Defines the rewriter machinery.  In particular, all of
   the rewriter definitions that have non-rewrite-rule-specific proofs
@@ -411,19 +184,6 @@ RulesProofs.v                         AllTacticsExtra.v
   proofs of rewrite rules indexed over a `list (bool * Prop)` of
   rewrite rule types.  This is the primary interface for defining a
   rewriter from a list of rewrite rules.
-
-- `AllTacticsExtra.v`: Specializes `AllTactics.v` to
-  what's defined in `Identifier.v`
-
-- `{NBE, Arith, ArithWithCasts, StripLiteralCasts, ToFancy,
-  ToFancyWithCasts}.v`: Use the tactic from `AllTactics.v`
-  together with the proven list of rewrite rules from
-  `RulesProofs.v` to reify and reduce the corresponding pass
-  and generate a rewriter.
-
-- `All.v`: `Definition`less file that `Export`s the rewriters
-  defined in `Rewriter/*.v`
-
 
 Proofs files:
 For `Language.v`, there is a semi-arbitrary split between two files
@@ -481,9 +241,3 @@ For `Language.v`, there is a semi-arbitrary split between two files
   + interp and wf proofs for the passes to/from Flat
 
 - `UnderLetsProofs.v`: wf and interp lemmas for the various passes defined in `UnderLets.v`
-- `MiscCompilerPassesProofs.v`: wf and interp lemmas for the various passes defined in `MiscCompilerPasses.v`
-- `AbstractInterpretation/ZRangeProofs.v`: Proves correctness lemmas of the per-operation zrange-bounds-analysis functions
-- `AbstractInterpretation/Wf.v`: wf lemmas for the AbstractInterpretation pass
-- `AbstractInterpretation/Proofs.v`: interp lemmas for the
-  AbstractInterpretation pass, and also correctness lemmas that
-  combine Wf and interp
