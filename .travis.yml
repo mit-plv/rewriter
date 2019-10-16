@@ -31,19 +31,23 @@ matrix:
 jobs:
   include:
     - stage: all
-      env: COQ_VERSION="master" COQ_PACKAGE="coq"       PPA="ppa:jgross-h/coq-master-daily"
+      env: COQ_VERSION="master" COQ_PACKAGE="coq"        PPA="ppa:jgross-h/coq-master-daily"
       language: c
       script: CUR=all ./etc/ci/travis.sh -j2 all
     - stage: all
-      env: COQ_VERSION="v8.10"  COQ_PACKAGE="coq"       PPA="ppa:jgross-h/coq-8.10-daily"
+      env: COQ_VERSION="v8.10"  COQ_PACKAGE="coq"        PPA="ppa:jgross-h/coq-8.10-daily"
       language: c
       script: CUR=all ./etc/ci/travis.sh -j2 all
     - stage: all
-      env: COQ_VERSION="v8.9"   COQ_PACKAGE="coq"       PPA="ppa:jgross-h/coq-8.9-daily"
+      env: COQ_VERSION="v8.9"   COQ_PACKAGE="coq"        PPA="ppa:jgross-h/coq-8.9-daily"
       language: c
       script: CUR=all ./etc/ci/travis.sh -j2 all
     - stage: all
-      env: COQ_VERSION="8.9.1"  COQ_PACKAGE="coq-8.9.1" PPA="ppa:jgross-h/many-coq-versions"
+      env: COQ_VERSION="8.10.0" COQ_PACKAGE="coq-8.10.0" PPA="ppa:jgross-h/many-coq-versions-ocaml-4-05"
+      language: c
+      script: CUR=all ./etc/ci/travis.sh -j2 all
+    - stage: all
+      env: COQ_VERSION="8.9.1"  COQ_PACKAGE="coq-8.9.1"  PPA="ppa:jgross-h/many-coq-versions"
       language: c
       script: CUR=all ./etc/ci/travis.sh -j2 all
 
