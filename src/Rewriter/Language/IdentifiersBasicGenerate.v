@@ -38,6 +38,22 @@ Module Compilers.
   Module Basic.
     Export IdentifiersBasicLibrary.Compilers.Basic.
 
+    Ltac eliminate_functional_dependencies term :=
+      lazymatch term with
+      | ?A -> ?term => term
+      | fun _ => ?term => term
+      | fun name : ?T => ?F
+        => let XXX := fresh "XXX" in
+           let term := constr:(fun XXX : T
+                               => match XXX return _ with name => F end) in
+           constr_fail_with ltac:(fun _ => fail 1 "cannot eliminate functional dependencies of" term)
+      | forall name : ?T, ?F
+        => let XXX := fresh "XXX" in
+           let term := constr:(forall XXX : T,
+                                  match XXX return _ with name => F end) in
+           constr_fail_with ltac:(fun _ => fail 1 "cannot eliminate functional dependencies of" term)
+      end.
+
     Module ScrapeTactics.
       Ltac heuristic_process_rules_proofs rules_proofs :=
         let get_prim_fst v :=
@@ -88,15 +104,18 @@ Module Compilers.
                   P1 (PrimitiveProd.Primitive.prod P2 rest)
                   fst_fst_part (@PrimitiveProd.Primitive.pair P2 rest snd_fst_part snd_part))
         | PrimitiveProd.Primitive.prod ?P ?rest
-          => heuristic_process_rules_proofs (rules_proofs : PrimitiveProd.Primitive.prod (@snd bool Prop (RewriteRuleNotations.default_do_again P)) rest)
+          => heuristic_process_rules_proofs (rules_proofs : PrimitiveProd.Primitive.prod (@snd bool Prop (RewriteRuleNotations.Types.default_do_again P)) rest)
         | Datatypes.prod ?P ?rest
           => let fst_part := get_fst rules_proofs in
              let snd_part := get_snd rules_proofs in
              heuristic_process_rules_proofs (@PrimitiveProd.Primitive.pair P rest fst_part snd_part)
         | Datatypes.unit
           => constr:(rules_proofs : PrimitiveHList.hlist (@snd bool Prop) Datatypes.nil)
+        | @snd bool Prop ?P
+          => constr:(PrimitiveProd.Primitive.pair rules_proofs tt
+                     : PrimitiveHList.hlist (@snd bool Prop) (Datatypes.cons P Datatypes.nil))
         | ?P => constr:(PrimitiveProd.Primitive.pair rules_proofs tt
-                        : PrimitiveHList.hlist (@snd bool Prop) (Datatypes.cons (RewriteRuleNotations.default_do_again P) Datatypes.nil))
+                        : PrimitiveHList.hlist (@snd bool Prop) (Datatypes.cons (RewriteRuleNotations.Types.default_do_again P) Datatypes.nil))
         end.
 
 
@@ -104,9 +123,11 @@ Module Compilers.
         idtac;
         lazymatch goal with
         | [ |- rules_proofsT_with_args ?rules_proofs ]
-          => let res := heuristic_process_rules_proofs rules_proofs in
-             let T := type of res in
-             eexists; exact (@id T res)
+          => (tryif has_evar rules_proofs
+               then fail 0 "Unresolved evar in" rules_proofs "Rewrite rules are not allowed to contain evars"
+               else let res := heuristic_process_rules_proofs rules_proofs in
+                    let T := type of res in
+                    eexists; exact (@id T res))
         end.
 
       Ltac scrape_preprocess T :=
@@ -143,21 +164,16 @@ Module Compilers.
              | fun x : ?T => ?F
                => let so_far := recr so_far T in
                   let F' := fresh in
-                  lazymatch
-                    constr:(
-                      fun x : T =>
-                        match F return _ with
-                        | F' =>
-                          ltac:(
-                            let F := (eval cbv delta [F'] in F') in
-                            clear F';
-                            let so_far := recr so_far F in
-                            exact so_far)
-                        end)
-                  with
-                  | fun _ => ?so_far => so_far
-                  | ?term => constr_fail_with ltac:(fun _ => fail 1 "cannot eliminate functional dependencies of" term)
-                  end
+                  eliminate_functional_dependencies
+                    (fun x : T =>
+                       match F return _ with
+                       | F' =>
+                         ltac:(
+                           let F := (eval cbv delta [F'] in F') in
+                           clear F';
+                           let so_far := recr so_far F in
+                           exact so_far)
+                       end)
              | ?ty
                => let base_type_list_named := lazymatch so_far with {| ScrapedData.base_type_list_named := ?base_type_list_named |} => base_type_list_named end in
                   lazymatch base_type_list_named with
@@ -226,21 +242,16 @@ Module Compilers.
             | fun x : ?T => ?F
               => let so_far := scrape_data_of_type so_far T in
                  let F' := fresh in
-                 lazymatch
-                   constr:(
-                     fun x : T =>
-                       match F return _ with
-                       | F' =>
-                         ltac:(
-                           let F := (eval cbv delta [F'] in F') in
-                           clear F';
-                           let so_far := recr so_far F in
-                           exact so_far)
-                       end)
-                 with
-                 | fun _ => ?so_far => so_far
-                 | ?term => constr_fail_with ltac:(fun _ => fail 1 "cannot eliminate functional dependencies of" term)
-                 end
+                 eliminate_functional_dependencies
+                   (fun x : T =>
+                      match F return _ with
+                      | F' =>
+                        ltac:(
+                          let F := (eval cbv delta [F'] in F') in
+                          clear F';
+                          let so_far := recr so_far F in
+                          exact so_far)
+                      end)
             | ?term => try_add term
             end
           end
@@ -532,7 +543,7 @@ Module Compilers.
                                => lazymatch v with
                                   | with_name name _ => refine (forall (name : base), _)
                                   | without_name ?T
-                                    => let name := fresh T in
+                                    => let name := fresh "base_" T in
                                        refine (forall name : base, _)
                                   end;
                                   iter rest
@@ -647,10 +658,7 @@ Module Compilers.
                                          iter rest
                                     end in
                                 iter all_ident_named_interped)) in
-        lazymatch res with
-        | _ -> ?res => res
-        | ?res => constr_fail_with ltac:(fun _ => fail 1 "Cannot eliminate functional dependencies of" res)
-        end.
+        eliminate_functional_dependencies res.
 
       Ltac build_ident_elim base base_type_list_named all_ident_named_interped is_pattern :=
         (eval cbv beta zeta in

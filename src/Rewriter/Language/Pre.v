@@ -81,10 +81,13 @@ Module Import RewriteRuleNotationsTactics.
 End RewriteRuleNotationsTactics.
 
 Module RewriteRuleNotations.
+  Notation "()" := tt : core_scope.
   Notation "' x" := (ident.literal x).
-  Notation dont_do_again := (pair false) (only parsing).
-  Notation do_again := (pair true) (only parsing).
-  Notation default_do_again := dont_do_again (only parsing).
+  Module Import Types.
+    Notation dont_do_again := (pair false) (only parsing).
+    Notation do_again := (pair true) (only parsing).
+    Notation default_do_again := dont_do_again (only parsing).
+  End Types.
 
   Notation all_dont_do_again ls
     := (match ls return _ with
@@ -106,4 +109,6 @@ Module RewriteRuleNotations.
   Notation "[ ]" := nil (format "[ ]") : rew_rules_scope.
   Notation "[ x ]" := (cons x nil) : rew_rules_scope.
   Notation "[ x ; y ; .. ; z ]" :=  (cons x (cons y .. (cons z nil) ..)) : rew_rules_scope.
+
+  Notation do_again := (@id (@snd bool Prop (Types.do_again _))) (only parsing).
 End RewriteRuleNotations.

@@ -2,38 +2,13 @@
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.micromega.Lia.
 Require Import Coq.Lists.List.
-Require Import Rewriter.Rewriter.AllTactics.
-Require Import Rewriter.Language.Pre.
+Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.Notations.
-Require Rewriter.Util.PrimitiveHList.
+Require Import Rewriter.Util.plugins.RewriterBuild.
 Import ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
 
-Import Rewriter.AllTactics.Compilers.RewriteRules.GoalType.
-Import Rewriter.AllTactics.Compilers.RewriteRules.Tactic.
-
-(** We first define some helper notations, and then define the list of
-    types of theorems we want to rewrite with. *)
-
-Local Notation "' x" := (ident.literal x).
-Local Notation dont_do_again := (pair false) (only parsing).
-Local Notation do_again := (pair true) (only parsing).
-Local Definition mymap {A B} := Eval cbv in @List.map A B.
-Local Definition myapp {A} := Eval cbv in @List.app A.
-
-Definition noruletypes : list (bool * Prop)
-  := [].
-
-(** Now we prove every theorem statement in the above list. *)
-
-Lemma noruleproofs
-  : PrimitiveHList.hlist (@snd bool Prop) noruletypes.
-Proof. repeat constructor. Qed.
-
-(** Next we define the rewriter package *)
-
-Definition norules : VerifiedRewriter_with_args false noruleproofs.
-Proof using All. make_rewriter. Defined.
+Time Make norules := Rewriter For ().
 
 (** Now we show some simple examples. *)
 
@@ -47,51 +22,55 @@ Qed.
 
 (** ==== *)
 
-Definition myruletypes : list (bool * Prop)
-  := Eval cbv [mymap myapp] in
-      myapp
-        (mymap
-           dont_do_again
-           [(forall x, x + 0 = x)
-            ; (forall A B x y, @fst A B (x, y) = x)
-            ; (forall A B x y, @snd A B (x, y) = y)
-            ; (forall A B f ls, @List.map A B f ls
-                                = (ident.eagerly (@list_rect) _ _)
-                                    []
-                                    (fun x xs map_f_xs => f x :: map_f_xs)
-                                    ls)
-            ; (forall A xs ys, @List.app A xs ys
-                               = (ident.eagerly (@list_rect) _ _)
-                                   ys (fun x xs app_xs_ys => x :: app_xs_ys) xs)
-            ; (forall A P N C ls,
-                  @ident.Thunked.list_rect A P N C ls
-                  = ident.eagerly (@ident.Thunked.list_rect) A P N C ls)
-            ; (forall A P Q N C ls v,
-                  @list_rect A (fun _ => P -> Q) N C ls v
-                  = ident.eagerly (@list_rect) A (fun _ => P -> Q) N C ls v)])
-        (mymap
-           do_again
-           [(forall A B f xs,
-                @List.flat_map A B f xs
-                = (list_rect _)
-                    nil
-                    (fun x _ flat_map_tl => f x ++ flat_map_tl)
-                    xs)]).
+Local Ltac t :=
+  repeat constructor; cbn [snd]; cbv [Pre.ident.eagerly]; intros;
+  try solve [ lia
+            | now apply ListUtil.eq_app_list_rect ].
 
-(** Now we prove every theorem statement in the above list. *)
+Lemma map_eagerly_rect
+  : forall A B f ls, @List.map A B f ls
+                     = (Pre.ident.eagerly (@list_rect) _ _)
+                         []
+                         (fun x xs map_f_xs => f x :: map_f_xs)
+                         ls.
+Proof. t. Qed.
 
-Lemma myruleproofs
-  : PrimitiveHList.hlist (@snd bool Prop) myruletypes.
-Proof.
-  repeat constructor; cbn [snd]; cbv [ident.eagerly]; intros;
-    try solve [ lia
-              | now apply ListUtil.eq_app_list_rect ].
-Qed.
+Lemma app_eagerly_rect
+  : forall A xs ys, @List.app A xs ys
+                    = (Pre.ident.eagerly (@list_rect) _ _)
+                        ys (fun x xs app_xs_ys => x :: app_xs_ys) xs.
+Proof. t. Qed.
 
-(** Next we define the rewriter package *)
+Lemma thunked_list_rect_eagerly_list_rect
+  : forall A P N C ls,
+    @Thunked.list_rect A P N C ls
+    = Pre.ident.eagerly (@Thunked.list_rect) A P N C ls.
+Proof. t. Qed.
 
-Definition myrules : VerifiedRewriter_with_args true myruleproofs.
-Proof using All. make_rewriter. Defined.
+Lemma list_rect_eagerly_list_rect
+  : forall A P Q N C ls v,
+    @list_rect A (fun _ => P -> Q) N C ls v
+    = Pre.ident.eagerly (@list_rect) A (fun _ => P -> Q) N C ls v.
+Proof. t. Qed.
+
+Lemma flat_map_rect
+  : forall A B f xs,
+    @List.flat_map A B f xs
+    = (list_rect (fun _ => _))
+        nil
+        (fun x _ flat_map_tl => f x ++ flat_map_tl)%list
+        xs.
+Proof. t. Qed.
+
+Time Make myrules
+  := Rewriter For (Z.add_0_r
+                   , (@Prod.fst_pair)
+                   , (@Prod.snd_pair)
+                   , map_eagerly_rect
+                   , app_eagerly_rect
+                   , thunked_list_rect_eagerly_list_rect
+                   , list_rect_eagerly_list_rect
+                   , do_again flat_map_rect).
 
 (** Now we show some simple examples. *)
 
