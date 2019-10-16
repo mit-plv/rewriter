@@ -46,6 +46,8 @@ nra.cache
 
 /*.out
 
+.merlin
+
 src/Rewriter/Util/plugins/*.annot
 src/Rewriter/Util/plugins/*.cmi
 src/Rewriter/Util/plugins/*.cmx
