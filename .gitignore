@@ -77,6 +77,12 @@ src/Rewriter/Util/plugins/strategy_tactic.ml
 src/Rewriter/Util/plugins/strategy_tactic.mli
 src/Rewriter/Util/plugins/strategy_tactic_plugin.mlg
 src/Rewriter/Util/plugins/strategy_tactic_plugin.mllib
+src/Rewriter/Util/plugins/definition_by_tactic_plugin.ml4
+src/Rewriter/Util/plugins/inductive_from_elim_plugin.ml4
+src/Rewriter/Util/plugins/rewriter_build_plugin.ml4
+src/Rewriter/Util/plugins/strategy_tactic_plugin.ml4
+
+/.coq-version
 
 src/Rewriter/Util/Compat.v
 
