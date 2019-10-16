@@ -324,7 +324,7 @@ Module Compilers.
     End ScrapeTactics.
 
     Module Import Tactics.
-      Ltac ident_basic_assembly_debug_level := constr:(1%nat).
+      Ltac ident_basic_assembly_debug_level := Pre.ident_basic_assembly_debug_level.
 
       Ltac check_debug_level_then_Set _ :=
         let lvl := ident_basic_assembly_debug_level in

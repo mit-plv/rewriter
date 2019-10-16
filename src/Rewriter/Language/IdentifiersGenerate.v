@@ -34,7 +34,7 @@ Module Compilers.
     Export IdentifiersLibrary.Compilers.pattern.
 
     Module Import Tactics.
-      Ltac ident_assembly_debug_level := constr:(1%nat).
+      Ltac ident_assembly_debug_level := Pre.ident_assembly_debug_level.
 
       Ltac check_debug_level_then_Set _ :=
         let lvl := ident_assembly_debug_level in

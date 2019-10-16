@@ -14,6 +14,15 @@ Module ident.
   Definition gets_inlined (real_val : bool) {T} (v : T) : bool := real_val.
 End ident.
 
+(** Modify this to get more match-to-elim conversion *)
+Ltac reify_preprocess_extra term := term.
+Ltac reify_ident_preprocess_extra term := term.
+(** Change this with [Ltac reify_debug_level ::= constr:(1).] to get
+    more debugging. *)
+Ltac reify_debug_level := constr:(0%nat).
+Ltac ident_basic_assembly_debug_level := constr:(1%nat).
+Ltac ident_assembly_debug_level := constr:(1%nat).
+
 Module GallinaIdentList.
   Inductive t := nil | cons {T : Type} (v : T) (vs : t).
 

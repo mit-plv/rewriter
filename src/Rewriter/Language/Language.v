@@ -32,9 +32,7 @@ Module Compilers.
   Local Set Boolean Equality Schemes.
   Local Set Decidable Equality Schemes.
   Module Reify.
-    (** Change this with [Ltac reify_debug_level ::= constr:(1).] to get
-        more debugging. *)
-    Ltac debug_level := constr:(0%nat).
+    Ltac debug_level := Pre.reify_debug_level.
 
     Tactic Notation "debug_enter_reify_idtac" ident(funname) uconstr(e)
       := idtac funname ": Attempting to reify:" e.
@@ -736,10 +734,6 @@ Module Compilers.
                               exact v))
         end
       end.
-
-    (** Modify this to get more match-to-elim conversion *)
-    Ltac reify_preprocess_extra term := term.
-    Ltac reify_ident_preprocess_extra term := term.
 
     Ltac reify_preprocess term :=
       let __ := Reify.debug_enter_reify_preprocess term in
