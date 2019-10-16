@@ -2,14 +2,14 @@ Require Import Rewriter.Language.Language.
 Require Import Rewriter.Util.Sigma.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.Prod.
-Require Import Rewriter.Util.Tactics.DestructHead.
-Require Import Rewriter.Util.Tactics.BreakMatch.
 Require Import Rewriter.Util.HProp.
 Require Import Rewriter.Util.Decidable.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.Bool.
 Require Import Rewriter.Util.Bool.Reflect.
 Require Import Rewriter.Util.CPSNotations.
+Require Import Rewriter.Util.Tactics.DestructHead.
+Require Import Rewriter.Util.Tactics.BreakMatch.
 Require Import Rewriter.Util.Tactics.RewriteHyp.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.FixCoqMistakes.

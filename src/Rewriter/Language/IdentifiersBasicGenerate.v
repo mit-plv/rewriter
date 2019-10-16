@@ -1,17 +1,14 @@
 Require Import Coq.ZArith.ZArith.
-Require Import Coq.FSets.FMapPositive.
 Require Import Coq.Bool.Bool.
 Require Import Coq.Classes.Morphisms.
-Require Import Coq.Relations.Relation_Definitions.
+Require Import Coq.Lists.List.
 Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.IdentifiersBasicLibrary.
 Require Import Rewriter.Util.Prod Rewriter.Util.LetIn.
-Require Import Rewriter.Util.ListUtil Coq.Lists.List Rewriter.Util.NatUtil.
+Require Import Rewriter.Util.ListUtil Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.Prod.
-Require Import Rewriter.Util.ZUtil.Definitions.
-Require Import Rewriter.Util.ZUtil.Notations.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Bool.
 Require Import Rewriter.Util.Bool.Reflect.
@@ -705,7 +702,7 @@ Module Compilers.
                         [ let x := fresh in
                           let y := fresh in
                           intros x y; destruct x, y; try reflexivity; instantiate (1:=Datatypes.false);
-                          intro; exfalso; apply diff_false_true; assumption
+                          intro; exfalso; apply Bool.diff_false_true; assumption
                         | let x := fresh in
                           let y := fresh in
                           intros x y ?; subst y; destruct x; reflexivity ] ])

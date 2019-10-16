@@ -9,14 +9,8 @@ Require Import Rewriter.Language.Inversion.
 Require Import Rewriter.Util.Tactics.BreakMatch.
 Require Import Rewriter.Util.Tactics.DestructHead.
 Require Import Rewriter.Util.Tactics.UniquePose.
-Require Import Rewriter.Util.Tactics.SpecializeAllWays.
-Require Import Rewriter.Util.Tactics.RewriteHyp.
 Require Import Rewriter.Util.Tactics.SplitInContext.
 Require Import Rewriter.Util.Tactics.SpecializeBy.
-Require Import Rewriter.Util.ZUtil.Tactics.LtbToLt.
-Require Import Rewriter.Util.ZUtil.Tactics.DivModToQuotRem.
-Require Import Rewriter.Util.ZUtil.Tactics.SplitMinMax.
-Require Import Rewriter.Util.ZUtil.Tactics.RewriteModSmall.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Sigma.

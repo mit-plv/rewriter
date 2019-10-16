@@ -1,12 +1,6 @@
 (** Definitions for use in pre-reified rewriter rules *)
-Require Import Coq.ZArith.BinInt.
-Require Import Rewriter.Util.ZUtil.Definitions.
-Require Import Rewriter.Util.ZUtil.Notations.
-Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Util.Notations.
 Require Rewriter.Util.PrimitiveHList.
-Local Open Scope bool_scope.
-Local Open Scope Z_scope.
 
 Module ident.
   Definition literal {T} (v : T) := v.

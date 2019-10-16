@@ -1,17 +1,16 @@
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.FSets.FMapPositive.
 Require Import Coq.Bool.Bool.
+Require Import Coq.Lists.List.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Relations.Relation_Definitions.
 Require Import Rewriter.Language.Pre.
-Require Import Rewriter.Util.Prod Rewriter.Util.LetIn.
-Require Import Rewriter.Util.ListUtil Coq.Lists.List Rewriter.Util.NatUtil.
+Require Import Rewriter.Util.LetIn.
+Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.OptionList.
 Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Util.NatUtil.
-Require Import Rewriter.Util.ZUtil.Definitions.
-Require Import Rewriter.Util.ZUtil.Notations.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Bool.Reflect.
 Require Import Rewriter.Util.Bool.
@@ -21,7 +20,7 @@ Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.Tactics.RunTacticAsConstr.
 Require Import Rewriter.Util.Tactics.DebugPrint.
 Require Import Rewriter.Util.Tactics.ConstrFail.
-Import Coq.Lists.List ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
+Import Coq.Lists.List ListNotations.
 Export Language.Pre.
 
 Local Set Primitive Projections.

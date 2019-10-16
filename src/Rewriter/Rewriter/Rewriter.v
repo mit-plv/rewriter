@@ -1,20 +1,19 @@
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.FSets.FMapPositive.
 Require Import Coq.MSets.MSetPositive.
-Require Import Rewriter.Util.ListUtil Coq.Lists.List Rewriter.Util.ListUtil.FoldBool.
-Require Import Rewriter.Util.Option.
-Require Import Rewriter.Util.OptionList.
-Require Import Rewriter.Util.CPSNotations.
-Require Import Rewriter.Util.Bool.Reflect.
-Require Import Rewriter.Util.ZUtil.Definitions.
-Require Import Rewriter.Util.ZUtil.Notations.
-Require Import Rewriter.Util.Tactics.ConstrFail.
-Require Rewriter.Util.PrimitiveProd.
-Require Rewriter.Util.PrimitiveHList.
+Require Import Coq.Lists.List.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.UnderLets.
 Require Import Rewriter.Language.IdentifiersLibrary.
+Require Rewriter.Util.PrimitiveProd.
+Require Rewriter.Util.PrimitiveHList.
+Require Import Rewriter.Util.Option.
+Require Import Rewriter.Util.OptionList.
+Require Import Rewriter.Util.ListUtil.
+Require Import Rewriter.Util.CPSNotations.
+Require Import Rewriter.Util.Bool.Reflect.
 Require Import Rewriter.Util.LetIn.
+Require Import Rewriter.Util.Tactics.ConstrFail.
 Require Import Rewriter.Util.Tactics.Head.
 Require Import Rewriter.Util.Tactics.CacheTerm.
 Require Import Rewriter.Util.Tactics.DebugPrint.
