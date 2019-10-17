@@ -262,6 +262,10 @@ Module Compilers.
              make_rewriter_from_scraped scraped_data var_like_idents base ident raw_ident pattern_ident include_interp specs_proofs
         end.
 
+      Module Export Hints.
+        Global Hint Extern 0 (GoalType.VerifiedRewriter_with_ind_args _ _ _ _ _ _ _ _) => make_rewriter_all : typeclass_instances.
+      End Hints.
+
       Ltac Rewrite_lhs_for verified_rewriter_package := Rewrite_for_gen verified_rewriter_package true false.
       Ltac Rewrite_rhs_for verified_rewriter_package := Rewrite_for_gen verified_rewriter_package false true.
       Ltac Rewrite_for verified_rewriter_package := Rewrite_for_gen verified_rewriter_package true true.

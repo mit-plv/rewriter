@@ -3433,6 +3433,8 @@ Module Compilers.
                  (include_interp : bool)
                  {rewrite_rulesT} (rules_proofs : PrimitiveHList.hlist (@snd bool Prop) rewrite_rulesT)
         := VerifiedRewriter.
+      Existing Class VerifiedRewriter_with_args.
+      Existing Class VerifiedRewriter_with_ind_args.
     End GoalType.
   End RewriteRules.
 End Compilers.

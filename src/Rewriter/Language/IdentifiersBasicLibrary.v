@@ -35,6 +35,15 @@ Module Compilers.
 
       Definition base_elim_with_args (scraped_data : ScrapedData.t) := Type.
       Definition ident_elim_with_args (scraped_data : ScrapedData.t) (base : Type) := Type.
+      Definition raw_ident_elim_with_args (scraped_data : ScrapedData.t) (base : Type) := ident_elim_with_args scraped_data base.
+      Definition pattern_ident_elim_with_args (scraped_data : ScrapedData.t) (base : Type) := ident_elim_with_args scraped_data base.
+
+      Existing Class package.
+      Existing Class package_with_args.
+      Existing Class base_elim_with_args.
+      Existing Class ident_elim_with_args.
+      Existing Class raw_ident_elim_with_args.
+      Existing Class pattern_ident_elim_with_args.
     End GoalType.
 
     Module HelperLemmas.

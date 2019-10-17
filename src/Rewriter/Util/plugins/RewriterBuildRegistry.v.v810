@@ -3,8 +3,8 @@ Require Export Rewriter.Util.plugins.RewriterBuildRegistryImports.
 Register Basic.GoalType.package_with_args as rewriter.basic_package_with_args.type.
 Register Basic.GoalType.base_elim_with_args as rewriter.base_elim_with_args.type.
 Register Basic.GoalType.ident_elim_with_args as rewriter.ident_elim_with_args.type.
-Register Basic.GoalType.ident_elim_with_args as rewriter.pattern_ident_elim_with_args.type.
-Register Basic.GoalType.ident_elim_with_args as rewriter.raw_ident_elim_with_args.type.
+Register Basic.GoalType.pattern_ident_elim_with_args as rewriter.pattern_ident_elim_with_args.type.
+Register Basic.GoalType.raw_ident_elim_with_args as rewriter.raw_ident_elim_with_args.type.
 Register ScrapedData.t_with_args as rewriter.scraped_data_with_args.type.
 Register rules_proofsT_with_args as rewriter.rules_proofs_with_args.type.
 Register GallinaIdentList.nil as rewriter.ident_list.nil.

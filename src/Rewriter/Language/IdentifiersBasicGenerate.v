@@ -127,6 +127,10 @@ Module Compilers.
                     eexists; exact (@id T res))
         end.
 
+      Module Export Hints.
+        Global Hint Extern 0 (rules_proofsT_with_args _) => make_rules_proofsT_with_args : typeclass_instances.
+      End Hints.
+
       Ltac scrape_preprocess T :=
         let T := Compilers.expr.reify_preprocess T in
         let T := Compilers.expr.reify_ident_preprocess T in
@@ -1417,7 +1421,7 @@ Module Compilers.
 
     Module PrintHelpers.
       Ltac make_ident_from_build build :=
-        idtac;
+        cbv [GoalType.raw_ident_elim_with_args GoalType.pattern_ident_elim_with_args];
         lazymatch goal with
         | [ |- GoalType.ident_elim_with_args ?scraped_data ?base ]
           => cbv [GoalType.ident_elim_with_args];
@@ -1445,6 +1449,9 @@ Module Compilers.
                   refine res
              end
         end.
+      Module Export Hints.
+        Global Hint Extern 0 (GoalType.base_elim_with_args _) => make_base_elim : typeclass_instances.
+      End Hints.
 
       Ltac print_base base_type_list_named :=
         let elimT := build_base_elim base_type_list_named in
@@ -1464,6 +1471,12 @@ Module Compilers.
       Ltac make_pattern_ident_elim := make_ident_from_build build_pattern_ident_elim.
       Ltac make_raw_ident_elim :=
         make_ident_from_build ltac:(fun base base_type_list_named all_ident_named_interped => build_raw_ident_elim all_ident_named_interped).
+
+      Module Export Hints.
+        Global Hint Extern 0 (GoalType.ident_elim_with_args _ _) => make_ident_elim : typeclass_instances.
+        Global Hint Extern 0 (GoalType.pattern_ident_elim_with_args _ _) => make_pattern_ident_elim : typeclass_instances.
+        Global Hint Extern 0 (GoalType.raw_ident_elim_with_args _ _) => make_raw_ident_elim : typeclass_instances.
+      End Hints.
 
       Ltac print_ident base base_type_list_named all_ident_named_interped :=
         let ident_elimT := build_ident_elim base base_type_list_named all_ident_named_interped in
@@ -1604,6 +1617,9 @@ Module Compilers.
           => cbv [GoalType.package_with_args];
              make_package_of_scraped scraped_data var_like_idents base ident
         end.
+      Module Export Hints.
+        Global Hint Extern 0 (GoalType.package_with_args _ _ _ _) => make_package : typeclass_instances.
+      End Hints.
       Ltac cache_build_package_of_scraped scraped_data var_like_idents base ident :=
         let name := fresh "package" in
         let term := build_package_of_scraped scraped_data var_like_idents base ident in

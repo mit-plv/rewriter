@@ -61,6 +61,7 @@ Module ScrapedData.
     }.
 
   Definition t_with_args {rewrite_rulesT} (rules_proofs : PrimitiveHList.hlist (@snd bool Prop) rewrite_rulesT) := t.
+  Existing Class t_with_args.
 End ScrapedData.
 
 Local Definition mymap {A B} := Eval cbv in @List.map A B.
@@ -70,6 +71,7 @@ Local Notation do_again := (pair true) (only parsing).
 
 Definition rules_proofsT_with_args {T} (rules_proofs : T) :=
   { rules : _ & PrimitiveHList.hlist (@snd bool Prop) rules }.
+Existing Class rules_proofsT_with_args.
 
 Module Import RewriteRuleNotationsTactics.
   Ltac mymap_dont_do_again ls' :=
