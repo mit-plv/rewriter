@@ -9,7 +9,11 @@ VERBOSE?=
 SHOW := $(if $(VERBOSE),@true "",@echo "")
 HIDE := $(if $(VERBOSE),,@)
 
+PYTHON3 := python3
+
 STRICT_DEPS?=
+
+EXTERNAL_PERF_DEPENDENCIES?=
 
 include Makefile.local.common
 include Makefile.coq
@@ -59,3 +63,45 @@ Makefile.coq: | Makefile-old.conf
 
 clean::
 	rm -f Makefile.coq
+
+##########################################
+## Perf-testing section
+include Makefile.perf
+
+NO_LIMIT_PERF?=
+MAX_PERF_KB?=10000000 # 10 GB
+MAX_PERF_SEC?=
+TIMEOUT_CMD?=
+TIMEOUT_SHOW?=
+
+ifneq (,$(NO_LIMIT_PERF))
+ifneq (,$(MAX_PERF_SEC))
+PERF_T_ARG:=-t $(MAX_PERF_SEC) # trailing space important
+else
+PERF_T_ARG:=
+endif
+
+TIMEOUT_CMD := etc/timeout/timeout -m $(MAX_PERF_KB) $(PERF_T_ARG)
+TIMEOUT_SHOW:=TIMEOUT -m $(MAX_PERF_KB) $(PERF_T_ARG)
+endif
+
+.PHONY: perf
+perf: $(ALL_PERF_LOGS)
+
+ifneq ($(EXTERNAL_PERF_DEPENDENCIES),1)
+$(ALL_PERF_LOGS): src/Rewriter/Rewriter/Examples/PerfTesting/Harness.vo
+endif
+
+$(ALL_PERF_LOGS) : %.log : %.v
+	$(SHOW)'$(TIMEOUT_SHOW)COQC $(<:src/Rewriter/Rewriter/Examples/PerfTesting/%.v=%) > LOG'
+	$(HIDE)rm -f $@.ok
+	$(HIDE)$(TIMER) ($(TIMEOUT_CMD) $(COQC) $(COQDEBUG) $(TIMING_ARG) $(COQFLAGS) $(COQLIBS) $< && touch $@.ok) > $@.tmp
+	$(HIDE)rm $@.ok
+	$(HIDE)mv -f $@.tmp $@
+
+.PHONY: perf.csv
+perf.csv:
+	$(SHOW)'PYTHON3 aggregate.py -o $@'
+	$(HIDE)$(PYTHON3) src/Rewriter/Rewriter/Examples/PerfTesting/aggregate.py -o $@ $(wildcard $(ALL_PERF_LOGS))
+## End Perf-testing section
+##########################################
