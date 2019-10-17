@@ -16,6 +16,7 @@ Ltac reify_ident_preprocess_extra term := term.
 Ltac reify_debug_level := constr:(0%nat).
 Ltac ident_basic_assembly_debug_level := constr:(1%nat).
 Ltac ident_assembly_debug_level := constr:(1%nat).
+Ltac perf_rewrite := constr:(false).
 
 Module GallinaIdentList.
   Inductive t := nil | cons {T : Type} (v : T) (vs : t).
