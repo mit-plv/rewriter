@@ -805,7 +805,7 @@ Module Compilers.
                            end;
                            lazymatch goal with
                            | [ |- _ = ?v ]
-                             => reify_ident v ltac:(fun idc => unify id' idc) ltac:(fun _ => fail 0 "could not reify" v "as an ident")
+                             => reify_ident v ltac:(fun idc => let unif := constr:(eq_refl : idc = id') in idtac) ltac:(fun _ => fail 0 "could not reify" v "as an ident")
                            end
                       end; reflexivity)
                 : { buildEagerIdent : _ & @ident.BuildInterpEagerIdentCorrectT _ _ _ ident_interp baseHasNat buildEagerIdent baseHasNatCorrect }).
@@ -867,7 +867,7 @@ Module Compilers.
                            let v := match goal with |- _ = ?v => v end in
                            reify_ident
                              v
-                             ltac:(fun idc => unify id' idc)
+                             ltac:(fun idc => let unif := constr:(eq_refl : idc = id') in idtac)
                                     ltac:(fun _ => fail 0 "could not reify" v "as an ident")
                       end; reflexivity)
                 : { buildIdent : _
