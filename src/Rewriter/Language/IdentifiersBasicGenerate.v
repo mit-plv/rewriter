@@ -993,7 +993,7 @@ Module Compilers.
       Ltac inhabit := (constructor; fail) + (constructor; inhabit).
       Ltac build_base_default base_interp :=
         constr:(ltac:(let t := fresh "t" in
-                      intro t; destruct t; hnf; inhabit)
+                      intro t; destruct t; hnf; [ once inhabit .. ])
                 : @DefaultValue.type.base.DefaultT _ base_interp).
       Ltac make_base_default base_interp := let res := build_base_default base_interp in refine res.
 
