@@ -254,34 +254,35 @@ Module Compilers.
         cbv [expr.Interp expr.interp Classes.ident_interp Classes.base GoalType.exprInfo type.interp base.interp base_interp_head ident_interp_head verified_rewriter_package_head ident.literal ident.eagerly].
 
       Ltac Rewrite_for_gen verified_rewriter_package do_lhs do_rhs :=
-        idtac;
-        let time_all := fun tac arg => time "Rewrite_for_gen" tac arg in
-        let time_etrans := fun tac arg => time "Rewrite_for_gen:etransitivity_for_sides" tac arg in
-        let time_generalize := fun tac arg => time "Rewrite_for_gen:generalize_hyps_for_rewriting" tac arg in
-        let time_reify := fun tac arg => time "reification" tac arg in
-        let time_do_rewrite := fun tac arg => time "rewriting" tac arg in
-        let time_cbv := fun tac arg => time "final_cbv" tac arg in
-        time_if_perf1
-          time_all
-          ltac:(fun _ =>
-                  lazymatch (eval hnf in (RewriteRules.GoalType.exprInfo verified_rewriter_package)) with
-                  | {| base := ?base
-                       ; ident := ?ident
-                       ; base_interp := ?base_interp
-                       ; ident_interp := ?ident_interp
-                    |}
-                    => let base_type := constr:(base.type base) in
-                       let base_type_interp := constr:(base.interp base_interp) in
-                       let reify_type := Basic.Tactic.reify_type_via_reify_package (RewriteRules.GoalType.exprReifyInfo verified_rewriter_package) in
-                       unshelve (
-                           time_if_perf3 time_etrans ltac:(fun _ => etransitivity_for_sides do_lhs do_rhs) ();
-                           time_if_perf3 time_generalize ltac:(fun _ => generalize_hyps_for_rewriting base reify_type base_interp) ();
-                           time_if_perf1 time_reify do_reify_rhs_with verified_rewriter_package;
-                           time_if_perf1 time_do_rewrite do_rewrite_with verified_rewriter_package;
-                           let n := numgoals in
-                           guard n = 0 (* assert that all goals are solved; we don't use [solve] because it eats error messages of inner tactics *));
-                       time_if_perf2 time_cbv ltac:(fun _ => do_final_cbv verified_rewriter_package base_interp ident_interp) ()
-                  end) ().
+        once
+          (idtac;
+           let time_all := fun tac arg => time "Rewrite_for_gen" tac arg in
+           let time_etrans := fun tac arg => time "Rewrite_for_gen:etransitivity_for_sides" tac arg in
+           let time_generalize := fun tac arg => time "Rewrite_for_gen:generalize_hyps_for_rewriting" tac arg in
+           let time_reify := fun tac arg => time "reification" tac arg in
+           let time_do_rewrite := fun tac arg => time "rewriting" tac arg in
+           let time_cbv := fun tac arg => time "final_cbv" tac arg in
+           time_if_perf1
+             time_all
+             ltac:(fun _ =>
+                     lazymatch (eval hnf in (RewriteRules.GoalType.exprInfo verified_rewriter_package)) with
+                     | {| base := ?base
+                          ; ident := ?ident
+                          ; base_interp := ?base_interp
+                          ; ident_interp := ?ident_interp
+                       |}
+                       => let base_type := constr:(base.type base) in
+                          let base_type_interp := constr:(base.interp base_interp) in
+                          let reify_type := Basic.Tactic.reify_type_via_reify_package (RewriteRules.GoalType.exprReifyInfo verified_rewriter_package) in
+                          unshelve (
+                              time_if_perf3 time_etrans ltac:(fun _ => etransitivity_for_sides do_lhs do_rhs) ();
+                              time_if_perf3 time_generalize ltac:(fun _ => generalize_hyps_for_rewriting base reify_type base_interp) ();
+                              time_if_perf1 time_reify do_reify_rhs_with verified_rewriter_package;
+                              time_if_perf1 time_do_rewrite do_rewrite_with verified_rewriter_package;
+                              let n := numgoals in
+                              guard n = 0 (* assert that all goals are solved; we don't use [solve] because it eats error messages of inner tactics *));
+                          time_if_perf2 time_cbv ltac:(fun _ => do_final_cbv verified_rewriter_package base_interp ident_interp) ()
+                     end) ()).
     End FinalTacticHelpers.
 
     Module Export GoalType.
