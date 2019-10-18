@@ -14,7 +14,7 @@ Require Import Rewriter.Language.IdentifiersBasicLibrary.
 Require Import Rewriter.Util.Tactics.Head.
 Require Import Rewriter.Util.Tactics.ConstrFail.
 Require Import Rewriter.Util.Tactics.CacheTerm.
-Require Import Rewriter.Util.Tactics.PrintGoal.
+Require Import Rewriter.Util.Tactics.WarnIfGoalsRemain.
 Require Import Rewriter.Util.Tactics.DebugPrint.
 Import ListNotations. Local Open Scope list_scope.
 Import PrimitiveSigma.Primitive.
@@ -58,9 +58,6 @@ Module Compilers.
         | S _ => ltac:(fun tac => time tac ())
         | ?v => ltac:(fun tac => fail 0 "Invalid non-nat ident_assembly_debug_level" v)
         end.
-
-      Ltac warn_if_goals_remain _ :=
-        [ > idtac "WARNING: Remaining goal:"; print_context_and_goal () .. ].
 
       Ltac find_evar_tail x :=
         lazymatch x with

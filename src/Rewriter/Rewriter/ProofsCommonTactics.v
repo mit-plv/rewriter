@@ -22,7 +22,7 @@ Require Import Rewriter.Util.Tactics.UniquePose.
 Require Import Rewriter.Util.Tactics.Head.
 Require Import Rewriter.Util.Tactics.RewriteHyp.
 Require Import Rewriter.Util.Tactics.CPSId.
-Require Import Rewriter.Util.Tactics.PrintGoal.
+Require Import Rewriter.Util.Tactics.WarnIfGoalsRemain.
 Require Import Rewriter.Util.FMapPositive.Equality.
 Require Import Rewriter.Util.MSetPositive.Equality.
 Require Import Rewriter.Util.MSetPositive.Facts.
@@ -59,9 +59,6 @@ Module Compilers.
   Module Import RewriteRules.
     Import Rewriter.Compilers.RewriteRules.
     Export Rewriter.ProofsCommon.Compilers.RewriteRules.
-
-    Ltac warn_if_goals_remain _ :=
-      [ > idtac "WARNING: Remaining goal:"; print_context_and_goal () .. ].
 
     Module Import WfTactics.
       Export Rewriter.ProofsCommon.Compilers.RewriteRules.WfTactics.

@@ -11,6 +11,7 @@ Require Import Rewriter.Util.Decidable.
 Require Import Rewriter.Util.HProp.
 Require Import Rewriter.Util.Equality.
 Require Import Rewriter.Util.Tactics.SpecializeBy.
+Require Import Rewriter.Util.Tactics.WarnIfGoalsRemain.
 Require Import Rewriter.Util.Tactics.CacheTerm.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.Inversion.
@@ -119,6 +120,7 @@ Module Compilers.
       Module Export Settings.
         Export ident.GoalType.Settings.
       End Settings.
+
       Ltac prove_package_proofs_via ident_package :=
         idtac;
         let time_if_debug1 := Tactics.time_if_debug1 in
@@ -129,25 +131,26 @@ Module Compilers.
         cbv [pkg];
         unshelve econstructor;
         [ let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving is_simple_correct0...") in
-          time_if_debug1 Raw.ident.prove_is_simple_correct0; fail 0 "A goal remains"
+          time_if_debug1 Raw.ident.prove_is_simple_correct0
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving invert_bind_args_raw_to_typed...") in
-          time_if_debug1 Raw.ident.prove_invert_bind_args_raw_to_typed; fail 0 "A goal remains"
+          time_if_debug1 Raw.ident.prove_invert_bind_args_raw_to_typed
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving fold_invert_bind_args...") in
-          time_if_debug1 Raw.ident.prove_fold_invert_bind_args; fail 0 "A goal remains"
+          time_if_debug1 Raw.ident.prove_fold_invert_bind_args
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving split_ident_to_ident...") in
-          time_if_debug1 Raw.ident.prove_split_ident_to_ident; fail 0 "A goal remains"
+          time_if_debug1 Raw.ident.prove_split_ident_to_ident
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving eq_indep_types_of_eq_types...") in
-          time_if_debug1 ltac:(Raw.ident.prove_eq_indep_types_of_eq_types reflect_base_beq); fail 0 "A goal remains"
+          time_if_debug1 ltac:(Raw.ident.prove_eq_indep_types_of_eq_types reflect_base_beq)
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving fold_eta_ident_cps...") in
-          time_if_debug1 ident.prove_fold_eta_ident_cps; fail 0 "A goal remains"
+          time_if_debug1 ident.prove_fold_eta_ident_cps
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving fold_unify...") in
-          time_if_debug1 ident.prove_fold_unify; fail 0 "A goal remains"
+          time_if_debug1 ident.prove_fold_unify
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving to_typed_of_typed_ident...") in
-          time_if_debug1 ident.prove_to_typed_of_typed_ident; fail 0 "A goal remains"
+          time_if_debug1 ident.prove_to_typed_of_typed_ident
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving eq_invert_bind_args_unknown...") in
-          time_if_debug1 Raw.ident.prove_eq_invert_bind_args_unknown; fail 0 "A goal remains"
+          time_if_debug1 Raw.ident.prove_eq_invert_bind_args_unknown
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving eq_unify_unknown...") in
-          time_if_debug1 ident.prove_eq_unify_unknown; fail 0 "A goal remains" ].
+          time_if_debug1 ident.prove_eq_unify_unknown ];
+        fail_if_goals_remain ().
       Ltac prove_package_proofs :=
         idtac;
         lazymatch goal with
