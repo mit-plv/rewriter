@@ -730,6 +730,7 @@ Module Compilers.
 
         Class package {base : Type} {ident : type.type (Compilers.base.type base) -> Type} :=
           {
+            all_base : list base;
             all_idents : list { T : Type & T };
             ident_index : forall t, ident t -> nat;
             eta_ident_cps_gen

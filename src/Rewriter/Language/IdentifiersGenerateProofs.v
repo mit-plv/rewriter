@@ -46,17 +46,27 @@ Module Compilers.
 
         Ltac inhabit := (constructor; fail) + (constructor; inhabit).
 
-        Ltac prove_is_simple_correct0 _ :=
+        Ltac pose_points defaultBase all_base :=
+          lazymatch (eval hnf in all_base) with
+          | Datatypes.nil => idtac
+          | Datatypes.cons ?t ?ts
+            => pose proof (defaultBase t);
+               pose_points defaultBase ts
+          end.
+
+        Ltac prove_is_simple_correct0 all_base defaultBase _ :=
+          pose_points defaultBase all_base;
           intros;
           let p := lazymatch goal with | [ |- is_simple ?p = true <-> _ ] => p end in
           destruct p; cbn; cbv -[Datatypes.fst Datatypes.snd projT1 projT2] in *; split; intro H;
           try solve [ reflexivity | exfalso; discriminate ];
           repeat first [ match goal with
-                         | [ H : ?A -> ?B |- _ ] => specialize (H ltac:(inhabit))
                          | [ H : forall x y : PrimitiveProd.Primitive.prod _ _, _ |- _ ] => specialize (fun x1 y1 x2 y2 => H (PrimitiveProd.Primitive.pair x1 x2) (PrimitiveProd.Primitive.pair y1 y2)); cbn in H
                          | [ H : forall x y : Datatypes.prod _ _, _ |- _ ] => specialize (fun x1 y1 x2 y2 => H (Datatypes.pair x1 x2) (Datatypes.pair y1 y2)); cbn in H
                          | [ H : forall x y : PrimitiveSigma.Primitive.sigT ?P, _ |- _ ] => specialize (fun x1 y1 x2 y2 => H (PrimitiveSigma.Primitive.existT P x1 x2) (PrimitiveSigma.Primitive.existT P y1 y2)); cbn in H
                          | [ H : forall x y : Compilers.base.type _, _ |- _ ] => specialize (H Compilers.base.type.unit (Compilers.base.type.prod Compilers.base.type.unit Compilers.base.type.unit))
+                         | [ H : ?A -> ?B, H' : ?A |- _ ] => specialize (H H')
+                         | [ H : ?A -> ?B |- _ ] => specialize (H ltac:(inhabit))
                          | [ H : forall x y : ?T, _ |- _ ] => specialize (H ltac:(constructor 1) ltac:(constructor 2 || fail 100 "Constructor 2 must exist for type" T)); try congruence; cbn in H
                          end
                        | congruence ].
@@ -127,10 +137,12 @@ Module Compilers.
         let exprInfo := (eval hnf in (Basic.GoalType.exprInfo ident_package)) in
         let exprExtraInfo := (eval hnf in (Basic.GoalType.exprExtraInfo ident_package)) in
         let reflect_base_beq := lazymatch (eval hnf in exprExtraInfo) with {| Classes.reflect_base_beq := ?reflect_base_beq |} => reflect_base_beq end in
+        let all_base := lazymatch (eval hnf in pkg) with {| pattern.ident.GoalType.all_base := ?all_base |} => all_base end in
+        let defaultBase := lazymatch (eval hnf in exprExtraInfo) with {| Classes.defaultBase := ?defaultBase |} => defaultBase end in
         cbv [pkg];
         unshelve econstructor;
         [ let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving is_simple_correct0...") in
-          time_if_debug1 Raw.ident.prove_is_simple_correct0; fail_if_goals_remain ()
+          time_if_debug1 ltac:(Raw.ident.prove_is_simple_correct0 all_base defaultBase); fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving invert_bind_args_raw_to_typed...") in
           time_if_debug1 Raw.ident.prove_invert_bind_args_raw_to_typed; fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving fold_invert_bind_args...") in

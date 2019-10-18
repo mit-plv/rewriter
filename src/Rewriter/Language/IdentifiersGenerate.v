@@ -91,6 +91,31 @@ Module Compilers.
         cache_term term name.
       Ltac make_all_idents ident := let v := build_all_idents ident in refine v.
 
+      Ltac build_all_base base :=
+        let res := open_constr:(_ : list base) in
+        let fill_next v :=
+            let next := find_evar_tail res in
+            let __ := open_constr:(eq_refl : next = v) in
+            constr:(I) in
+        let __ := open_constr:(
+                    ltac:(intros;
+                          let t' := fresh "t'" in
+                          lazymatch goal with
+                          | [ t : _ |- _ ] => pose t as t'; destruct t
+                          end;
+                          let t := (eval cbv [t'] in t') in
+                          let h := head t in
+                          let __ := fill_next open_constr:(Datatypes.cons h _) in
+                          constructor)
+                    : base -> True) in
+        let __ := fill_next uconstr:(Datatypes.nil) in
+        res.
+      Ltac cache_build_all_base base :=
+        let name := fresh "all_base" in
+        let term := build_all_base base in
+        cache_term term name.
+      Ltac make_all_base base := let v := build_all_base base in refine v.
+
       Ltac build_simple_idents ident all_idents :=
         lazymatch (eval hnf in all_idents) with
         | Datatypes.cons (existT _ (ident ?T) ?idc) ?rest
@@ -627,6 +652,8 @@ Module Compilers.
                       | ?T => let exp := uconstr:(Compilers.type.type (Compilers.base.type ?base)) in
                               constr_fail_with ltac:(fun _ => fail 1 "Invalid type" T "of ident (" ident "); expected" exp)
                       end in
+          let __ := Tactics.debug1 ltac:(fun _ => idtac "Building all_base...") in
+          let all_base := Compilers.pattern.Tactics.cache_build_all_base base in
           let __ := Tactics.debug1 ltac:(fun _ => idtac "Building all_idents...") in
           let all_idents := Compilers.pattern.Tactics.cache_build_all_idents ident in
           let __ := Tactics.debug1 ltac:(fun _ => idtac "Building ident_index...") in
@@ -726,6 +753,7 @@ Module Compilers.
           let __ := Tactics.debug1 ltac:(fun _ => idtac "Building final ident package...") in
           constr:(@GoalType.Build_package
                     base ident
+                    all_base
                     all_idents
                     ident_index
                     eta_ident_cps_gen
