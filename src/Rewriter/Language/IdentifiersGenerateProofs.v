@@ -120,7 +120,6 @@ Module Compilers.
       Module Export Settings.
         Export ident.GoalType.Settings.
       End Settings.
-
       Ltac prove_package_proofs_via ident_package :=
         idtac;
         let time_if_debug1 := Tactics.time_if_debug1 in
@@ -131,26 +130,25 @@ Module Compilers.
         cbv [pkg];
         unshelve econstructor;
         [ let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving is_simple_correct0...") in
-          time_if_debug1 Raw.ident.prove_is_simple_correct0
+          time_if_debug1 Raw.ident.prove_is_simple_correct0; fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving invert_bind_args_raw_to_typed...") in
-          time_if_debug1 Raw.ident.prove_invert_bind_args_raw_to_typed
+          time_if_debug1 Raw.ident.prove_invert_bind_args_raw_to_typed; fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving fold_invert_bind_args...") in
-          time_if_debug1 Raw.ident.prove_fold_invert_bind_args
+          time_if_debug1 Raw.ident.prove_fold_invert_bind_args; fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving split_ident_to_ident...") in
-          time_if_debug1 Raw.ident.prove_split_ident_to_ident
+          time_if_debug1 Raw.ident.prove_split_ident_to_ident; fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving eq_indep_types_of_eq_types...") in
-          time_if_debug1 ltac:(Raw.ident.prove_eq_indep_types_of_eq_types reflect_base_beq)
+          time_if_debug1 ltac:(Raw.ident.prove_eq_indep_types_of_eq_types reflect_base_beq); fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving fold_eta_ident_cps...") in
-          time_if_debug1 ident.prove_fold_eta_ident_cps
+          time_if_debug1 ident.prove_fold_eta_ident_cps; fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving fold_unify...") in
-          time_if_debug1 ident.prove_fold_unify
+          time_if_debug1 ident.prove_fold_unify; fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving to_typed_of_typed_ident...") in
-          time_if_debug1 ident.prove_to_typed_of_typed_ident
+          time_if_debug1 ident.prove_to_typed_of_typed_ident; fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving eq_invert_bind_args_unknown...") in
-          time_if_debug1 Raw.ident.prove_eq_invert_bind_args_unknown
+          time_if_debug1 Raw.ident.prove_eq_invert_bind_args_unknown; fail_if_goals_remain ()
         | let __ := Tactics.debug1 ltac:(fun _ => idtac "Proving eq_unify_unknown...") in
-          time_if_debug1 ident.prove_eq_unify_unknown ];
-        fail_if_goals_remain ().
+          time_if_debug1 ident.prove_eq_unify_unknown; fail_if_goals_remain () ].
       Ltac prove_package_proofs :=
         idtac;
         lazymatch goal with
