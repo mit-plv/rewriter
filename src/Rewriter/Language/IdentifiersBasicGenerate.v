@@ -10,6 +10,7 @@ Require Import Rewriter.Util.ListUtil Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Util.CPSNotations.
+Require Import Rewriter.Util.Pointed.
 Require Import Rewriter.Util.Bool.
 Require Import Rewriter.Util.Bool.Reflect.
 Require Rewriter.Util.TypeList.
@@ -991,9 +992,19 @@ Module Compilers.
                 : @invert_expr.BuildInvertIdentCorrectT _ _ _ invertIdent buildIdent).
 
       Ltac inhabit := (constructor; fail) + (constructor; inhabit).
+      Ltac inhabit_or_pointed :=
+        once (once (hnf; inhabit)
+              + lazymatch goal with
+                | [ |- ?G ]
+                  => let T := constr:(pointed G) in
+                     change T;
+                     (exact _ || fail 0 "Could not inhabit" G "; consider adding an instance of type" T)
+                end).
+
       Ltac build_base_default base_interp :=
+        let base_interp_head := head base_interp in
         constr:(ltac:(let t := fresh "t" in
-                      intro t; destruct t; hnf; [ once inhabit .. ])
+                      intro t; destruct t; cbv [base_interp_head]; [ inhabit_or_pointed .. ])
                 : @DefaultValue.type.base.DefaultT _ base_interp).
       Ltac make_base_default base_interp := let res := build_base_default base_interp in refine res.
 
