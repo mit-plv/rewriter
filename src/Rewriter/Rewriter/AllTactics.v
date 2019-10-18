@@ -254,6 +254,7 @@ Module Compilers.
         cbv [expr.Interp expr.interp Classes.ident_interp Classes.base GoalType.exprInfo type.interp base.interp base_interp_head ident_interp_head verified_rewriter_package_head ident.literal ident.eagerly].
 
       Ltac Rewrite_for_gen verified_rewriter_package do_lhs do_rhs :=
+        idtac;
         let time_all := fun tac arg => time "Rewrite_for_gen" tac arg in
         let time_etrans := fun tac arg => time "Rewrite_for_gen:etransitivity_for_sides" tac arg in
         let time_generalize := fun tac arg => time "Rewrite_for_gen:generalize_hyps_for_rewriting" tac arg in
