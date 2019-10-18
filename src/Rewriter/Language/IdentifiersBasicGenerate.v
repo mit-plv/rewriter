@@ -676,9 +676,10 @@ Module Compilers.
                    exact ty))).
 
       Ltac build_baseHasNatAndCorrect base_interp :=
-        constr:(ltac:(unshelve eexists; hnf; [ constructor | unshelve econstructor ]; cbv;
-                      [ exact (fun x => x)
-                      | exact (fun x => x)
+        let base_interp_head := head base_interp in
+        constr:(ltac:(unshelve eexists; hnf; [ constructor | unshelve econstructor ]; cbv -[base_interp_head]; cbv [base_interp_head];
+                      [ match goal with |- nat -> nat => exact (fun x => x) end
+                      | match goal with |- nat -> nat => exact (fun x => x) end
                       | exact (fun P x v => v)
                       | exact (fun P x v => v) ])
                 : { hasNat : base.type.BaseTypeHasNatT _ & @base.BaseHasNatCorrectT _ base_interp hasNat }).
