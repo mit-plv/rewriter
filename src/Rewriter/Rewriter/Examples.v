@@ -8,7 +8,7 @@ Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.plugins.RewriterBuild.
 Import ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
 
-Time Make norules := Rewriter For () (with extra idents ()).
+Time Make norules := Rewriter For ().
 
 (** Now we show some simple examples. *)
 
