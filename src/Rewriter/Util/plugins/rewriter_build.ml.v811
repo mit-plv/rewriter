@@ -164,7 +164,7 @@ let make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_l
   let sigma = set_strategy_of_package sigma (-1000) verified_rewriter in
   (sigma, verified_rewriter)
 
-let make_rewriter sigma ~poly ~var_like_idents ~include_interp ~extra (package_name : Names.Id.t) (rules_proofs : EConstr.t) (extra : EConstr.t) =
+let make_rewriter sigma ~poly ~var_like_idents ~include_interp ~extra (package_name : Names.Id.t) (rules_proofs : EConstr.t) =
   let env = Global.env () in
   let (sigma, include_interp) = Evd.fresh_global env sigma (if include_interp then r_true () else r_false ()) in
   let (sigma, rules_proofs) = rewriter_heuristic_process_rules_proofs env sigma ~poly rules_proofs in
