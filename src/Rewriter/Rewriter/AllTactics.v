@@ -223,7 +223,7 @@ Module Compilers.
         let time_split := fun tac arg => time "prove_Wf_with:split" tac arg in
         let time_reflexivity := fun tac arg => time "prove_Wf_with:reflexivity" tac arg in
         time_if_perf3 time_refine ltac:(fun _ => refine (@prove_Wf verified_rewriter_package _ _ _)) ();
-        time_if_perf3 time_vm_compute ltac:(fun _ => vm_compute) ();
+        time_if_perf3 time_vm_compute ltac:(fun _ => rewrite_default_red_tactic) ();
         time_if_perf3 time_split ltac:(fun _ => split) ();
         time_if_perf3 time_reflexivity ltac:(fun _ => reflexivity) ().
 
@@ -241,9 +241,9 @@ Module Compilers.
             => time_if_perf2
                  time_vm_unif
                  ltac:(fun _ =>
-                         let RHS' := (eval vm_compute in RHS) in
+                         let RHS' := rewrite_default_eval_red RHS in
                          unify ev RHS') ();
-               time_if_perf3 time_vm_cast_no_check ltac:(fun _ => vm_cast_no_check (eq_refl RHS)) ()
+               time_if_perf3 time_vm_cast_no_check ltac:(fun _ => rewrite_default_cast_no_check (eq_refl RHS)) ()
           end ].
 
       Ltac do_final_cbv verified_rewriter_package base_interp ident_interp :=

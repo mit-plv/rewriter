@@ -10,6 +10,9 @@ Export InductiveHList.Notations.
 Ltac ident_basic_assembly_debug_level := constr:(1%nat).
 Ltac ident_assembly_debug_level := constr:(1%nat).
 Ltac rewrite_perf_level := constr:(0%nat).
+Ltac rewrite_default_eval_red x := (eval vm_compute in x).
+Ltac rewrite_default_red_tactic := vm_compute.
+Ltac rewrite_default_cast_no_check := vm_cast_no_check.
 
 Module Named.
   Local Set Primitive Projections.
