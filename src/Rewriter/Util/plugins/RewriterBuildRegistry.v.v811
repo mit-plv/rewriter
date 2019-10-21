@@ -7,7 +7,7 @@ Register Basic.GoalType.ident_elim_with_args as rewriter.pattern_ident_elim_with
 Register Basic.GoalType.ident_elim_with_args as rewriter.raw_ident_elim_with_args.type.
 Register ScrapedData.t_with_args as rewriter.scraped_data_with_args.type.
 Register rules_proofsT_with_args as rewriter.rules_proofs_with_args.type.
-Register GallinaIdentList.nil as rewriter.ident_list.nil.
+Register InductiveHList.nil as rewriter.ident_list.nil.
 Register RewriteRules.GoalType.VerifiedRewriter_with_ind_args as rewriter.verified_rewriter_with_args.type.
 
 Ltac make_base_elim_with_args := Basic.PrintBase.make_base_elim.
