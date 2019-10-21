@@ -41,6 +41,7 @@ Require Import Rewriter.Util.HProp.
 Require Import Rewriter.Util.Decidable.
 Require Import Rewriter.Util.Bool.
 Require Import Rewriter.Util.NatUtil.
+Require Rewriter.Util.InductiveHList.
 Require Rewriter.Util.PrimitiveHList.
 Import Coq.Lists.List ListNotations. Local Open Scope list_scope.
 Local Open Scope Z_scope.
@@ -3425,7 +3426,7 @@ Module Compilers.
 
       Definition VerifiedRewriter_with_ind_args
                  (scraped_data : ScrapedData.t)
-                 (var_like_idents : GallinaIdentList.t)
+                 (var_like_idents : InductiveHList.hlist)
                  (base : Type)
                  (ident : type.type (base.type base) -> Type)
                  (raw_ident : Type)

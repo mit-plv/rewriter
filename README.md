@@ -44,8 +44,8 @@ Within each directory, the dependency graphs (again eliding `*Proofs.v` and rela
 
 Within `Language/`:
 ```
-  Pre.v
-    ↑
+  PreCommon.v ←─────────── Pre.v
+    ↑                        ↑
 Language.v ←── IdentifiersBasicLibrary.v ←──── IdentifiersBasicGenerate.v
     ↑                        ↑
     ├────────────────┐       └────────────────────────────┐
@@ -62,9 +62,13 @@ The files contain:
 
 - Inside `Language/`:
 
+  + `PreCommon.v`: A few definitions which are used in writing out
+    rewrite rules and the interpretations of PHOAS identifiers, e.g.,
+    `ident.cast`, `ident.eagerly`, etc.
+
   + `Pre.v`: A few definitions which are used in writing out rewrite
-    rules and the interpretations of PHOAS identifiers, e.g.,
-    `ident.cast`, `ident.eagerly`, `Thunked.list_rect`, etc
+    rules, which are not used in the parameterized rewriter, only in
+    reifying rewrite rules.
 
   + `Language.v`: Defines parts of the PHOAS basic infrastructure
         parameterized over base types and identifiers including:

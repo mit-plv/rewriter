@@ -8,7 +8,7 @@ Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.plugins.RewriterBuild.
 Import ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
 
-Time Make norules := Rewriter For ().
+Time Make norules := Rewriter For () (with extra idents ()).
 
 (** Now we show some simple examples. *)
 
@@ -23,13 +23,13 @@ Qed.
 (** ==== *)
 
 Local Ltac t :=
-  repeat constructor; cbn [snd]; cbv [Pre.ident.eagerly]; intros;
+  repeat constructor; cbn [snd]; cbv [ident.eagerly]; intros;
   try solve [ lia
             | now apply ListUtil.eq_app_list_rect ].
 
 Lemma map_eagerly_rect
   : forall A B f ls, @List.map A B f ls
-                     = (Pre.ident.eagerly (@list_rect) _ _)
+                     = (ident.eagerly (@list_rect) _ _)
                          []
                          (fun x xs map_f_xs => f x :: map_f_xs)
                          ls.
@@ -37,20 +37,20 @@ Proof. t. Qed.
 
 Lemma app_eagerly_rect
   : forall A xs ys, @List.app A xs ys
-                    = (Pre.ident.eagerly (@list_rect) _ _)
+                    = (ident.eagerly (@list_rect) _ _)
                         ys (fun x xs app_xs_ys => x :: app_xs_ys) xs.
 Proof. t. Qed.
 
 Lemma thunked_list_rect_eagerly_list_rect
   : forall A P N C ls,
     @Thunked.list_rect A P N C ls
-    = Pre.ident.eagerly (@Thunked.list_rect) A P N C ls.
+    = ident.eagerly (@Thunked.list_rect) A P N C ls.
 Proof. t. Qed.
 
 Lemma list_rect_eagerly_list_rect
   : forall A P Q N C ls v,
     @list_rect A (fun _ => P -> Q) N C ls v
-    = Pre.ident.eagerly (@list_rect) A (fun _ => P -> Q) N C ls v.
+    = ident.eagerly (@list_rect) A (fun _ => P -> Q) N C ls v.
 Proof. t. Qed.
 
 Lemma flat_map_rect

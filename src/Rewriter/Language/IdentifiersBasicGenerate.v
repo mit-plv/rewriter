@@ -179,13 +179,13 @@ Module Compilers.
              | ?ty
                => let base_type_list_named := lazymatch so_far with {| ScrapedData.base_type_list_named := ?base_type_list_named |} => base_type_list_named end in
                   lazymatch base_type_list_named with
-                  | context[GallinaIdentList.cons {| Named.value := ty |}] (* already present *)
+                  | context[InductiveHList.cons {| Named.value := ty |}] (* already present *)
                     => so_far
                   | _ => lazymatch so_far with
                          | {| ScrapedData.all_ident_named_interped := ?all_ident_named_interped
                               ; ScrapedData.base_type_list_named := ?base_type_list_named |}
                            => constr:({| ScrapedData.all_ident_named_interped := all_ident_named_interped
-                                         ; ScrapedData.base_type_list_named := GallinaIdentList.cons (without_name ty) base_type_list_named |})
+                                         ; ScrapedData.base_type_list_named := InductiveHList.cons (without_name ty) base_type_list_named |})
                          end
                   end
              end
@@ -221,12 +221,12 @@ Module Compilers.
         let try_add term :=
             let all_ident_named_interped := lazymatch so_far with {| ScrapedData.all_ident_named_interped := ?all_ident_named_interped |} => all_ident_named_interped end in
             lazymatch all_ident_named_interped with
-            | context[GallinaIdentList.cons {| Named.value := term |}] (* already present *)
+            | context[InductiveHList.cons {| Named.value := term |}] (* already present *)
               => so_far
             | _ => lazymatch so_far with
                    | {| ScrapedData.all_ident_named_interped := ?all_ident_named_interped
                         ; ScrapedData.base_type_list_named := ?base_type_list_named |}
-                     => constr:({| ScrapedData.all_ident_named_interped := GallinaIdentList.cons (without_name term) all_ident_named_interped
+                     => constr:({| ScrapedData.all_ident_named_interped := InductiveHList.cons (without_name term) all_ident_named_interped
                                    ; ScrapedData.base_type_list_named := base_type_list_named |})
                    end
             end in
@@ -268,7 +268,7 @@ Module Compilers.
          TODO: make this not be the case. *)
       Notation initial_type_list :=
         ([without_name Datatypes.nat
-          ; without_name Datatypes.bool]%gi_list)
+          ; without_name Datatypes.bool]%hlist)
           (only parsing).
       Notation initial_term_list :=
         ([without_name (@ident.literal)
@@ -292,7 +292,7 @@ Module Compilers.
           ; with_name ident_eager_list_rect_arrow (ident.eagerly (@list_rect_arrow_nodep))
           ; with_name ident_List_nth_default (@nth_default)
           ; with_name ident_eager_List_nth_default (ident.eagerly (@nth_default))
-         ]%gi_list)
+         ]%hlist)
           (only parsing).
 
       Ltac scrape_data_of_rulesT rules extra :=
@@ -446,8 +446,8 @@ Module Compilers.
       Ltac build_base_type_list base_type_list_named :=
         let rec iter ls :=
             lazymatch (eval hnf in ls) with
-            | GallinaIdentList.nil => TypeList.nil
-            | GallinaIdentList.cons {| Named.value := ?T |} ?rest
+            | InductiveHList.nil => TypeList.nil
+            | InductiveHList.cons {| Named.value := ?T |} ?rest
               => let rest := iter rest in
                  constr:(TypeList.cons T rest)
             end in
@@ -546,8 +546,8 @@ Module Compilers.
         constr:(forall (base : Set),
                    ltac:(let rec iter ls :=
                              lazymatch (eval hnf in ls) with
-                             | GallinaIdentList.nil => exact base
-                             | @GallinaIdentList.cons _ ?v ?rest
+                             | InductiveHList.nil => exact base
+                             | @InductiveHList.cons _ ?v ?rest
                                => lazymatch v with
                                   | with_name name _ => refine (forall (name : base), _)
                                   | without_name ?T
@@ -594,8 +594,8 @@ Module Compilers.
         constr:(forall (raw_ident : Set),
                    ltac:(let rec iter ls :=
                              lazymatch (eval hnf in ls) with
-                             | GallinaIdentList.nil => exact raw_ident
-                             | @GallinaIdentList.cons _ ?v ?rest
+                             | InductiveHList.nil => exact raw_ident
+                             | @InductiveHList.cons _ ?v ?rest
                                => let name := lazymatch v with
                                               | with_name name _ => fresh "raw_" name
                                               | without_name ?T => fresh "raw_ident_" T
@@ -645,9 +645,9 @@ Module Compilers.
                                        end in
                                 let rec iter ls :=
                                     lazymatch (eval hnf in ls) with
-                                    | GallinaIdentList.nil
+                                    | InductiveHList.nil
                                       => let t := fresh "t" in exact (forall t, ident t)
-                                    | @GallinaIdentList.cons _ ?v ?rest
+                                    | @InductiveHList.cons _ ?v ?rest
                                       => let name
                                              := lazymatch is_pattern with
                                                 | false
@@ -907,7 +907,7 @@ Module Compilers.
                    let idcv := (eval cbv [idc'] in idc') in
                    let idc_head := head idcv in
                    lazymatch (eval hnf in var_like_idents) with
-                   | context[GallinaIdentList.cons idc_head]
+                   | context[InductiveHList.cons idc_head]
                      => refine Datatypes.true
                    | _ => refine Datatypes.false
                    end)
@@ -1048,9 +1048,9 @@ Module Compilers.
                           let base_interp_head := head base_interp in
                           let all_ident_named_interped := (eval hnf in all_ident_named_interped) in
                           intros t idc;
-                          pose (fun default : False => GallinaIdentList.nth (@index_of_ident _ idc) all_ident_named_interped default) as v;
+                          pose (fun default : False => InductiveHList.nth (@index_of_ident _ idc) all_ident_named_interped default) as v;
                           destruct idc;
-                          cbv [GallinaIdentList.nth GallinaIdentList.nth_type] in v;
+                          cbv [InductiveHList.nth InductiveHList.nth_type] in v;
                           let res := lazymatch (eval cbv [v] in v) with
                                      | fun _ => {| Named.value := ?v |} => v
                                      | ?v => constr_fail_with ltac:(fun _ => fail 1 "Invalid interpreted identifier" v)
@@ -1077,16 +1077,16 @@ Module Compilers.
         lazymatch all_idents with
         | Datatypes.nil
           => lazymatch all_ident_named_interped with
-             | GallinaIdentList.nil => GallinaAndReifiedIdentList.nil
+             | InductiveHList.nil => GallinaAndReifiedIdentList.nil
              | _ => constr_fail_with ltac:(fun _ => fail 1 "Invalid remaining interped identifiers" all_ident_named_interped)
              end
         | Datatypes.cons (existT _ _ ?ridc) ?rest_ridc
           => lazymatch all_ident_named_interped with
-             | GallinaIdentList.nil => constr_fail_with ltac:(fun _ => fail 1 "Invalid remaining identifiers" all_idents)
-             | GallinaIdentList.cons {| Named.value := ?vidc |} ?rest_vidc
+             | InductiveHList.nil => constr_fail_with ltac:(fun _ => fail 1 "Invalid remaining identifiers" all_idents)
+             | InductiveHList.cons {| Named.value := ?vidc |} ?rest_vidc
                => let rest := build_all_ident_and_interp rest_ridc rest_vidc in
                   constr:(GallinaAndReifiedIdentList.cons ridc vidc rest)
-             | _ => constr_fail_with ltac:(fun _ => fail 1 "Invalid non-GallinaIdentList" all_ident_named_interped)
+             | _ => constr_fail_with ltac:(fun _ => fail 1 "Invalid non-InductiveHList" all_ident_named_interped)
              end
         | _ => constr_fail_with ltac:(fun _ => fail 1 "Invalid non list of existT identifiers" all_idents)
         end.

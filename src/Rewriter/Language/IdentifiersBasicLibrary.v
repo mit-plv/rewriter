@@ -1,4 +1,4 @@
-Require Import Rewriter.Language.Pre.
+Require Import Rewriter.Language.PreCommon.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.Inversion.
 Require Import Rewriter.Util.Bool.Reflect.
@@ -30,7 +30,7 @@ Module Compilers.
           ; ident_is_var_like : forall t (idc : Classes.ident t), Datatypes.bool
         }.
 
-      Definition package_with_args (scraped_data : ScrapedData.t) (var_like_idents : GallinaIdentList.t) (base : Type) (ident : type.type (base.type base) -> Type)
+      Definition package_with_args (scraped_data : ScrapedData.t) (var_like_idents : InductiveHList.hlist) (base : Type) (ident : type.type (base.type base) -> Type)
         := package.
 
       Definition base_elim_with_args (scraped_data : ScrapedData.t) := Type.

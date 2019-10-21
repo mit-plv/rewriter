@@ -4,7 +4,7 @@ Require Import Coq.Bool.Bool.
 Require Import Coq.Lists.List.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Relations.Relation_Definitions.
-Require Import Rewriter.Language.Pre.
+Require Import Rewriter.Language.PreCommon.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Util.Option.
@@ -21,13 +21,13 @@ Require Import Rewriter.Util.Tactics.RunTacticAsConstr.
 Require Import Rewriter.Util.Tactics.DebugPrint.
 Require Import Rewriter.Util.Tactics.ConstrFail.
 Import Coq.Lists.List ListNotations.
-Export Language.Pre.
+Export Language.PreCommon.
 
 Local Set Primitive Projections.
 
 Import EqNotations.
 Module Compilers.
-  Export Language.Pre.
+  Export Language.PreCommon.
   Local Set Boolean Equality Schemes.
   Local Set Decidable Equality Schemes.
   Module Reify.

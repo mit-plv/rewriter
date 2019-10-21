@@ -76,10 +76,11 @@ let rules_ty_of_rules_proofs env sigma rules_proofs =
   | _ -> CErrors.user_err Pp.(str "Invalid type for rules_proofs: " ++ Printer.pr_econstr_env env sigma rules_proofs_ty)
 
 
-let rewriter_scrape_data env sigma ~poly (rules_proofs : EConstr.t) =
+let rewriter_scrape_data env sigma ~poly (rules_proofs : EConstr.t) (extra : EConstr.t) =
   let (sigma, scraped_data_with_args) = Evd.fresh_global env sigma (r_scraped_data_with_args ()) in
   let rules_ty = rules_ty_of_rules_proofs env sigma rules_proofs in
-  let scraped_data_ty = mkApp (scraped_data_with_args, [|rules_ty; rules_proofs|]) in
+  let (sigma, extra_ty) = Typing.type_of env sigma extra in
+  let scraped_data_ty = mkApp (scraped_data_with_args, [|rules_ty; rules_proofs; extra_ty; extra|]) in
   let uctx = Evd.evar_universe_context sigma in
   let (scraped_data, _uses_unsafe_tactic, uctx) =
     Pfedit.build_by_tactic env uctx ~poly scraped_data_ty scraped_data_with_args_tac in
@@ -147,14 +148,13 @@ let set_strategy_of_package sigma level verified_rewriter_package =
   | _ ->
     CErrors.user_err Pp.(str "Invalid hnf of exprInfo: " ++ Printer.pr_econstr_env env sigma exprInfo)
 
-let make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_like_idents base ident raw_ident pattern_ident include_interp rules_proofs extra =
+let make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_like_idents base ident raw_ident pattern_ident include_interp rules_proofs =
   let env = Global.env () in
   let (sigma, verified_rewriter_with_args) = Evd.fresh_global env sigma (r_verified_rewriter_with_args ()) in
 
   let (sigma, verified_rewriter_with_args) = Evd.fresh_global env sigma (r_verified_rewriter_with_args ()) in
   let rules_ty = rules_ty_of_rules_proofs env sigma rules_proofs in
-  let (sigma, extra_ty) = Typing.type_of env sigma extra in
-  let verified_rewriter_ty = mkApp (verified_rewriter_with_args, [|scraped_data; var_like_idents; base; ident; raw_ident; pattern_ident; include_interp; rules_ty; rules_proofs; extra_ty; extra|]) in
+  let verified_rewriter_ty = mkApp (verified_rewriter_with_args, [|scraped_data; var_like_idents; base; ident; raw_ident; pattern_ident; include_interp; rules_ty; rules_proofs|]) in
   (* force a typecheck of the application, propogate universe constraints *)
   let (sigma, _) = Typing.type_of env sigma verified_rewriter_ty in
   (* add universe constraints to the global env *)
@@ -168,9 +168,9 @@ let make_rewriter sigma ~poly ~var_like_idents ~include_interp ~extra (package_n
   let env = Global.env () in
   let (sigma, include_interp) = Evd.fresh_global env sigma (if include_interp then r_true () else r_false ()) in
   let (sigma, rules_proofs) = rewriter_heuristic_process_rules_proofs env sigma ~poly rules_proofs in
-  let (sigma, scraped_data) = rewriter_scrape_data env sigma ~poly rules_proofs in
+  let (sigma, scraped_data) = rewriter_scrape_data env sigma ~poly rules_proofs extra in
   let (sigma, (base, ident, raw_ident, pattern_ident)) = rewriter_emit_inductives sigma ~poly scraped_data None None None None in
-  let (sigma, rewriter) = make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_like_idents base ident raw_ident pattern_ident include_interp rules_proofs extra in
+  let (sigma, rewriter) = make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_like_idents base ident raw_ident pattern_ident include_interp rules_proofs in
   (sigma, rewriter)
 
 let vernac_rewriter_emit_inductives ~poly (scraped_data : Constrexpr.constr_expr) (base : Names.Id.t) (ident : Names.Id.t) (raw_ident : Names.Id.t) (pattern_ident : Names.Id.t) =

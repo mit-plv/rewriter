@@ -8,6 +8,7 @@ Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.PrimitiveSigma.
 Require Import Rewriter.Util.Bool.Reflect.
 Require Import Rewriter.Util.Notations.
+Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.IdentifiersLibrary.
 Require Import Rewriter.Language.IdentifiersBasicLibrary.
