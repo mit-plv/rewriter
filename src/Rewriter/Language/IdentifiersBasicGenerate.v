@@ -738,7 +738,12 @@ Module Compilers.
                    intro t; destruct t;
                    let h := head base_interp in
                    cbv [h];
-                   refine ((fun T (beq : T -> T -> Datatypes.bool) (_ : reflect_rel (@eq T) beq) => beq) _ _ _))
+                   refine ((fun T (beq : T -> T -> Datatypes.bool) (_ : reflect_rel (@eq T) beq) => beq) _ _ _);
+                   lazymatch goal with
+                   | [ |- reflect_rel (@eq ?T) _ ]
+                     => let exp := uconstr:(reflect_rel (@eq T) ?[beq]) in
+                        fail 0 "Could not find a typeclass instance for boolean equality of" T ":" exp
+                   end)
              : forall t, base_interp t -> base_interp t -> Datatypes.bool)).
       Ltac make_base_interp_beq base_interp := let v := build_base_interp_beq base_interp in refine v.
 
