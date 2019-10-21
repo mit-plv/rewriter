@@ -295,7 +295,7 @@ Module Compilers.
          ]%gi_list)
           (only parsing).
 
-      Ltac scrape_data_of_rulesT rules :=
+      Ltac scrape_data_of_rulesT rules extra :=
         let rec iter so_far ls :=
             lazymatch (eval hnf in ls) with
             | Datatypes.cons (_, ?T) ?rest
@@ -304,27 +304,29 @@ Module Compilers.
             | Datatypes.nil => so_far
             | ?term => constr_fail_with ltac:(fun _ => fail 1 "Invalid non-list-of-pair rewrite rules" term)
             end in
-        iter {| ScrapedData.all_ident_named_interped := initial_term_list
-                ; ScrapedData.base_type_list_named := initial_type_list |}
-             rules.
+        let so_far :=
+            iter {| ScrapedData.all_ident_named_interped := initial_term_list
+                    ; ScrapedData.base_type_list_named := initial_type_list |}
+                 rules in
+        scrape_data_of_term so_far extra.
 
-      Ltac build_scrape_data rules_proofs :=
+      Ltac build_scrape_data rules_proofs extra :=
         let expected_type := uconstr:(PrimitiveHList.hlist (@snd bool Prop) ?[rewrite_rules]) in
         lazymatch (type of rules_proofs) with
         | PrimitiveHList.hlist _ ?rewrite_rulesT
-          => scrape_data_of_rulesT rewrite_rulesT
+          => scrape_data_of_rulesT rewrite_rulesT extra
         | ?T => constr_fail_with ltac:(fun _ => fail 1 "Unexpected type" T "of rewrite rules proofs" rules_proofs "; expected" expected_type)
         end.
-      Ltac make_scrape_data_via rules_proofs :=
-        let res := build_scrape_data rules_proofs in refine res.
+      Ltac make_scrape_data_via rules_proofs extra :=
+        let res := build_scrape_data rules_proofs extra in refine res.
       Ltac make_scrape_data :=
         idtac;
         lazymatch goal with
-        | [ |- ScrapedData.t_with_args ?rules_proofs ]
+        | [ |- ScrapedData.t_with_args ?rules_proofs ?extra ]
           => cbv [ScrapedData.t_with_args];
-             make_scrape_data_via rules_proofs
+             make_scrape_data_via rules_proofs extra
         | [ |- ?G ]
-          => let exp := uconstr:(ScrapedData.t_with_args ?[rules_proofs]) in
+          => let exp := uconstr:(ScrapedData.t_with_args ?[rules_proofs] ?[extra]) in
              fail 0 "Unexpected goal:" G "(expected" exp ")"
         end.
     End ScrapeTactics.

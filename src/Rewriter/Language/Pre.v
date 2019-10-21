@@ -61,7 +61,7 @@ Module ScrapedData.
       ; all_ident_named_interped : GallinaIdentList.t
     }.
 
-  Definition t_with_args {rewrite_rulesT} (rules_proofs : PrimitiveHList.hlist (@snd bool Prop) rewrite_rulesT) := t.
+  Definition t_with_args {rewrite_rulesT} (rules_proofs : PrimitiveHList.hlist (@snd bool Prop) rewrite_rulesT) {extraT} (extra : extraT) := t.
   Existing Class t_with_args.
 End ScrapedData.
 
