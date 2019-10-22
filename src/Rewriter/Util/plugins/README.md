@@ -1,8 +1,11 @@
-This directory contains the plugin portion of the rewriter.  As Ltac
-cannot emit `Inductive` declarations, nor emit `Global Strategy`
-commands that persist after the proof, we must code these parts in
-OCaml.  Additionally, for convenience of use, we also script the
-sequencing of Ltac commands with these two parts.
+This directory contains the plugin portion of the rewriter.  There are
+some examples in
+[`src/Rewriter/Rewriter/Examples.v`](../../Rewriter/Examples.v).
+
+As Ltac cannot emit `Inductive` declarations, nor emit `Global
+Strategy` commands that persist after the proof, we must code these
+parts in OCaml.  Additionally, for convenience of use, we also script
+the sequencing of Ltac commands with these two parts.
 
 There are five steps to buidling the rewriter package:
 
