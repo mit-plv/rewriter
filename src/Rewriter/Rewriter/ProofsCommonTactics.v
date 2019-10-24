@@ -148,6 +148,7 @@ Module Compilers.
                        | [ |- List.Forall2 _ ?x ?x ] => rewrite Forall2_Forall; cbv [Proper]
                        | [ |- List.Forall2 _ (List.map _ _) (List.map _ _) ] => rewrite Forall2_map_map_iff
                        | [ |- List.Forall _ (seq _ _) ] => rewrite Forall_seq
+                       | [ |- List.Forall _ _ ] => rewrite Forall_forall
                        end
                      | progress intros
                      | progress fin_wf ].
@@ -166,11 +167,12 @@ Module Compilers.
         Export Settings.
 
         Ltac prove_good _ :=
-          let do_time := Make.time_if_debug1 in (* eval the level early *)
-          let exprExtraInfo := lazymatch goal with |- context[@Wf_GoalT ?exprInfo ?exprExtraInfo ?pkg] => exprExtraInfo end in
-          do_time start_good;
-          do_time ltac:(fun _ => handle_reified_rewrite_rules exprExtraInfo; handle_extra_nbe exprExtraInfo; handle_extra_arith_rules);
-          warn_if_goals_remain ().
+          once
+            (let do_time := Make.time_if_debug1 in (* eval the level early *)
+             let exprExtraInfo := lazymatch goal with |- context[@Wf_GoalT ?exprInfo ?exprExtraInfo ?pkg] => exprExtraInfo end in
+             do_time start_good;
+             do_time ltac:(fun _ => handle_reified_rewrite_rules exprExtraInfo; handle_extra_nbe exprExtraInfo; handle_extra_arith_rules);
+             warn_if_goals_remain ()).
       End Tactic.
     End WfTactics.
 
@@ -514,26 +516,27 @@ Module Compilers.
 
       Module Export Tactic.
         Ltac prove_interp_good _ :=
-          let do_time := Make.time_if_debug1 in (* eval the level early *)
-          let exprInfo := lazymatch goal with |- context[@Interp_GoalT ?exprInfo ?exprExtraInfo ?pkg] => (eval hnf in exprInfo) end in
-          let exprExtraInfo := lazymatch goal with |- context[@Interp_GoalT ?exprInfo ?exprExtraInfo ?pkg] => (eval hnf in exprExtraInfo) end in
-          lazymatch constr:((exprInfo, exprExtraInfo)) with
-          | ({| Classes.base_interp := ?base_interp
-                ; Classes.ident_interp := ?ident_interp
-             |}
-             , {| Classes.ident_interp_Proper := ?ident_interp_Proper
-               |})
-            => let base_interp_head := head base_interp in
-               let ident_interp_head := head ident_interp in
-               do_time start_interp_good;
-               do_time
-                 ltac:(
-                 fun _
-                 => preprocess base_interp_head;
-                    handle_extra_nbe exprExtraInfo ident_interp_head ident_interp_Proper;
-                    handle_reified_rewrite_rules_interp exprInfo exprExtraInfo base_interp_head ident_interp_head ident_interp_Proper)
-          end;
-          warn_if_goals_remain ().
+          once
+            (let do_time := Make.time_if_debug1 in (* eval the level early *)
+             let exprInfo := lazymatch goal with |- context[@Interp_GoalT ?exprInfo ?exprExtraInfo ?pkg] => (eval hnf in exprInfo) end in
+             let exprExtraInfo := lazymatch goal with |- context[@Interp_GoalT ?exprInfo ?exprExtraInfo ?pkg] => (eval hnf in exprExtraInfo) end in
+             lazymatch constr:((exprInfo, exprExtraInfo)) with
+             | ({| Classes.base_interp := ?base_interp
+                   ; Classes.ident_interp := ?ident_interp
+                |}
+                , {| Classes.ident_interp_Proper := ?ident_interp_Proper
+                  |})
+               => let base_interp_head := head base_interp in
+                  let ident_interp_head := head ident_interp in
+                  do_time start_interp_good;
+                  do_time
+                    ltac:(
+                    fun _
+                    => preprocess base_interp_head;
+                       handle_extra_nbe exprExtraInfo ident_interp_head ident_interp_Proper;
+                       handle_reified_rewrite_rules_interp exprInfo exprExtraInfo base_interp_head ident_interp_head ident_interp_Proper)
+             end;
+             warn_if_goals_remain ()).
       End Tactic.
     End InterpTactics.
   End RewriteRules.
