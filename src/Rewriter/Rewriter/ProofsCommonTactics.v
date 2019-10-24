@@ -244,13 +244,13 @@ Module Compilers.
                   apply H'; clear H'
              end;
              [ try assumption;
-               cbn [PrimitiveHList.hlist snd];
-               repeat lazymatch goal with
-                      | [ |- PrimitiveProd.Primitive.prod _ _ ] => constructor
-                      | [ |- forall A x, x = x ] => reflexivity
-                      | [ |- Datatypes.unit ] => constructor
-                      end;
-               try assumption
+               cbn [PrimitiveHList.hlist snd] in *;
+               repeat first [ assumption
+                            | lazymatch goal with
+                              | [ |- PrimitiveProd.Primitive.prod _ _ ] => constructor
+                              | [ |- forall A x, x = x ] => reflexivity
+                              end ];
+               warn_if_goals_remain ()
              | try match goal with
                    | [ H : PrimitiveHList.hlist _ _ |- _ ] => clear H
                    end;
