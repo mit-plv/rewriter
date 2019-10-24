@@ -246,6 +246,7 @@ Module Compilers.
                repeat lazymatch goal with
                       | [ |- PrimitiveProd.Primitive.prod _ _ ] => constructor
                       | [ |- forall A x, x = x ] => reflexivity
+                      | [ |- Datatypes.unit ] => constructor
                       end;
                try assumption
              | try match goal with
