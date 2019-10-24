@@ -308,7 +308,10 @@ Module Compilers.
             iter {| ScrapedData.all_ident_named_interped := initial_term_list
                     ; ScrapedData.base_type_list_named := initial_type_list |}
                  rules in
-        scrape_data_of_term so_far extra.
+        let extraT := type of extra in
+        let so_far := scrape_data_of_type so_far extraT in
+        let so_far := scrape_data_of_term so_far extra in
+        so_far.
 
       Ltac build_scrape_data rules_proofs extra :=
         let expected_type := uconstr:(PrimitiveHList.hlist (@snd bool Prop) ?[rewrite_rules]) in
