@@ -75,7 +75,12 @@ Module Compilers.
         Local Notation expr_maybe_do_again should_do_again
           := (@expr.expr base_type ident (if should_do_again then value else var)).
 
-        Fixpoint pattern_of_expr (var' := fun _ => positive) evm (invalid : forall t, @expr.expr base_type ident var' t -> { p : pattern (pattern.type.relax t) & @unification_resultT' var' _ p evm })
+        Inductive pattern_of_expr_error_messages {t} :=
+        | ILLEGAL_ABS_ON_LHS (e : @expr.expr base_type ident (fun _ => positive) t)
+        | ILLEGAL_LET_IN_ON_LHS (e : @expr.expr base_type ident (fun _ => positive) t)
+        .
+
+        Fixpoint pattern_of_expr (var' := fun _ => positive) evm (invalid : forall t, @pattern_of_expr_error_messages t -> { p : pattern (pattern.type.relax t) & @unification_resultT' var' _ p evm })
                  {t} (e : @expr.expr base_type ident var' t)
           : { p : pattern (pattern.type.relax t) & @unification_resultT' var' _ p evm }
           := match e in expr.expr t return { p : pattern (pattern.type.relax t) & @unification_resultT' var' _ p evm } with
@@ -90,8 +95,9 @@ Module Compilers.
                   existT _ (pattern.App fp xp)
                          (fv, xv)
              | expr.Abs _ _ _ as e
+               => invalid _ (ILLEGAL_ABS_ON_LHS e)
              | expr.LetIn _ _ _ _ as e
-               => invalid _ e
+               => invalid _ (ILLEGAL_LET_IN_ON_LHS e)
              end.
 
         Fixpoint pair'_unification_resultT' {A evm t p}
@@ -106,8 +112,12 @@ Module Compilers.
                      (m, l)
              end.
 
+        Inductive expr_pos_to_expr_value_error_message :=
+        | MISSING_VAR (_ : positive * type * PositiveMap.t { t : _ & value t })
+        .
+
         Fixpoint expr_pos_to_expr_value
-                 (invalid : forall t, positive * type * PositiveMap.t { t : _ & value t } -> @expr.expr base_type ident value t)
+                 (invalid : forall t, expr_pos_to_expr_value_error_message -> @expr.expr base_type ident value t)
                  {t} (e : @expr.expr base_type ident (fun _ => positive) t) (m : PositiveMap.t { t : _ & value t }) (cur_i : positive)
           : @expr.expr base_type ident value t
           := match e in expr.expr t return expr.expr t with
@@ -120,7 +130,7 @@ Module Compilers.
                           (fun tv => type.try_transport value _ t (projT2 tv))
                           (PositiveMap.find v m) with
                   | Some (Some res) => expr.Var res
-                  | Some None | None => invalid _ (v, t, m)
+                  | Some None | None => invalid _ (MISSING_VAR (v, t, m))
                   end
              | expr.Abs s d f
                => expr.Abs (fun v => @expr_pos_to_expr_value invalid _ (f cur_i) (PositiveMap.add cur_i (existT value _ v) m) (Pos.succ cur_i))
@@ -134,7 +144,7 @@ Module Compilers.
         | TYPE_IS_NOT_BASE (p : positive) (m : PositiveMap.t { t : _ & value t }) (t : type).
 
         Definition lookup_expr_gets_inlined
-                   (invalid : forall A B, A -> B)
+                   (invalid : lookup_gets_inlined_error_messages -> bool)
                    (gets_inlined : forall t, value (type.base t) -> bool)
                    (m : PositiveMap.t { t : _ & value t })
                    (p : positive)
@@ -144,9 +154,9 @@ Module Compilers.
               | Some (existT t e)
                 => match t return value t -> _ with
                    | type.base t => gets_inlined t
-                   | _ => invalid _ _ (TYPE_IS_NOT_BASE p m t)
+                   | _ => fun _ => invalid (TYPE_IS_NOT_BASE p m t)
                    end e
-              | None => invalid _ _ (NO_SUCH_EXPRESSION_TO_CHECK p m)
+              | None => invalid (NO_SUCH_EXPRESSION_TO_CHECK p m)
               end.
 
         Definition expr_to_pattern_and_replacement
@@ -168,7 +178,7 @@ Module Compilers.
                   (lam_unification_resultT'
                      (fun unif_data_new
                       => let '(value_map, side_conditions) := pair'_unification_resultT' unif_data_lhs unif_data_new (PositiveMap.empty _, side_conditions) in
-                         let side_conditions := side_conditions (lookup_expr_gets_inlined invalid gets_inlined value_map) in
+                         let side_conditions := side_conditions (lookup_expr_gets_inlined (invalid _ _) gets_inlined value_map) in
                          let start_i := Pos.succ (PositiveMap.fold (fun k _ max => Pos.max k max) value_map 1%positive) in
                          let replacement := expr_pos_to_expr_value (fun _ => invalid _ _) rhs value_map start_i in
                          let replacement := expr_value_to_rewrite_rule_replacement should_do_again replacement in
@@ -285,6 +295,28 @@ Module Compilers.
         let pat := preadjust_pattern_type_variables pat in
         adjust_pattern_type_variables' pat.
 
+      Ltac walk_term_under_binders_fail_invalid invalid term fv :=
+        lazymatch fv with
+        | context[invalid _ _ ?x]
+          => fail 0 "Invalid (in" term "): Invalid:" x
+        | context[invalid]
+          => lazymatch fv with
+             | ?f ?x => walk_term_under_binders_fail_invalid invalid term f;
+                        walk_term_under_binders_fail_invalid invalid term x
+             | fun (x : ?T) => @?f x
+               => let __ :=
+                      constr:(
+                        fun x : T
+                        => ltac:(let f := (eval cbv beta in (f x)) in
+                                 walk_term_under_binders_fail_invalid invalid term f;
+                                 exact I)) in
+                  idtac
+             | context[invalid _ ?x]
+               => fail 0 "Invalid (second arg) (in" term "): Invalid:" x
+             end
+        | _ => idtac
+        end.
+
       Ltac strip_invalid_or_fail term :=
         lazymatch term with
         | fun _ => ?f => f
@@ -293,12 +325,9 @@ Module Compilers.
              constr:(fun invalid : T
                      => match f return _ with
                         | f'
-                          => ltac:(lazymatch (eval cbv [f'] in f') with
-                                   | context[invalid _ _ ?x]
-                                     => fail 0 "Invalid:" x
-                                   | context[invalid _ ?x]
-                                     => fail 0 "Invalid:" x
-                                   end)
+                          => ltac:(let f := (eval cbv [f'] in f') in
+                                   walk_term_under_binders_fail_invalid invalid term f;
+                                   fail 0 "Invalid (unknown subterm):" term)
                         end)
         end.
 
