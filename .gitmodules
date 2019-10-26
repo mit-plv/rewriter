@@ -1,3 +1,6 @@
 [submodule "etc/coq-scripts"]
 	path = etc/coq-scripts
 	url = https://github.com/JasonGross/coq-scripts.git
+[submodule "etc/timeout"]
+	path = etc/timeout
+	url = https://github.com/pshved/timeout.git
