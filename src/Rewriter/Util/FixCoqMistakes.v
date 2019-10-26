@@ -29,6 +29,10 @@ Definition f_equal2 {A1 A2 B} (f : A1 -> A2 -> B) {x1 y1 : A1} {x2 y2 : A2} (H :
          end
      end.
 
+(** Implement the fix in https://github.com/coq/coq/pull/10966, even though it doesn't land until 8.11 *)
+Ltac Coq.Init.Tactics.assert_fails tac ::=
+  tryif (cut True; [ intros _; once tac | ]) then fail 0 tac "succeeds" else idtac.
+
 (** Work around BZ#5341, https://coq.inria.fr/bugs/show_bug.cgi?id=5341, [subst] fails with bogus error message about universe polymorphism *)
 Local Theorem create_internal_eq_rew_r_dep :  forall A (a : A) (x : A) (e : a = x),
     e = e -> True.
