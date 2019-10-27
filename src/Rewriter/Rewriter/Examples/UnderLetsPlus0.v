@@ -64,7 +64,7 @@ Ltac test_from_to_gen do_verify test_tac min max step :=
   let min := (eval vm_compute in min) in
   idtac "Params: n=" min;
   assert_succeeds_preserve_error (once (assert (goal min); [ start (); test_tac do_verify | ]));
-  let finished := (eval vm_compute in ((min + step) >? max)%nat) in
+  let finished := (eval vm_compute in (max <? (min + step))%nat) in
   lazymatch finished with
   | true => idtac
   | false => test_from_to_gen test_tac (min + step)%nat max

@@ -63,10 +63,10 @@ Module LiftLetsMap.
     := let '(n_count, m_count)
            := match test_tac_n, s with
               | _, SuperFast => (5, 5)
-              | _, Fast => (5, 5)
-              | _, Medium => (5, 5)
-              | _, Slow => (5, 5)
-              | _, VerySlow => (5, 5)
+              | _, Fast => (10, 10)
+              | _, Medium => (20, 20)
+              | _, Slow => (50, 50)
+              | _, VerySlow => (100, 100)
               end in
        flat_map (fun n => map (fun m => (n, m)) (seq 1 m_count)) (seq 1 n_count).
   Definition args_of_size (test_tac_n : nat) (s : size)
@@ -98,10 +98,10 @@ Module Plus0Tree.
     := let '(n_count, m_count)
            := match test_tac_n, s with
               | _, SuperFast => (12, 2)
-              | _, Fast => (5, 5)
-              | _, Medium => (5, 5)
-              | _, Slow => (5, 5)
-              | _, VerySlow => (5, 5)
+              | _, Fast => (20, 10)
+              | _, Medium => (50, 50)
+              | _, Slow => (100, 100)
+              | _, VerySlow => (1000, 1000)
               end in
        flat_map (fun n => map (fun m => (n, m)) (seq 1 m_count)) (seq 1 n_count).
   Definition args_of_size (test_tac_n : nat) (s : size)
@@ -173,7 +173,7 @@ Module UnderLetsPlus0.
        | _, Medium => [(100, 500, 1)]
        | _, Slow => [(500, 1000, 1)]
        | _, VerySlow => [(1000, 5000, 1)]
-       end%Z.
+       end.
 
   Ltac run test_tac_n size :=
     let test_from_to_tac := test_for_of_size size test_from_to_safe test_from_to in
