@@ -1,0 +1,40 @@
+Params: n= 1 ,m= 1
+Tactic call setoid_rewrite ran for 0.053 secs (0.052u,0.s) (success)
+Params: n= 1 ,m= 2
+Tactic call setoid_rewrite ran for 0.029 secs (0.028u,0.s) (success)
+Params: n= 2 ,m= 1
+Tactic call setoid_rewrite ran for 0.021 secs (0.024u,0.s) (success)
+Params: n= 1 ,m= 3
+Tactic call setoid_rewrite ran for 0.147 secs (0.147u,0.s) (success)
+Params: n= 3 ,m= 1
+Tactic call setoid_rewrite ran for 0.049 secs (0.048u,0.s) (success)
+Params: n= 1 ,m= 4
+Tactic call setoid_rewrite ran for 0.15 secs (0.151u,0.s) (success)
+Params: n= 2 ,m= 2
+Tactic call setoid_rewrite ran for 0.073 secs (0.072u,0.s) (success)
+Params: n= 4 ,m= 1
+Tactic call setoid_rewrite ran for 0.093 secs (0.096u,0.s) (success)
+Params: n= 5 ,m= 1
+Tactic call setoid_rewrite ran for 0.17 secs (0.171u,0.s) (success)
+Params: n= 2 ,m= 3
+Tactic call setoid_rewrite ran for 0.196 secs (0.196u,0.s) (success)
+Params: n= 3 ,m= 2
+Tactic call setoid_rewrite ran for 0.174 secs (0.172u,0.s) (success)
+Params: n= 2 ,m= 4
+Tactic call setoid_rewrite ran for 0.416 secs (0.415u,0.s) (success)
+Params: n= 4 ,m= 2
+Tactic call setoid_rewrite ran for 0.356 secs (0.351u,0.004s) (success)
+Params: n= 3 ,m= 3
+Tactic call setoid_rewrite ran for 0.455 secs (0.455u,0.s) (success)
+Params: n= 5 ,m= 2
+Tactic call setoid_rewrite ran for 0.663 secs (0.66u,0.004s) (success)
+Params: n= 3 ,m= 4
+Tactic call setoid_rewrite ran for 0.981 secs (0.976u,0.004s) (success)
+Params: n= 4 ,m= 3
+Tactic call setoid_rewrite ran for 0.906 secs (0.903u,0.s) (success)
+Params: n= 5 ,m= 3
+Tactic call setoid_rewrite ran for 1.674 secs (1.676u,0.s) (success)
+Params: n= 4 ,m= 4
+Tactic call setoid_rewrite ran for 1.94 secs (1.939u,0.s) (success)
+Params: n= 5 ,m= 4
+Tactic call setoid_rewrite ran for 3.515 secs (3.507u,0.004s) (success)

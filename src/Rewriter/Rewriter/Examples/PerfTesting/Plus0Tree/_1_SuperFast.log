@@ -1,0 +1,72 @@
+Params: n= 1 ,m= 1
+Tactic call cbv;rewrite! ran for 0. secs (0.u,0.s) (success)
+Params: n= 1 ,m= 2
+Tactic call cbv;rewrite! ran for 0. secs (0.u,0.s) (success)
+Params: n= 1 ,m= 3
+Tactic call cbv;rewrite! ran for 0.001 secs (0.004u,0.s) (success)
+Params: n= 2 ,m= 1
+Tactic call cbv;rewrite! ran for 0.047 secs (0.048u,0.s) (success)
+Params: n= 2 ,m= 2
+Tactic call cbv;rewrite! ran for 0.001 secs (0.u,0.s) (success)
+Params: n= 2 ,m= 3
+Tactic call cbv;rewrite! ran for 0.002 secs (0.004u,0.s) (success)
+Params: n= 3 ,m= 1
+Tactic call cbv;rewrite! ran for 0.001 secs (0.u,0.s) (success)
+Params: n= 3 ,m= 2
+Tactic call cbv;rewrite! ran for 0.002 secs (0.004u,0.s) (success)
+Params: n= 3 ,m= 3
+Tactic call cbv;rewrite! ran for 0.004 secs (0.004u,0.s) (success)
+Params: n= 4 ,m= 1
+Tactic call cbv;rewrite! ran for 0.002 secs (0.004u,0.s) (success)
+Params: n= 4 ,m= 2
+Tactic call cbv;rewrite! ran for 0.004 secs (0.004u,0.s) (success)
+Params: n= 4 ,m= 3
+Tactic call cbv;rewrite! ran for 0.008 secs (0.012u,0.s) (success)
+Params: n= 5 ,m= 1
+Tactic call cbv;rewrite! ran for 0.004 secs (0.004u,0.s) (success)
+Params: n= 5 ,m= 2
+Tactic call cbv;rewrite! ran for 0.009 secs (0.008u,0.s) (success)
+Params: n= 5 ,m= 3
+Tactic call cbv;rewrite! ran for 0.099 secs (0.095u,0.004s) (success)
+Params: n= 6 ,m= 1
+Tactic call cbv;rewrite! ran for 0.007 secs (0.008u,0.s) (success)
+Params: n= 6 ,m= 2
+Tactic call cbv;rewrite! ran for 0.021 secs (0.024u,0.s) (success)
+Params: n= 6 ,m= 3
+Tactic call cbv;rewrite! ran for 0.036 secs (0.036u,0.s) (success)
+Params: n= 7 ,m= 1
+Tactic call cbv;rewrite! ran for 0.015 secs (0.016u,0.s) (success)
+Params: n= 7 ,m= 2
+Tactic call cbv;rewrite! ran for 0.042 secs (0.044u,0.s) (success)
+Params: n= 7 ,m= 3
+Tactic call cbv;rewrite! ran for 0.075 secs (0.075u,0.s) (success)
+Params: n= 8 ,m= 1
+Tactic call cbv;rewrite! ran for 0.032 secs (0.032u,0.s) (success)
+Params: n= 8 ,m= 2
+Tactic call cbv;rewrite! ran for 0.088 secs (0.088u,0.s) (success)
+Params: n= 8 ,m= 3
+Tactic call cbv;rewrite! ran for 0.18 secs (0.179u,0.004s) (success)
+Params: n= 9 ,m= 1
+Tactic call cbv;rewrite! ran for 0.072 secs (0.072u,0.s) (success)
+Params: n= 9 ,m= 2
+Tactic call cbv;rewrite! ran for 0.206 secs (0.203u,0.003s) (success)
+Params: n= 9 ,m= 3
+Tactic call cbv;rewrite! ran for 0.404 secs (0.403u,0.s) (success)
+Params: n= 10 ,m= 1
+Tactic call cbv;rewrite! ran for 0.164 secs (0.164u,0.s) (success)
+Params: n= 10 ,m= 2
+Tactic call cbv;rewrite! ran for 0.501 secs (0.496u,0.008s) (success)
+Params: n= 10 ,m= 3
+Tactic call cbv;rewrite! ran for 1.045 secs (1.035u,0.008s) (success)
+Params: n= 11 ,m= 1
+Tactic call cbv;rewrite! ran for 0.439 secs (0.432u,0.008s) (success)
+Params: n= 11 ,m= 2
+Tactic call cbv;rewrite! ran for 1.307 secs (1.299u,0.007s) (success)
+Params: n= 11 ,m= 3
+Tactic call cbv;rewrite! ran for 2.559 secs (2.544u,0.012s) (success)
+Params: n= 12 ,m= 1
+Tactic call cbv;rewrite! ran for 1.02 secs (1.016u,0.004s) (success)
+Params: n= 12 ,m= 2
+Tactic call cbv;rewrite! ran for 2.857 secs (2.852u,0.004s) (success)
+Params: n= 12 ,m= 3
+Tactic call cbv;rewrite! ran for 5.414 secs (5.407u,0.004s) (success)

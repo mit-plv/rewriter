@@ -1,0 +1,40 @@
+Params: n= 41
+Tactic call cbn ran for 1.754 secs (1.744u,0.007s) (success)
+Params: n= 43
+Tactic call cbn ran for 1.916 secs (1.915u,0.s) (success)
+Params: n= 45
+Tactic call cbn ran for 2.198 secs (2.196u,0.s) (success)
+Params: n= 47
+Tactic call cbn ran for 2.484 secs (2.484u,0.s) (success)
+Params: n= 49
+Tactic call cbn ran for 2.584 secs (2.58u,0.s) (success)
+Params: n= 51
+Tactic call cbn ran for 2.991 secs (2.984u,0.004s) (success)
+Params: n= 53
+Tactic call cbn ran for 3.266 secs (3.26u,0.s) (success)
+Params: n= 55
+Tactic call cbn ran for 3.714 secs (3.708u,0.s) (success)
+Params: n= 57
+Tactic call cbn ran for 4.008 secs (4.003u,0.s) (success)
+Params: n= 59
+Tactic call cbn ran for 4.443 secs (4.44u,0.s) (success)
+Params: n= 61
+Tactic call cbn ran for 4.875 secs (4.868u,0.004s) (success)
+Params: n= 63
+Tactic call cbn ran for 5.45 secs (5.443u,0.s) (success)
+Params: n= 65
+Tactic call cbn ran for 5.569 secs (5.564u,0.s) (success)
+Params: n= 67
+Tactic call cbn ran for 6.169 secs (6.164u,0.s) (success)
+Params: n= 69
+Tactic call cbn ran for 6.739 secs (6.731u,0.s) (success)
+Params: n= 71
+Tactic call cbn ran for 7.562 secs (7.547u,0.008s) (success)
+Params: n= 73
+Tactic call cbn ran for 8.293 secs (8.288u,0.008s) (success)
+Params: n= 75
+Tactic call cbn ran for 9.139 secs (9.131u,0.007s) (success)
+Params: n= 77
+Tactic call cbn ran for 9.916 secs (9.908u,0.008s) (success)
+Params: n= 79
+Tactic call cbn ran for 10.825 secs (10.82u,0.004s) (success)

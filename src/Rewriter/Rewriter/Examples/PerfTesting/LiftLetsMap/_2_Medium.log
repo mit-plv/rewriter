@@ -1,0 +1,24 @@
+Params: n= 1 ,m= 6
+Tactic call rewrite_strat(bottomup,bottomup) ran for 0.267 secs (0.267u,0.s) (success)
+Params: n= 1 ,m= 7
+Tactic call rewrite_strat(bottomup,bottomup) ran for 0.248 secs (0.248u,0.004s) (success)
+Params: n= 2 ,m= 6
+Tactic call rewrite_strat(bottomup,bottomup) ran for 0.777 secs (0.775u,0.s) (success)
+Params: n= 2 ,m= 7
+Tactic call rewrite_strat(bottomup,bottomup) ran for 1.372 secs (1.372u,0.s) (success)
+Params: n= 3 ,m= 6
+Tactic call rewrite_strat(bottomup,bottomup) ran for 2.343 secs (2.343u,0.s) (success)
+Params: n= 3 ,m= 7
+Tactic call rewrite_strat(bottomup,bottomup) ran for 4.44 secs (4.44u,0.004s) (success)
+Params: n= 4 ,m= 6
+Tactic call rewrite_strat(bottomup,bottomup) ran for 5.799 secs (5.791u,0.008s) (success)
+Params: n= 4 ,m= 7
+Tactic call rewrite_strat(bottomup,bottomup) ran for 11.688 secs (11.68u,0.008s) (success)
+Params: n= 5 ,m= 6
+Tactic call rewrite_strat(bottomup,bottomup) ran for 12.563 secs (12.559u,0.004s) (success)
+Params: n= 5 ,m= 7
+Tactic call rewrite_strat(bottomup,bottomup) ran for 26.226 secs (26.212u,0.015s) (success)
+Params: n= 6 ,m= 6
+Tactic call rewrite_strat(bottomup,bottomup) ran for 24.86 secs (24.855u,0.004s) (success)
+Params: n= 6 ,m= 7
+Tactic call rewrite_strat(bottomup,bottomup) ran for 52.513 secs (52.515u,0.s) (success)

@@ -1,0 +1,60 @@
+Params: n= 31
+Tactic call cbv;rewrite_strat(topdown) ran for 1.368 secs (1.363u,0.004s) (success)
+Params: n= 32
+Tactic call cbv;rewrite_strat(topdown) ran for 1.366 secs (1.364u,0.s) (success)
+Params: n= 33
+Tactic call cbv;rewrite_strat(topdown) ran for 1.519 secs (1.519u,0.s) (success)
+Params: n= 34
+Tactic call cbv;rewrite_strat(topdown) ran for 1.677 secs (1.676u,0.s) (success)
+Params: n= 35
+Tactic call cbv;rewrite_strat(topdown) ran for 1.854 secs (1.851u,0.s) (success)
+Params: n= 36
+Tactic call cbv;rewrite_strat(topdown) ran for 2.032 secs (2.032u,0.s) (success)
+Params: n= 37
+Tactic call cbv;rewrite_strat(topdown) ran for 2.241 secs (2.232u,0.008s) (success)
+Params: n= 38
+Tactic call cbv;rewrite_strat(topdown) ran for 2.455 secs (2.452u,0.s) (success)
+Params: n= 39
+Tactic call cbv;rewrite_strat(topdown) ran for 2.687 secs (2.683u,0.s) (success)
+Params: n= 40
+Tactic call cbv;rewrite_strat(topdown) ran for 2.942 secs (2.936u,0.s) (success)
+Params: n= 41
+Tactic call cbv;rewrite_strat(topdown) ran for 3.2 secs (3.188u,0.008s) (success)
+Params: n= 42
+Tactic call cbv;rewrite_strat(topdown) ran for 3.486 secs (3.483u,0.s) (success)
+Params: n= 43
+Tactic call cbv;rewrite_strat(topdown) ran for 3.791 secs (3.788u,0.s) (success)
+Params: n= 44
+Tactic call cbv;rewrite_strat(topdown) ran for 4.127 secs (4.124u,0.s) (success)
+Params: n= 45
+Tactic call cbv;rewrite_strat(topdown) ran for 4.463 secs (4.451u,0.008s) (success)
+Params: n= 46
+Tactic call cbv;rewrite_strat(topdown) ran for 4.838 secs (4.823u,0.007s) (success)
+Params: n= 47
+Tactic call cbv;rewrite_strat(topdown) ran for 5.241 secs (5.236u,0.s) (success)
+Params: n= 48
+Tactic call cbv;rewrite_strat(topdown) ran for 5.642 secs (5.635u,0.s) (success)
+Params: n= 49
+Tactic call cbv;rewrite_strat(topdown) ran for 6.083 secs (6.071u,0.004s) (success)
+Params: n= 50
+Tactic call cbv;rewrite_strat(topdown) ran for 6.55 secs (6.54u,0.004s) (success)
+Params: n= 51
+Tactic call cbv;rewrite_strat(topdown) ran for 7.215 secs (7.203u,0.004s) (success)
+Params: n= 52
+Tactic call cbv;rewrite_strat(topdown) ran for 7.749 secs (7.736u,0.004s) (success)
+Params: n= 53
+Tactic call cbv;rewrite_strat(topdown) ran for 8.457 secs (8.435u,0.015s) (success)
+Params: n= 54
+Tactic call cbv;rewrite_strat(topdown) ran for 8.902 secs (8.896u,0.008s) (success)
+Params: n= 55
+Tactic call cbv;rewrite_strat(topdown) ran for 9.506 secs (9.504u,0.004s) (success)
+Params: n= 56
+Tactic call cbv;rewrite_strat(topdown) ran for 10.169 secs (10.164u,0.004s) (success)
+Params: n= 57
+Tactic call cbv;rewrite_strat(topdown) ran for 10.863 secs (10.863u,0.s) (success)
+Params: n= 58
+Tactic call cbv;rewrite_strat(topdown) ran for 11.608 secs (11.599u,0.008s) (success)
+Params: n= 59
+Tactic call cbv;rewrite_strat(topdown) ran for 12.39 secs (12.388u,0.s) (success)
+Params: n= 60
+Tactic call cbv;rewrite_strat(topdown) ran for 13.136 secs (13.132u,0.004s) (success)
