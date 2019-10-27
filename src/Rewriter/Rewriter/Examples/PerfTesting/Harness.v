@@ -173,7 +173,7 @@ Module UnderLetsPlus0.
        | _, Medium => [(100, 500, 1)]
        | _, Slow => [(500, 1000, 1)]
        | _, VerySlow => [(1000, 5000, 1)]
-       end.
+       end%Z.
 
   Ltac run test_tac_n size :=
     let test_from_to_tac := test_for_of_size size test_from_to_safe test_from_to in
