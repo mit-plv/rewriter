@@ -1,0 +1,60 @@
+Params: n= 2
+Tactic call native_compute(1) ran for 0.123 secs (0.u,0.011s) (success)
+Tactic call native_compute(2) ran for 0.141 secs (0.u,0.016s) (success)
+Params: n= 3
+Tactic call native_compute(1) ran for 0.118 secs (0.004u,0.008s) (success)
+Tactic call native_compute(2) ran for 0.137 secs (0.004u,0.011s) (success)
+Params: n= 5
+Tactic call native_compute(1) ran for 0.103 secs (0.004u,0.008s) (success)
+Tactic call native_compute(2) ran for 0.194 secs (0.048u,0.04s) (success)
+Params: n= 7
+Tactic call native_compute(1) ran for 0.129 secs (0.004u,0.012s) (success)
+Tactic call native_compute(2) ran for 0.148 secs (0.u,0.012s) (success)
+Params: n= 9
+Tactic call native_compute(1) ran for 0.13 secs (0.u,0.015s) (success)
+Tactic call native_compute(2) ran for 0.152 secs (0.u,0.016s) (success)
+Params: n= 11
+Tactic call native_compute(1) ran for 0.149 secs (0.004u,0.012s) (success)
+Tactic call native_compute(2) ran for 0.101 secs (0.004u,0.008s) (success)
+Params: n= 13
+Tactic call native_compute(1) ran for 0.093 secs (0.004u,0.008s) (success)
+Tactic call native_compute(2) ran for 0.11 secs (0.004u,0.007s) (success)
+Params: n= 15
+Tactic call native_compute(1) ran for 0.134 secs (0.008u,0.008s) (success)
+Tactic call native_compute(2) ran for 0.174 secs (0.u,0.012s) (success)
+Params: n= 17
+Tactic call native_compute(1) ran for 0.129 secs (0.004u,0.012s) (success)
+Tactic call native_compute(2) ran for 0.149 secs (0.004u,0.008s) (success)
+Params: n= 19
+Tactic call native_compute(1) ran for 0.112 secs (0.003u,0.008s) (success)
+Tactic call native_compute(2) ran for 0.094 secs (0.004u,0.007s) (success)
+Params: n= 21
+Tactic call native_compute(1) ran for 0.11 secs (0.u,0.012s) (success)
+Tactic call native_compute(2) ran for 0.156 secs (0.004u,0.012s) (success)
+Params: n= 23
+Tactic call native_compute(1) ran for 0.124 secs (0.008u,0.008s) (success)
+Tactic call native_compute(2) ran for 0.099 secs (0.u,0.012s) (success)
+Params: n= 25
+Tactic call native_compute(1) ran for 0.096 secs (0.004u,0.008s) (success)
+Tactic call native_compute(2) ran for 0.093 secs (0.004u,0.008s) (success)
+Params: n= 27
+Tactic call native_compute(1) ran for 0.093 secs (0.004u,0.007s) (success)
+Tactic call native_compute(2) ran for 0.091 secs (0.004u,0.008s) (success)
+Params: n= 29
+Tactic call native_compute(1) ran for 0.092 secs (0.004u,0.008s) (success)
+Tactic call native_compute(2) ran for 0.111 secs (0.u,0.012s) (success)
+Params: n= 31
+Tactic call native_compute(1) ran for 0.091 secs (0.004u,0.008s) (success)
+Tactic call native_compute(2) ran for 0.09 secs (0.004u,0.008s) (success)
+Params: n= 33
+Tactic call native_compute(1) ran for 0.112 secs (0.004u,0.008s) (success)
+Tactic call native_compute(2) ran for 0.132 secs (0.004u,0.012s) (success)
+Params: n= 35
+Tactic call native_compute(1) ran for 0.139 secs (0.004u,0.012s) (success)
+Tactic call native_compute(2) ran for 0.104 secs (0.u,0.008s) (success)
+Params: n= 37
+Tactic call native_compute(1) ran for 0.094 secs (0.004u,0.007s) (success)
+Tactic call native_compute(2) ran for 0.115 secs (0.u,0.012s) (success)
+Params: n= 39
+Tactic call native_compute(1) ran for 0.143 secs (0.u,0.016s) (success)
+Tactic call native_compute(2) ran for 0.134 secs (0.004u,0.012s) (success)

@@ -1,0 +1,6 @@
+Params: n= 8 ,m= 3
+Tactic call cbv;rewrite_strat(bottomup) ran for 38.057 secs (37.995u,0.06s) (success)
+Params: n= 9 ,m= 2
+Tactic call cbv;rewrite_strat(bottomup) ran for 63.587 secs (63.564u,0.023s) (success)
+Params: n= 10 ,m= 1
+Tactic call cbv;rewrite_strat(bottomup) ran for 53.474 secs (53.435u,0.04s) (success)

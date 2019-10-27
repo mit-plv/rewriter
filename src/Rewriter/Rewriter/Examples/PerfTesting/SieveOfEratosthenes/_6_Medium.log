@@ -1,0 +1,70 @@
+Params: n= 81
+Tactic call simpl ran for 11.814 secs (11.768u,0.036s) (success)
+Params: n= 83
+Tactic call simpl ran for 12.622 secs (12.6u,0.007s) (success)
+Params: n= 85
+Tactic call simpl ran for 13.588 secs (13.576u,0.s) (success)
+Params: n= 87
+Tactic call simpl ran for 14.765 secs (14.74u,0.008s) (success)
+Params: n= 89
+Tactic call simpl ran for 15.531 secs (15.516u,0.s) (success)
+Params: n= 91
+Tactic call simpl ran for 16.799 secs (16.775u,0.004s) (success)
+Params: n= 93
+Tactic call simpl ran for 18.099 secs (18.072u,0.015s) (success)
+Params: n= 95
+Tactic call simpl ran for 19.243 secs (19.227u,0.016s) (success)
+Params: n= 97
+Tactic call simpl ran for 19.715 secs (19.708u,0.008s) (success)
+Params: n= 99
+Tactic call simpl ran for 21.045 secs (21.02u,0.024s) (success)
+Params: n= 101
+Tactic call simpl ran for 22.038 secs (22.036u,0.s) (success)
+Params: n= 103
+Tactic call simpl ran for 23.416 secs (23.407u,0.008s) (success)
+Params: n= 105
+Tactic call simpl ran for 24.806 secs (24.8u,0.007s) (success)
+Params: n= 107
+Tactic call simpl ran for 26.179 secs (26.167u,0.012s) (success)
+Params: n= 109
+Tactic call simpl ran for 27.553 secs (27.54u,0.012s) (success)
+Params: n= 111
+Tactic call simpl ran for 29.442 secs (29.427u,0.016s) (success)
+Params: n= 113
+Tactic call simpl ran for 30.447 secs (30.435u,0.012s) (success)
+Params: n= 115
+Tactic call simpl ran for 32.369 secs (32.335u,0.032s) (success)
+Params: n= 117
+Tactic call simpl ran for 34.294 secs (34.279u,0.011s) (success)
+Params: n= 119
+Tactic call simpl ran for 36.135 secs (36.1u,0.036s) (success)
+Params: n= 121
+Tactic call simpl ran for 37.791 secs (37.768u,0.024s) (success)
+Params: n= 123
+Tactic call simpl ran for 39.868 secs (39.824u,0.039s) (success)
+Params: n= 125
+Tactic call simpl ran for 41.805 secs (41.764u,0.04s) (success)
+Params: n= 127
+Tactic call simpl ran for 43.753 secs (43.711u,0.04s) (success)
+Params: n= 129
+Tactic call simpl ran for 46.215 secs (46.187u,0.027s) (success)
+Params: n= 131
+Tactic call simpl ran for 48.376 secs (48.344u,0.032s) (success)
+Params: n= 133
+Tactic call simpl ran for 50.707 secs (50.68u,0.024s) (success)
+Params: n= 135
+Tactic call simpl ran for 53.171 secs (53.155u,0.016s) (success)
+Params: n= 137
+Tactic call simpl ran for 54.963 secs (54.952u,0.012s) (success)
+Params: n= 139
+Tactic call simpl ran for 57.247 secs (57.196u,0.051s) (success)
+Params: n= 141
+Tactic call simpl ran for 60.176 secs (60.139u,0.036s) (success)
+Params: n= 143
+Tactic call simpl ran for 62.941 secs (62.907u,0.032s) (success)
+Params: n= 145
+Tactic call simpl ran for 65.012 secs (64.987u,0.024s) (success)
+Params: n= 147
+Tactic call simpl ran for 67.945 secs (67.911u,0.036s) (success)
+Params: n= 149
+Tactic call simpl ran for 70.317 secs (70.296u,0.02s) (success)

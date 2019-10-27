@@ -1,0 +1,40 @@
+Params: n= 2
+Tactic call simpl ran for 0.001 secs (0.004u,0.s) (success)
+Params: n= 3
+Tactic call simpl ran for 0.041 secs (0.032u,0.008s) (success)
+Params: n= 5
+Tactic call simpl ran for 0.008 secs (0.008u,0.s) (success)
+Params: n= 7
+Tactic call simpl ran for 0.02 secs (0.02u,0.s) (success)
+Params: n= 9
+Tactic call simpl ran for 0.11 secs (0.111u,0.s) (success)
+Params: n= 11
+Tactic call simpl ran for 0.06 secs (0.06u,0.s) (success)
+Params: n= 13
+Tactic call simpl ran for 0.089 secs (0.087u,0.s) (success)
+Params: n= 15
+Tactic call simpl ran for 0.137 secs (0.136u,0.s) (success)
+Params: n= 17
+Tactic call simpl ran for 0.176 secs (0.176u,0.s) (success)
+Params: n= 19
+Tactic call simpl ran for 0.235 secs (0.235u,0.s) (success)
+Params: n= 21
+Tactic call simpl ran for 0.311 secs (0.312u,0.s) (success)
+Params: n= 23
+Tactic call simpl ran for 0.393 secs (0.395u,0.s) (success)
+Params: n= 25
+Tactic call simpl ran for 0.475 secs (0.476u,0.s) (success)
+Params: n= 27
+Tactic call simpl ran for 0.583 secs (0.584u,0.s) (success)
+Params: n= 29
+Tactic call simpl ran for 0.687 secs (0.687u,0.s) (success)
+Params: n= 31
+Tactic call simpl ran for 0.839 secs (0.839u,0.s) (success)
+Params: n= 33
+Tactic call simpl ran for 0.986 secs (0.988u,0.s) (success)
+Params: n= 35
+Tactic call simpl ran for 1.17 secs (1.171u,0.s) (success)
+Params: n= 37
+Tactic call simpl ran for 1.332 secs (1.335u,0.s) (success)
+Params: n= 39
+Tactic call simpl ran for 1.555 secs (1.556u,0.s) (success)

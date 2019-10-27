@@ -1,0 +1,32 @@
+Params: n= 7 ,m= 10
+Tactic call cbv;setoid_rewrite ran for 12.065 secs (11.995u,0.068s) (success)
+Params: n= 8 ,m= 6
+Tactic call cbv;setoid_rewrite ran for 13.371 secs (13.332u,0.036s) (success)
+Params: n= 8 ,m= 7
+Tactic call cbv;setoid_rewrite ran for 16.493 secs (16.496u,0.s) (success)
+Params: n= 8 ,m= 8
+Tactic call cbv;setoid_rewrite ran for 20.106 secs (20.107u,0.s) (success)
+Params: n= 8 ,m= 9
+Tactic call cbv;setoid_rewrite ran for 23.644 secs (23.587u,0.055s) (success)
+Params: n= 8 ,m= 10
+Tactic call cbv;setoid_rewrite ran for 29.622 secs (29.604u,0.019s) (success)
+Params: n= 9 ,m= 4
+Tactic call cbv;setoid_rewrite ran for 18.833 secs (18.792u,0.04s) (success)
+Params: n= 9 ,m= 5
+Tactic call cbv;setoid_rewrite ran for 25.326 secs (25.307u,0.019s) (success)
+Params: n= 9 ,m= 6
+Tactic call cbv;setoid_rewrite ran for 32.855 secs (32.855u,0.s) (success)
+Params: n= 9 ,m= 7
+Tactic call cbv;setoid_rewrite ran for 41.613 secs (41.616u,0.s) (success)
+Params: n= 9 ,m= 8
+Tactic call cbv;setoid_rewrite ran for 50.404 secs (50.363u,0.04s) (success)
+Params: n= 9 ,m= 9
+Tactic call cbv;setoid_rewrite ran for 60.252 secs (60.216u,0.039s) (success)
+Params: n= 9 ,m= 10
+Tactic call cbv;setoid_rewrite ran for 70.866 secs (70.812u,0.056s) (success)
+Params: n= 10 ,m= 3
+Tactic call cbv;setoid_rewrite ran for 32.211 secs (32.168u,0.043s) (success)
+Params: n= 11 ,m= 1
+Tactic call cbv;setoid_rewrite ran for 24.537 secs (24.476u,0.064s) (success)
+Params: n= 11 ,m= 2
+Tactic call cbv;setoid_rewrite ran for 50.463 secs (50.432u,0.031s) (success)
