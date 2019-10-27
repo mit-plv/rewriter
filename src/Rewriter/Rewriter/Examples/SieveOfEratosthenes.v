@@ -138,7 +138,8 @@ Global Open Scope Z_scope.
 Ltac test_from_to_gen do_verify test_tac min max step :=
   idtac;
   let min := (eval vm_compute in min) in
-  idtac "Params: n=" min;
+  let minNat := (eval vm_compute in (Z.to_nat min)) in
+  idtac "Params: n=" minNat;
   assert_succeeds_preserve_error (once (assert (goal min); [ start (); test_tac do_verify | ]));
   let finished := (eval vm_compute in ((min + step) >? max)%Z) in
   lazymatch finished with
