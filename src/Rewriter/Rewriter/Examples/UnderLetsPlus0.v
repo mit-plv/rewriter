@@ -67,7 +67,7 @@ Ltac test_from_to_gen do_verify test_tac min max step :=
   let finished := (eval vm_compute in (max <? (min + step))%nat) in
   lazymatch finished with
   | true => idtac
-  | false => test_from_to_gen test_tac (min + step)%nat max
+  | false => test_from_to_gen do_verify test_tac (min + step)%nat max step
   end.
 Ltac test_from_to test_tac min max step := test_from_to_gen ltac:(fun _ => idtac) test_tac min max step.
 Ltac test_from_to_safe test_tac min max step := test_from_to_gen verify test_tac min max step.
