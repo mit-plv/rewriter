@@ -1,5 +1,7 @@
 Require Import Coq.Lists.List.
 Require Import Coq.ZArith.ZArith.
+Require Import Coq.Sorting.Mergesort.
+Require Import Coq.Structures.Orders.
 Require Export Rewriter.Rewriter.Examples.PerfTesting.Settings.
 Require Rewriter.Rewriter.Examples.LiftLetsMap.
 Require Rewriter.Rewriter.Examples.Plus0Tree.
@@ -55,6 +57,37 @@ Definition remove_smaller_args_of_size {T} (T_beq : T -> T -> bool) (sz : size)
      let smaller_args := flat_map args_of_size (smaller_sizes sz) in
      filter (fun v => negb (existsb (T_beq v) smaller_args)) args.
 
+Module NatProdOrder <: TotalLeBool.
+  Definition t := (nat * nat)%type.
+  Definition t_to_Z (v : t) : Z := (Z.of_nat (fst v) * Z.of_nat (snd v))%Z.
+  Definition ltb (x y : t) : bool
+    := (t_to_Z x <? t_to_Z y)%Z
+       || (((t_to_Z x =? t_to_Z y)%Z)
+             && ((fst x <? fst y)
+                 || ((fst x =? fst y) && (snd x <? snd y)))).
+  Definition leb (x y : t) : bool
+    := ltb x y || ((fst x =? fst y) && (snd x =? snd y)).
+  Theorem leb_total : forall a1 a2, leb a1 a2 = true \/ leb a2 a1 = true.
+  Proof.
+    cbv [leb ltb]; intros a1 a2.
+    repeat first [ rewrite !Bool.andb_true_iff
+                 | rewrite !Bool.orb_true_iff
+                 | rewrite !Nat.eqb_eq
+                 | rewrite !Z.eqb_eq
+                 | rewrite !Z.ltb_lt
+                 | rewrite !Nat.ltb_lt ].
+    destruct (Z.lt_total (t_to_Z a1) (t_to_Z a2)) as [?|[?|?]];
+      try solve [ auto ]; [].
+    destruct (Nat.lt_total (fst a1) (fst a2)) as [?|[?|?]];
+      try solve [ auto 6 ]; [].
+    destruct (Nat.lt_total (snd a1) (snd a2)) as [?|[?|?]];
+      solve [ auto 7 ].
+  Qed.
+End NatProdOrder.
+
+Module Import NatProdSort := Sort NatProdOrder.
+Notation sort_by_prod := NatProdSort.sort.
+
 Module LiftLetsMap.
   Import Examples.LiftLetsMap.
   Global Open Scope nat_scope.
@@ -62,13 +95,15 @@ Module LiftLetsMap.
   Definition args_of_size' (test_tac_n : nat) (s : size)
     := let '(n_count, m_count)
            := match test_tac_n, s with
-              | _, SuperFast => (5, 5)
+              | 0, SuperFast => (10, 10)
+              | _, SuperFast => (5, 4)
+              | 0, Fast => (90, 90)
               | _, Fast => (10, 10)
               | _, Medium => (20, 20)
               | _, Slow => (50, 50)
               | _, VerySlow => (100, 100)
               end in
-       flat_map (fun n => map (fun m => (n, m)) (seq 1 m_count)) (seq 1 n_count).
+       sort_by_prod (flat_map (fun n => map (fun m => (n, m)) (seq 1 m_count)) (seq 1 n_count)).
   Definition args_of_size (test_tac_n : nat) (s : size)
     := remove_smaller_args_of_size (Prod.prod_beq _ _ Nat.eqb Nat.eqb) s (args_of_size' test_tac_n).
 
@@ -88,6 +123,10 @@ Module LiftLetsMap.
              iter ls
         end in
     iter args.
+(*
+  Goal True.
+    Time test_for timetest1 8 8.
+  *)
 End LiftLetsMap.
 
 Module Plus0Tree.
@@ -133,11 +172,29 @@ Module SieveOfEratosthenes.
 
   Definition args_of_size (test_tac_n : nat) (s : size)
     := match test_tac_n, s with
-       | _, SuperFast => [(2, 3, 1); (5, 99, 2)]
-       | _, Fast => [(101, 499, 2)]
-       | _, Medium => [(501, 1001, 2)]
-       | _, Slow => [(1001, 2999, 2)]
-       | _, VerySlow => [(3001, 4999, 2)]
+       | 0%nat, SuperFast => [(2, 3, 1); (5, 49, 2)]
+       | 1%nat, SuperFast => [(2, 3, 1); (5, 1199, 2)]
+       | 2%nat, SuperFast => [(2, 3, 1); (5, 449, 2)]
+       | 3%nat, SuperFast => [(2, 3, 1); (5, 499, 2)]
+       | 4%nat, SuperFast => [(2, 3, 1); (5, 39, 2)]
+       | 5%nat, SuperFast => [(2, 3, 1); (5, 39, 2)]
+       | 6%nat, SuperFast => [(2, 3, 1); (5, 39, 2)]
+       | 0%nat, Fast => [(51, 4999, 2)]
+       | 1%nat, Fast => [(1201, 4999, 2)]
+       | 2%nat, Fast => [(451, 3999, 2)]
+       | 3%nat, Fast => [(501, 4999, 2)]
+       | 4%nat, Fast => [(41, 4999, 2)]
+       | 5%nat, Fast => [(41, 79, 2)]
+       | 6%nat, Fast => [(41, 79, 2)]
+       | 2%nat, Medium => [(4001, 4999, 2)]
+       | 5%nat, Medium => [(81, 149, 2)]
+       | 6%nat, Medium => [(81, 149, 2)]
+       | 5%nat, Slow => [(151, 189, 2)]
+       | 6%nat, Slow => [(151, 189, 2)]
+       | 5%nat, VerySlow => [(191, 4999, 2)]
+       | 6%nat, VerySlow => [(191, 4999, 2)]
+       | 0%nat, _ | 1%nat, _ | 2%nat, _ | 3%nat, _ | 4%nat, _ => []
+       | _, _ => []
        end%Z.
 
   Ltac run test_tac_n size :=
@@ -168,11 +225,25 @@ Module UnderLetsPlus0.
 
   Definition args_of_size (test_tac_n : nat) (s : size)
     := match test_tac_n, s with
-       | _, SuperFast => [(1, 10, 1)]
-       | _, Fast => [(11, 100, 1)]
-       | _, Medium => [(100, 500, 1)]
-       | _, Slow => [(500, 1000, 1)]
-       | _, VerySlow => [(1000, 5000, 1)]
+       | 0, SuperFast => [(1, 70, 1)]
+       | 1, SuperFast => [(1, 70, 1)]
+       | 2, SuperFast => [(1, 30, 1)]
+       | 3, SuperFast => [(1, 30, 1)]
+       | 0, Fast => [(71, 5000, 1)]
+       | 1, Fast => [(71, 200, 1)]
+       | 2, Fast => [(31, 60, 1)]
+       | 3, Fast => [(31, 60, 1)]
+       | 1, Medium => [(201, 350, 1)]
+       | 2, Medium => [(61, 90, 1)] (* ??? *)
+       | 3, Medium => [(61, 90, 1)] (* ??? *)
+       | 1, Slow => [(351, 1000, 1)] (* ??? *)
+       | 2, Slow => [(91, 600, 1)] (* ??? *)
+       | 3, Slow => [(91, 600, 1)] (* ??? *)
+       | 1, VerySlow => [(1001, 5000, 1)]
+       | 2, VerySlow => [(601, 5000, 1)]
+       | 3, VerySlow => [(601, 5000, 1)]
+       | 0, _ => []
+       | _, _ => []
        end.
 
   Ltac run test_tac_n size :=
