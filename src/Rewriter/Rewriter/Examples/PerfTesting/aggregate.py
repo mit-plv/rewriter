@@ -13,6 +13,9 @@ parser.add_argument('infile', metavar='INFILE', nargs='*', type=argparse.FileTyp
 
 
 def process_file(f, data):
+    def param_to_tuple(p):
+        k, v = p.split('=')
+        return (k, int(v))
     reg = re.compile(r'Tactic call (.*?) ran for ([0-9\.]+) secs \(([0-9\.]+)u,([0-9\.]+)s\) \(success\)')
     fdir, fname = os.path.split(f.name)
     fbase, kind = os.path.split(fdir)
@@ -20,7 +23,7 @@ def process_file(f, data):
     for line in f.readlines():
         r = reg.match(line.strip())
         if line.startswith('Params: '):
-            curparams = tuple([('kind', kind)] + [tuple(p.split('=')) for p in line[len('Params: '):].strip().replace(' ', '').split(',')])
+            curparams = tuple([('kind', kind)] + [param_to_tuple(p) for p in line[len('Params: '):].strip().replace(' ', '').split(',')])
             if curparams not in data.keys():
                 data[curparams] = {}
         elif line.strip() == '':
