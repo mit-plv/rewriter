@@ -94,3 +94,7 @@ src/Rewriter/Util/plugins/strategy_tactic_plugin.ml4
 src/Rewriter/Rewriter/Examples/PerfTesting/*/*.v
 src/Rewriter/Rewriter/Examples/PerfTesting/*/*.log
 /perf.csv
+/perf-LiftLetsMap.csv
+/perf-Plus0Tree.csv
+/perf-SieveOfEratosthenes.csv
+/perf-UnderLetsPlus0.csv

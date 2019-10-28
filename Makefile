@@ -99,9 +99,17 @@ $(ALL_PERF_LOGS) : %.log : %.v
 	$(HIDE)rm $@.ok
 	$(HIDE)mv -f $@.tmp $@
 
+EXTRA_PERF_CSVS := $(KINDS:%=perf-%.csv)
+
+.PHONY: perf-csv
+perf-csv: perf.csv $(EXTRA_PERF_CSVS)
+
 .PHONY: perf.csv
 perf.csv:
 	$(SHOW)'PYTHON3 aggregate.py -o $@'
 	$(HIDE)$(PYTHON3) src/Rewriter/Rewriter/Examples/PerfTesting/aggregate.py -o $@ $(wildcard $(ALL_PERF_LOGS))
+
+$(EXTRA_PERF_CSVS) : perf-%.csv : perf.csv
+	$(PYTHON3) src/Rewriter/Rewriter/Examples/PerfTesting/process.py -o $@ $* $<
 ## End Perf-testing section
 ##########################################
