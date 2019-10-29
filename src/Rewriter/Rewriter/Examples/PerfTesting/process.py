@@ -78,7 +78,7 @@ def process_rows(data, kind):
 
 def emit_output(f, fields, rows):
     rows = list(rows)
-    fwriter = csv.DictWriter(f, fields)
+    fwriter = csv.DictWriter(f, fields, lineterminator="\n")
     fwriter.writeheader()
     fwriter.writerows(rows)
     f.close()

@@ -45,7 +45,7 @@ def data_to_rows(data):
 
 def emit_output(f, data):
     data = list(data)
-    fwriter = csv.writer(f)
+    fwriter = csv.writer(f, lineterminator="\n")
     keys = list(sorted(set(k for row in data for k in row.keys())))
     param_keys = [k for k in keys if k.startswith('param ')]
     other_keys = [k for k in keys if not k.startswith('param ')]
