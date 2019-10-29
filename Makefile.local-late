@@ -12,7 +12,7 @@ $(COMPATIBILITY_FILES) : % : %$(EXPECTED_EXT) $(COQ_VERSION_FILE)
 $(ALLDFILES): $(COMPATIBILITY_FILES) $(COQ_VERSION_FILE) _CoqProject
 
 # Remove -undeclared-scope once we stop supporting 8.9
-OTHERFLAGS += -w -notation-overridden,-undeclared-scope,+implicit-core-hint-db,+implicits-in-term
+OTHERFLAGS += -w -notation-overridden,-undeclared-scope
 ifneq ($(PROFILE),)
 OTHERFLAGS += -profile-ltac
 endif
