@@ -96,7 +96,7 @@ endif
 $(ALL_PERF_LOGS) : %.log : %.v
 	$(SHOW)'$(TIMEOUT_SHOW)COQC $(<:src/Rewriter/Rewriter/Examples/PerfTesting/%.v=%) > LOG'
 	$(HIDE)rm -f $@.ok
-	$(HIDE)$(TIMER) ($(TIMEOUT_CMD) $(COQC) $(COQDEBUG) $(TIMING_ARG) $(COQFLAGS) $(COQLIBS) $< && touch $@.ok) > $@.tmp
+	$(HIDE)($(TIMER) $(TIMEOUT_CMD) $(COQC) $(COQDEBUG) $(TIMING_ARG) $(COQFLAGS) $(COQLIBS) $< && touch $@.ok) > $@.tmp
 	$(HIDE)rm $@.ok
 	$(HIDE)mv -f $@.tmp $@
 
