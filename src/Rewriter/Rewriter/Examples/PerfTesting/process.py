@@ -35,7 +35,7 @@ def process_rows(data, kind):
     elif kind == 'LiftLetsMap':
         keymap = [('list length', 'param n'),
                   ('iteration count', 'param m'),
-                  ('term size', (lambda row: row['param n'] * row['param m'])),
+                  ('term size', (lambda row: int(row['param n']) * int(row['param m']))),
                   ('Rewrite_for', 'Rewrite_for_gen user'),
                   ('rewriting', 'rewriting user'),
                   ('rewriting (vm only)', 'vm_compute_and_unify_in_rewrite user'),
@@ -44,7 +44,7 @@ def process_rows(data, kind):
     elif kind == 'Plus0Tree':
         keymap = [('tree depth', 'param n'),
                   ('extra +0s per node', 'param m'),
-                  ('term size', (lambda row: 3 * row['param m'] * (2 ** (row['param n'] - 1)))),
+                  ('term size', (lambda row: 3 * int(row['param m']) * (2 ** (int(row['param n']) - 1)))),
                   ('Rewrite_for', 'Rewrite_for_gen user'),
                   ('rewriting', 'rewriting user'),
                   ('rewriting (vm only)', 'vm_compute_and_unify_in_rewrite user'),
