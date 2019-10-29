@@ -21,6 +21,13 @@ def readfile(f):
     return fields, rows
 
 def process_rows(data, kind):
+    def remap(new, old, row):
+        if isinstance(old, str):
+            return (new, row[old])
+        elif callable(old):
+            return (new, old(row))
+        else:
+            raise Exception('Invalid non-str-non-callable: %s (for %s)' % (repr(old), new))
     rows = [row for row in data if row['param kind'] == kind]
     known_kinds = ['LiftLetsMap', 'Plus0Tree', 'SieveOfEratosthenes', 'UnderLetsPlus0']
     if kind not in known_kinds:
@@ -28,6 +35,7 @@ def process_rows(data, kind):
     elif kind == 'LiftLetsMap':
         keymap = [('list length', 'param n'),
                   ('iteration count', 'param m'),
+                  ('term size', (lambda row: row['param n'] * row['param m'])),
                   ('Rewrite_for', 'Rewrite_for_gen user'),
                   ('rewriting', 'rewriting user'),
                   ('rewriting (vm only)', 'vm_compute_and_unify_in_rewrite user'),
@@ -36,6 +44,7 @@ def process_rows(data, kind):
     elif kind == 'Plus0Tree':
         keymap = [('tree depth', 'param n'),
                   ('extra +0s per node', 'param m'),
+                  ('term size', (lambda row: 3 * row['param m'] * (2 ** (row['param n'] - 1)))),
                   ('Rewrite_for', 'Rewrite_for_gen user'),
                   ('rewriting', 'rewriting user'),
                   ('rewriting (vm only)', 'vm_compute_and_unify_in_rewrite user'),
@@ -65,7 +74,7 @@ def process_rows(data, kind):
                   ('cbv;setoid_rewrite', 'cbv;setoid_rewrite user')]
     else:
         raise Exception('Internal Error: Known but unhandled kind: %s' % kind)
-    return tuple(k for k, k_old in keymap), [dict((k, row[k_old]) for k, k_old in keymap) for row in rows]
+    return tuple(k for k, k_old in keymap), [dict(remap(k, k_old, row) for k, k_old in keymap) for row in rows]
 
 def emit_output(f, fields, rows):
     rows = list(rows)

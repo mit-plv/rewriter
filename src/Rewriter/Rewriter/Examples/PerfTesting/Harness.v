@@ -8,6 +8,7 @@ Require Rewriter.Rewriter.Examples.Plus0Tree.
 Require Rewriter.Rewriter.Examples.SieveOfEratosthenes.
 Require Rewriter.Rewriter.Examples.UnderLetsPlus0.
 Import ListNotations.
+Global Set Printing Width 200.
 Global Open Scope Z_scope.
 Global Open Scope nat_scope.
 Local Open Scope list_scope.
@@ -50,10 +51,18 @@ Definition smaller_sizes (sz : size) : list size
      | VerySlow => [SuperFast; Fast; Medium; Slow]
      end.
 
+Fixpoint uniquify {T} (T_beq : T -> T -> bool) (ls : list T) : list T
+  := match ls with
+     | nil => nil
+     | cons x xs
+       => (if existsb (T_beq x) xs then (fun xs => xs) else cons x)
+            (uniquify T_beq xs)
+     end.
+
 Definition remove_smaller_args_of_size {T} (T_beq : T -> T -> bool) (sz : size)
            (args_of_size : size -> list T)
   : list T
-  := let args := args_of_size sz in
+  := let args := uniquify T_beq (args_of_size sz) in
      let smaller_args := flat_map args_of_size (smaller_sizes sz) in
      filter (fun v => negb (existsb (T_beq v) smaller_args)) args.
 
@@ -88,6 +97,31 @@ End NatProdOrder.
 Module Import NatProdSort := Sort NatProdOrder.
 Notation sort_by_prod := NatProdSort.sort.
 
+Module NatFstOrder <: TotalLeBool.
+  Definition t := (nat * nat)%type.
+  Definition ltb (x y : t) : bool
+    := (fst x <? fst y)
+       || ((fst x =? fst y)
+             && (snd x <? snd y)).
+  Definition leb (x y : t) : bool
+    := ltb x y || ((fst x =? fst y) && (snd x =? snd y)).
+  Theorem leb_total : forall a1 a2, leb a1 a2 = true \/ leb a2 a1 = true.
+  Proof.
+    cbv [leb ltb]; intros a1 a2.
+    repeat first [ rewrite !Bool.andb_true_iff
+                 | rewrite !Bool.orb_true_iff
+                 | rewrite !Nat.eqb_eq
+                 | rewrite !Nat.ltb_lt ].
+    destruct (Nat.lt_total (fst a1) (fst a2)) as [?|[?|?]];
+      try solve [ auto 6 ]; [].
+    destruct (Nat.lt_total (snd a1) (snd a2)) as [?|[?|?]];
+      solve [ auto 7 ].
+  Qed.
+End NatFstOrder.
+
+Module Import NatFstSort := Sort NatFstOrder.
+Notation sort_by_fst := NatFstSort.sort.
+
 Module LiftLetsMap.
   Import Examples.LiftLetsMap.
   Global Open Scope nat_scope.
@@ -98,10 +132,13 @@ Module LiftLetsMap.
               | 0, SuperFast => (10, 10)
               | _, SuperFast => (5, 4)
               | 0, Fast => (90, 90)
-              | _, Fast => (10, 10)
-              | _, Medium => (20, 20)
-              | _, Slow => (50, 50)
-              | _, VerySlow => (100, 100)
+              | _, Fast => (6, 5)
+              | 0, Medium => (150, 150)
+              | _, Medium => (6, 7)
+              | 0, Slow => (200, 200) (* ??? *)
+              | _, Slow => (10, 10) (* ??? *)
+              | 0, VerySlow => (400, 400) (* ??? *)
+              | _, VerySlow => (100, 100) (* ??? *)
               end in
        sort_by_prod (flat_map (fun n => map (fun m => (n, m)) (seq 1 m_count)) (seq 1 n_count)).
   Definition args_of_size (test_tac_n : nat) (s : size)
@@ -123,10 +160,6 @@ Module LiftLetsMap.
              iter ls
         end in
     iter args.
-(*
-  Goal True.
-    Time test_for timetest1 8 8.
-  *)
 End LiftLetsMap.
 
 Module Plus0Tree.
@@ -134,15 +167,30 @@ Module Plus0Tree.
   Global Open Scope nat_scope.
 
   Definition args_of_size' (test_tac_n : nat) (s : size)
-    := let '(n_count, m_count)
+    := let ls
            := match test_tac_n, s with
-              | _, SuperFast => (12, 2)
-              | _, Fast => (20, 10)
-              | _, Medium => (50, 50)
-              | _, Slow => (100, 100)
-              | _, VerySlow => (1000, 1000)
+              | 0, SuperFast => [(11, 2); (7, 4)]
+              | 1, SuperFast => [(12, 3)]
+              | 2, SuperFast => [(8, 3)]
+              | 3, SuperFast => [(9, 3)]
+              | 4, SuperFast => [(7, 3)]
+              | 0, Fast => [(14, 5); (9, 1000)]
+              | 1, Fast => [(14, 2); (13, 3); (9, 18); (5, 50)]
+              | 2, Fast => [(9, 3); (4, 40)]
+              | 3, Fast => [(9, 3); (5, 50)]
+              | 4, Fast => [(8, 2); (4, 30)]
+              | 0, Medium => [(16, 3); (12, 100)]
+              | 1, Medium => [(15, 3)]
+              | _, Medium => [(11, 3)] (* ?? *)
+              | _, Slow => [] (* ??? *)
+              | _, VerySlow => [(1000, 1000)] (* ??? *)
+              | _, _ => []
               end in
-       flat_map (fun n => map (fun m => (n, m)) (seq 1 m_count)) (seq 1 n_count).
+       sort_by_fst
+         (flat_map
+            (fun '(n_count, m_count)
+             => flat_map (fun n => map (fun m => (n, m)) (seq 1 m_count)) (seq 1 n_count))
+            ls).
   Definition args_of_size (test_tac_n : nat) (s : size)
     := remove_smaller_args_of_size (Prod.prod_beq _ _ Nat.eqb Nat.eqb) s (args_of_size' test_tac_n).
 

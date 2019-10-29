@@ -23,17 +23,19 @@ Proof. reflexivity. Qed.
 
 Time Make myrew := Rewriter For (Z.add_0_l, Z.add_0_r, nat_rect_arrow_nodep_eagerly, eval_prod_rect).
 
-Fixpoint iter_plus_acc (m : nat) (acc v : Z) :=
-  match m with
-  | O => acc
-  | S m => iter_plus_acc m (acc + v) v
-  end.
+Definition iter_plus_acc (m : nat) (acc v : Z) :=
+  @nat_rect_arrow_nodep
+    Z Z
+    (fun acc => acc)
+    (fun _ rec acc => rec (acc + v))
+    m
+    acc.
 
 Definition make_tree (n : nat) (m : nat) (v : Z) (acc : Z) :=
   Eval cbv [iter_plus_acc] in
     @nat_rect_arrow_nodep
       (Z * Z) Z
-      (fun '(v, acc) => acc + acc + v)
+      (fun '(v, acc) => iter_plus_acc m (acc + acc) v)
       (fun _ rec '(v, acc) => iter_plus_acc m (rec (v, acc) + rec (v, acc)) v)
       n
       (v, acc).
