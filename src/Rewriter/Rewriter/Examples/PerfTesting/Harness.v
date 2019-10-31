@@ -133,7 +133,7 @@ Module LiftLetsMap.
               | _, SuperFast => (5, 4)
               | 0, Fast => (90, 90)
               | _, Fast => (6, 5)
-              | 0, Medium => (150, 150)
+              | 0, Medium => (120, 120) (* maybe should be (150, 150), but (120, 120) already takes over 16 h, I think *)
               | _, Medium => (6, 7)
               | 0, Slow => (200, 200) (* ??? *)
               | _, Slow => (10, 10) (* ??? *)
