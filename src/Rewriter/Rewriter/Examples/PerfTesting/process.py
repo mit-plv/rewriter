@@ -8,6 +8,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-o', '--output-file', dest='outfile', type=argparse.FileType('w'),
                     default=sys.stdout,
                     help="output file name")
+parser.add_argument('--txts', action='store_true',
+                    help="also emit .txt files for each column in the csv")
 parser.add_argument('kind', metavar='KIND', type=str,
                     help="the kind of output")
 parser.add_argument('infile', metavar='INFILE.csv', type=argparse.FileType('r'),
@@ -80,15 +82,25 @@ def process_rows(data, kind):
         raise Exception('Internal Error: Known but unhandled kind: %s' % kind)
     return tuple(k for k, k_old in keymap), sorted([dict(remap(k, k_old, row) for k, k_old in keymap) for row in rows], key=key)
 
-def emit_output(f, fields, rows):
+def emit_output(f, fields, rows, txts=False):
+    fname, fext = os.path.splitext(f.name)
     rows = list(rows)
     fwriter = csv.DictWriter(f, fields, lineterminator="\n")
     fwriter.writeheader()
     fwriter.writerows(rows)
     f.close()
 
+    if txts:
+        size_field = 'term size' if 'term size' in fields else 'n'
+        for k in fields:
+            if k in ('n', 'm', 'term size'):
+                pass
+            lines = ['%d %s' % (int(row[size_field]), row[k]) for row in rows if k in row.keys() and row[k] not in (None, '')]
+            with open(fname + '-%s.txt' % k.replace(' ', '-').replace('_', '-'), 'w') as f_txt:
+                f_txt.writelines(lines)
+
 if __name__ == '__main__':
     args = parser.parse_args()
     fields, data = readfile(args.infile)
     fields, rows = process_rows(data, args.kind)
-    emit_output(args.outfile, fields, rows)
+    emit_output(args.outfile, fields, rows, txts=args.txts)

@@ -111,6 +111,6 @@ perf.csv:
 	$(HIDE)$(PYTHON3) src/Rewriter/Rewriter/Examples/PerfTesting/aggregate.py -o $@ $(wildcard $(ALL_PERF_LOGS))
 
 $(EXTRA_PERF_CSVS) : perf-%.csv : perf.csv
-	$(PYTHON3) src/Rewriter/Rewriter/Examples/PerfTesting/process.py -o $@ $* $<
+	$(PYTHON3) src/Rewriter/Rewriter/Examples/PerfTesting/process.py --txts -o $@ $* $<
 ## End Perf-testing section
 ##########################################
