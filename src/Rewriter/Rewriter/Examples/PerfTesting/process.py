@@ -93,7 +93,7 @@ def emit_output(f, fields, rows, txts=False):
     if txts:
         size_field = 'term size' if 'term size' in fields else 'n'
         for k in fields:
-            if k not in ('n', 'm', 'term size', 'list length', 'iteration count'):
+            if k not in ('n', 'm', 'term size', 'list length', 'iteration count', 'extra-+0s-per-node', 'tree depth'):
                 lines = ['%d %s' % (int(row[size_field]), row[k]) for row in rows if k in row.keys() and row[k] not in (None, '')]
                 with open(fname + '-%s.txt' % k.replace(' ', '-').replace('_', '-'), 'w') as f_txt:
                     f_txt.write('\n'.join(lines))
