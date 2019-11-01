@@ -41,6 +41,7 @@ def process_rows(data, kind):
                   ('rewriting (vm only)', 'vm_compute_and_unify_in_rewrite user'),
                   ('rewrite_strat(topdown,bottomup)', 'rewrite_strat(topdown,bottomup) user'),
                   ('rewrite_strat(bottomup,bottomup)', 'rewrite_strat(bottomup,bottomup) user')]
+        key = (lambda row: row['term size'])
     elif kind == 'Plus0Tree':
         keymap = [('tree depth', 'param n'),
                   ('extra +0s per node', 'param m'),
@@ -52,6 +53,7 @@ def process_rows(data, kind):
                   ('cbv;setoid_rewrite', 'cbv;setoid_rewrite user'),
                   ('cbv;rewrite_strat(topdown)', 'cbv;rewrite_strat(topdown) user'),
                   ('cbv;rewrite_strat(bottomup)', 'cbv;rewrite_strat(bottomup) user')]
+        key = (lambda row: row['term size'])
     elif kind == 'SieveOfEratosthenes':
         keymap = [('n', 'param n'),
                   ('Rewrite_for', 'Rewrite_for_gen user'),
@@ -64,6 +66,7 @@ def process_rows(data, kind):
                   ('native(2)(real)', 'native_compute(2) real'),
                   ('cbn', 'cbn user'),
                   ('simpl', 'simpl user')]
+        key = (lambda row: int(row['n']))
     elif kind == 'UnderLetsPlus0':
         keymap = [('n', 'param n'),
                   ('Rewrite_for', 'Rewrite_for_gen user'),
@@ -72,9 +75,10 @@ def process_rows(data, kind):
                   ('cbv;rewrite_strat(bottomup)', 'cbv;rewrite_strat(bottomup) user'),
                   ('cbv;rewrite_strat(topdown)', 'cbv;rewrite_strat(topdown) user'),
                   ('cbv;setoid_rewrite', 'cbv;setoid_rewrite user')]
+        key = (lambda row: int(row['n']))
     else:
         raise Exception('Internal Error: Known but unhandled kind: %s' % kind)
-    return tuple(k for k, k_old in keymap), [dict(remap(k, k_old, row) for k, k_old in keymap) for row in rows]
+    return tuple(k for k, k_old in keymap), sorted([dict(remap(k, k_old, row) for k, k_old in keymap) for row in rows], key=key)
 
 def emit_output(f, fields, rows):
     rows = list(rows)
