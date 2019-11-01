@@ -133,7 +133,7 @@ Module LiftLetsMap.
               | 3, SuperFast => (50, 50)
               | _, SuperFast => (5, 4)
               | 0, Fast => (90, 90)
-              | 3, Fast => (160, 160) (* N.B. test 3 stack overflows on larger than ~160, 160 *)
+              | 3, Fast => (150, 150) (* N.B. test 3 stack overflows on larger than ~160, 160 *)
               | _, Fast => (6, 5)
               | 0, Medium => (120, 120) (* maybe should be (150, 150), but (120, 120) already takes over 16 h, I think *)
               | _, Medium => (6, 7)
