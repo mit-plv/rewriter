@@ -14,6 +14,12 @@ Ltac rewrite_default_eval_red x := (eval vm_compute in x).
 Ltac rewrite_default_red_tactic := vm_compute.
 Ltac rewrite_default_cast_no_check := vm_cast_no_check.
 
+(** We place this dummy tactic here so that none of the rewriter
+    tactics will depend on any plugin code, unless you also load the
+    plugin.  This makes it easier to use the rewriter even if you
+    can't build plugins. *)
+Ltac set_strategy_expand id := idtac.
+
 Module Named.
   Local Set Primitive Projections.
   Inductive maybe_name := no_name | a_name (_ : forall P : Prop, P -> P).

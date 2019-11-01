@@ -16,7 +16,6 @@ Require Import Rewriter.Util.Bool.Reflect.
 Require Rewriter.Util.TypeList.
 Require Rewriter.Util.PrimitiveHList.
 Require Import Rewriter.Util.Notations.
-Require Import Rewriter.Util.plugins.StrategyTactic.
 Require Import Rewriter.Util.Tactics.RunTacticAsConstr.
 Require Import Rewriter.Util.Tactics.DebugPrint.
 Require Import Rewriter.Util.Tactics.ConstrFail.
@@ -1273,7 +1272,7 @@ Module Compilers.
         let term := build_base_interp eta_base_cps base_type_list index_of_base in
         let base_interp := cache_term term name in
         let base_interp_head := head base_interp in
-        let __ := match goal with _ => strategy -1000 [base_interp_head] end in
+        let __ := match goal with _ => set_strategy_expand base_interp_head end in
         base_interp.
 
       Ltac cache_build_all_gen T mk P :=
@@ -1431,7 +1430,7 @@ Module Compilers.
         let term := build_ident_interp base_interp ident index_of_ident all_ident_named_interped in
         let ident_interp := cache_term term name in
         let ident_interp_head := head ident_interp in
-        let __ := match goal with _ => strategy -1000 [ident_interp_head] end in
+        let __ := match goal with _ => set_strategy_expand ident_interp_head end in
         ident_interp.
 
       Ltac cache_build_all_idents ident :=
