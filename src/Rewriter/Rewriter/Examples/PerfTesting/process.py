@@ -42,7 +42,8 @@ def process_rows(data, kind):
                   ('rewriting', 'rewriting user'),
                   ('rewriting (vm only)', 'vm_compute_and_unify_in_rewrite user'),
                   ('rewrite_strat(topdown,bottomup)', 'rewrite_strat(topdown,bottomup) user'),
-                  ('rewrite_strat(bottomup,bottomup)', 'rewrite_strat(bottomup,bottomup) user')]
+                  ('rewrite_strat(bottomup,bottomup)', 'rewrite_strat(bottomup,bottomup) user'),
+                  ('cps+vm_compute', 'cps+vm_compute user')]
         key = (lambda row: row['term size'])
     elif kind == 'Plus0Tree':
         keymap = [('tree depth', 'param n'),
