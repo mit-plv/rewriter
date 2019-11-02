@@ -5,23 +5,24 @@ Require Import Coq.ZArith.ZArith.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.NatUtil.
+Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Util.plugins.RewriterBuild.
 Require Export Rewriter.Rewriter.Examples.PerfTesting.Settings.
 Require Import Rewriter.Util.Tactics.AssertSucceedsPreserveError.
 Local Open Scope Z_scope.
 
-Lemma nat_rect_arrow_nodep_eagerly
+Lemma eval_nat_rect_arrow_nodep
   : forall A B O_case S_case n v,
     @nat_rect_arrow_nodep A B O_case S_case ('n) v
     = ident.eagerly (@nat_rect_arrow_nodep) _ _ O_case S_case ('n) v.
 Proof. reflexivity. Qed.
 
 Lemma eval_prod_rect
-  : forall A B P f x y, @Prod.prod_rect_nodep A B P f (x, y) = f x y.
+  : forall A B P f x y, @prod_rect_nodep A B P f (x, y) = f x y.
 Proof. reflexivity. Qed.
 
-Time Make myrew := Rewriter For (Z.add_0_l, Z.add_0_r, nat_rect_arrow_nodep_eagerly, eval_prod_rect).
+Time Make myrew := Rewriter For (Z.add_0_r, eval_nat_rect_arrow_nodep, eval_prod_rect).
 
 Definition iter_plus_acc (m : nat) (acc v : Z) :=
   @nat_rect_arrow_nodep
