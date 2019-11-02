@@ -67,7 +67,7 @@ End Ax.
 
 Definition map_double_cps {T} (ls : list Z) (k : list Z -> T) :=
   list_rect
-    (fun _ => _)
+    (fun _ => (list Z -> T) -> _)
     (fun k => k nil)
     (fun x xs rec k
      => Let_InAx (ZAddAx x x)
@@ -78,7 +78,7 @@ Definition map_double_cps {T} (ls : list Z) (k : list Z -> T) :=
 
 Definition make_cps {T} (n : nat) (m : nat) (v : Z) (k : list Z -> T)
   := nat_rect
-       (fun _ => _)
+       _
        (fun k => k (List.repeat v n))
        (fun _ rec k => rec (fun ls => map_double_cps ls k))
        m
