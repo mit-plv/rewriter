@@ -8,6 +8,7 @@ Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Bool.
+Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Util.Bool.Reflect.
@@ -17,14 +18,14 @@ Require Import Rewriter.Util.Tactics.AssertSucceedsPreserveError.
 Import ListNotations.
 Local Open Scope Z_scope. Local Open Scope list_scope.
 
-Lemma nat_rect_arrow_nodep_eagerly
+Lemma eval_nat_rect_arrow_nodep
   : forall A B O_case S_case n v,
     @nat_rect_arrow_nodep A B O_case S_case ('n) v
     = ident.eagerly (@nat_rect_arrow_nodep) _ _ O_case S_case ('n) v.
 Proof. reflexivity. Qed.
 
 Lemma eval_prod_rect
-  : forall A B P f x y, @Prod.prod_rect_nodep A B P f (x, y) = f x y.
+  : forall A B P f x y, @prod_rect_nodep A B P f (x, y) = f x y.
 Proof. reflexivity. Qed.
 
 Lemma eval_fold_right
@@ -72,7 +73,7 @@ Definition PositiveSet_t_beq : PositiveSet.t -> PositiveSet.t -> bool := tree_be
 Global Instance PositiveSet_reflect_eqb : reflect_rel (@eq PositiveSet.t) PositiveSet_t_beq
   := reflect_of_brel Equality.PositiveSet.internal_tree_dec_bl Equality.PositiveSet.internal_tree_dec_lb.
 
-Notation lemmas := (nat_rect_arrow_nodep_eagerly, eval_prod_rect, eval_fold_right, eval_map, do_again eval_rev, eval_bool_rect_true, eval_bool_rect_false, @Prod.fst_pair, eval_list_rect, eval_app) (only parsing).
+Notation lemmas := (eval_nat_rect_arrow_nodep, eval_prod_rect, eval_fold_right, eval_map, do_again eval_rev, eval_bool_rect_true, eval_bool_rect_false, @fst_pair, eval_list_rect, eval_app) (only parsing).
 Notation extra_idents := (Z.eqb, orb, Z.gtb, PositiveSet.elements, @fst, @snd, PositiveSet.mem, Pos.succ, PositiveSet.add, List.fold_right, List.map, List.seq, Pos.mul, S, Pos.of_nat, Z.to_nat, Z.div, Z.pos, O, PositiveSet.empty) (only parsing).
 
 Time Make myrew := Rewriter For lemmas (with extra idents extra_idents) (with delta).
