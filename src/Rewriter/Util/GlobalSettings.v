@@ -27,4 +27,5 @@ Global Set Uniform Inductive Parameters.
 (** Set SimplIsCbn. *)
 
 (** Faster printing *)
-Global Set Fast Name Printing.
+(** N.B. This makes [A -> B] always print as a [forall] *)
+(** Global Set Fast Name Printing. *)
