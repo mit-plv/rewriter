@@ -1,12 +1,20 @@
 (*** Boolean Utility Lemmas and Databases *)
 Require Import Coq.Bool.Bool.
 
-Scheme Minimality for bool Sort Type.
-Arguments bool_rect_nodep {_} _ _ _.
+(* We would use [Scheme Minimality for bool Sort Type.], but we want
+   [bool_rect_nodep] to unfold directly to [bool_rect] so that
+   unification doesn't have a hard time unifying [bool_rect] and
+   [bool_rect_nodep] on large arguments. *)
+Definition bool_rect_nodep {P} := @bool_rect (fun _ => P).
 Module Thunked.
   Definition bool_rect P (t f : Datatypes.unit -> P) (b : bool) : P
     := Datatypes.bool_rect (fun _ => P) (t tt) (f tt) b.
 End Thunked.
+(** Strongly prefer unfolding these versions of [bool_rect] to the
+    underlying [bool_rect] principle.  Possibly -1 would suffice rather
+    than expand, but I don't think there's harm in [expand] because
+    [bool_rect] ought not be much more complicated than any of these *)
+Global Strategy expand [bool_rect_nodep Thunked.bool_rect].
 
 (** For equalities of booleans *)
 Create HintDb bool_congr discriminated.

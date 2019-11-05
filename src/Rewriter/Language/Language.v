@@ -739,13 +739,16 @@ Module Compilers.
       lazymatch term with
       | match ?b with true => ?t | false => ?f end
         => let T := type of term in
-           reify_preprocess (@Datatypes.bool_rect (fun _ => T) t f b)
+           reify_preprocess (@Thunked.bool_rect T (fun _ => t) (fun _ => f) b)
       | match ?x with Datatypes.pair a b => @?f a b end
         => let T := type of term in
            reify_preprocess (@prod_rect_nodep _ _ T f x)
       | match ?x with nil => ?N | cons a b => @?C a b end
         => let T := type of term in
-           reify_preprocess (@ListUtil.list_case _ (fun _ => T) N C x)
+           reify_preprocess (@Thunked.list_case _ T (fun _ => N) C x)
+      | match ?x with None => ?N | Some a => @?S a end
+        => let T := type of term in
+           reify_preprocess (@Thunked.option_rect _ T S (fun _ => N) x)
       | let x := ?a in ?b
         => let A := type of a in
            let T := type of term in

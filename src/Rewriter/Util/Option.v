@@ -5,14 +5,24 @@ Require Import Rewriter.Util.Tactics.DestructHead.
 Require Import Rewriter.Util.Notations.
 
 Scheme Equality for option.
-Scheme Minimality for option Sort Type.
 Arguments option_beq {_} _ _ _.
-Arguments option_rect_nodep {_ _} _ _ _.
+
+(* We would use [Scheme Minimality for option Sort Type.], but we want
+   [option_rect_nodep] to unfold directly to [option_rect] so that
+   unification doesn't have a hard time unifying [option_rect] and
+   [option_rect_nodep] on large arguments. *)
+Definition option_rect_nodep {A P} : (A -> P) -> P -> option A -> P
+  := @option_rect A (fun _ => P).
 
 Module Thunked.
   Definition option_rect {A} P (S_case : A -> P) (N_case : unit -> P) (o : option A) : P
     := Datatypes.option_rect (fun _ => P) S_case (N_case tt) o.
 End Thunked.
+(** Strongly prefer unfolding these versions of [option_rect] to the
+    underlying [option_rect] principle.  Possibly -1 would suffice rather
+    than expand, but I don't think there's harm in [expand] because
+    [option_rect] ought not be much more complicated than any of these *)
+Global Strategy expand [option_rect_nodep Thunked.option_rect].
 
 Definition option_beq_hetero {A B} (AB_beq : A -> B -> bool) (x : option A) (y : option B) : bool
   := match x, y with

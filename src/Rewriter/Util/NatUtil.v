@@ -6,15 +6,23 @@ Require Import Coq.micromega.Lia.
 Import Nat.
 
 Scheme Equality for nat.
-Scheme Minimality for nat Sort Type.
-Arguments nat_rect_nodep {_} _ _ _.
-
+(* We would use [Scheme Minimality for nat Sort Type.], but we want
+   [nat_rect_nodep] to unfold directly to [nat_rect] so that
+   unification doesn't have a hard time unifying [nat_rect] and
+   [nat_rect_nodep] on large arguments. *)
+Definition nat_rect_nodep {P} : P -> (nat -> P -> P) -> nat -> P
+  := nat_rect (fun _ => P).
 Definition nat_rect_arrow_nodep {P Q} := @nat_rect_nodep (P -> Q).
 
 Module Thunked.
   Definition nat_rect P (O_case : unit -> P) (S_case : nat -> P -> P) (n : nat) : P
     := Datatypes.nat_rect (fun _ => P) (O_case tt) S_case n.
 End Thunked.
+(** Strongly prefer unfolding these versions of [nat_rect] to the
+    underlying [nat_rect] principle.  Possibly -1 would suffice rather
+    than expand, but I don't think there's harm in [expand] because
+    [nat_rect] ought not be much more complicated than any of these *)
+Global Strategy expand [nat_rect_arrow_nodep nat_rect_nodep Thunked.nat_rect].
 
 Create HintDb natsimplify discriminated.
 

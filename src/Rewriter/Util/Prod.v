@@ -15,8 +15,18 @@ Local Arguments snd {_ _} _.
 Local Arguments f_equal {_ _} _ {_ _} _.
 
 Scheme Equality for prod.
-Scheme Minimality for prod Sort Type.
-Arguments prod_rect_nodep {_ _ _} _ _.
+
+(* We would use [Scheme Minimality for prod Sort Type.], but we want
+   [prod_rect_nodep] to unfold directly to [prod_rect] so that
+   unification doesn't have a hard time unifying [prod_rect] and
+   [prod_rect_nodep] on large arguments. *)
+Definition prod_rect_nodep {A B P} : (A -> B -> P) -> A * B -> P
+  := @prod_rect A B (fun _ => P).
+(** Strongly prefer unfolding this version of [prod_rect] to the
+    underlying [prod_rect] principle.  Possibly -1 would suffice rather
+    than expand, but I don't think there's harm in [expand] because
+    [prod_rect] ought not be much more complicated than any of these *)
+Global Strategy expand [prod_rect_nodep].
 
 Definition fst_pair {A B} (a:A) (b:B) : fst (a,b) = a := eq_refl.
 Definition snd_pair {A B} (a:A) (b:B) : snd (a,b) = b := eq_refl.
