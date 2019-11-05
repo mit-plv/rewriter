@@ -1182,7 +1182,7 @@ Module Compilers.
                                   => let __ := Reify.debug_leave_lookup_ident_success idc ridc in
                                      then_tac ridc
                                 | _
-                                  => let __ := Reify.debug_leave_lookup_ident_failure idc in
+                                  => let __ := Reify.debug_leave_lookup_ident_in_failure idc all_ident_and_interp in
                                      else_tac ()
                                 end)
                               term

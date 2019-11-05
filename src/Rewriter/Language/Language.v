@@ -55,6 +55,8 @@ Module Compilers.
       := idtac funname ": Success in looking up ident:" e "as" ret.
     Tactic Notation "debug_leave_lookup_ident_failure_idtac" ident(funname) uconstr(e)
       := idtac funname ": Failure in looking up:" e.
+    Tactic Notation "debug_leave_lookup_ident_in_failure_idtac" ident(funname) uconstr(e) uconstr(ls)
+      := idtac funname ": Failure in looking up:" e "(in" ls ")".
     Ltac check_debug_level_then_Set _ :=
       let lvl := debug_level in
       lazymatch type of lvl with
@@ -87,6 +89,13 @@ Module Compilers.
       | S (S (S (S _))) => constr_run_tac tac
       | _ => check_debug_level_then_Set ()
       end.
+    Ltac debug5or4 tac5 tac4 :=
+      let lvl := debug_level in
+      lazymatch lvl with
+      | S (S (S (S (S _)))) => constr_run_tac tac5
+      | S (S (S (S _))) => constr_run_tac tac4
+      | _ => check_debug_level_then_Set ()
+      end.
     Ltac debug5 tac :=
       let lvl := debug_level in
       lazymatch lvl with
@@ -108,7 +117,10 @@ Module Compilers.
          constr_fail.
     Ltac debug_enter_lookup_ident e := debug3 ltac:(fun _ => debug_enter_lookup_ident_idtac reify_ident e).
     Ltac debug_leave_lookup_ident_success e ret := debug3 ltac:(fun _ => debug_leave_lookup_ident_success_idtac reify_ident e ret).
-    Ltac debug_leave_lookup_ident_failure e := debug4 ltac:(fun _ => debug_leave_lookup_ident_failure_idtac reify_ident e).
+    Ltac debug_leave_lookup_ident_in_failure e ls :=
+      debug5or4
+        ltac:(fun _ => debug_leave_lookup_ident_in_failure_idtac reify_ident e ls)
+               ltac:(fun _ => debug_leave_lookup_ident_failure_idtac reify_ident e).
     Ltac debug_leave_reify_base_type_failure e
       := let dummy := debug0 ltac:(fun _ => debug_leave_reify_failure_idtac reify_base_type e) in
          constr_fail.
