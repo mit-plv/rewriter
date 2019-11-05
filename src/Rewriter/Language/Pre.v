@@ -37,6 +37,10 @@ Definition rules_proofsT_with_args {T} (rules_proofs : T) :=
   { rules : _ & PrimitiveHList.hlist (@snd bool Prop) rules }.
 Existing Class rules_proofsT_with_args.
 
+Definition rules_proofs_for_eager_type {T : Type} (key : T) :=
+  { rules : _ & PrimitiveHList.hlist (@snd bool Prop) rules }.
+Existing Class rules_proofs_for_eager_type.
+
 Module Import RewriteRuleNotationsTactics.
   Ltac mymap_dont_do_again ls' :=
     let v := (eval cbv [mymap myapp ls'] in (mymap dont_do_again ls')) in
@@ -62,6 +66,7 @@ Module RewriteRuleNotations.
     Notation dont_do_again := (pair false) (only parsing).
     Notation do_again := (pair true) (only parsing).
     Notation default_do_again := dont_do_again (only parsing).
+    Definition eval_rect {T} (v : T) := unit.
   End Types.
 
   Notation all_dont_do_again ls
@@ -86,4 +91,5 @@ Module RewriteRuleNotations.
   Notation "[ x ; y ; .. ; z ]" :=  (cons x (cons y .. (cons z nil) ..)) : rew_rules_scope.
 
   Notation do_again := (@id (@snd bool Prop (Types.do_again _))) (only parsing).
+  Definition eval_rect {T} (v : T) : Types.eval_rect v := tt.
 End RewriteRuleNotations.

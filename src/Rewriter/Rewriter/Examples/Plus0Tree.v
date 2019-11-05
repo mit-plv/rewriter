@@ -12,21 +12,11 @@ Require Export Rewriter.Rewriter.Examples.PerfTesting.Settings.
 Require Import Rewriter.Util.Tactics.AssertSucceedsPreserveError.
 Local Open Scope Z_scope.
 
-Lemma eval_nat_rect_arrow_nodep
-  : forall A B O_case S_case n v,
-    @nat_rect_arrow_nodep A B O_case S_case ('n) v
-    = ident.eagerly (@nat_rect_arrow_nodep) _ _ O_case S_case ('n) v.
-Proof. reflexivity. Qed.
-
-Lemma eval_prod_rect
-  : forall A B P f x y, @prod_rect_nodep A B P f (x, y) = f x y.
-Proof. reflexivity. Qed.
-
-Time Make myrew := Rewriter For (Z.add_0_r, eval_nat_rect_arrow_nodep, eval_prod_rect).
+Time Make myrew := Rewriter For (Z.add_0_r, eval_rect nat, eval_rect prod).
 
 Definition iter_plus_acc (m : nat) (acc v : Z) :=
-  @nat_rect_arrow_nodep
-    Z Z
+  @nat_rect
+    (fun _ => Z -> Z)
     (fun acc => acc)
     (fun _ rec acc => rec (acc + v))
     m
@@ -34,8 +24,8 @@ Definition iter_plus_acc (m : nat) (acc v : Z) :=
 
 Definition make_tree (n : nat) (m : nat) (v : Z) (acc : Z) :=
   Eval cbv [iter_plus_acc] in
-    @nat_rect_arrow_nodep
-      (Z * Z) Z
+    @nat_rect
+      (fun _ => Z * Z -> Z)
       (fun '(v, acc) => iter_plus_acc m (acc + acc) v)
       (fun _ rec '(v, acc) => iter_plus_acc m (rec (v, acc) + rec (v, acc)) v)
       n
@@ -56,13 +46,13 @@ Ltac verify _ :=
 Ltac timetest0 do_verify :=
   assert_succeeds_preserve_error (once (time "Rewrite_lhs_for" Rewrite_lhs_for myrew); do_verify ()).
 Ltac timetest1 do_verify :=
-  assert_succeeds_preserve_error (once (time "cbv;rewrite!" (cbv [nat_rect_arrow_nodep nat_rect_nodep]; rewrite !Z.add_0_r)); do_verify ()).
+  assert_succeeds_preserve_error (once (time "cbv;rewrite!" (cbv [nat_rect]; rewrite !Z.add_0_r)); do_verify ()).
 Ltac timetest2 do_verify :=
-  assert_succeeds_preserve_error (once (time "cbv;setoid_rewrite" (cbv [nat_rect_arrow_nodep nat_rect_nodep]; repeat setoid_rewrite Z.add_0_r)); do_verify ()).
+  assert_succeeds_preserve_error (once (time "cbv;setoid_rewrite" (cbv [nat_rect]; repeat setoid_rewrite Z.add_0_r)); do_verify ()).
 Ltac timetest3 do_verify :=
-  assert_succeeds_preserve_error (once (time "cbv;rewrite_strat(topdown)" ((cbv [nat_rect_arrow_nodep nat_rect_nodep]); rewrite_strat topdown Z.add_0_r)); do_verify ()).
+  assert_succeeds_preserve_error (once (time "cbv;rewrite_strat(topdown)" ((cbv [nat_rect]); rewrite_strat topdown Z.add_0_r)); do_verify ()).
 Ltac timetest4 do_verify :=
-  assert_succeeds_preserve_error (once (time "cbv;rewrite_strat(bottomup)" ((cbv [nat_rect_arrow_nodep nat_rect_nodep]); rewrite_strat bottomup Z.add_0_r)); do_verify ()).
+  assert_succeeds_preserve_error (once (time "cbv;rewrite_strat(bottomup)" ((cbv [nat_rect]); rewrite_strat bottomup Z.add_0_r)); do_verify ()).
 
 Global Open Scope nat_scope.
 Ltac test_for_gen do_verify test_tac n m :=
@@ -80,12 +70,12 @@ Proof.
   intros.
   Set Printing Width 150.
   time "Rewrite_for" assert_succeeds (Rewrite_lhs_for myrew).
-  time "cbv;rewrite!" assert_succeeds (cbv [nat_rect_arrow_nodep nat_rect_nodep]; rewrite !Z.add_0_r).
-  time "cbv;setoid_rewrite" assert_succeeds (cbv [nat_rect_arrow_nodep nat_rect_nodep]; repeat setoid_rewrite Z.add_0_r).
-  time "cbv;rewrite_strat(topdown)" assert_succeeds ((rewrite_strat eval cbv [nat_rect_arrow_nodep nat_rect_nodep]); rewrite_strat topdown Z.add_0_r).
-  time "cbv;rewrite_strat(bottomup)" assert_succeeds ((rewrite_strat eval cbv [nat_rect_arrow_nodep nat_rect_nodep]); rewrite_strat bottomup Z.add_0_r).
-  Fail time "rewrite_strat(cbv;topdown)" (*assert_succeeds*) ((rewrite_strat (eval cbv [nat_rect_arrow_nodep nat_rect_nodep]; topdown Z.add_0_r))).
-  Fail time "rewrite_strat(cbv;bottomup)" (*assert_succeeds*) ((rewrite_strat (eval cbv [nat_rect_arrow_nodep nat_rect_nodep]; bottomup Z.add_0_r))).
+  time "cbv;rewrite!" assert_succeeds (cbv [nat_rect]; rewrite !Z.add_0_r).
+  time "cbv;setoid_rewrite" assert_succeeds (cbv [nat_rect]; repeat setoid_rewrite Z.add_0_r).
+  time "cbv;rewrite_strat(topdown)" assert_succeeds ((rewrite_strat eval cbv [nat_rect]); rewrite_strat topdown Z.add_0_r).
+  time "cbv;rewrite_strat(bottomup)" assert_succeeds ((rewrite_strat eval cbv [nat_rect]); rewrite_strat bottomup Z.add_0_r).
+  Fail time "rewrite_strat(cbv;topdown)" (*assert_succeeds*) ((rewrite_strat (eval cbv [nat_rect]; topdown Z.add_0_r))).
+  Fail time "rewrite_strat(cbv;bottomup)" (*assert_succeeds*) ((rewrite_strat (eval cbv [nat_rect]; bottomup Z.add_0_r))).
   Time Rewrite_for myrew.
   Show.
 Abort.

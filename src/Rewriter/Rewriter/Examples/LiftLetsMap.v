@@ -20,22 +20,7 @@ Lemma eval_repeat
     = ident.eagerly (@nat_rect) _ nil (fun k repeat_k => x :: repeat_k) ('n).
 Proof. induction n; cbn; f_equal; eauto. Qed.
 
-Lemma eval_list_rect
-  : forall A P N C ls,
-    @Thunked.list_rect A P N C ls
-    = ident.eagerly (@Thunked.list_rect) A P N C ls.
-Proof. reflexivity. Qed.
-
-Lemma eval_nat_rect
-  : forall P O_case S_case n,
-    @Thunked.nat_rect P O_case S_case ('n)
-    = (ident.eagerly (@Thunked.nat_rect) _)
-        O_case
-        S_case
-        ('n).
-Proof. reflexivity. Qed.
-
-Time Make myrew := Rewriter For (eval_repeat, eval_list_rect, eval_nat_rect) (with extra idents (Z.add)).
+Time Make myrew := Rewriter For (eval_repeat, eval_rect list, eval_rect nat) (with extra idents (Z.add)).
 
 Definition map_double (ls : list Z) :=
   list_rect

@@ -82,11 +82,26 @@ Module Compilers.
              let rest := lazymatch type of snd_part with PrimitiveHList.hlist (@snd bool Prop) ?rest => rest end in
              constr:(PrimitiveProd.Primitive.pair fst_part snd_part
                      : PrimitiveHList.hlist (@snd bool Prop) (Datatypes.cons lem rest))
+        | PrimitiveProd.Primitive.prod (PrimitiveHList.hlist (@snd bool Prop) Datatypes.nil) _
+          => let snd_part := get_prim_snd rules_proofs in
+             let snd_part := heuristic_process_rules_proofs snd_part in
+             snd_part
         | PrimitiveProd.Primitive.prod (PrimitiveProd.Primitive.prod ?P1 ?P2) ?rest
           => let fst_part := get_prim_fst rules_proofs in
              let snd_part := get_prim_snd rules_proofs in
              let fst_fst_part := get_prim_fst fst_part in
              let snd_fst_part := get_prim_snd fst_part in
+             heuristic_process_rules_proofs
+               (@PrimitiveProd.Primitive.pair
+                  P1 (PrimitiveProd.Primitive.prod P2 rest)
+                  fst_fst_part (@PrimitiveProd.Primitive.pair P2 rest snd_fst_part snd_part))
+        | PrimitiveProd.Primitive.prod (PrimitiveHList.hlist (@snd bool Prop) (Datatypes.cons ?P ?Ps)) ?rest
+          => let fst_part := get_prim_fst rules_proofs in
+             let snd_part := get_prim_snd rules_proofs in
+             let fst_fst_part := get_prim_fst fst_part in
+             let snd_fst_part := get_prim_snd fst_part in
+             let P1 := constr:(@snd bool Prop P) in
+             let P2 := constr:(PrimitiveHList.hlist (@snd bool Prop) Ps) in
              heuristic_process_rules_proofs
                (@PrimitiveProd.Primitive.pair
                   P1 (PrimitiveProd.Primitive.prod P2 rest)
@@ -100,6 +115,12 @@ Module Compilers.
                (@PrimitiveProd.Primitive.pair
                   P1 (PrimitiveProd.Primitive.prod P2 rest)
                   fst_fst_part (@PrimitiveProd.Primitive.pair P2 rest snd_fst_part snd_part))
+        | PrimitiveProd.Primitive.prod (@RewriteRuleNotations.Types.eval_rect ?TT ?T) ?rest
+          => let fst_part := get_prim_fst rules_proofs in
+             let snd_part := get_prim_snd rules_proofs in
+             let fst_part := heuristic_process_rules_proofs (fst_part : @RewriteRuleNotations.Types.eval_rect TT T) in
+             heuristic_process_rules_proofs
+               (@PrimitiveProd.Primitive.pair _ rest fst_part snd_part)
         | PrimitiveProd.Primitive.prod ?P ?rest
           => heuristic_process_rules_proofs (rules_proofs : PrimitiveProd.Primitive.prod (@snd bool Prop (RewriteRuleNotations.Types.default_do_again P)) rest)
         | Datatypes.prod ?P ?rest
@@ -111,6 +132,11 @@ Module Compilers.
         | @snd bool Prop ?P
           => constr:(PrimitiveProd.Primitive.pair rules_proofs tt
                      : PrimitiveHList.hlist (@snd bool Prop) (Datatypes.cons P Datatypes.nil))
+        | RewriteRuleNotations.Types.eval_rect ?T
+          => lazymatch (eval hnf in (_ : rules_proofs_for_eager_type T)) with
+             | existT _ ?ty ?val
+               => heuristic_process_rules_proofs (val : PrimitiveHList.hlist (@snd bool Prop) ty)
+             end
         | ?P => constr:(PrimitiveProd.Primitive.pair rules_proofs tt
                         : PrimitiveHList.hlist (@snd bool Prop) (Datatypes.cons (RewriteRuleNotations.Types.default_do_again P) Datatypes.nil))
         end.

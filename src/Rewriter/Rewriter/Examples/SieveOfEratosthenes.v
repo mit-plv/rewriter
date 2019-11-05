@@ -18,16 +18,6 @@ Require Import Rewriter.Util.Tactics.AssertSucceedsPreserveError.
 Import ListNotations.
 Local Open Scope Z_scope. Local Open Scope list_scope.
 
-Lemma eval_nat_rect_arrow_nodep
-  : forall A B O_case S_case n v,
-    @nat_rect_arrow_nodep A B O_case S_case ('n) v
-    = ident.eagerly (@nat_rect_arrow_nodep) _ _ O_case S_case ('n) v.
-Proof. reflexivity. Qed.
-
-Lemma eval_prod_rect
-  : forall A B P f x y, @prod_rect_nodep A B P f (x, y) = f x y.
-Proof. reflexivity. Qed.
-
 Lemma eval_fold_right
   : forall A B f x ls,
     @List.fold_right A B f x ls
@@ -40,22 +30,11 @@ Lemma eval_app
     = ident.eagerly (@list_rect) A _ ys (fun x xs app_xs_ys => x :: app_xs_ys) xs.
 Proof. induction xs; cbn; intros; f_equal; auto. Qed.
 
-Lemma eval_list_rect
-  : forall A P N C ls,
-    @Thunked.list_rect A P N C ls
-    = ident.eagerly (@Thunked.list_rect) A P N C ls.
-Proof. reflexivity. Qed.
-
 Lemma eval_map
   : forall A B f ls,
     @List.map A B f ls
     = ident.eagerly (@list_rect) _ _ nil (fun l ls map_ls => cons (f l) map_ls) ls.
 Proof. induction ls; cbn; f_equal; auto. Qed.
-
-Lemma eval_bool_rect_true : forall T t f, @Thunked.bool_rect T t f true = t tt.
-Proof. reflexivity. Qed.
-Lemma eval_bool_rect_false : forall T t f, @Thunked.bool_rect T t f false = f tt.
-Proof. reflexivity. Qed.
 
 Lemma eval_rev
   : forall A xs,
@@ -73,16 +52,18 @@ Definition PositiveSet_t_beq : PositiveSet.t -> PositiveSet.t -> bool := tree_be
 Global Instance PositiveSet_reflect_eqb : reflect_rel (@eq PositiveSet.t) PositiveSet_t_beq
   := reflect_of_brel Equality.PositiveSet.internal_tree_dec_bl Equality.PositiveSet.internal_tree_dec_lb.
 
-Notation lemmas := (eval_nat_rect_arrow_nodep, eval_prod_rect, eval_fold_right, eval_map, do_again eval_rev, eval_bool_rect_true, eval_bool_rect_false, @fst_pair, eval_list_rect, eval_app) (only parsing).
+Notation lemmas := (eval_rect nat, eval_rect prod, eval_fold_right, eval_map, do_again eval_rev, eval_rect bool, @fst_pair, eval_rect list, eval_app) (only parsing).
 Notation extra_idents := (Z.eqb, orb, Z.gtb, PositiveSet.elements, @fst, @snd, PositiveSet.mem, Pos.succ, PositiveSet.add, List.fold_right, List.map, List.seq, Pos.mul, S, Pos.of_nat, Z.to_nat, Z.div, Z.pos, O, PositiveSet.empty) (only parsing).
 
+Set Printing Implicit.
+Set Printing Depth 100000000.
 Time Make myrew := Rewriter For lemmas (with extra idents extra_idents) (with delta).
 
 Definition sieve' (fuel : nat) (max : Z)
   := List.rev
        (fst
-          (@nat_rect_arrow_nodep
-             (list Z (* primes *) * PositiveSet.t (* composites *) * positive (* next_prime *)) (list Z (* primes *) * PositiveSet.t (* composites *))
+          (@nat_rect
+             (fun _ => list Z (* primes *) * PositiveSet.t (* composites *) * positive (* next_prime *) -> list Z (* primes *) * PositiveSet.t (* composites *))
              (fun '(primes, composites, next_prime) => (primes, composites))
              (fun _ rec '(primes, composites, next_prime)
               => rec
@@ -162,12 +143,12 @@ Proof.
   time "Rewrite_for" assert_succeeds (Rewrite_lhs_for myrew).
   Rewrite_lhs_for myrew.
   Set Printing Depth 1000000.
-  time "cbv;rewrite!" assert_succeeds (cbv [nat_rect_arrow_nodep nat_rect_nodep]; rewrite !Z.add_0_r).
-  time "cbv;setoid_rewrite" assert_succeeds (cbv [nat_rect_arrow_nodep nat_rect_nodep]; repeat setoid_rewrite Z.add_0_r).
-  time "cbv;rewrite_strat(topdown)" assert_succeeds ((rewrite_strat eval cbv [nat_rect_arrow_nodep nat_rect_nodep]); rewrite_strat topdown Z.add_0_r).
-  time "cbv;rewrite_strat(bottomup)" assert_succeeds ((rewrite_strat eval cbv [nat_rect_arrow_nodep nat_rect_nodep]); rewrite_strat bottomup Z.add_0_r).
-  Fail time "rewrite_strat(cbv;topdown)" (*assert_succeeds*) ((rewrite_strat (eval cbv [nat_rect_arrow_nodep nat_rect_nodep]; topdown Z.add_0_r))).
-  Fail time "rewrite_strat(cbv;bottomup)" (*assert_succeeds*) ((rewrite_strat (eval cbv [nat_rect_arrow_nodep nat_rect_nodep]; bottomup Z.add_0_r))).
+  time "cbv;rewrite!" assert_succeeds (cbv [nat_rect]; rewrite !Z.add_0_r).
+  time "cbv;setoid_rewrite" assert_succeeds (cbv [nat_rect]; repeat setoid_rewrite Z.add_0_r).
+  time "cbv;rewrite_strat(topdown)" assert_succeeds ((rewrite_strat eval cbv [nat_rect]); rewrite_strat topdown Z.add_0_r).
+  time "cbv;rewrite_strat(bottomup)" assert_succeeds ((rewrite_strat eval cbv [nat_rect]); rewrite_strat bottomup Z.add_0_r).
+  Fail time "rewrite_strat(cbv;topdown)" (*assert_succeeds*) ((rewrite_strat (eval cbv [nat_rect]; topdown Z.add_0_r))).
+  Fail time "rewrite_strat(cbv;bottomup)" (*assert_succeeds*) ((rewrite_strat (eval cbv [nat_rect]; bottomup Z.add_0_r))).
   Time Rewrite_for myrew.
   Show.
 Abort.

@@ -41,18 +41,6 @@ Lemma app_eagerly_rect
                         ys (fun x xs app_xs_ys => x :: app_xs_ys) xs.
 Proof. t. Qed.
 
-Lemma thunked_list_rect_eagerly_list_rect
-  : forall A P N C ls,
-    @Thunked.list_rect A P N C ls
-    = ident.eagerly (@Thunked.list_rect) A P N C ls.
-Proof. t. Qed.
-
-Lemma list_rect_eagerly_list_rect
-  : forall A P Q N C ls v,
-    @list_rect A (fun _ => P -> Q) N C ls v
-    = ident.eagerly (@list_rect) A (fun _ => P -> Q) N C ls v.
-Proof. t. Qed.
-
 Lemma flat_map_rect
   : forall A B f xs,
     @List.flat_map A B f xs
@@ -68,8 +56,7 @@ Time Make myrules
                    , (@Prod.snd_pair)
                    , map_eagerly_rect
                    , app_eagerly_rect
-                   , thunked_list_rect_eagerly_list_rect
-                   , list_rect_eagerly_list_rect
+                   , eval_rect list
                    , do_again flat_map_rect).
 
 (** Now we show some simple examples. *)
