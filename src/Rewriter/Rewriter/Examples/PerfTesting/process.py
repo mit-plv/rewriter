@@ -50,6 +50,7 @@ def process_rows(data, kind):
         keymap = [('tree depth', 'param n'),
                   ('extra +0s per node', 'param m'),
                   ('term size', (lambda row: 3 * int(row['param m']) * (2 ** (int(row['param n']) - 1)))),
+                  ('term size+87', (lambda row: (3 * int(row['param m']) + 87) * (2 ** (int(row['param n']) - 1)))),
                   ('Rewrite_for', 'Rewrite_for_gen user'),
                   ('rewriting', 'rewriting user'),
                   ('rewriting (vm only)', 'vm_compute_and_unify_in_rewrite user'),
@@ -93,12 +94,16 @@ def emit_output(f, fields, rows, txts=False):
     f.close()
 
     if txts:
-        size_field = 'term size' if 'term size' in fields else 'n'
-        for k in fields:
-            if k not in ('n', 'm', 'term size', 'list length', 'iteration count', 'extra +0s per node', 'tree depth'):
-                lines = ['%d %s' % (int(row[size_field]), row[k]) for row in rows if k in row.keys() and row[k] not in (None, '')]
-                with open(fname + '-%s.txt' % k.replace(' ', '-').replace('_', '-'), 'w') as f_txt:
-                    f_txt.write('\n'.join(lines))
+        size_fields = ['term size' if 'term size' in fields else 'n']
+        size_fields.extend(k for k in fields if k.startswith('term size+'))
+        for size_field in size_fields:
+            extra = ''
+            if size_field.startswith('term size+'): extra = size_field[len('term size'):]
+            for k in fields:
+                if k not in ('n', 'm', 'term size', 'list length', 'iteration count', 'extra +0s per node', 'tree depth') and not k.startswith('term size'):
+                    lines = ['%d %s' % (int(row[size_field]), row[k]) for row in rows if k in row.keys() and row[k] not in (None, '')]
+                    with open(fname + '%s-%s.txt' % (extra, k.replace(' ', '-').replace('_', '-')), 'w') as f_txt:
+                        f_txt.write('\n'.join(lines))
 
 if __name__ == '__main__':
     args = parser.parse_args()
