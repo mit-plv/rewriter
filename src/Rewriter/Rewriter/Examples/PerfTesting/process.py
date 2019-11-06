@@ -3,6 +3,7 @@ import argparse
 import sys, os, os.path
 import csv
 import re
+import math
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-o', '--output-file', dest='outfile', type=argparse.FileType('w'),
@@ -48,7 +49,7 @@ def process_rows(data, kind):
     elif kind == 'Plus0Tree':
         keymap = [('tree depth', 'param n'),
                   ('extra +0s per node', 'param m'),
-                  ('term size', (lambda row: 3 * int(row['param m']) * (2 ** (int(row['param n']) - 1)))),
+                  ('term size', (lambda row: int(row['param m']) * math.exp(int(row['param n'])))),
                   ('Rewrite_for', 'Rewrite_for_gen user'),
                   ('rewriting', 'rewriting user'),
                   ('rewriting (vm only)', 'vm_compute_and_unify_in_rewrite user'),
