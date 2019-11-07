@@ -125,4 +125,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     fields, data = readfile(args.infile)
     fields, rows = process_rows(data, args.kind)
-    emit_output(args.outfile, fields, rows, kind, txts=args.txts)
+    emit_output(args.outfile, fields, rows, args.kind, txts=args.txts)
