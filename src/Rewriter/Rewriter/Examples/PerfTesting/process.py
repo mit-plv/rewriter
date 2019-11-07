@@ -49,8 +49,8 @@ def process_rows(data, kind):
     elif kind == 'Plus0Tree':
         keymap = [('tree depth', 'param n'),
                   ('extra +0s per node', 'param m'),
-                  ('term size', (lambda row: 3 * int(row['param m']) * (2 ** (int(row['param n']) - 1)))),
-                  ('term size+87', (lambda row: (3 * int(row['param m']) + 87) * (2 ** (int(row['param n']) - 1)))),
+                  ('term size', (lambda row: (int(row['param m']) + 1) * (2 ** (int(row['param n']) + 1)) - int(row['param m']))),
+                  ('term size+29', (lambda row: (int(row['param m']) + 1 + 29) * (2 ** (int(row['param n']) + 1)) - int(row['param m']))),
                   ('Rewrite_for', 'Rewrite_for_gen user'),
                   ('rewriting', 'rewriting user'),
                   ('rewriting (vm only)', 'vm_compute_and_unify_in_rewrite user'),
@@ -85,7 +85,7 @@ def process_rows(data, kind):
         raise Exception('Internal Error: Known but unhandled kind: %s' % kind)
     return tuple(k for k, k_old in keymap), sorted([dict(remap(k, k_old, row) for k, k_old in keymap) for row in rows], key=key)
 
-def emit_output(f, fields, rows, txts=False):
+def emit_output(f, fields, rows, kind, txts=False):
     fname, fext = os.path.splitext(f.name)
     rows = list(rows)
     fwriter = csv.DictWriter(f, fields, lineterminator="\n")
@@ -94,19 +94,35 @@ def emit_output(f, fields, rows, txts=False):
     f.close()
 
     if txts:
+        def get_lines(k, size_field, only_if=(lambda row: True)):
+            return ['%d %s' % (int(row[size_field]), row[k]) for row in rows if k in row.keys() and only_if(row) and row[k] not in (None, '')]
+        def writef(extra, k, lines):
+            with open(fname + '%s-%s.txt' % (extra, k.replace(' ', '-').replace('_', '-')), 'w') as f_txt:
+                f_txt.write('\n'.join(lines))
+        k_good = (lambda k: k not in ('n', 'm', 'term size', 'list length', 'iteration count', 'extra +0s per node', 'tree depth') and not k.startswith('term size'))
         size_fields = ['term size' if 'term size' in fields else 'n']
         size_fields.extend(k for k in fields if k.startswith('term size+'))
         for size_field in size_fields:
             extra = ''
             if size_field.startswith('term size+'): extra = size_field[len('term size'):]
             for k in fields:
-                if k not in ('n', 'm', 'term size', 'list length', 'iteration count', 'extra +0s per node', 'tree depth') and not k.startswith('term size'):
-                    lines = ['%d %s' % (int(row[size_field]), row[k]) for row in rows if k in row.keys() and row[k] not in (None, '')]
-                    with open(fname + '%s-%s.txt' % (extra, k.replace(' ', '-').replace('_', '-')), 'w') as f_txt:
-                        f_txt.write('\n'.join(lines))
+                if k_good(k):
+                    lines = get_lines(k, size_field)
+                    writef(extra, k, lines)
+        if kind == 'Plus0Tree':
+            for n in range(1, 10):
+                for k in fields:
+                    if k_good(k):
+                        lines = get_lines(k, 'm', only_if=(lambda row: int(row['n']) == n))
+                        writef('-only-n-%d' % n, k, lines)
+            for m in range(1, 4):
+                for k in fields:
+                    if k_good(k):
+                        lines = get_lines(k, 'n', only_if=(lambda row: int(row['m']) == m))
+                        writef('-only-m-%d' % m, k, lines)
 
 if __name__ == '__main__':
     args = parser.parse_args()
     fields, data = readfile(args.infile)
     fields, rows = process_rows(data, args.kind)
-    emit_output(args.outfile, fields, rows, txts=args.txts)
+    emit_output(args.outfile, fields, rows, kind, txts=args.txts)
