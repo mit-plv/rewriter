@@ -157,11 +157,15 @@ Module Compilers.
                                         change (@type.related _ base_type_interp (fun _ => eq) t x y)
                | [ H := _ |- _ ] => revert H
                | [ H : ?T |- @type.related _ base_type_interp (fun _ => eq) ?B _ _ ]
-                 => let t := reify_type T in
-                    generalize (_ : Proper (@type.related _ base_type_interp (fun _ => eq) t) H);
-                    revert H;
-                    refine (@generalize_to_eqv _ base_type_interp t B _ _ _)
-               | [ H : ?T |- _ ] => clear H
+                 => lazymatch goal with
+                    | [ |- context[H] ]
+                      => let t := reify_type T in
+                         generalize (_ : Proper (@type.related _ base_type_interp (fun _ => eq) t) H);
+                         revert H;
+                         refine (@generalize_to_eqv _ base_type_interp t B _ _ _)
+                    | _ => idtac
+                    end
+               (*| [ H : ?T |- _ ] => clear H*)
                end.
 
       Ltac etransitivity_for_sides do_lhs do_rhs :=
