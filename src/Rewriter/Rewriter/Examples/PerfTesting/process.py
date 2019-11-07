@@ -113,12 +113,12 @@ def emit_output(f, fields, rows, kind, txts=False):
             for n in range(1, 10):
                 for k in fields:
                     if k_good(k):
-                        lines = get_lines(k, 'm', only_if=(lambda row: int(row['n']) == n))
+                        lines = get_lines(k, 'extra +0s per node', only_if=(lambda row: int(row['tree depth']) == n))
                         writef('-only-n-%d' % n, k, lines)
             for m in range(1, 4):
                 for k in fields:
                     if k_good(k):
-                        lines = get_lines(k, 'n', only_if=(lambda row: int(row['m']) == m))
+                        lines = get_lines(k, 'tree depth', only_if=(lambda row: int(row['extra +0s per node']) == m))
                         writef('-only-m-%d' % m, k, lines)
 
 if __name__ == '__main__':
