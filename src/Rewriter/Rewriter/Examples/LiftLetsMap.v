@@ -131,6 +131,9 @@ Ltac timetest2 do_verify :=
 Ltac timetest3 do_verify :=
   assert_succeeds_preserve_error
     (once (time "cps+vm_compute" vm_compute); do_verify ()).
+(* we can't verify because we don't do the final cbv *)
+Ltac timetest4 do_verify :=
+  assert_succeeds_preserve_error (once (time "Rewrite_lhs_for_skip_cbv" AllTactics.Compilers.RewriteRules.Tactic.Rewrite_lhs_for_skip_cbv myrew)(*; do_verify ()*)).
 
 Global Open Scope nat_scope.
 Ltac test_for_gen do_verify test_tac test_tac_n n m :=

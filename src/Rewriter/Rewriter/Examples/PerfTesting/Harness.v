@@ -131,16 +131,17 @@ Module LiftLetsMap.
            := match test_tac_n, s with
               | 0, SuperFast => (10, 10)
               | 3, SuperFast => (50, 50)
+              | 4, SuperFast => (50, 50)
               | _, SuperFast => (5, 4)
               | 0, Fast => (90, 90)
               | 3, Fast => (150, 150) (* N.B. test 3 stack overflows on larger than ~160, 160 *)
+              | 4, Fast => (150, 150)
               | _, Fast => (6, 5)
               | 0, Medium => (115, 115) (* maybe should be (150, 150), but (115, 115) already takes over 11 h, I think *)
               | _, Medium => (6, 7)
               | 0, Slow => (200, 200) (* ??? *)
               | _, Slow => (10, 10) (* ??? *)
               | 0, VerySlow => (400, 400) (* ??? *)
-              | 3, VerySlow => (160, 160) (* N.B. test 3 stack overflows on larger than ~160, 160 *)
               | _, VerySlow => (100, 100) (* ??? *)
               end in
        sort_by_prod (flat_map (fun n => map (fun m => (n, m)) (seq 1 m_count)) (seq 1 n_count)).
@@ -155,6 +156,7 @@ Module LiftLetsMap.
                     | 1 => timetest1
                     | 2 => timetest2
                     | 3 => timetest3
+                    | 4 => timetest4
                     end in
     let rec iter ls :=
         lazymatch ls with

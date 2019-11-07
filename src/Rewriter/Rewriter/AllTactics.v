@@ -253,10 +253,13 @@ Module Compilers.
         let verified_rewriter_package_head := head verified_rewriter_package in
         cbv [expr.Interp expr.interp Classes.ident_interp Classes.base GoalType.exprInfo type.interp base.interp base_interp_head ident_interp_head verified_rewriter_package_head ident.literal ident.eagerly].
 
-      Ltac Rewrite_for_gen verified_rewriter_package do_lhs do_rhs :=
+      Ltac Rewrite_for_gen verified_rewriter_package skip_cbv do_lhs do_rhs :=
         once
           (idtac;
-           let time_all := fun tac arg => time "Rewrite_for_gen" tac arg in
+           let time_all := lazymatch skip_cbv with
+                           | false => fun tac arg => time "Rewrite_for_gen" tac arg
+                           | true => fun tac arg => time "Rewrite_for_gen_skip_cbv" tac arg
+                           end in
            let time_etrans := fun tac arg => time "Rewrite_for_gen:etransitivity_for_sides" tac arg in
            let time_generalize := fun tac arg => time "Rewrite_for_gen:generalize_hyps_for_rewriting" tac arg in
            let time_reify := fun tac arg => time "reification" tac arg in
@@ -281,7 +284,10 @@ Module Compilers.
                               time_if_perf1 time_do_rewrite do_rewrite_with verified_rewriter_package;
                               let n := numgoals in
                               guard n = 0 (* assert that all goals are solved; we don't use [solve] because it eats error messages of inner tactics *));
-                          time_if_perf2 time_cbv ltac:(fun _ => do_final_cbv verified_rewriter_package base_interp ident_interp) ()
+                          lazymatch skip_cbv with
+                          | true => idtac
+                          | false => time_if_perf2 time_cbv ltac:(fun _ => do_final_cbv verified_rewriter_package base_interp ident_interp) ()
+                          end
                      end) ()).
     End FinalTacticHelpers.
 
@@ -328,9 +334,12 @@ Module Compilers.
         Global Hint Extern 0 (GoalType.VerifiedRewriter_with_ind_args _ _ _ _ _ _ _ _) => make_rewriter_all : typeclass_instances.
       End Hints.
 
-      Ltac Rewrite_lhs_for verified_rewriter_package := Rewrite_for_gen verified_rewriter_package true false.
-      Ltac Rewrite_rhs_for verified_rewriter_package := Rewrite_for_gen verified_rewriter_package false true.
-      Ltac Rewrite_for verified_rewriter_package := Rewrite_for_gen verified_rewriter_package true true.
+      Ltac Rewrite_lhs_for verified_rewriter_package := Rewrite_for_gen verified_rewriter_package false true false.
+      Ltac Rewrite_rhs_for verified_rewriter_package := Rewrite_for_gen verified_rewriter_package false false true.
+      Ltac Rewrite_for verified_rewriter_package := Rewrite_for_gen verified_rewriter_package false true true.
+      Ltac Rewrite_lhs_for_skip_cbv verified_rewriter_package := Rewrite_for_gen verified_rewriter_package true true false.
+      Ltac Rewrite_rhs_for_skip_cbv verified_rewriter_package := Rewrite_for_gen verified_rewriter_package true false true.
+      Ltac Rewrite_for_skip_cbv verified_rewriter_package := Rewrite_for_gen verified_rewriter_package true true true.
     End Tactic.
   End RewriteRules.
 End Compilers.
