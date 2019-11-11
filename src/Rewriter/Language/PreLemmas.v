@@ -22,9 +22,9 @@ Lemma eval_nat_rect
 Proof. reflexivity. Qed.
 
 Lemma eval_list_rect_arrow
-  : forall A P Q N C ls,
-    @list_rect_arrow_nodep A P Q N C ls
-    = ident.eagerly (@list_rect_arrow_nodep) A P Q N C ls.
+  : forall A P Q N C ls v,
+    @list_rect_arrow_nodep A P Q N C ls v
+    = ident.eagerly (@list_rect_arrow_nodep) A P Q N C ls v.
 Proof. reflexivity. Qed.
 
 Lemma eval_list_rect
