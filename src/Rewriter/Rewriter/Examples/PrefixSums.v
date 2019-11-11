@@ -17,7 +17,7 @@ Definition prefixSums (ls : list nat) : list nat :=
   let ls'' := map (fun p => fst p * snd p) ls' in
   let '(_, ls''') := fold_left (fun acc_ls''' n =>
                                   let '(acc, ls''') := acc_ls''' in
-                                  let acc' := acc + n in
+                                  dlet acc' := acc + n in
                                   (acc', acc' :: ls''')) ls'' (0, []) in
   ls'''.
 
@@ -66,11 +66,19 @@ Make rewriter := Rewriter For (zero_plus, plus_zero,
                           (with delta)
                           (with extra idents (seq)).
 
-Make rewriter2 := Rewriter For (eval_rect prod, eval_rect list).
+Ltac verify _ :=
+  lazymatch goal with
+  | [ |- ?f ?a ?b ?c ?d = dlet acc := ?b + ?c * 2 in
+          dlet acc' := acc + ?d * 3 in
+          [acc'; acc; ?b; 0] ]
+    => idtac
+  | [ |- ?G ] => fail 0 "invalid:" G
+  end.
 
 Lemma prefixSums4 :
   {f : nat -> nat -> nat -> nat -> list nat
   | forall a b c d, f a b c d
                     = prefixSums [a; b; c; d]}.
 Proof. eexists; intros; Rewrite_rhs_for rewriter.
+       verify ().
        reflexivity. Qed.
