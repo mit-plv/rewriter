@@ -46,8 +46,8 @@ Lemma eval_combine : forall A B (la : list A) (lb : list B),
                               (fun x _ r lb => list_case (fun _ => _) [] (fun y ys => (x, y) :: r ys) lb) la lb.
 Proof. cbv [ident.eagerly]; induction la, lb; simpl; intros; f_equal; auto. Qed.
 
-Lemma eval_length : forall A ls,
-    @length A ls
+Lemma eval_length : forall A (ls : list A),
+    length ls
     = list_rect _ 0 (fun _ _ n => S n) ls.
 Proof. induction ls; cbv; f_equal; reflexivity. Qed.
 
