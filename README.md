@@ -5,7 +5,7 @@ Building
 -----
 [![Build Status](https://travis-ci.com/mit-plv/rewriter.svg?branch=master)](https://travis-ci.com/mit-plv/rewriter)
 
-This repository requires Coq 8.9 or later.
+This repository requires Coq 8.9 or later, and requires that the version of OCaml used to build Coq be installed and accessible on the system.
 
 Git submodules are used for some dependencies. If you did not clone with `--recursive`, run
 
@@ -21,6 +21,12 @@ Usage
 The entry point is [`src/Rewriter/Util/plugins/RewriterBuild.v`](./src/Rewriter/Util/plugins/RewriterBuild.v).
 (Better entry point coming in the future.)
 There are some examples in [`src/Rewriter/Rewriter/Examples.v`](./src/Rewriter/Rewriter/Examples.v).
+
+The examples from the paper are in [`src/Rewriter/Rewriter/Examples/PerfTesting/`](./src/Rewriter/Rewriter/Examples/PerfTesting/).
+On the branch with performance data, the `perf-*.txt` files in the top-level directory contain selected performance data in two-column format, while the `perf*.csv` files contain all performance data in CSV format.
+The logs with raw timing data live in the subdirectories of [`src/Rewriter/Rewriter/Examples/PerfTesting/`](./src/Rewriter/Rewriter/Examples/PerfTesting/), and were made with the targets `perf-SuperFast`, `perf-Fast`, and `perf-Medium` targets.
+The text and csv files were generated with `make perf-csv`.
+(The targets `perf-Slow` and `perf-VerySlow` exist but take a very, very, very long time to run.)
 
 Reading The Code
 ----------------

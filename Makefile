@@ -74,15 +74,18 @@ MAX_PERF_KB?=10000000 # 10 GB
 MAX_PERF_SEC?=
 TIMEOUT_CMD?=
 TIMEOUT_SHOW?=
+PERF_SET_LIMITS?=
 
 ifneq (,$(NO_LIMIT_PERF))
 ifneq (,$(MAX_PERF_SEC))
+TMEDOUT_CMD:=$(MAX_PERF_SEC)
 PERF_T_ARG:=-t $(MAX_PERF_SEC) # trailing space important
 else
 PERF_T_ARG:=
 endif
 
-TIMEOUT_CMD := etc/timeout/timeout -m $(MAX_PERF_KB) $(PERF_T_ARG)
+# apparently ulimit -m doesn't work anymore https://superuser.com/a/1497437/59575 / https://thirld.com/blog/2012/02/09/things-to-remember-when-using-ulimit/
+PERF_SET_LIMITS = ulimit -S -m $(PERF_MAX_KB); ulimit -S -v $(PERF_MAX_KB);
 TIMEOUT_SHOW:=TIMEOUT -m $(MAX_PERF_KB) $(PERF_T_ARG)
 endif
 
@@ -96,7 +99,7 @@ endif
 $(ALL_PERF_LOGS) : %.log : %.v
 	$(SHOW)'$(TIMEOUT_SHOW)COQC $(<:src/Rewriter/Rewriter/Examples/PerfTesting/%.v=%) > LOG'
 	$(HIDE)rm -f $@.ok
-	$(HIDE)($(TIMER) $(TIMEOUT_CMD) $(COQC) $(COQDEBUG) $(TIMING_ARG) $(COQFLAGS) $(COQLIBS) $< && touch $@.ok) > $@.tmp
+	$(HIDE)($(PERF_SET_LIMITS) $(TIMER) $(TIMEOUT_CMD) $(COQC) $(COQDEBUG) $(TIMING_ARG) $(COQFLAGS) $(COQLIBS) $< && touch $@.ok) > $@.tmp
 	$(HIDE)rm $@.ok
 	$(HIDE)mv -f $@.tmp $@
 
