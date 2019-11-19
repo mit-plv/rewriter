@@ -26,6 +26,10 @@ endef
 
 $(foreach size,$(SIZES),$(eval $(call makesize,$(size))))
 
+.PHONY: sizes
+sizes:
+	@echo $(addprefix perf-,$(SIZES))
+
 $(PERF_DIR)/LiftLetsMap/_%.v:
 	$(SHOW)'ECHO > $@'
 	$(HIDE)mkdir -p $(dir $@)
