@@ -157,6 +157,7 @@ Module LiftLetsMap.
                     | 2 => timetest2
                     | 3 => timetest3
                     | 4 => timetest4
+                    | 5 => timetest5
                     end in
     let rec iter ls :=
         lazymatch ls with
