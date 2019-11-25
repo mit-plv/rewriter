@@ -33,6 +33,10 @@ jobs:
       language: c
       script: CUR=all ./etc/ci/travis.sh -j2 all
     - stage: all
+      env: COQ_VERSION="v8.11"  COQ_PACKAGE="coq libcoq-ocaml-dev"               PPA="ppa:jgross-h/coq-8.11-daily"
+      language: c
+      script: CUR=all ./etc/ci/travis.sh -j2 all
+    - stage: all
       env: COQ_VERSION="v8.10"  COQ_PACKAGE="coq libcoq-ocaml-dev"               PPA="ppa:jgross-h/coq-8.10-daily"
       language: c
       script: CUR=all ./etc/ci/travis.sh -j2 all
