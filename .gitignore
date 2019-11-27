@@ -89,8 +89,6 @@ src/Rewriter/Util/plugins/strategy_tactic_plugin.ml4
 
 /.coq-version
 
-/_CoqProject
-
 # perf testing
 
 src/Rewriter/Rewriter/Examples/PerfTesting/*/*.v

@@ -28,6 +28,8 @@ clean::
 	rm -f $(COQ_VERSION_FILE)
 
 # This target is used to update the _CoqProject file.
+# But it only works if we have git
+ifneq (,$(wildcard .git/))
 SORT_COQPROJECT = sed 's,[^/]*/,~&,g' | env LC_COLLATE=C sort | sed 's,~,,g'
 EXISTING_COQPROJECT_CONTENTS:=$(shell cat _CoqProject 2>&1)
 WARNINGS:=+implicit-core-hint-db,+implicits-in-term,+non-reversible-notation,+deprecated-intros-until-0,+deprecated-focus,+unused-intro-pattern
@@ -40,10 +42,7 @@ _CoqProject:
 	$(SHOW)'ECHO > _CoqProject'
 	$(HIDE)($(COQPROJECT_CMD)) > $@
 endif
-
-clean::
-	rm -f _CoqProject
-
+endif
 
 
 .DEFAULT_GOAL := all
