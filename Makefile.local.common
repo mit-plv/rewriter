@@ -35,21 +35,23 @@ endif
 endif
 endif
 
-COMPATIBILITY_FILES := \
+COMPATIBILITY_FILES_PATTERN := \
 	src/Rewriter/Util/plugins/definition_by_tactic.ml \
 	src/Rewriter/Util/plugins/definition_by_tactic.mli \
-	src/Rewriter/Util/plugins/definition_by_tactic_plugin.$(ML4_OR_MLG) \
+	src/Rewriter/Util/plugins/definition_by_tactic_plugin.@ML4_OR_MLG@ \
 	src/Rewriter/Util/plugins/definition_by_tactic_plugin.mllib \
 	src/Rewriter/Util/plugins/inductive_from_elim.ml \
 	src/Rewriter/Util/plugins/inductive_from_elim.mli \
-	src/Rewriter/Util/plugins/inductive_from_elim_plugin.$(ML4_OR_MLG) \
+	src/Rewriter/Util/plugins/inductive_from_elim_plugin.@ML4_OR_MLG@ \
 	src/Rewriter/Util/plugins/inductive_from_elim_plugin.mllib \
 	src/Rewriter/Util/plugins/rewriter_build.ml \
 	src/Rewriter/Util/plugins/rewriter_build.mli \
-	src/Rewriter/Util/plugins/rewriter_build_plugin.$(ML4_OR_MLG) \
+	src/Rewriter/Util/plugins/rewriter_build_plugin.@ML4_OR_MLG@ \
 	src/Rewriter/Util/plugins/rewriter_build_plugin.mllib \
 	src/Rewriter/Util/plugins/strategy_tactic.ml \
 	src/Rewriter/Util/plugins/strategy_tactic.mli \
-	src/Rewriter/Util/plugins/strategy_tactic_plugin.$(ML4_OR_MLG) \
+	src/Rewriter/Util/plugins/strategy_tactic_plugin.@ML4_OR_MLG@ \
 	src/Rewriter/Util/plugins/strategy_tactic_plugin.mllib \
         src/Rewriter/Util/plugins/RewriterBuildRegistry.v
+
+COMPATIBILITY_FILES := $(subst @ML4_OR_MLG@,$(ML4_OR_MLG),$(COMPATIBILITY_FILES_PATTERN))
