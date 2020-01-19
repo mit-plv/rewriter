@@ -68,7 +68,7 @@ Module Compilers.
               @Build_VerifiedRewriter exprInfo exprReifyInfo (@Rewriter.Compilers.RewriteRules.GoalType.Rewrite exprInfo exprExtraInfo pkg R) HWf HInterp_gen _ _ (@GeneralizeVar.Wf_via_flat _ ident _ _ _ _ _));
         [ | clear HWf ]; intros.
       all: abstract (
-               rewrite Rewrite_eq; cbv [Make.Rewrite]; rewrite rewrite_head_eq, all_rewrite_rules_eq, ?eq_invert_bind_args_unknown, ?eq_unify_unknown;
+               rewrite Rewrite_eq; cbv [Make.Rewrite]; rewrite rewrite_head_eq; unfold rewrite_head0; rewrite all_rewrite_rules_eq, ?eq_invert_bind_args_unknown, ?eq_unify_unknown;
                first [ apply (Compile.Wf_Rewrite _); [ | assumption ];
                        let wf_do_again := fresh "wf_do_again" in
                        (intros ? ? ? ? wf_do_again ? ?);
