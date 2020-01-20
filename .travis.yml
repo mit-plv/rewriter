@@ -23,9 +23,6 @@ before_script:
   - echo | coqtop
   - source ./etc/ci/travis_keep_alive.sh
 
-matrix:
-  fast_finish: true
-
 jobs:
   include:
     - stage: all
