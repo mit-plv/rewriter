@@ -15,17 +15,26 @@ STRICT_DEPS?=
 
 EXTERNAL_PERF_DEPENDENCIES?=
 
+.PHONY: clean
+
+# Makefile.coq from Coq 8.9 is incompatible with Coq >= 8.10, so we invoke clean a different way, and force a remake of Makefile.coq
+ifeq ($(MAKECMDGOALS),clean)
+clean::
+	$(MAKE) -B Makefile.coq
+	$(MAKE) -f Makefile.coq clean
+else
 include Makefile.local.common
 include Makefile.coq
+endif
+
+clean::
+	rm -f _CoqProject Makefile.coq Makefile-old.conf $(COQ_VERSION_FILE)
 
 ifneq ($(COQ_EXTENDED_VERSION),$(COQ_EXTENDED_VERSION_OLD))
 $(COQ_VERSION_FILE)::
 	$(SHOW)'echo $$COQ_VERSION_INFO ($(COQ_VERSION)) > $@'
 	$(HIDE)echo "$(COQ_EXTENDED_VERSION)" > $@
 endif
-
-clean::
-	rm -f $(COQ_VERSION_FILE)
 
 _CoqProject: _CoqProject.in
 	sed s'/@ML4_OR_MLG@/$(ML4_OR_MLG)/g' $< > $@
