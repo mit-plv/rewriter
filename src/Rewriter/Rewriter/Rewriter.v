@@ -819,6 +819,29 @@ Module Compilers.
 
         Definition option_bind' {A B} := @Option.bind A B. (* for help with unfolding *)
 
+        Fixpoint reveal_rawexpr_of_pattern_cps {t} (e : rawexpr) (p : pattern t) {struct p}
+          : ~> rawexpr
+          := match p with
+             | pattern.Wildcard _ => fun T k => k e
+             | pattern.Ident _ _ => reveal_rawexpr_cps e
+             | pattern.App s d pf px
+               => fun T k
+                  => reveal_rawexpr_cps
+                       e _
+                       (fun e
+                        => match e with
+                           | rApp f x t alt
+                             => reveal_rawexpr_of_pattern_cps
+                                  f pf _
+                                  (fun f
+                                   => reveal_rawexpr_of_pattern_cps
+                                        x px _
+                                        (fun x
+                                         => k (rApp f x alt)))
+                           | _ => k e
+                           end)
+             end%cps.
+
         Fixpoint unify_pattern' {t} (e : rawexpr) (p : pattern t) (evm : EvarMap) {struct p}
           : forall T, (unification_resultT' p evm -> option T) -> option T
           := match p, e return forall T, (unification_resultT' p evm -> option T) -> option T with
@@ -848,15 +871,24 @@ Module Compilers.
                => fun _ k => None
              end%option.
 
-        Definition unify_pattern {t} (e : rawexpr) (p : pattern t)
+        Definition reveal_rawexpr_of_pattern_as_necessary_cps (reveal_as_necessary : bool) {t} (e : rawexpr) (p : pattern t)
+          : ~> rawexpr
+          := if reveal_as_necessary
+             then reveal_rawexpr_of_pattern_cps e p
+             else fun T k => k e.
+
+        Definition unify_pattern (reveal_as_necessary : bool) {t} (e : rawexpr) (p : pattern t)
           : forall T, (unification_resultT p -> option T) -> option T
           := fun T cont
-             => unify_types
-                  e p _
-                  (fun evm
-                   => evm <- evm;
-                        unify_pattern'
-                          e p evm T (fun v => cont (existT _ _ v)))%option.
+             => reveal_rawexpr_of_pattern_as_necessary_cps
+                  reveal_as_necessary e p _
+                  (fun e
+                   => unify_types
+                        e p _
+                        (fun evm
+                         => evm <- evm;
+                              unify_pattern'
+                                e p evm T (fun v => cont (existT _ _ v)))%option).
 
         (** We follow
             http://moscova.inria.fr/~maranget/papers/ml05e-maranget.pdf,
@@ -1047,11 +1079,11 @@ Module Compilers.
 
           Local Notation maybe_do_again := (maybe_do_again do_again).
 
-          Definition rewrite_with_rule {t} e' (pf : rewrite_ruleT)
+          Definition rewrite_with_rule (deeper : bool) {t} e' (pf : rewrite_ruleT)
             : option (UnderLets (expr t))
             := let 'existT p f := pf in
                let should_do_again := rew_should_do_again f in
-               unify_pattern
+               (unify_pattern deeper)
                  e' (pattern.pattern_of_anypattern p) _
                  (fun x
                   => app_with_unification_resultT_cps
@@ -1069,20 +1101,28 @@ Module Compilers.
                                                      UnderLets.Base (tr' fv))%under_lets))%option)%cps)%option)%cps)%cps).
 
           Definition eval_rewrite_rules
-                     (d : decision_tree)
+                     (d : option decision_tree)
                      (rews : rewrite_rulesT)
                      (e : rawexpr)
             : UnderLets (expr (type_of_rawexpr e))
             := let defaulte := expr_of_rawexpr e in
-               (eval_decision_tree
-                  (e::nil) d
-                  (fun k ctx
-                   => match ctx return option (UnderLets (expr (type_of_rawexpr e))) with
-                      | e'::nil
-                        => (pf <- nth_error rews k; rewrite_with_rule e' pf)%option
-                      | _ => None
-                      end);;;
-                  (UnderLets.Base defaulte))%option.
+               match d with
+               | Some d
+                 => eval_decision_tree
+                      (e::nil) d
+                      (fun k ctx
+                       => match ctx return option (UnderLets (expr (type_of_rawexpr e))) with
+                          | e'::nil
+                            => (pf <- nth_error rews k; rewrite_with_rule false e' pf)%option
+                          | _ => None
+                          end);;;
+                      (UnderLets.Base defaulte)
+               | None (* just try all the rewrite rules *)
+                 => List.fold_right
+                      (fun pf res => rewrite_with_rule true e pf;;; res)
+                      (UnderLets.Base defaulte)
+                      rews
+               end%option.
         End eval_rewrite_rules.
 
         Local Notation enumerate ls
@@ -1215,7 +1255,7 @@ Module Compilers.
           := compile_rewrites' fuel (enumerate (List.map (fun p => to_raw_pattern (pattern.pattern_of_anypattern (projT1 p)) :: nil) ps)).
 
         Section with_do_again.
-          Context (dtree : decision_tree)
+          Context (dtree : option decision_tree)
                   (rewrite_rules : rewrite_rulesT)
                   (default_fuel : nat)
                   (do_again : forall t : base_type, @expr.expr base_type ident value t -> UnderLets (expr t)).
@@ -1515,10 +1555,23 @@ Module Compilers.
 
               rewrite_head0
               := (fun var
-                  => @Compile.assemble_identifier_rewriters base _ base_beq ident var eta_ident_cps pattern_ident arg_types (@unify _ _ pkg) (@unify_unknown _ _ pkg) raw_ident full_types (@invert_bind_args _ _ pkg) (@invert_bind_args_unknown _ _ pkg) type_of raw_to_typed is_simple dtree (all_rewrite_rules var));
-              rewrite_head (* adjusted version *) : forall var (do_again : forall t, @expr.expr (base.type base) ident (@Compile.value _ ident var) (type.base t) -> @UnderLets.UnderLets _ ident var (@expr.expr (base.type base) ident var (type.base t)))
-                                     t (idc : ident t), @Compile.value_with_lets (base.type base) ident var t;
-              rewrite_head_eq : rewrite_head = rewrite_head0
+                  => @Compile.assemble_identifier_rewriters base _ base_beq ident var eta_ident_cps pattern_ident arg_types (@unify _ _ pkg) (@unify_unknown _ _ pkg) raw_ident full_types (@invert_bind_args _ _ pkg) (@invert_bind_args_unknown _ _ pkg) type_of raw_to_typed is_simple (Some dtree) (all_rewrite_rules var));
+              rewrite_head_no_dtree0
+              := (fun var
+                  => @Compile.assemble_identifier_rewriters base _ base_beq ident var eta_ident_cps pattern_ident arg_types (@unify _ _ pkg) (@unify_unknown _ _ pkg) raw_ident full_types (@invert_bind_args _ _ pkg) (@invert_bind_args_unknown _ _ pkg) type_of raw_to_typed is_simple None (all_rewrite_rules var));
+              rewrite_head (* adjusted version *)
+              : forall var (do_again : forall t, @expr.expr (base.type base) ident (@Compile.value _ ident var) (type.base t) -> @UnderLets.UnderLets _ ident var (@expr.expr (base.type base) ident var (type.base t)))
+                       t (idc : ident t), @Compile.value_with_lets (base.type base) ident var t;
+              rewrite_head_eq : rewrite_head = rewrite_head0;
+              rewrite_head_no_dtree (* adjusted version *)
+              : forall var (do_again : forall t, @expr.expr (base.type base) ident (@Compile.value _ ident var) (type.base t) -> @UnderLets.UnderLets _ ident var (@expr.expr (base.type base) ident var (type.base t)))
+                       t (idc : ident t), @Compile.value_with_lets (base.type base) ident var t;
+              rewrite_head_no_dtree_eq : rewrite_head_no_dtree = rewrite_head_no_dtree0;
+              rewrite_head_gen
+              := fun (use_dtree : bool) (use_precomputed_functions : bool)
+                 => if use_precomputed_functions
+                    then if use_dtree then rewrite_head else rewrite_head_no_dtree
+                    else if use_dtree then rewrite_head0 else rewrite_head_no_dtree0;
             }.
       End GoalType.
       Import Compilers.Classes.
@@ -1527,8 +1580,10 @@ Module Compilers.
                {exprExtraInfo : ExprExtraInfoT}
                {pkg : @package base ident}
                (data : rewriter_dataT)
+               (use_dtree : bool)
+               (use_precomputed_functions : bool)
                {t} (e : expr.Expr (ident:=ident) t) : expr.Expr (ident:=ident) t
-        := Compile.Rewrite (ident_is_var_like data) (rewrite_head data) (default_fuel data) e.
+        := Compile.Rewrite (ident_is_var_like data) (rewrite_head_gen data use_dtree use_precomputed_functions) (default_fuel data) e.
     End Make.
     Export Make.GoalType.
 
@@ -1541,7 +1596,7 @@ Module Compilers.
              {pkg : package} :=
         {
           Rewriter_data : rewriter_dataT;
-          Rewrite : forall {t} (e : expr.Expr (ident:=ident) t), expr.Expr (ident:=ident) t;
+          Rewrite : forall (use_dtree use_precomputed_functions : bool) {t} (e : expr.Expr (ident:=ident) t), expr.Expr (ident:=ident) t;
           Rewrite_eq : @Rewrite = @Make.Rewrite _ _ pkg Rewriter_data
         }.
     End GoalType.

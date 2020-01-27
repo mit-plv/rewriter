@@ -148,13 +148,13 @@ let set_strategy_of_package sigma level verified_rewriter_package =
   | _ ->
     CErrors.user_err Pp.(str "Invalid hnf of exprInfo: " ++ Printer.pr_econstr_env env sigma exprInfo)
 
-let make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_like_idents base ident raw_ident pattern_ident include_interp skip_early_reduction rules_proofs =
+let make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_like_idents base ident raw_ident pattern_ident include_interp skip_early_reduction skip_early_reduction_no_dtree rules_proofs =
   let env = Global.env () in
   let (sigma, verified_rewriter_with_args) = Evd.fresh_global env sigma (r_verified_rewriter_with_args ()) in
 
   let (sigma, verified_rewriter_with_args) = Evd.fresh_global env sigma (r_verified_rewriter_with_args ()) in
   let rules_ty = rules_ty_of_rules_proofs env sigma rules_proofs in
-  let verified_rewriter_ty = mkApp (verified_rewriter_with_args, [|scraped_data; var_like_idents; base; ident; raw_ident; pattern_ident; include_interp; skip_early_reduction; rules_ty; rules_proofs|]) in
+  let verified_rewriter_ty = mkApp (verified_rewriter_with_args, [|scraped_data; var_like_idents; base; ident; raw_ident; pattern_ident; include_interp; skip_early_reduction; skip_early_reduction_no_dtree; rules_ty; rules_proofs|]) in
   (* force a typecheck of the application, propogate universe constraints *)
   let (sigma, _) = Typing.type_of env sigma verified_rewriter_ty in
   (* add universe constraints to the global env *)
@@ -164,14 +164,15 @@ let make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_l
   let sigma = set_strategy_of_package sigma (-1000) verified_rewriter in
   (sigma, verified_rewriter)
 
-let make_rewriter sigma ~poly ~var_like_idents ~include_interp ~skip_early_reduction ~extra (package_name : Names.Id.t) (rules_proofs : EConstr.t) =
+let make_rewriter sigma ~poly ~var_like_idents ~include_interp ~skip_early_reduction ~skip_early_reduction_no_dtree ~extra (package_name : Names.Id.t) (rules_proofs : EConstr.t) =
   let env = Global.env () in
   let (sigma, include_interp) = Evd.fresh_global env sigma (if include_interp then r_true () else r_false ()) in
   let (sigma, skip_early_reduction) = Evd.fresh_global env sigma (if skip_early_reduction then r_true () else r_false ()) in
+  let (sigma, skip_early_reduction_no_dtree) = Evd.fresh_global env sigma (if skip_early_reduction_no_dtree then r_true () else r_false ()) in
   let (sigma, rules_proofs) = rewriter_heuristic_process_rules_proofs env sigma ~poly rules_proofs in
   let (sigma, scraped_data) = rewriter_scrape_data env sigma ~poly rules_proofs extra in
   let (sigma, (base, ident, raw_ident, pattern_ident)) = rewriter_emit_inductives sigma ~poly scraped_data None None None None in
-  let (sigma, rewriter) = make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_like_idents base ident raw_ident pattern_ident include_interp skip_early_reduction rules_proofs in
+  let (sigma, rewriter) = make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_like_idents base ident raw_ident pattern_ident include_interp skip_early_reduction skip_early_reduction_no_dtree rules_proofs in
   (sigma, rewriter)
 
 let vernac_rewriter_emit_inductives ~poly (scraped_data : Constrexpr.constr_expr) (base : Names.Id.t) (ident : Names.Id.t) (raw_ident : Names.Id.t) (pattern_ident : Names.Id.t) =
@@ -181,7 +182,7 @@ let vernac_rewriter_emit_inductives ~poly (scraped_data : Constrexpr.constr_expr
   ignore(rewriter_emit_inductives sigma ~poly scraped_data (Some base) (Some ident) (Some raw_ident) (Some pattern_ident))
 
 
-let vernac_make_rewriter ~poly ?(var_like_idents = None) ?(include_interp = false) ?(skip_early_reduction = true) ?(extra = None) (package_name : Names.Id.t) (rules_proofs : Constrexpr.constr_expr) =
+let vernac_make_rewriter ~poly ?(var_like_idents = None) ?(include_interp = false) ?(skip_early_reduction = false) ?(skip_early_reduction_no_dtree = false) ?(extra = None) (package_name : Names.Id.t) (rules_proofs : Constrexpr.constr_expr) =
   let env = Global.env () in
   let sigma = Evd.from_env env in
   let (sigma, var_like_idents) = match var_like_idents with
@@ -193,4 +194,4 @@ let vernac_make_rewriter ~poly ?(var_like_idents = None) ?(include_interp = fals
     | None -> Evd.fresh_global env sigma (r_false ()) (* can be any well-typed term; all subterms get added to the identifiers of the reified language *)
   in
   let (sigma, rules_proofs) = Constrintern.interp_constr_evars env sigma rules_proofs in
-  ignore(make_rewriter sigma package_name rules_proofs ~poly ~var_like_idents ~include_interp ~skip_early_reduction ~extra)
+  ignore(make_rewriter sigma package_name rules_proofs ~poly ~var_like_idents ~include_interp ~skip_early_reduction ~skip_early_reduction_no_dtree ~extra)

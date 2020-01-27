@@ -1075,50 +1075,54 @@ Module Compilers.
       Ltac make_rewrite_head2 pident_unify_unknown invert_bind_args_unknown rewrite_head1 pr2_rewrite_rules :=
         time_tac_in_constr_if_debug1
           ltac:(fun _
-                => (eval cbv [id
-                                pr2_rewrite_rules
-                                projT1 projT2
-                                cpsbind cpscall cps_option_bind cpsreturn
-                                PrimitiveProd.Primitive.fst PrimitiveProd.Primitive.snd
-                                pattern.type.subst_default pattern.base.subst_default pattern.base.lookup_default
-                                PositiveMap.add PositiveMap.find PositiveMap.empty
-                                PositiveSet.rev PositiveSet.rev_append
-                                Compile.eval_decision_tree
-                                Compile.eval_rewrite_rules
-                                Compile.expr_of_rawexpr
-                                Compile.normalize_deep_rewrite_rule
-                                Compile.option_bind' pident_unify_unknown invert_bind_args_unknown Compile.normalize_deep_rewrite_rule
-                                Compile.reveal_rawexpr_cps
-                                Compile.reveal_rawexpr_cps_gen
-                                Compile.rew_should_do_again
-                                Compile.rew_with_opt
-                                Compile.rew_under_lets
-                                Compile.rew_replacement
-                                Compile.rValueOrExpr
-                                Compile.swap_list
-                                Compile.type_of_rawexpr
-                                Compile.option_type_type_beq
-                                Compile.value
-                                Compile.value_of_rawexpr
-                                Compile.value_with_lets
-                                ident.smart_Literal
-                                type.try_transport_cps
-                             ] in rewrite_head1)).
+                => let rewrite_head2
+                       := (eval cbv [id
+                                       pr2_rewrite_rules
+                                       projT1 projT2
+                                       cpsbind cpscall cps_option_bind cpsreturn
+                                       PrimitiveProd.Primitive.fst PrimitiveProd.Primitive.snd
+                                       pattern.type.subst_default pattern.base.subst_default pattern.base.lookup_default
+                                       PositiveMap.add PositiveMap.find PositiveMap.empty
+                                       PositiveSet.rev PositiveSet.rev_append
+                                       Compile.eval_decision_tree
+                                       Compile.eval_rewrite_rules
+                                       Compile.expr_of_rawexpr
+                                       Compile.normalize_deep_rewrite_rule
+                                       Compile.option_bind' pident_unify_unknown invert_bind_args_unknown Compile.normalize_deep_rewrite_rule
+                                       Compile.reveal_rawexpr_cps
+                                       Compile.reveal_rawexpr_cps_gen
+                                       Compile.rew_should_do_again
+                                       Compile.rew_with_opt
+                                       Compile.rew_under_lets
+                                       Compile.rew_replacement
+                                       Compile.rValueOrExpr
+                                       Compile.swap_list
+                                       Compile.type_of_rawexpr
+                                       Compile.option_type_type_beq
+                                       Compile.value
+                                       Compile.value_of_rawexpr
+                                       Compile.value_with_lets
+                                       ident.smart_Literal
+                                       type.try_transport_cps
+                                    ] in rewrite_head1) in
+                   rewrite_head2).
       Ltac make_rewrite_head3 base_interp try_make_transport_base_cps base_beq rewrite_head2 :=
         time_tac_in_constr_if_debug1
           ltac:(fun _
-                => (eval cbn [id
-                                base_interp try_make_transport_base_cps base_beq
-                                cpsbind cpscall cps_option_bind cpsreturn
-                                Compile.reify Compile.reify_and_let_binds_cps Compile.reflect Compile.value'
-                                Option.sequence Option.sequence_return Option.bind
-                                UnderLets.reify_and_let_binds_base_cps
-                                UnderLets.splice UnderLets.splice_list UnderLets.to_expr
-                                base.interp
-                                option_beq
-                                type.try_make_transport_cps base.try_make_transport_cps
-                                Datatypes.fst Datatypes.snd
-                             ] in rewrite_head2)).
+                => let rewrite_head3
+                       := (eval cbn [id
+                                       base_interp try_make_transport_base_cps base_beq
+                                       cpsbind cpscall cps_option_bind cpsreturn
+                                       Compile.reify Compile.reify_and_let_binds_cps Compile.reflect Compile.value'
+                                       Option.sequence Option.sequence_return Option.bind
+                                       UnderLets.reify_and_let_binds_base_cps
+                                       UnderLets.splice UnderLets.splice_list UnderLets.to_expr
+                                       base.interp
+                                       option_beq
+                                       type.try_make_transport_cps base.try_make_transport_cps
+                                       Datatypes.fst Datatypes.snd
+                                    ] in rewrite_head2) in
+                   rewrite_head3).
       Ltac make_rewrite_head' base_interp try_make_transport_base_cps base_beq pident_unify_unknown invert_bind_args_unknown rewrite_head0 pr2_rewrite_rules :=
         let base_interp := head base_interp in
         let try_make_transport_base_cps := head try_make_transport_base_cps in
@@ -1153,7 +1157,7 @@ Module Compilers.
                    exact v)) in
         cache_term v rewrite_head.
 
-      Ltac Build_rewriter_dataT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction specs :=
+      Ltac Build_rewriter_dataT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs :=
         let pkg_type := type of pkg in
         let base := lazymatch (eval hnf in pkg_type) with @package ?base ?ident => base end in
         let ident := lazymatch (eval hnf in pkg_type) with @package ?base ?ident => ident end in
@@ -1183,10 +1187,20 @@ Module Compilers.
         let rewrite_head0
             := cache_term
                  (fun var
-                  => @Compile.assemble_identifier_rewriters base (@Classes.try_make_transport_base_cps exprInfo exprExtraInfo) (@Classes.base_beq exprInfo exprExtraInfo) ident var (@eta_ident_cps _ _ pkg) (@pattern_ident _ _ pkg) (@arg_types_of pkg) (@unify _ _ pkg) pident_unify_unknown (@raw_ident _ _ pkg) (@full_types_of pkg) (@invert_bind_args _ _ pkg) invert_bind_args_unknown (@type_of_of pkg) (@raw_to_typed_of pkg) (@is_simple_of pkg) dtree (all_rewrite_rules var))
+                  => @Compile.assemble_identifier_rewriters base (@Classes.try_make_transport_base_cps exprInfo exprExtraInfo) (@Classes.base_beq exprInfo exprExtraInfo) ident var (@eta_ident_cps _ _ pkg) (@pattern_ident _ _ pkg) (@arg_types_of pkg) (@unify _ _ pkg) pident_unify_unknown (@raw_ident _ _ pkg) (@full_types_of pkg) (@invert_bind_args _ _ pkg) invert_bind_args_unknown (@type_of_of pkg) (@raw_to_typed_of pkg) (@is_simple_of pkg) (Some dtree) (all_rewrite_rules var))
                  rewrite_head0 in
         let __ := debug1 ltac:(fun _ => idtac "Reducing rewrite_head...") in
         let rewrite_head := make_rewrite_head base_interp try_make_transport_base_cps base_beq ident pident_unify_unknown invert_bind_args_unknown skip_early_reduction rewrite_head0 pr2_rewrite_rules in
+        let __ := debug1 ltac:(fun _ => idtac "Assembling rewrite_head_no_dtree...") in
+        let rewrite_head_no_dtree0 := fresh "rewrite_head_no_dtree0" in
+        let var := fresh "var" in
+        let rewrite_head_no_dtree0
+            := cache_term
+                 (fun var
+                  => @Compile.assemble_identifier_rewriters base (@Classes.try_make_transport_base_cps exprInfo exprExtraInfo) (@Classes.base_beq exprInfo exprExtraInfo) ident var (@eta_ident_cps _ _ pkg) (@pattern_ident _ _ pkg) (@arg_types_of pkg) (@unify _ _ pkg) pident_unify_unknown (@raw_ident _ _ pkg) (@full_types_of pkg) (@invert_bind_args _ _ pkg) invert_bind_args_unknown (@type_of_of pkg) (@raw_to_typed_of pkg) (@is_simple_of pkg) None (all_rewrite_rules var))
+                 rewrite_head_no_dtree0 in
+        let __ := debug1 ltac:(fun _ => idtac "Reducing rewrite_head_no_dtree...") in
+        let rewrite_head_no_dtree := make_rewrite_head base_interp try_make_transport_base_cps base_beq ident pident_unify_unknown invert_bind_args_unknown skip_early_reduction_no_dtree rewrite_head_no_dtree0 pr2_rewrite_rules in
         constr:(@Build_rewriter_dataT'
                   exprInfo exprExtraInfo
                   pkg
@@ -1194,7 +1208,8 @@ Module Compilers.
                   specs dummy_count dtree
                   rewrite_rules all_rewrite_rules eq_refl
                   default_fuel
-                  rewrite_head eq_refl).
+                  rewrite_head eq_refl
+                  rewrite_head_no_dtree eq_refl).
 
       Module Export Tactic.
         Module Export Settings.
@@ -1206,17 +1221,17 @@ Module Compilers.
           Global Arguments id / .
         End Settings.
 
-        Tactic Notation "make_rewriter_data" tactic3(reify_base) tactic3(reify_ident) constr(exprInfo) constr(exprExtraInfo) constr(pkg) constr(ident_is_var_like) constr(include_interp) constr(skip_early_reduction) constr(specs) :=
-          let res := Build_rewriter_dataT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction specs in refine res.
+        Tactic Notation "make_rewriter_data" tactic3(reify_base) tactic3(reify_ident) constr(exprInfo) constr(exprExtraInfo) constr(pkg) constr(ident_is_var_like) constr(include_interp) constr(skip_early_reduction) constr(skip_early_reduction_no_dtree) constr(specs) :=
+          let res := Build_rewriter_dataT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in refine res.
       End Tactic.
     End Make.
     Export Make.GoalType.
     Import Make.Tactic.
 
-    Ltac Build_RewriterT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction specs :=
+    Ltac Build_RewriterT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs :=
       let pkg := (eval hnf in pkg) in
       let rewriter_data := fresh "rewriter_data" in
-      let data := Make.Build_rewriter_dataT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction specs in
+      let data := Make.Build_rewriter_dataT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in
       let Rewrite_name := fresh "Rewriter" in
       let Rewrite := (eval cbv [Make.Rewrite rewrite_head Make.GoalType.ident_is_var_like Classes.base Classes.base_interp Classes.ident Classes.buildIdent Classes.invertIdent Classes.try_make_transport_base_cps default_fuel] in (@Make.Rewrite exprInfo exprExtraInfo pkg data)) in
       let Rewrite := cache_term Rewrite Rewrite_name in
@@ -1227,8 +1242,8 @@ Module Compilers.
         Export Make.Tactic.Settings.
       End Settings.
 
-      Tactic Notation "make_Rewriter" tactic3(reify_base) tactic3(reify_ident) constr(exprInfo) constr(exprExtraInfo) constr(pkg) constr(ident_is_var_like) constr(include_interp) constr(skip_early_reduction) constr(specs) :=
-        let res := Build_RewriterT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction specs in refine res.
+      Tactic Notation "make_Rewriter" tactic3(reify_base) tactic3(reify_ident) constr(exprInfo) constr(exprExtraInfo) constr(pkg) constr(ident_is_var_like) constr(include_interp) constr(skip_early_reduction) constr(skip_early_reduction_no_dtree) constr(specs) :=
+        let res := Build_RewriterT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in refine res.
     End Tactic.
   End RewriteRules.
 End Compilers.
