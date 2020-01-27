@@ -99,7 +99,7 @@ Module Compilers.
                  end in
       res.
 
-    Ltac Build_Rewriter basic_package pkg_proofs include_interp specs_proofs :=
+    Ltac Build_Rewriter basic_package pkg_proofs include_interp skip_early_reduction specs_proofs :=
       let basic_package := (eval hnf in basic_package) in
       let exprInfo := (eval hnf in (Basic.GoalType.exprInfo basic_package)) in
       let exprExtraInfo := (eval hnf in (Basic.GoalType.exprExtraInfo basic_package)) in
@@ -117,7 +117,7 @@ Module Compilers.
                         constr_fail_with ltac:(fun _ => fail 1 "Invalid type for specs_proofs:" T "Expected:" expected_type)
                    end in
       let R_name := fresh "Rewriter_data" in
-      let R := Build_RewriterT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs in
+      let R := Build_RewriterT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction specs in
       let R := cache_term R R_name in
       let __ := Make.debug1 ltac:(fun _ => idtac "Proving Rewriter_Wf...") in
       let Rwf := fresh "Rewriter_Wf" in
@@ -304,38 +304,38 @@ Module Compilers.
         Export Rewriter.Reify.Compilers.RewriteRules.Tactic.Settings.
       End Settings.
 
-      Ltac make_rewriter_via basic_package pkg_proofs include_interp specs_proofs :=
-        let res := Build_Rewriter basic_package pkg_proofs include_interp specs_proofs in
+      Ltac make_rewriter_via basic_package pkg_proofs include_interp skip_early_reduction specs_proofs :=
+        let res := Build_Rewriter basic_package pkg_proofs include_interp skip_early_reduction specs_proofs in
         let __ := Make.debug1 ltac:(fun _ => idtac "Refining with verified rewriter...") in
         refine res.
 
       Ltac make_rewriter :=
         idtac;
         lazymatch goal with
-        | [ |- GoalType.VerifiedRewriter_with_args ?basic_package ?pkg_proofs ?include_interp ?specs_proofs ]
+        | [ |- GoalType.VerifiedRewriter_with_args ?basic_package ?pkg_proofs ?include_interp ?skip_early_reduction ?specs_proofs ]
           => cbv [GoalType.VerifiedRewriter_with_args];
-             make_rewriter_via basic_package pkg_proofs include_interp specs_proofs
+             make_rewriter_via basic_package pkg_proofs include_interp skip_early_reduction specs_proofs
         end.
 
-      Tactic Notation "make_rewriter_via" constr(basic_package) constr(pkg_proofs) constr(include_interp) constr(specs_proofs) :=
-        make_rewriter_via basic_package pkg_proofs include_interp specs_proofs.
+      Tactic Notation "make_rewriter_via" constr(basic_package) constr(pkg_proofs) constr(include_interp) constr(skip_early_reduction) constr(specs_proofs) :=
+        make_rewriter_via basic_package pkg_proofs include_interp skip_early_reduction specs_proofs.
 
-      Ltac make_rewriter_from_scraped scraped_data var_like_idents base ident raw_ident pattern_ident include_interp specs_proofs :=
+      Ltac make_rewriter_from_scraped scraped_data var_like_idents base ident raw_ident pattern_ident include_interp skip_early_reduction specs_proofs :=
         let basic_package := Basic.Tactic.cache_build_package_of_scraped scraped_data var_like_idents base ident in
         let pattern_package := Compilers.pattern.ident.Tactic.cache_build_package basic_package raw_ident pattern_ident in
         let pkg_proofs := Compilers.pattern.ProofTactic.cache_build_package_proofs basic_package pattern_package in
-        make_rewriter_via basic_package pkg_proofs include_interp specs_proofs.
+        make_rewriter_via basic_package pkg_proofs include_interp skip_early_reduction specs_proofs.
 
       Ltac make_rewriter_all :=
         idtac;
         lazymatch goal with
-        | [ |- GoalType.VerifiedRewriter_with_ind_args ?scraped_data ?var_like_idents ?base ?ident ?raw_ident ?pattern_ident ?include_interp ?specs_proofs ]
+        | [ |- GoalType.VerifiedRewriter_with_ind_args ?scraped_data ?var_like_idents ?base ?ident ?raw_ident ?pattern_ident ?include_interp ?skip_early_reduction ?specs_proofs ]
           => cbv [GoalType.VerifiedRewriter_with_ind_args];
-             make_rewriter_from_scraped scraped_data var_like_idents base ident raw_ident pattern_ident include_interp specs_proofs
+             make_rewriter_from_scraped scraped_data var_like_idents base ident raw_ident pattern_ident include_interp skip_early_reduction specs_proofs
         end.
 
       Module Export Hints.
-        Global Hint Extern 0 (GoalType.VerifiedRewriter_with_ind_args _ _ _ _ _ _ _ _) => make_rewriter_all : typeclass_instances.
+        Global Hint Extern 0 (GoalType.VerifiedRewriter_with_ind_args _ _ _ _ _ _ _ _ _) => make_rewriter_all : typeclass_instances.
       End Hints.
 
       Ltac Rewrite_lhs_for verified_rewriter_package := Rewrite_for_gen verified_rewriter_package false true false.

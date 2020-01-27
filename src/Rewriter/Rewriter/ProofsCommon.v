@@ -3421,6 +3421,7 @@ Module Compilers.
                  (basic_package : Basic.GoalType.package)
                  {base ident pkg} (pkg_proofs : @pattern.ProofGoalType.package_proofs base ident pkg)
                  (include_interp : bool)
+                 (skip_early_reduction : bool)
                  {rewrite_rulesT} (rules_proofs : PrimitiveHList.hlist (@snd bool Prop) rewrite_rulesT)
         := VerifiedRewriter.
 
@@ -3432,6 +3433,7 @@ Module Compilers.
                  (raw_ident : Type)
                  (pattern_ident : type.type (pattern.base.type base) -> Type)
                  (include_interp : bool)
+                 (skip_early_reduction : bool)
                  {rewrite_rulesT} (rules_proofs : PrimitiveHList.hlist (@snd bool Prop) rewrite_rulesT)
         := VerifiedRewriter.
       Existing Class VerifiedRewriter_with_args.
