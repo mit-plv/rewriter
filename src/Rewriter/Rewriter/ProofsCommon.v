@@ -916,6 +916,8 @@ Module Compilers.
         Local Notation eval_decision_tree var := (@eval_decision_tree base ident var raw_pident full_types invert_bind_args invert_bind_args_unknown type_of_raw_pident raw_pident_to_typed raw_pident_is_simple).
         Local Notation reveal_rawexpr_gen assume_known e := (@reveal_rawexpr_cps_gen base ident _ assume_known e _ id).
         Local Notation reveal_rawexpr e := (@reveal_rawexpr_cps base ident _ e _ id).
+        Local Notation reveal_rawexpr_of_pattern e p := (@reveal_rawexpr_of_pattern_cps base ident _ pident _ e p _ id).
+        Local Notation reveal_rawexpr_of_pattern_as_necessary reveal_as_necessary e p := (@reveal_rawexpr_of_pattern_as_necessary_cps base ident _ pident reveal_as_necessary _ e p _ id).
         Local Notation unify_pattern' var := (@unify_pattern' base try_make_transport_base_cps ident var pident pident_arg_types pident_unify pident_unify_unknown).
         Local Notation unify_pattern var := (@unify_pattern base try_make_transport_base_cps base_beq ident var pident pident_arg_types pident_unify pident_unify_unknown).
         Local Notation app_transport_with_unification_resultT'_cps := (@app_transport_with_unification_resultT'_cps base try_make_transport_base_cps pident pident_arg_types).
@@ -1078,6 +1080,37 @@ Module Compilers.
                               | solve [ eauto ] ].
           Qed.
 
+          Lemma reveal_rawexpr_cps_gen_id assume_known e T k
+            : @reveal_rawexpr_cps_gen base ident var assume_known e T k = k (reveal_rawexpr_gen assume_known e).
+          Proof using Type.
+            cbv [reveal_rawexpr_cps_gen]; break_innermost_match; try reflexivity.
+            all: cbv [value value'] in *; expr.invert_match; try reflexivity.
+          Qed.
+
+          Lemma reveal_rawexpr_cps_id e T k
+            : @reveal_rawexpr_cps base ident var e T k = k (reveal_rawexpr e).
+          Proof using Type. apply reveal_rawexpr_cps_gen_id. Qed.
+
+          Lemma reveal_rawexpr_of_pattern_cps_id e t p T k
+            : @reveal_rawexpr_of_pattern_cps base ident var pident t e p T k = k (reveal_rawexpr_of_pattern e p).
+          Proof using Type.
+            revert e T k; induction p; cbn [reveal_rawexpr_of_pattern_cps]; intros;
+              repeat first [ reflexivity
+                           | progress cps_id'_no_option reveal_rawexpr_cps_id
+                           | match goal with
+                             | [ H : forall e T k, reveal_rawexpr_of_pattern_cps _ _ T k = k _ |- _ ]
+                               => progress cps_id'_no_option H
+                             end
+                           | break_innermost_match_step ].
+          Qed.
+
+          Lemma reveal_rawexpr_of_pattern_as_necessary_cps_id reveal_as_necessary e t p T k
+            : @reveal_rawexpr_of_pattern_as_necessary_cps base ident var pident reveal_as_necessary t e p T k = k (reveal_rawexpr_of_pattern_as_necessary reveal_as_necessary e p).
+          Proof using Type.
+            cbv [reveal_rawexpr_of_pattern_as_necessary_cps];
+              destruct reveal_as_necessary; now try apply reveal_rawexpr_of_pattern_cps_id.
+          Qed.
+
           Lemma rawexpr_types_ok_of_reveal_rawexpr {re t}
             : rawexpr_types_ok (reveal_rawexpr re) t <-> rawexpr_types_ok re t.
           Proof using Type.
@@ -1091,6 +1124,31 @@ Module Compilers.
                               | break_innermost_match_step
                               | apply conj
                               | expr.invert_match_step ].
+          Qed.
+
+          Lemma rawexpr_types_ok_of_reveal_rawexpr_of_pattern {re t t'} {p : pattern t'}
+            : rawexpr_types_ok (reveal_rawexpr_of_pattern re p) t <-> rawexpr_types_ok re t.
+          Proof using Type.
+            revert re t; induction p; cbn [reveal_rawexpr_of_pattern]; intros;
+                try reflexivity;
+                (etransitivity; [ | apply rawexpr_types_ok_of_reveal_rawexpr ]).
+            all: repeat first [ reflexivity
+                              | progress cps_id'_no_option reveal_rawexpr_cps_id
+                              | progress cps_id'_no_option reveal_rawexpr_of_pattern_cps_id
+                              | break_innermost_match_step
+                              | progress cbv [id]
+                              | progress cbn [rawexpr_types_ok]
+                              | match goal with
+                                | [ H : forall r t, rawexpr_types_ok _ t <-> rawexpr_types_ok r t |- _ ]
+                                  => rewrite H; clear H
+                                end ].
+          Qed.
+
+          Lemma rawexpr_types_ok_of_reveal_rawexpr_of_pattern_as_necessary {reveal_as_necessary re t t'} {p : pattern t'}
+            : rawexpr_types_ok (reveal_rawexpr_of_pattern_as_necessary reveal_as_necessary re p) t <-> rawexpr_types_ok re t.
+          Proof using Type.
+            destruct reveal_as_necessary;
+              now try exact rawexpr_types_ok_of_reveal_rawexpr_of_pattern.
           Qed.
 
           Local Ltac invert_t_step :=
@@ -1403,16 +1461,18 @@ Module Compilers.
               repeat first [ progress rewrite_type_transport_correct
                            | reflexivity
                            | progress cbv [Option.bind cpscall option_bind'] in *
+                           | progress cps_id false reveal_rawexpr_cps_id
                            | match goal with H : _ |- _ => etransitivity; rewrite H; clear H; [ | reflexivity ] end
                            | break_innermost_match_step ].
           Qed.
 
-          Lemma unify_pattern_cps_id {t e p T cont}
-            : @unify_pattern var t e p T cont
-              = (v' <- @unify_pattern var t e p _ (@Some _); cont v')%option.
+          Lemma unify_pattern_cps_id {reveal_as_necessary t e p T cont}
+            : @unify_pattern var reveal_as_necessary t e p T cont
+              = (v' <- @unify_pattern var reveal_as_necessary t e p _ (@Some _); cont v')%option.
           Proof using try_make_transport_base_cps_correct.
             clear -try_make_transport_base_cps_correct.
-            cbv [unify_pattern].
+            cbv [unify_pattern cpscall].
+            cps_id'_no_option reveal_rawexpr_of_pattern_as_necessary_cps_id.
             etransitivity; rewrite unify_types_cps_id; [ | reflexivity ].
             repeat first [ reflexivity
                          | progress rewrite_type_transport_correct
@@ -1489,17 +1549,6 @@ Module Compilers.
                          | break_match_hyps_step ltac:(fun _ => idtac) ].
           Qed.
 
-          Lemma reveal_rawexpr_cps_gen_id assume_known e T k
-            : @reveal_rawexpr_cps_gen base ident var assume_known e T k = k (reveal_rawexpr_gen assume_known e).
-          Proof using Type.
-            cbv [reveal_rawexpr_cps_gen]; break_innermost_match; try reflexivity.
-            all: cbv [value value'] in *; expr.invert_match; try reflexivity.
-          Qed.
-
-          Lemma reveal_rawexpr_cps_id e T k
-            : @reveal_rawexpr_cps base ident var e T k = k (reveal_rawexpr e).
-          Proof using Type. apply reveal_rawexpr_cps_gen_id. Qed.
-
           Lemma reveal_rawexpr_equiv e
             : rawexpr_equiv (reveal_rawexpr e) e.
           Proof using Type.
@@ -1511,6 +1560,42 @@ Module Compilers.
                               | reflexivity
                               | apply conj ].
           Qed.
+
+          Lemma reveal_rawexpr_of_pattern_equiv e t (p : pattern t)
+            : rawexpr_equiv (reveal_rawexpr_of_pattern e p) e.
+          Proof using Type.
+            revert e; induction p; cbn [reveal_rawexpr_of_pattern];
+              try reflexivity;
+              (etransitivity; [ | apply reveal_rawexpr_equiv ]).
+            all: repeat first [ reflexivity
+                              | progress cps_id'_no_option reveal_rawexpr_cps_id
+                              | progress cps_id'_no_option reveal_rawexpr_of_pattern_cps_id
+                              | break_innermost_match_step
+                              | progress cbv [id]
+                              | progress cbn [rawexpr_equiv]
+                              | match goal with
+                                | [ H : _ |- _ ] => rewrite H; clear H
+                                end
+                              | repeat apply conj; reflexivity ].
+          Qed.
+
+          Lemma reveal_rawexpr_of_pattern_as_necessary_equiv reveal_as_necessary e t (p : pattern t)
+            : rawexpr_equiv (reveal_rawexpr_of_pattern_as_necessary reveal_as_necessary e p) e.
+          Proof using Type.
+            destruct reveal_as_necessary; now try apply reveal_rawexpr_of_pattern_equiv.
+          Qed.
+
+          Lemma type_of_reveal_rawexpr e
+            : type_of_rawexpr (reveal_rawexpr e) = type_of_rawexpr (var:=var) e.
+          Proof using Type. apply eq_type_of_rawexpr_equiv, reveal_rawexpr_equiv. Qed.
+
+          Lemma type_of_reveal_rawexpr_of_pattern t e (p : pattern t)
+            : type_of_rawexpr (reveal_rawexpr_of_pattern e p) = type_of_rawexpr (var:=var) e.
+          Proof using Type. apply eq_type_of_rawexpr_equiv, reveal_rawexpr_of_pattern_equiv. Qed.
+
+          Lemma type_of_reveal_rawexpr_of_pattern_as_necessary reveal_as_necessary t e (p : pattern t)
+            : type_of_rawexpr (reveal_rawexpr_of_pattern_as_necessary reveal_as_necessary e p) = type_of_rawexpr (var:=var) e.
+          Proof using Type. apply eq_type_of_rawexpr_equiv, reveal_rawexpr_of_pattern_as_necessary_equiv. Qed.
 
           Fixpoint eval_decision_tree_cont_None_ext
                    {T ctx d cont}
@@ -1793,7 +1878,7 @@ Module Compilers.
               destruct (eq_type_of_rawexpr_of_wf Hwf); generalize dependent (type_of_rawexpr re1); generalize dependent (type_of_rawexpr re2); intros; subst; clear -reflect_base_beq; eliminate_hprop_eq; reflexivity.
           Qed.
 
-          Lemma wf_reveal_rawexpr t G re1 e1 re2 e2 (Hwf : @wf_rawexpr G t re1 e1 re2 e2)
+          Lemma wf_reveal_rawexpr {t G re1 e1 re2 e2} (Hwf : @wf_rawexpr G t re1 e1 re2 e2)
             : @wf_rawexpr G t (reveal_rawexpr re1) e1 (reveal_rawexpr re2) e2.
           Proof using Type.
             pose proof (wf_expr_of_wf_rawexpr Hwf).
@@ -1807,6 +1892,25 @@ Module Compilers.
                            | break_innermost_match_step
                            | progress expr.invert_match
                            | progress expr.inversion_wf_constr ].
+          Qed.
+
+          Lemma wf_reveal_rawexpr_of_pattern {tp} {p : pattern tp} {t G re1 e1 re2 e2} (Hwf : @wf_rawexpr G t re1 e1 re2 e2)
+            : @wf_rawexpr G t (reveal_rawexpr_of_pattern re1 p) e1 (reveal_rawexpr_of_pattern re2 p) e2.
+          Proof using Type.
+            revert t re1 e1 re2 e2 Hwf; induction p; cbn [reveal_rawexpr_of_pattern]; intros;
+              pose proof Hwf as Hwf'; apply wf_reveal_rawexpr in Hwf';
+                try assumption;
+                cps_id'_no_option reveal_rawexpr_cps_id.
+            destruct Hwf'; repeat constructor; try assumption; [].
+            cps_id'_no_option reveal_rawexpr_of_pattern_cps_id.
+            repeat constructor; eauto.
+          Qed.
+
+          Lemma wf_reveal_rawexpr_of_pattern_as_necessary {reveal_as_necessary tp} {p : pattern tp} {t G re1 e1 re2 e2} (Hwf : @wf_rawexpr G t re1 e1 re2 e2)
+            : @wf_rawexpr G t (reveal_rawexpr_of_pattern_as_necessary reveal_as_necessary re1 p) e1 (reveal_rawexpr_of_pattern_as_necessary reveal_as_necessary re2 p) e2.
+          Proof using Type.
+            destruct reveal_as_necessary;
+              now try apply wf_reveal_rawexpr_of_pattern.
           Qed.
 
           Lemma related_app_type_of_list_of_under_type_of_list_relation_cps {K1 K2 ls args}
@@ -3402,26 +3506,41 @@ Module Compilers.
       Import Compilers.Basic.GoalType.
       Import Compilers.Classes.
 
+      Module Export DefaultOptionType.
+        Record RewriterOptions
+          := {
+              use_decision_tree : bool;
+              use_precomputed_functions : bool;
+            }.
+
+        Definition default_rewriter_options : RewriterOptions
+          := {| use_decision_tree := true ; use_precomputed_functions := true |}.
+      End DefaultOptionType.
+
       Record VerifiedRewriter :=
         {
           exprInfo : ExprInfoT;
           exprReifyInfo : ExprReifyInfoT;
+          optsT : Type;
+          default_opts : optsT;
 
-          Rewrite : forall {t} (e : expr.Expr (ident:=ident) t), expr.Expr (ident:=ident) t;
-          Wf_Rewrite : forall {t} e (Hwf : Wf e), Wf (@Rewrite t e);
-          Interp_Rewrite {t} e
-          : forall (Hwf : Wf e), expr.Interp ident_interp (@Rewrite t e) == expr.Interp ident_interp e;
+          Rewrite : forall (opts : optsT) {t} (e : expr.Expr (ident:=ident) t), expr.Expr (ident:=ident) t;
+          Wf_Rewrite : forall opts {t} e (Hwf : Wf e), Wf (@Rewrite opts t e);
+          Interp_Rewrite opts {t} e
+          : forall (Hwf : Wf e), expr.Interp ident_interp (@Rewrite opts t e) == expr.Interp ident_interp e;
 
           check_wf : forall {t}, expr.Expr (ident:=ident) t -> bool;
           generalize_for_wf : forall {t}, expr.Expr (ident:=ident) t -> expr.Expr (ident:=ident) t;
           prove_Wf : forall {t} (e : expr.Expr (ident:=ident) t), (e = generalize_for_wf e /\ check_wf e = true) -> expr.Wf e;
         }.
 
+      Notation Rewrite_default R := (@Rewrite R (@default_opts R)).
+
       Definition VerifiedRewriter_with_args
                  (basic_package : Basic.GoalType.package)
                  {base ident pkg} (pkg_proofs : @pattern.ProofGoalType.package_proofs base ident pkg)
                  (include_interp : bool)
-                 (skip_early_reduction : bool)
+                 (skip_early_reduction skip_early_reduction_no_dtree : bool)
                  {rewrite_rulesT} (rules_proofs : PrimitiveHList.hlist (@snd bool Prop) rewrite_rulesT)
         := VerifiedRewriter.
 
@@ -3433,7 +3552,7 @@ Module Compilers.
                  (raw_ident : Type)
                  (pattern_ident : type.type (pattern.base.type base) -> Type)
                  (include_interp : bool)
-                 (skip_early_reduction : bool)
+                 (skip_early_reduction skip_early_reduction_no_dtree : bool)
                  {rewrite_rulesT} (rules_proofs : PrimitiveHList.hlist (@snd bool Prop) rewrite_rulesT)
         := VerifiedRewriter.
       Existing Class VerifiedRewriter_with_args.

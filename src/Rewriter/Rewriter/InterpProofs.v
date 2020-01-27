@@ -327,7 +327,7 @@ Module Compilers.
                   => if should_do_again return ((@expr.expr base_type ident (if should_do_again then value else var) t) -> UnderLets (expr t))
                      then do_again t
                      else UnderLets.Base)
-              (d : decision_tree)
+              (d : option decision_tree)
               (rew_rules : rewrite_rulesT)
               (e : rawexpr)
               (res := @eval_rewrite_rules do_again d rew_rules e)
@@ -335,22 +335,34 @@ Module Compilers.
             \/ exists n pf e',
               nth_error rew_rules n = Some pf
               /\ Some res
-                 = rewrite_with_rule do_again e' pf
+                 = rewrite_with_rule do_again (if d then false else true) e' pf
               /\ rawexpr_equiv e e'.
         Proof using raw_pident_to_typed_invert_bind_args invert_bind_args_unknown_correct.
           subst res; cbv [eval_rewrite_rules].
-          refine (let H := eval_decision_tree_correct d [e] _ in _).
-          destruct H as [H| [? [? [H ?] ] ] ]; rewrite H; cbn [Option.sequence Option.sequence_return];
-            [ left; reflexivity | ]; clear H.
-          inversion_head' eqlistA.
-          unfold Option.bind at 1.
-          break_innermost_match_step; [ | left; reflexivity ].
-          cbn [Option.bind Option.sequence Option.sequence_return].
-          match goal with
-          | [ |- (Option.sequence_return ?x ?y) = _ \/ _ ]
-            => destruct x eqn:?
-          end; [ | left; reflexivity ]; cbn [Option.sequence_return].
-          right; repeat esplit; try eassumption; auto.
+          destruct d as [d|].
+          { refine (let H := eval_decision_tree_correct d [e] _ in _).
+            destruct H as [H| [? [? [H ?] ] ] ]; rewrite H; cbn [Option.sequence Option.sequence_return];
+              [ left; reflexivity | ]; clear H.
+            inversion_head' eqlistA.
+            unfold Option.bind at 1.
+            break_innermost_match_step; [ | left; reflexivity ].
+            cbn [Option.bind Option.sequence Option.sequence_return].
+            match goal with
+            | [ |- (Option.sequence_return ?x ?y) = _ \/ _ ]
+              => destruct x eqn:?
+            end; [ | left; reflexivity ]; cbn [Option.sequence_return].
+            right; repeat esplit; try eassumption; auto. }
+          { induction rew_rules as [|rew_rule rew_rules IH];
+              cbn [List.fold_right]; [ now left | ].
+            destruct IH as [IH|(n & pf & e' & Hn & IH & Hequiv)]; [ | right ].
+            { rewrite IH.
+              cbv [Option.sequence_return]; break_innermost_match_step;
+                [ right | now left ].
+              exists O; do 2 eexists; cbn [nth_error];
+                repeat apply conj; (idtac + symmetry); (reflexivity + eassumption). }
+            { destruct (rewrite_with_rule do_again true e rew_rule) eqn:?; [ exists O | exists (S n) ];
+                cbn [nth_error]; do 2 eexists;
+                  repeat apply conj; (idtac + symmetry); (reflexivity + eassumption). } }
         Qed.
       End with_var.
 
@@ -891,16 +903,178 @@ Module Compilers.
               end.
         Qed.
 
-        Lemma interp_unify_pattern {t re p v res}
+        Lemma rawexpr_types_ok_of_reveal_rawexpr_of_pattern_as_necessary'
+              {reveal_as_necessary re t} {p : pattern t}
+              (H : rawexpr_types_ok re (type_of_rawexpr re))
+          : rawexpr_types_ok
+              (reveal_rawexpr_of_pattern_as_necessary_cps reveal_as_necessary
+                                                          re p rawexpr id)
+              (type_of_rawexpr
+                 (reveal_rawexpr_of_pattern_as_necessary_cps
+                    reveal_as_necessary re p rawexpr id)).
+        Proof using Type.
+          rewrite type_of_reveal_rawexpr_of_pattern_as_necessary.
+          now apply rawexpr_types_ok_of_reveal_rawexpr_of_pattern_as_necessary.
+        Qed.
+
+        Lemma rApp_Proper_rawexpr_interp_related
+              r1 r1'
+              (Hr1 : forall v, rawexpr_interp_related r1 v -> exists pf, rawexpr_interp_related r1' (rew [type.interp _] pf in v))
+              r2 r2'
+              (Hr2 : forall v, rawexpr_interp_related r2 v -> exists pf, rawexpr_interp_related r2' (rew [type.interp _] pf in v))
+              t alt
+              v
+              (H : rawexpr_interp_related (rApp r1 r2 (t:=t) alt) v)
+          : rawexpr_interp_related (rApp r1' r2' (t:=t) alt) v.
+        Proof.
+          cbn [rawexpr_interp_related] in *;
+            repeat first [ assumption
+                         | break_innermost_match_step
+                         | progress destruct_head'_ex
+                         | progress destruct_head'_and
+                         | progress cbn [type_of_rawexpr eq_rect] in *
+                         | match goal with
+                           | [ H : forall v, rawexpr_interp_related ?r v -> ex _, H' : rawexpr_interp_related ?r _ |- _ ]
+                             => specialize (H _ H')
+                           end
+                         | progress subst
+                         | rewrite <- eq_trans_rew_distr in *
+                         | solve [ eauto 10 using conj, ex_intro ] ].
+        Qed.
+
+        Lemma rawexpr_interp_related_of_reveal_rawexpr_gen_gen
+              {known re v}
+              (Hre : rawexpr_interp_related re v)
+              Hpf
+          : rawexpr_interp_related
+              (reveal_rawexpr_cps_gen known re rawexpr id)
+              (rew <- [type.interp (base.interp base_interp)] Hpf in v).
+        Proof using reflect_base_beq.
+          destruct re, known;
+            repeat first [ progress cbn [reveal_rawexpr_cps_gen type_of_rawexpr eq_rect eq_sym eq_rect_r value'] in *
+                         | assumption
+                         | progress cbv [id value] in *
+                         | progress eliminate_hprop_eq
+                         | break_innermost_match_step
+                         | progress cbn [rawexpr_interp_related expr_interp_related expr.interp_related_gen expr.interp] in *
+                         | progress expr.invert_match
+                         | progress destruct_head'_ex
+                         | progress destruct_head'_and
+                         | progress subst
+                         | solve [ eauto ]
+                         | solve [ repeat (eassumption + apply conj + exists eq_refl + eexists) ] ].
+        Qed.
+
+        Lemma rawexpr_interp_related_of_reveal_rawexpr_gen
+              {re v}
+              (Hre : rawexpr_interp_related re v)
+              Hpf
+          : rawexpr_interp_related
+              (reveal_rawexpr_cps re rawexpr id)
+              (rew <- [type.interp (base.interp base_interp)] Hpf in v).
+        Proof using reflect_base_beq.
+          now apply rawexpr_interp_related_of_reveal_rawexpr_gen_gen.
+        Qed.
+
+        Lemma rawexpr_interp_related_of_reveal_rawexpr
+              {re v}
+              (Hre : rawexpr_interp_related re v)
+              (Hpf : type_of_rawexpr (reveal_rawexpr_cps re rawexpr id)
+                     = type_of_rawexpr re
+               := type_of_reveal_rawexpr _)
+          : rawexpr_interp_related
+              (reveal_rawexpr_cps re rawexpr id)
+              (rew <- [type.interp (base.interp base_interp)] Hpf in v).
+        Proof using reflect_base_beq.
+          now apply rawexpr_interp_related_of_reveal_rawexpr_gen.
+        Qed.
+
+        Lemma rawexpr_interp_related_of_reveal_rawexpr_of_pattern_gen
+              {re v t} {p : pattern t}
+              (Hre : rawexpr_interp_related re v)
+              Hpf
+          : rawexpr_interp_related
+              (reveal_rawexpr_of_pattern_cps re p rawexpr id)
+              (rew <- [type.interp (base.interp base_interp)] Hpf in v).
+        Proof using reflect_base_beq.
+          revert re v Hre Hpf; induction p; cbn [reveal_rawexpr_of_pattern_cps];
+            intros re v;
+            cps_id'_no_option reveal_rawexpr_cps_id;
+            intros; cbv [id] in *.
+          all: repeat first [ assumption
+                            | solve [ eauto ]
+                            | progress eliminate_hprop_eq
+                            | now apply rawexpr_interp_related_of_reveal_rawexpr_gen
+                            | revert Hpf; progress cps_id'_no_option reveal_rawexpr_of_pattern_cps_id; intros
+                            | match goal with
+                              | [ |- context[match reveal_rawexpr_cps ?re _ (fun x => x) with _ => _ end] ]
+                                => pose proof (@rawexpr_interp_related_of_reveal_rawexpr_gen re _ ltac:(eassumption));
+                                   cbv [id] in *; break_innermost_match_step
+                              | [ H : forall p : ?x = ?x, _ |- _ ] => specialize (H eq_refl)
+                              end
+                            | progress cbn [eq_rect eq_rect_r eq_sym type_of_rawexpr] in *
+                            | match goal with
+                              | [ H : ?x = ?y, H' : forall p : ?x = ?y, _ |- _ ]
+                                => specialize (H' H)
+                              end
+                            | progress cbv [eq_rect_r] in *
+                            | solve [ eapply rApp_Proper_rawexpr_interp_related; [ .. | eassumption ];
+                                      repeat (unshelve eauto using ex_intro, eq_sym, type_of_reveal_rawexpr_of_pattern) ] ].
+        Qed.
+
+        Lemma rawexpr_interp_related_of_reveal_rawexpr_of_pattern
+              {re v} {t} {p : pattern t}
+              (Hre : rawexpr_interp_related re v)
+              (Hpf : type_of_rawexpr (reveal_rawexpr_of_pattern_cps re p rawexpr id)
+                     = type_of_rawexpr re
+               := type_of_reveal_rawexpr_of_pattern _ _ _)
+          : rawexpr_interp_related
+              (reveal_rawexpr_of_pattern_cps re p rawexpr id)
+              (rew <- [type.interp (base.interp base_interp)] Hpf in v).
+        Proof using reflect_base_beq.
+          now apply rawexpr_interp_related_of_reveal_rawexpr_of_pattern_gen.
+        Qed.
+
+        Lemma rawexpr_interp_related_of_reveal_rawexpr_of_pattern_as_necessary_gen
+              {reveal_as_necessary re v t} {p : pattern t}
+              (Hre : rawexpr_interp_related re v)
+              Hpf
+          : rawexpr_interp_related
+              (reveal_rawexpr_of_pattern_as_necessary_cps reveal_as_necessary re p rawexpr id)
+              (rew <- [type.interp (base.interp base_interp)] Hpf in v).
+        Proof using reflect_base_beq.
+          destruct reveal_as_necessary;
+            try eapply rawexpr_interp_related_of_reveal_rawexpr_of_pattern_gen;
+            try eassumption;
+            cbn [reveal_rawexpr_of_pattern_as_necessary_cps] in *;
+            cbv [id] in *;
+            eliminate_hprop_eq;
+            eassumption.
+        Qed.
+
+        Lemma rawexpr_interp_related_of_reveal_rawexpr_of_pattern_as_necessary
+              {reveal_as_necessary re v} {t} {p : pattern t}
+              (Hre : rawexpr_interp_related re v)
+              (Hpf : type_of_rawexpr (reveal_rawexpr_of_pattern_as_necessary_cps reveal_as_necessary re p rawexpr id)
+                     = type_of_rawexpr re
+               := type_of_reveal_rawexpr_of_pattern_as_necessary _ _ _ _)
+          : rawexpr_interp_related
+              (reveal_rawexpr_of_pattern_as_necessary_cps reveal_as_necessary re p rawexpr id)
+              (rew <- [type.interp (base.interp base_interp)] Hpf in v).
+        Proof using reflect_base_beq.
+          now apply rawexpr_interp_related_of_reveal_rawexpr_of_pattern_as_necessary_gen.
+        Qed.
+
+        Lemma interp_unify_pattern {reveal_as_necessary t re p v res}
               (Hre : rawexpr_interp_related re v)
               (Ht' : rawexpr_types_ok re (type_of_rawexpr re))
-              (H : @unify_pattern t re p _ (@Some _) = Some res)
+              (H : @unify_pattern reveal_as_necessary t re p _ (@Some _) = Some res)
               (evm' := mk_new_evm (projT1 res) (pattern_collect_vars p))
           : exists resv,
             unification_resultT_interp_related res resv
             /\ exists Hty, (app_with_unification_resultT_cps (@pattern_default_interp t p) resv _ (@Some _) = Some (existT (fun evm => type.interp (base.interp base_interp) (pattern.type.subst_default t evm)) evm' (rew Hty in v))).
         Proof using pident_unify_unknown_correct pident_unify_to_typed try_make_transport_base_cps_correct.
-          subst evm'; cbv [unify_pattern unification_resultT_interp_related unification_resultT related_unification_resultT app_with_unification_resultT_cps pattern_default_interp] in *.
+          subst evm'; cbv [unify_pattern unification_resultT_interp_related unification_resultT related_unification_resultT app_with_unification_resultT_cps pattern_default_interp cpscall] in *.
           repeat
             (unshelve
                (repeat first [ progress cbv [Option.bind related_sigT_by_eq] in *
@@ -916,7 +1090,8 @@ Module Compilers.
                                | [ H : unify_pattern' _ _ _ _ _ = Some _, H'' : rawexpr_types_ok _ _ |- _ ]
                                  => let T := type of H in
                                     unique pose proof (H : id T) (* save an extra copy *);
-                                    epose proof (interp_unify_pattern' _ H _ H'')
+                                    first [ epose proof (interp_unify_pattern' _ H _ H'')
+                                          | epose proof (interp_unify_pattern' _ H _ (rawexpr_types_ok_of_reveal_rawexpr_of_pattern_as_necessary' H'')) ]
                                | [ H : pattern.type.app_forall_vars (pattern.type.lam_forall_vars _) _ = Some _ |- _ ] => pose proof (pattern.type.app_forall_vars_lam_forall_vars H); clear H
                                | [ H : pattern.type.app_forall_vars (pattern.type.lam_forall_vars _) _ = None |- None = Some _ ]
                                  => exfalso; revert H;
@@ -929,6 +1104,7 @@ Module Compilers.
                              | progress cps_id'_with_option unify_types_cps_id
                              | progress cps_id'_with_option unify_pattern'_cps_id
                              | progress cps_id'_with_option app_transport_with_unification_resultT'_cps_id
+                             | progress cps_id'_no_option reveal_rawexpr_of_pattern_as_necessary_cps_id
                              | break_innermost_match_hyps_step
                              | break_innermost_match_step
                              | match goal with
@@ -945,6 +1121,11 @@ Module Compilers.
                              | progress intros
                              | eapply mem_pattern_collect_vars_types_match_with; eassumption
                              | exists (eq_type_of_rawexpr_of_types_match_with' ltac:(eassumption) ltac:(eassumption))
+                             | exists (eq_trans
+                                         (eq_sym (type_of_reveal_rawexpr_of_pattern_as_necessary _ _ _ _))
+                                         (eq_type_of_rawexpr_of_types_match_with' ltac:(eassumption) ltac:(now apply rawexpr_types_ok_of_reveal_rawexpr_of_pattern_as_necessary')))
+                             | progress cbv [eq_rect_r] in *
+                             | rewrite <- eq_trans_rew_distr
                              | match goal with
                                | [ |- rew ?pf in _ = rew ?pf' in _ ]
                                  => cut (pf = pf'); generalize pf pf'; [ intros; subst; reflexivity | clear; cbv beta zeta; intros ];
@@ -952,10 +1133,9 @@ Module Compilers.
                                     | [ |- ?a = ?b :> (?x = ?y) ]
                                       => generalize dependent x; generalize dependent y; intros; subst; eliminate_hprop_eq; reflexivity
                                     end
+                               | [ |- rawexpr_interp_related (reveal_rawexpr_of_pattern_as_necessary_cps _ _ _ _ _) _ ]
+                                 => eapply rawexpr_interp_related_of_reveal_rawexpr_of_pattern_as_necessary
                                end ])).
-          (* For 8.7 compatibility *)
-          Grab Existential Variables.
-          all: assumption.
         Qed.
 
         Lemma interp_maybe_do_again
@@ -978,12 +1158,13 @@ Module Compilers.
               (Hdo_again : forall t e v,
                   expr.interp_related_gen ident_interp (fun t => value_interp_related) e v
                   -> UnderLets_interp_related (do_again t e) v)
+              reveal_as_necessary
               (rewr : rewrite_ruleT)
               (Hrewr : rewrite_rule_data_interp_goodT (projT2 rewr))
               t re v1 v2
               (Ht : t = type_of_rawexpr re)
               (Ht' : rawexpr_types_ok re (type_of_rawexpr re))
-          : @rewrite_with_rule do_again t re rewr = Some v1
+          : @rewrite_with_rule do_again reveal_as_necessary t re rewr = Some v1
             -> rawexpr_interp_related re (rew Ht in v2)
             -> UnderLets_interp_related v1 v2.
         Proof using pident_unify_to_typed pident_unify_unknown_correct try_make_transport_base_cps_correct.
@@ -1023,7 +1204,7 @@ Module Compilers.
                        | progress cbv [related_sigT_by_eq] in *
                        | progress cbn [projT1 projT2 eq_rect] in *
                        | match goal with
-                         | [ H : unify_pattern _ _ _ _ = Some _ |- _ ] => eapply interp_unify_pattern in H; [ | eassumption | eassumption ]
+                         | [ H : unify_pattern _ _ _ _ _ = Some _ |- _ ] => eapply interp_unify_pattern in H; [ | eassumption | eassumption ]
                          | [ H : unification_resultT_interp_related _ _, Hrewr : rewrite_rule_data_interp_goodT _ |- _ ]
                            => specialize (Hrewr _ _ H)
                          | [ H : option_eq _ ?x ?y, H' : ?x' = Some _ |- _ ]
@@ -1062,7 +1243,7 @@ Module Compilers.
 
         Lemma interp_eval_rewrite_rules
               (do_again : forall t : base_type, @expr.expr base_type ident value t -> UnderLets (expr t))
-              (d : decision_tree)
+              (d : option decision_tree)
               (rew_rules : rewrite_rulesT)
               (re : rawexpr) v
               (Hre : rawexpr_types_ok re (type_of_rawexpr re))
@@ -1075,22 +1256,43 @@ Module Compilers.
           : UnderLets_interp_related res v.
         Proof using raw_pident_to_typed_invert_bind_args invert_bind_args_unknown_correct pident_unify_unknown_correct pident_unify_to_typed try_make_transport_base_cps_correct.
           subst res; cbv [eval_rewrite_rules].
-          refine (let H := eval_decision_tree_correct d [re] _ in _).
-          destruct H as [H| [? [? [H ?] ] ] ]; rewrite H; cbn [Option.sequence Option.sequence_return UnderLets_interp_related];
-            [ now apply expr_of_rawexpr_interp_related | ]; clear H.
-          inversion_head' eqlistA.
-          unfold Option.bind at 1.
-          break_innermost_match_step; [ | cbn [Option.sequence_return UnderLets_interp_related]; now apply expr_of_rawexpr_interp_related ].
-          cbn [Option.bind Option.sequence Option.sequence_return UnderLets_interp_related].
-          match goal with
-          | [ |- ?R (Option.sequence_return ?x ?y) _ ]
-            => destruct x eqn:Hinterp
-          end; cbn [Option.sequence_return UnderLets.interp]; [ | now apply expr_of_rawexpr_interp_related ].
-          unshelve (eapply interp_rewrite_with_rule; [ | | | eassumption | ]; try eassumption).
-          { apply eq_type_of_rawexpr_equiv; assumption. }
-          { eapply Hrew_rules, nth_error_In; rewrite <- sigT_eta; eassumption. }
-          { erewrite <- rawexpr_types_ok_iff_of_rawexpr_equiv, <- eq_type_of_rawexpr_equiv by eassumption; assumption. }
-          { apply rawexpr_interp_related_Proper_rawexpr_equiv; assumption. }
+          destruct d as [d|].
+          { refine (let H := eval_decision_tree_correct d [re] _ in _).
+            destruct H as [H| [? [? [H ?] ] ] ]; rewrite H; cbn [Option.sequence Option.sequence_return UnderLets_interp_related];
+              [ now apply expr_of_rawexpr_interp_related | ]; clear H.
+            inversion_head' eqlistA.
+            unfold Option.bind at 1.
+            break_innermost_match_step; [ | cbn [Option.sequence_return UnderLets_interp_related]; now apply expr_of_rawexpr_interp_related ].
+            cbn [Option.bind Option.sequence Option.sequence_return UnderLets_interp_related].
+            match goal with
+            | [ |- ?R (Option.sequence_return ?x ?y) _ ]
+              => destruct x eqn:Hinterp
+            end; cbn [Option.sequence_return UnderLets.interp]; [ | now apply expr_of_rawexpr_interp_related ].
+            unshelve (eapply interp_rewrite_with_rule; [ | | | eassumption | ]; try eassumption).
+            { apply eq_type_of_rawexpr_equiv; assumption. }
+            { eapply Hrew_rules, nth_error_In; rewrite <- sigT_eta; eassumption. }
+            { erewrite <- rawexpr_types_ok_iff_of_rawexpr_equiv, <- eq_type_of_rawexpr_equiv by eassumption; assumption. }
+            { apply rawexpr_interp_related_Proper_rawexpr_equiv; assumption. } }
+          { cbv [rewrite_rules_interp_goodT] in *.
+            induction rew_rules as [|rew_rule rew_rules IH];
+              cbn [List.fold_right List.In] in *;
+              [ now apply expr_of_rawexpr_interp_related | ].
+            repeat first [ progress specialize_by_assumption
+                         | assumption
+                         | match goal with
+                           | [ H : forall p r, or _ _ -> _ |- _ ]
+                             => pose proof (fun p r H' => H p r (or_introl H'));
+                                pose proof (fun p r H' => H p r (or_intror H'));
+                                clear H
+                           | [ H : forall x y, ?v = existT _ x y -> _ |- _ ]
+                             => is_var v; destruct v; specialize (H _ _ eq_refl)
+                           | [ |- ?R (rewrite_with_rule ?do_again ?deeper ?re ?r;;; _)%option _ ]
+                             => let H := fresh in
+                                destruct (rewrite_with_rule do_again deeper re r) eqn:H;
+                                cbn [Option.sequence_return];
+                                [ unshelve eapply interp_rewrite_with_rule; try eassumption; try reflexivity; assumption
+                                | ]
+                           end ]. }
         Qed.
 
         (* Ltac's [repeat] is too weak :-( *)
@@ -1099,7 +1301,7 @@ Module Compilers.
 
         Lemma interp_assemble_identifier_rewriters'
               (do_again : forall t : base_type, @expr.expr base_type ident value t -> UnderLets (expr t))
-              (dt : decision_tree)
+              (dt : option decision_tree)
               (rew_rules : rewrite_rulesT)
               t re K
               (res := @assemble_identifier_rewriters' dt rew_rules do_again t re K)
@@ -1157,7 +1359,7 @@ Module Compilers.
 
         Lemma interp_assemble_identifier_rewriters
               (do_again : forall t : base_type, @expr.expr base_type ident value t -> UnderLets (expr t))
-              (d : decision_tree)
+              (d : option decision_tree)
               (rew_rules : rewrite_rulesT)
               t idc v
               (res := @assemble_identifier_rewriters d rew_rules do_again t idc)
