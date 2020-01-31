@@ -182,7 +182,7 @@ let vernac_rewriter_emit_inductives ~poly (scraped_data : Constrexpr.constr_expr
   ignore(rewriter_emit_inductives sigma ~poly scraped_data (Some base) (Some ident) (Some raw_ident) (Some pattern_ident))
 
 
-let vernac_make_rewriter ~poly ?(var_like_idents = None) ?(include_interp = false) ?(skip_early_reduction = false) ?(skip_early_reduction_no_dtree = false) ?(extra = None) (package_name : Names.Id.t) (rules_proofs : Constrexpr.constr_expr) =
+let vernac_make_rewriter ~poly ?(var_like_idents = None) ?(include_interp = false) ?(skip_early_reduction = false) ?(skip_early_reduction_no_dtree = true) ?(extra = None) (package_name : Names.Id.t) (rules_proofs : Constrexpr.constr_expr) =
   let env = Global.env () in
   let sigma = Evd.from_env env in
   let (sigma, var_like_idents) = match var_like_idents with
