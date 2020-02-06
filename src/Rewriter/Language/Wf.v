@@ -34,6 +34,7 @@ Module Compilers.
 
   Create HintDb wf discriminated.
   Create HintDb interp discriminated.
+  Hint Constants Opaque : wf interp.
 
   Hint Opaque expr.interp expr.Interp : interp rewrite.
   Hint Extern 2 => typeclasses eauto : wf.
@@ -886,6 +887,10 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
 
   Hint Constructors expr.wf : wf.
   Hint Resolve @expr.Wf_APP expr.Wf_Reify expr.Wf_reify : wf.
+  (** Work around COQBUG(https://github.com/coq/coq/issues/11536) *)
+  Hint Extern 1 (expr.Wf (GallinaReify.base.Reify_as _ _)) => simple apply (@expr.Wf_Reify) : wf.
+  (** Work around COQBUG(https://github.com/coq/coq/issues/11536) *)
+  Hint Extern 1 (expr.Wf (fun var => GallinaReify.base.reify _)) => simple apply (@expr.Wf_reify) : wf.
   Hint Opaque expr.APP GallinaReify.Reify_as GallinaReify.base.reify : wf interp rewrite.
   Hint Rewrite @expr.Interp_Reify @expr.interp_reify @expr.interp_reify_list @expr.interp_reify_option @expr.Interp_reify @expr.Interp_APP : interp.
 
