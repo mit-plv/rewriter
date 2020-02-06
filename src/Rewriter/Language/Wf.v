@@ -35,6 +35,7 @@ Module Compilers.
   Create HintDb wf discriminated.
   Create HintDb interp discriminated.
 
+  Hint Opaque expr.interp expr.Interp : interp rewrite.
   Hint Extern 2 => typeclasses eauto : wf.
 
   Module type.
@@ -396,8 +397,10 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
       Lemma Wf_APP {s d f x} : @Wf (s -> d) f -> @Wf s x -> @Wf d (expr.APP f x).
       Proof using Type. cbv [Wf expr.APP]; auto with wf. Qed.
     End with_ty.
+    Global Hint Opaque Wf : wf interp rewrite.
     Global Hint Constructors wf : wf.
     Global Hint Resolve @Wf_APP : wf.
+    Global Hint Opaque expr.APP : wf interp rewrite.
     Hint Rewrite @expr.Interp_APP : interp.
 
     Ltac is_expr_constructor arg :=
@@ -583,6 +586,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
       Proof. intros Hwf var1 var2; eapply wf_of_wf3 with (G:=nil), Hwf. Qed.
     End wf_properties.
     Global Hint Resolve Wf_of_Wf3 : wf.
+    Global Hint Opaque Wf3 : wf interp rewrite.
 
     Section interp_gen.
       Context {base_type}
@@ -882,6 +886,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
 
   Hint Constructors expr.wf : wf.
   Hint Resolve @expr.Wf_APP expr.Wf_Reify expr.Wf_reify : wf.
+  Hint Opaque expr.APP GallinaReify.Reify_as GallinaReify.base.reify : wf interp rewrite.
   Hint Rewrite @expr.Interp_Reify @expr.interp_reify @expr.interp_reify_list @expr.interp_reify_option @expr.Interp_reify @expr.Interp_APP : interp.
 
   Notation Wf := expr.Wf.
@@ -1570,6 +1575,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
 
   Global Hint Extern 0 (?x == ?x) => apply expr.Wf_Interp_Proper_gen : wf interp.
   Hint Resolve GeneralizeVar.Wf_FromFlat_ToFlat GeneralizeVar.Wf_GeneralizeVar : wf.
+  Hint Opaque GeneralizeVar.FromFlat GeneralizeVar.ToFlat GeneralizeVar.GeneralizeVar : wf interp rewrite.
   Hint Resolve GeneralizeVar.Wf3_FromFlat_ToFlat GeneralizeVar.Wf3_GeneralizeVar : wf.
   Hint Rewrite @GeneralizeVar.Interp_gen1_GeneralizeVar @GeneralizeVar.Interp_gen1_FromFlat_ToFlat : interp.
 End Compilers.

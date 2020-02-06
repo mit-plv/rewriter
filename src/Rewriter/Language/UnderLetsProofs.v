@@ -144,6 +144,7 @@ Module Compilers.
   End SubstVarLike.
 
   Hint Resolve SubstVarLike.Wf_SubstVar SubstVarLike.Wf_SubstVarLike SubstVarLike.Wf_SubstVarOrIdent : wf.
+  Hint Opaque SubstVarLike.SubstVar SubstVarLike.SubstVarLike SubstVarLike.SubstVarOrIdent : wf interp rewrite.
   Hint Rewrite @SubstVarLike.Interp_SubstVar @SubstVarLike.Interp_SubstVarLike @SubstVarLike.Interp_SubstVarOrIdent : interp.
 
   Module UnderLets.
@@ -1492,5 +1493,6 @@ Module Compilers.
   End UnderLets.
 
   Hint Resolve UnderLets.Wf_LetBindReturn : wf.
+  Hint Opaque UnderLets.LetBindReturn : wf interp rewrite.
   Hint Rewrite @UnderLets.Interp_LetBindReturn : interp.
 End Compilers.
