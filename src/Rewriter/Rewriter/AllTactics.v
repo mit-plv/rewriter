@@ -186,38 +186,65 @@ Module Compilers.
         : (@expr.Interp base_type ident base_interp ident_interp T x) == z.
       Proof. subst; assumption. Qed.
 
+      Inductive mark := mkmark.
+
+      Ltac generalize_hyps_for_rewriting_step base reify_type base_interp base_type base_type_interp do_again :=
+        lazymatch goal with
+        | [ |- @eq ?T ?x ?y ] => let t := reify_type T in
+                                 change (@type.related _ base_type_interp (fun _ => eq) t x y)
+        | [ H := _ |- _ ] => clear H || revert H || move H at top (* if H is a section variable which is used in the goal *)
+        | [ H : ?T |- @type.related _ base_type_interp (fun _ => eq) ?B _ _ ]
+          => lazymatch goal with
+             | [ |- context[H] ]
+               => let t := reify_type T in
+                  generalize (_ : Proper (@type.related _ base_type_interp (fun _ => eq) t) H);
+                  revert H;
+                  refine (@generalize_to_eqv _ base_type_interp t B _ _ _)
+             | _ => lazymatch T with
+                    | mark => (* now we're done *) idtac
+                    | _ => (clear H || move H at top);
+                           do_again ()
+                    end
+             end
+        | [ |- _ ] => (* now we're done *) idtac
+        end.
+
       Ltac generalize_hyps_for_rewriting base reify_type base_interp :=
         let base_type := constr:(base.type base) in
         let base_type_interp := constr:(base.interp base_interp) in
+        let step := generalize_hyps_for_rewriting_step base reify_type base_interp base_type base_type_interp in
+        let just_step _ := step ltac:(fun _ => idtac) in
+        let rec repeat_step _ := step repeat_step in
         (*let reify_base_type T := base.reify base reify_base T in
         let reify_type T := type.reify reify_base_type (base.type base) T in*)
         intros;
-        repeat match goal with
-               | [ |- @eq ?T ?x ?y ] => let t := reify_type T in
-                                        change (@type.related _ base_type_interp (fun _ => eq) t x y)
-               | [ H := _ |- _ ] => revert H
-               | [ H : ?T |- @type.related _ base_type_interp (fun _ => eq) ?B _ _ ]
-                 => lazymatch goal with
-                    | [ |- context[H] ]
-                      => let t := reify_type T in
-                         generalize (_ : Proper (@type.related _ base_type_interp (fun _ => eq) t) H);
-                         revert H;
-                         refine (@generalize_to_eqv _ base_type_interp t B _ _ _)
-                    | _ => idtac
-                    end
-               (*| [ H : ?T |- _ ] => clear H*)
-               end.
+        let H := fresh in
+        pose proof mkmark as H;
+        move H at top;
+        (* use [repeat] first so we don't blow the stack *)
+        repeat just_step ();
+        (* use recursion to get nice error messages *)
+        repeat_step ().
 
       Ltac etransitivity_for_sides do_lhs do_rhs :=
         intros;
-        let LHS := match goal with |- ?LHS = ?RHS => LHS end in
-        let RHS := match goal with |- ?LHS = ?RHS => RHS end in
-        let LHS' := open_constr:(_) in
-        let RHS' := open_constr:(_) in
-        transitivity RHS';
-        [ transitivity LHS'; [ symmetry | shelve ] | ];
-        [ lazymatch do_lhs with true => idtac | false => reflexivity end
-        | lazymatch do_rhs with true => idtac | false => reflexivity end ].
+        lazymatch goal with
+        | [ |- _ = _ ] => idtac
+        | [ |- ?G ] => fail "The goal" G "is not an equality"
+        end;
+        (* we keep the original goal at the beginning of the goals list *)
+        (* there's only one goal at this point, but we use branching
+           with [..] to be more symmetric between treating lhs and
+           rhs *)
+        [ lazymatch do_lhs with
+          | true => etransitivity; revgoals; [ | symmetry ]
+          | false => idtac
+          end | .. ];
+        [ lazymatch do_rhs with
+          | true => etransitivity
+          | false => idtac
+          end | .. ];
+        [ shelve (* shelve the original goal *) | .. ].
 
       Ltac check_perf_level_then_tac tac arg :=
         let lvl := rewrite_perf_level in
