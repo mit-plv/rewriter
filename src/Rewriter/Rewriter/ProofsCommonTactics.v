@@ -495,7 +495,8 @@ Module Compilers.
                        | [ |- expr.interp_related_gen _ _ (expr.Abs ?f) _ ]
                          => let fh := fresh in set (fh := f); cbn [expr.interp_related_gen]; subst fh; cbv beta; intros
                        | [ |- expr.interp_related_gen _ _ (expr.LetIn ?v ?f) (LetIn.Let_In ?V ?F) ]
-                         => let vh := fresh in
+                         => rewrite (LetIn.unfold_Let_In V F);
+                            let vh := fresh in
                             set (vh := v);
                             let fh := fresh in
                             set (fh := f);
