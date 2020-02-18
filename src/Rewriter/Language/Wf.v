@@ -133,6 +133,31 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
 
     Global Hint Immediate and_eqv_for_each_lhs_of_arrow_not_higher_order : typeclass_instances.
 
+    Global Instance andb_bool_for_each_lhs_of_arrow_Proper
+           {base_type} {f g R1 R2 R3 t}
+           (R_Proper : forall t, Proper (R1 t ==> R2 t ==> eq) (R3 t))
+      : Proper (@type.and_for_each_lhs_of_arrow base_type g g R1 t ==> @type.and_for_each_lhs_of_arrow base_type f f R2 t ==> eq)
+               (@type.andb_bool_for_each_lhs_of_arrow base_type _ _ R3 t).
+    Proof.
+      cbv [Proper respectful] in *; induction t; cbn [type.andb_bool_for_each_lhs_of_arrow type.and_for_each_lhs_of_arrow];
+        [ reflexivity | ].
+      intros; destruct_head'_and.
+      apply f_equal2; eauto.
+    Qed.
+
+    Global Instance and_for_each_lhs_of_arrow_Proper
+           {base_type} {f g R1 R2 R3 R4 t}
+           (R4_True_Proper : Proper R4 True)
+           (R4_Proper_and : Proper (R4 ==> R4 ==> R4) and)
+           (R_Proper : forall t, Proper (R1 t ==> R2 t ==> R4) (R3 t))
+      : Proper (@type.and_for_each_lhs_of_arrow base_type g g R1 t ==> @type.and_for_each_lhs_of_arrow base_type f f R2 t ==> R4)
+               (@type.and_for_each_lhs_of_arrow base_type _ _ R3 t).
+    Proof.
+      cbv [Proper respectful] in *; induction t; cbn [type.andb_bool_for_each_lhs_of_arrow type.and_for_each_lhs_of_arrow];
+        [ intros; assumption | intros; apply R4_Proper_and; destruct_head'_and ];
+        auto.
+    Qed.
+
     Lemma related_hetero_iff_app_curried {base_type base_interp1 base_interp2 R} t F G
       : (@type.related_hetero base_type base_interp1 base_interp2 R t F G)
         <-> (forall x y, type.and_for_each_lhs_of_arrow (@type.related_hetero base_type base_interp1 base_interp2 R) x y -> R (type.final_codomain t) (type.app_curried F x) (type.app_curried G y)).
