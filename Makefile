@@ -81,23 +81,23 @@ clean::
 include Makefile.perf
 
 NO_LIMIT_PERF?=
-MAX_PERF_KB?=10000000 # 10 GB
-MAX_PERF_SEC?=
+PERF_MAX_KB?=10000000 # 10 GB
+PERF_MAX_SEC?=
 TIMEOUT_CMD?=
 TIMEOUT_SHOW?=
 PERF_SET_LIMITS?=
 
 ifneq (,$(NO_LIMIT_PERF))
-ifneq (,$(MAX_PERF_SEC))
-TMEDOUT_CMD:=$(MAX_PERF_SEC)
-PERF_T_ARG:=-t $(MAX_PERF_SEC) # trailing space important
+ifneq (,$(PERF_MAX_SEC))
+TIMEOUT_CMD:=$(PERF_MAX_SEC)
+PERF_T_ARG:=-t $(PERF_MAX_SEC) # trailing space important
 else
 PERF_T_ARG:=
 endif
 
 # apparently ulimit -m doesn't work anymore https://superuser.com/a/1497437/59575 / https://thirld.com/blog/2012/02/09/things-to-remember-when-using-ulimit/
 PERF_SET_LIMITS = ulimit -S -m $(PERF_MAX_KB); ulimit -S -v $(PERF_MAX_KB);
-TIMEOUT_SHOW:=TIMEOUT -m $(MAX_PERF_KB) $(PERF_T_ARG)
+TIMEOUT_SHOW:=TIMEOUT -m $(PERF_MAX_KB) $(PERF_T_ARG)
 endif
 
 .PHONY: perf
