@@ -50,11 +50,11 @@ let make_inductive_from_elim sigma (name : Names.Id.t option) (elim_ty : EConstr
       mind_entry_inds = [{
           mind_entry_typename = name;
           mind_entry_arity = EConstr.to_constr sigma ind_ty;
-          mind_entry_template = false;
           mind_entry_consnames = List.map (fun (cname, cty) -> cname) ctor_types;
           mind_entry_lc = List.map (fun (cname, cty) -> ctor_type_to_constr cty) ctor_types
         }];
       mind_entry_universes = uctx;
+      mind_entry_template = false;
       mind_entry_cumulative = false;
       mind_entry_private = None;
     } in
