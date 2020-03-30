@@ -116,8 +116,8 @@ Section hprop.
   Context {A} `{IsHProp A}.
 
   Let hprop_encode {x y : A} (p : x = y) : unit := tt.
-
-  Local Hint Resolve (fun x => @isiso_encode A x (fun _ => unit)) : typeclass_instances.
+  Let isiso_encode_unit := fun x => @isiso_encode A x (fun _ => unit).
+  Local Existing Instance isiso_encode_unit.
 
   Global Instance ishprop_path_hprop : IsHPropRel (@eq A).
   Proof.

@@ -425,7 +425,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
     End with_ty.
     Global Hint Opaque Wf : wf interp rewrite.
     Global Hint Constructors wf : wf.
-    Global Hint Resolve @Wf_APP : wf.
+    Global Hint Resolve Wf_APP : wf.
     Global Hint Opaque expr.APP : wf interp rewrite.
     Hint Rewrite @expr.Interp_APP : interp.
 
@@ -911,7 +911,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
   End expr.
 
   Hint Constructors expr.wf : wf.
-  Hint Resolve @expr.Wf_APP expr.Wf_Reify expr.Wf_reify : wf.
+  Hint Resolve expr.Wf_APP expr.Wf_Reify expr.Wf_reify : wf.
   (** Work around COQBUG(https://github.com/coq/coq/issues/11536) *)
   Hint Extern 1 (expr.Wf (GallinaReify.base.Reify_as _ _)) => simple apply (@expr.Wf_Reify) : wf.
   (** Work around COQBUG(https://github.com/coq/coq/issues/11536) *)

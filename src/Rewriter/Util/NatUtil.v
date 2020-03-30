@@ -27,7 +27,16 @@ Global Strategy expand [nat_rect_arrow_nodep nat_rect_nodep Thunked.nat_rect].
 Create HintDb natsimplify discriminated.
 
 Hint Resolve mod_bound_pos plus_le_compat : arith.
-Hint Resolve (fun x y p q => proj1 (@Nat.mod_bound_pos x y p q)) (fun x y p q => proj2 (@Nat.mod_bound_pos x y p q)) : arith.
+
+Lemma mod_bound_nonneg x y : 0 <= x mod y.
+Proof.
+  destruct y; [ reflexivity | apply Nat.mod_bound_pos ]; lia.
+Qed.
+
+Lemma mod_bound_lt x y : 0 < y -> x mod y < y.
+Proof. apply Nat.mod_bound_pos; lia. Qed.
+
+Hint Resolve mod_bound_nonneg mod_bound_lt : arith.
 
 Hint Rewrite @mod_small @mod_mod @mod_1_l @mod_1_r succ_pred using omega : natsimplify.
 

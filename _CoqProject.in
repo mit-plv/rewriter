@@ -1,6 +1,6 @@
 -R src/Rewriter Rewriter
 -I src/Rewriter/Util/plugins
--arg -w -arg +implicit-core-hint-db,+implicits-in-term,+non-reversible-notation,+deprecated-intros-until-0,+deprecated-focus,+unused-intro-pattern
+-arg -w -arg +implicit-core-hint-db,+implicits-in-term,+non-reversible-notation,+deprecated-intros-until-0,+deprecated-focus,+unused-intro-pattern,+deprecated-hint-constr,+variable-collision,+unexpected-implicit-declaration
 src/Rewriter/Demo.v
 src/Rewriter/Language/IdentifiersBasicGenerate.v
 src/Rewriter/Language/IdentifiersBasicLibrary.v
