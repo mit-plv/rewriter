@@ -4,6 +4,7 @@ Require Import Coq.Classes.Morphisms.
 Require Import Coq.Lists.List.
 Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.Reify.
 Require Import Rewriter.Language.IdentifiersBasicLibrary.
 Require Import Rewriter.Util.Prod Rewriter.Util.LetIn.
 Require Import Rewriter.Util.ListUtil Rewriter.Util.NatUtil.
@@ -30,6 +31,7 @@ Import EqNotations.
 Module Compilers.
   Import Language.Pre.
   Import Language.Compilers.
+  Import Reify.Compilers.
   Export IdentifiersBasicLibrary.Compilers.
 
   Module Basic.
@@ -501,13 +503,13 @@ Module Compilers.
            end.
 
       Ltac reify_base_type_via_list base base_interp all_base_and_interp :=
-        Language.Compilers.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
+        Reify.Compilers.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
       Ltac reify_type_via_list base base_interp all_base_and_interp :=
-        Language.Compilers.type.reify ltac:(reify_base_type_via_list base base_interp all_base_and_interp) constr:(base.type base).
+        Reify.Compilers.type.reify ltac:(reify_base_type_via_list base base_interp all_base_and_interp) constr:(base.type base).
       Ltac reify_pattern_base_type_via_list base base_interp all_base_and_interp :=
-        Language.Compilers.pattern.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
+        Reify.Compilers.pattern.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
       Ltac reify_pattern_type_via_list base base_interp all_base_and_interp :=
-        Language.Compilers.type.reify ltac:(reify_pattern_base_type_via_list base base_interp all_base_and_interp) constr:(pattern.base.type base).
+        Reify.Compilers.type.reify ltac:(reify_pattern_base_type_via_list base base_interp all_base_and_interp) constr:(pattern.base.type base).
 
       Ltac ident_type_of_interped_type reify_type base_type base_type_interp ident ty :=
         let recur := ident_type_of_interped_type reify_type base_type base_type_interp ident in
@@ -1053,10 +1055,10 @@ Module Compilers.
           => (* solve [ *) let rT := reify_type T in unify e rT; reflexivity (* | idtac "ERROR: Failed to reify" T ] *)
         end.
 
-      Ltac expr_reified_hint base_type ident reify_base_type reify_ident :=
+      Ltac expr_reified_hint base_type ident from_flat reify_base_type reify_ident :=
         lazymatch goal with
         | [ |- @expr.Reified_of _ ident _ _ ?t ?v ?e ]
-          => (*solve [ *) let rv := expr.Reify constr:(base_type) ident ltac:(reify_base_type) ltac:(reify_ident) v in unify e rv; reflexivity (* | idtac "ERROR: Failed to reify" v "(of type" t "); try setting Reify.debug_level to see output" ] *)
+          => (*solve [ *) let rv := expr.Reify constr:(base_type) ident from_flat ltac:(reify_base_type) ltac:(reify_ident) v in unify e rv; reflexivity (* | idtac "ERROR: Failed to reify" v "(of type" t "); try setting Reify.debug_level to see output" ] *)
         end.
 
       Ltac build_index_of_ident ident :=
@@ -1264,13 +1266,14 @@ Module Compilers.
       Ltac expr_reified_hint_via_reify_package reify_pkg :=
         let pkgT := type of reify_pkg in
         let exprInfo := lazymatch (eval hnf in pkgT) with @GoalType.ExprReifyInfoT ?exprInfo => (eval hnf in exprInfo) end in
+        let from_flat := (eval hnf in (@GoalType.from_flat _ reify_pkg)) in
         lazymatch exprInfo with
         | {| Classes.base := ?base
              ; Classes.ident := ?ident |}
           => let base_type := constr:(base.type base) in
              let reify_base_type := reify_base_type_via_reify_package reify_pkg in
              let reify_ident := reify_ident_via_reify_package reify_pkg in
-             expr_reified_hint base_type ident reify_base_type reify_ident
+             expr_reified_hint base_type ident from_flat reify_base_type reify_ident
         end.
 
       Ltac cache_build_index_of_base base :=
@@ -1633,22 +1636,28 @@ Module Compilers.
                          ident
                          base_interp
                          ident_interp) in
+        let exprExtraInfo
+            := constr:(ltac:(
+                         econstructor;
+                         first [ exact base_default
+                               | exact (@reflect_base_interp_beq)
+                               | exact try_make_base_transport_cps_correct
+                               | exact toFromRestrictedIdent
+                               | exact buildInvertIdentCorrect
+                               | exact (@buildInterpIdentCorrect)
+                               | exact (@buildInterpEagerIdentCorrect)
+                               | exact (@ident_interp_Proper) ])
+                       : @Classes.ExprExtraInfoT exprInfo) in
+        let from_flat
+            := constr:(@HelperLemmas.from_flat_of_exprExtraInfo exprInfo exprExtraInfo) in
         constr:(@GoalType.Build_package
                   exprInfo
-                  (ltac:(
-                     econstructor;
-                     first [ exact base_default
-                           | exact (@reflect_base_interp_beq)
-                           | exact try_make_base_transport_cps_correct
-                           | exact toFromRestrictedIdent
-                           | exact buildInvertIdentCorrect
-                           | exact (@buildInterpIdentCorrect)
-                           | exact (@buildInterpEagerIdentCorrect)
-                           | exact (@ident_interp_Proper) ]))
+                  exprExtraInfo
                   (@GoalType.Build_ExprReifyInfoT
                      exprInfo
                      all_base_and_interp
-                     all_ident_and_interp)
+                     all_ident_and_interp
+                     from_flat)
                   ident_is_var_like).
       Ltac make_package_via base ident base_type_list_named var_like_idents all_ident_named_interped :=
         let res := build_package base ident base_type_list_named var_like_idents all_ident_named_interped in refine res.

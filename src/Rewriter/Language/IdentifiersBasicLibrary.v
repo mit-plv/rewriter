@@ -20,6 +20,7 @@ Module Compilers.
         {
           all_base_and_interp : list (Classes.base * Type)
           ; all_ident_and_interp : GallinaAndReifiedIdentList.t
+          ; from_flat : forall t, @GeneralizeVar.Flat.expr _ Classes.ident t -> @Expr _ Classes.ident t
         }.
 
       Record package :=
@@ -130,6 +131,12 @@ Module Compilers.
                          | progress break_innermost_match_hyps ].
         Qed.
       End build_BuildInvertIdentCorrectT_opt.
+
+      Definition from_flat_of_exprExtraInfo
+                 {exprInfo : Classes.ExprInfoT}
+                 {exprExtraInfo : Classes.ExprExtraInfoT}
+        : forall t, @GeneralizeVar.Flat.expr _ Classes.ident t -> @Expr _ Classes.ident t
+        := @GeneralizeVar.FromFlat _ _ _ _.
     End HelperLemmas.
   End Basic.
 End Compilers.
