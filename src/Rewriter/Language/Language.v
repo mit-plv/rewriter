@@ -1336,9 +1336,9 @@ Module Compilers.
     Module Export Notations.
       Delimit Scope ident_scope with ident.
       Global Arguments expr.Ident {base_type%type ident%function var%function t%etype} idc%ident.
-      Notation "# x" := (expr.Ident x) : expr_pat_scope.
+      Notation "# x" := (expr.Ident x) (only parsing) : expr_pat_scope.
       Notation "# x" := (@expr.Ident _ _ _ _ x) : expr_scope.
-      Notation "x @ y" := (expr.App x%expr_pat y%expr_pat) : expr_pat_scope.
+      Notation "x @ y" := (expr.App x%expr_pat y%expr_pat) (only parsing) : expr_pat_scope.
 
       Notation "( x , y , .. , z )" := (expr.App (expr.App (#ident_pair) .. (expr.App (expr.App (#ident_pair) x%expr) y%expr) .. ) z%expr) : expr_scope.
       Notation "x :: y" := (#ident_cons @ x @ y)%expr : expr_scope.
