@@ -1415,6 +1415,11 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
           -> expr.Wf e.
       Proof. intros [H0 H1]; rewrite H0; cbv [GeneralizeVar]; apply Wf_FromFlat, H1. Qed.
 
+      Lemma Wf3_via_flat {t} (e : Expr t)
+        : (e = GeneralizeVar (e _) /\ Flat.wf (base_type_beq:=base_type_beq) (PositiveMap.empty _) (to_flat (e _)) = true)
+          -> expr.Wf3 e.
+      Proof. intros [H0 H1]; rewrite H0; cbv [GeneralizeVar]; apply Wf3_FromFlat, H1. Qed.
+
       Lemma wf_to_flat'_gen
             {t}
             (e1 e2 : expr t)
@@ -1602,6 +1607,18 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
     end.
 
   Ltac prove_Wf _ := prove_Wf_with ltac:(fun _ => idtac).
+
+  Ltac prove_Wf3_with extra_tac :=
+    lazymatch goal with
+    | [ |- @expr.Wf3 ?base_type ?ident ?t ?e ]
+      => refine (@GeneralizeVar.Wf3_via_flat base_type ident _ _ _ _ _ t e _);
+         [ solve [ assumption | auto with nocore | typeclasses eauto | extra_tac ()
+                   | let G := match goal with |- ?G => G end in
+                     fail 1 "Could not automatically solve" G ]..
+         | vm_cast_no_check (conj (eq_refl e) (eq_refl true)) ]
+    end.
+
+  Ltac prove_Wf3 _ := prove_Wf3_with ltac:(fun _ => idtac).
 
   Global Hint Extern 0 (?x == ?x) => apply expr.Wf_Interp_Proper_gen : wf interp.
   Hint Resolve GeneralizeVar.Wf_FromFlat_ToFlat GeneralizeVar.Wf_GeneralizeVar : wf.
