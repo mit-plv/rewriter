@@ -238,7 +238,9 @@ Module Compilers.
                      end
              | base.type.unit
                => fun e T k
-                  => k (#ident.ident_tt)%expr
+                  => if is_var_like e
+                     then k (#ident.ident_tt)%expr
+                     else UnderLets.UnderLet e (fun v => k (#ident.ident_tt)%expr)
              end%under_lets.
 
         Fixpoint let_bind_return {t} : expr t -> expr t
