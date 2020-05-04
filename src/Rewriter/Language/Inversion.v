@@ -495,15 +495,91 @@ Module Compilers.
           cbv [invert_expr.invert_App2 invert_expr.invert_AppIdent2 invert_expr.invert_App invert_expr.invert_AppIdent invert_expr.invert_Ident]; intros;
           repeat first [ reflexivity
                        | progress subst
-                       | progress cbn [Option.bind] in *
+                       | progress cbn [Option.bind projT1 projT2 proj1_sig proj2_sig fst snd type.final_codomain eq_rect eq_ind eq_ind_r] in *
+                       | progress destruct_head'_sig
                        | progress inversion_option
-                       | progress invert_match_step ].
+                       | progress invert_match_step
+                       | (exists eq_refl) ].
         Lemma invert_App2_Some {t} {e : expr t} {v} : invert_expr.invert_App2 e = Some v -> e = expr.App (expr.App (fst (fst (projT2 v))) (snd (fst (projT2 v)))) (snd (projT2 v)).
         Proof. t''. Qed.
         Lemma invert_AppIdent_Some {t} {e : expr t} {v} : invert_expr.invert_AppIdent e = Some v -> e = expr.App (expr.Ident (fst (projT2 v))) (snd (projT2 v)).
         Proof. t''. Qed.
         Lemma invert_AppIdent2_Some {t} {e : expr t} {v} : invert_expr.invert_AppIdent2 e = Some v -> e = expr.App (expr.App (expr.Ident (fst (fst (projT2 v)))) (snd (fst (projT2 v)))) (snd (projT2 v)).
         Proof. t''. Qed.
+        Definition invert_App_curried_Some_type {t} {e : expr t} {args} {v}
+          : invert_expr.invert_App_curried e args = v
+            -> type.final_codomain (projT1 v) = type.final_codomain t.
+        Proof.
+          induction e; cbn [invert_expr.invert_App_curried];
+            repeat first [ progress intros
+                         | progress subst
+                         | progress cbn [projT1 type.final_codomain] in *
+                         | reflexivity
+                         | assumption
+                         | match goal with
+                           | [ IH : forall args, _ = _ -> _ |- _ ] => specialize (IH _ eq_refl)
+                           end ].
+        Defined.
+        Definition invert_AppIdent_curried_Some_type {t} {e : expr t} {v}
+          : invert_expr.invert_AppIdent_curried e = Some v
+            -> type.base (type.final_codomain (projT1 v)) = t.
+        Proof.
+          cbv [invert_expr.invert_AppIdent_curried Option.bind].
+          destruct t; [ | let H := fresh in intro H; exfalso; clear -H; abstract congruence ].
+          break_innermost_match_step.
+          match goal with
+          | [ H : invert_expr.invert_App_curried _ _ = _ |- _ ]
+            => apply invert_App_curried_Some_type in H
+          end.
+          cbn [projT1 type.final_codomain] in *.
+          break_innermost_match
+          ; [ | let H := fresh in intro H; exfalso; clear -H; abstract congruence ].
+          intro; inversion_option; subst; reflexivity.
+        Defined.
+        Lemma invert_App_curried_Some {t} {e : expr t} {args} {v}
+          : forall H : invert_expr.invert_App_curried e args = v,
+            invert_expr.App_curried e args = rew [fun t => expr (type.base t)] (invert_App_curried_Some_type H) in invert_expr.App_curried (fst (projT2 v)) (snd (projT2 v)).
+        Proof.
+          induction e; cbn [invert_expr.invert_App_curried];
+            t''.
+          all: repeat first [ match goal with
+                              | [ IH : forall args, _ = _ -> _ |- _ ] => specialize (IH _ eq_refl)
+                              end
+                            | progress cbn [type.final_codomain invert_expr.App_curried fst snd] in *
+                            | assumption ].
+        Qed.
+        Lemma invert_App_curried_Some_base {t} {e : expr (type.base t)} {args} {v}
+          : forall H : invert_expr.invert_App_curried e args = v,
+              e = rew [fun t => expr (type.base t)] (invert_App_curried_Some_type H) in invert_expr.App_curried (fst (projT2 v)) (snd (projT2 v)).
+        Proof. apply (@invert_App_curried_Some _ e args v). Qed.
+        Lemma invert_AppIdent_curried_Some {t} {e : expr t} {v}
+          : forall H : invert_expr.invert_AppIdent_curried e = Some v,
+            e = rew (invert_AppIdent_curried_Some_type H) in invert_expr.App_curried (expr.Ident (fst (projT2 v))) (snd (projT2 v)).
+        Proof.
+          cbv [invert_expr.invert_AppIdent_curried invert_AppIdent_curried_Some_type]; destruct t; [ | congruence ];
+            cbv [Option.bind].
+          pose proof (@invert_App_curried_Some _ e tt).
+          generalize dependent (@invert_App_curried_Some_type _ e tt); intros.
+          break_innermost_match_hyps; try congruence.
+          repeat match goal with
+                 | [ H : forall v, _ = v -> _ |- _ ]
+                   => generalize dependent (H _ eq_refl); clear H; intros
+                 | [ H : invert_expr.invert_Ident _ = _ |- _ ]
+                   => apply invert_Ident_Some in H
+                 end;
+            cbn [invert_expr.App_curried] in *;
+            t''.
+        Qed.
+        Lemma invert_App_curried_Some_sig {t} {e : expr t} {args} {v}
+          : invert_expr.invert_App_curried e args = v
+            -> { pf : type.final_codomain _ = type.final_codomain t
+               | invert_expr.App_curried e args = rew [fun t => expr (type.base t)] pf in invert_expr.App_curried (fst (projT2 v)) (snd (projT2 v)) }.
+        Proof. eexists; now unshelve apply invert_App_curried_Some. Qed.
+        Lemma invert_AppIdent_curried_Some_sig {t} {e : expr t} {v}
+          : invert_expr.invert_AppIdent_curried e = Some v
+            -> { pf : type.base (type.final_codomain _) = t
+               | e = rew pf in invert_expr.App_curried (expr.Ident (fst (projT2 v))) (snd (projT2 v)) }.
+        Proof. eexists; now unshelve apply invert_AppIdent_curried_Some. Qed.
 
         Definition decode {t} (x y : expr t) : code x y -> x = y.
         Proof.
@@ -541,6 +617,10 @@ Module Compilers.
         => guard_tac H; apply (@invert_AppIdent_Some base_type ident var t e) in H
       | [ H : @invert_expr.invert_AppIdent2 ?base_type ?ident ?var ?t ?e = Some _ |- _ ]
         => guard_tac H; apply (@invert_AppIdent2_Some base_type ident var t e) in H
+      | [ H : @invert_expr.invert_App_curried ?base_type ?ident ?var ?t ?e ?args = ?v |- _ ]
+        => guard_tac H; apply (@invert_App_curried_Some_sig base_type ident var t e args) in H
+      | [ H : @invert_expr.invert_AppIdent_curried ?base_type ?ident ?var ?t ?e = Some ?v |- _ ]
+        => guard_tac H; apply (@invert_AppIdent_curried_Some_sig base_type ident var t e) in H
       end.
     Ltac invert_subst_simple_step :=
       first [ progress cbv beta iota in *
