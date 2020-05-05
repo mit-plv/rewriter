@@ -754,6 +754,20 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
           exact Hwf.
         Qed.
 
+        Lemma invert_wf_App_curried_eq_base {t1 t2 e1 args1 e2 args2 G}
+              (pf : type.base (type.final_codomain t2) = type.base (type.final_codomain t1))
+              (Hwf : expr.wf G (ident:=ident) (var1:=var1) (var2:=var2) (App_curried (t:=t1) e1 args1) (rew [expr] pf in App_curried (t:=t2) e2 args2))
+          : { pf : _ = _
+            | let e1' := invert_App_curried e1 args1 in
+              let e2' := invert_App_curried e2 args2 in
+              expr.wf G (fst (projT2 e1')) (rew [expr] pf in (fst (projT2 e2')))
+              /\ type.and_for_each_lhs_of_arrow (fun t => expr.wf G) (snd (projT2 e1')) (rew [type.for_each_lhs_of_arrow _] pf in (snd (projT2 e2'))) }.
+        Proof using Type.
+          inversion_type.
+          eapply invert_wf_App_curried.
+          rewrite rew_map; eassumption.
+        Qed.
+
         Lemma invert_wf_App_curried_not_app {t1 t2 e1 args1 e2 args2 G}
               (pf : type.final_codomain t2 = type.final_codomain t1)
               (Hwf : expr.wf G (ident:=ident) (var1:=var1) (var2:=var2) (App_curried (t:=t1) e1 args1) (rew [fun t => expr (type.base t)] pf in App_curried (t:=t2) e2 args2))
@@ -797,6 +811,22 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
                                    destruct IH
                               end
                             | progress inversion_wf_constr ].
+        Qed.
+
+        Lemma invert_wf_App_curried_or_eq_base {t1 t2 e1 args1 e2 args2 G}
+              (pf : type.base (type.final_codomain t2) = type.base (type.final_codomain t1))
+              (Hwf : expr.wf G (ident:=ident) (var1:=var1) (var2:=var2) (App_curried (t:=t1) e1 args1) (rew [expr] pf in App_curried (t:=t2) e2 args2))
+              (H_at_base
+               : type.count_args t1 = type.count_args t2
+                 \/ ((forall s f x, e1 <> expr.App (s:=s) f x)
+                     /\ (forall s f x, e2 <> expr.App (s:=s) f x)))
+          : { pft : t2 = t1
+            | expr.wf G e1 (rew [expr] pft in e2)
+              /\ type.and_for_each_lhs_of_arrow (fun t => expr.wf G) args1 (rew pft in args2) }.
+        Proof using Type.
+          inversion_type.
+          eapply invert_wf_App_curried_or; [ | assumption ].
+          rewrite rew_map; eassumption.
         Qed.
       End with_var2.
     End invert_gen.
