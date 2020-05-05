@@ -581,6 +581,23 @@ Module Compilers.
                | e = rew pf in invert_expr.App_curried (expr.Ident (fst (projT2 v))) (snd (projT2 v)) }.
         Proof. eexists; now unshelve apply invert_AppIdent_curried_Some. Qed.
 
+        Lemma invert_App_curried_App_curried {t} {e : expr t} {args}
+          : invert_expr.invert_App_curried (invert_expr.App_curried e args) tt
+            = invert_expr.invert_App_curried e args.
+        Proof.
+          induction t, args; cbn in *; [ reflexivity | ].
+          match goal with H : _ |- _ => rewrite H end;
+            cbn; reflexivity.
+        Qed.
+
+        Lemma invert_App_curried_not_App {t} {e : expr t} {args}
+              (Hnot : forall s f x, e <> expr.App (s:=s) f x)
+          : invert_expr.invert_App_curried e args = existT _ t (e, args).
+        Proof.
+          destruct e; cbn [invert_expr.invert_App_curried]; try reflexivity.
+          exfalso; eapply Hnot; reflexivity.
+        Qed.
+
         Definition decode {t} (x y : expr t) : code x y -> x = y.
         Proof.
           destruct x; cbn [code]; intro p; symmetry;

@@ -144,6 +144,12 @@ Module Compilers.
     Defined.
     Global Hint Extern 1 (reflect (@eq (type ?base_type) ?x ?y) _) => notypeclasses refine (@reflect_type_beq base_type _ _ x y) : typeclass_instances.
 
+    Fixpoint count_args {base_type} (t : type base_type) : nat
+      := match t with
+         | base _ => O
+         | arrow _ d => S (count_args d)
+         end.
+
     Fixpoint final_codomain {base_type} (t : type base_type) : base_type
       := match t with
          | base t
