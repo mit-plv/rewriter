@@ -1,0 +1,3 @@
+val vernac_rewriter_emit_inductives : poly:bool -> Constrexpr.constr_expr -> Names.Id.t -> Names.Id.t -> Names.Id.t -> Names.Id.t -> unit
+
+val vernac_make_rewriter : poly:bool -> ?var_like_idents:(Constrexpr.constr_expr option) -> ?include_interp:bool -> ?skip_early_reduction:bool -> ?skip_early_reduction_no_dtree:bool -> ?extra:(Constrexpr.constr_expr option) -> Names.Id.t -> Constrexpr.constr_expr -> unit
