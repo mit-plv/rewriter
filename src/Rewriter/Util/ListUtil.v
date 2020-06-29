@@ -2170,7 +2170,7 @@ Qed.
 Lemma nth_error_rev A n ls : List.nth_error (@List.rev A ls) n = if lt_dec n (length ls) then List.nth_error ls (length ls - S n) else None.
 Proof.
   destruct lt_dec; [ | rewrite nth_error_length_error; rewrite ?List.rev_length; try reflexivity; lia ].
-  revert dependent n; induction ls as [|x xs IHxs]; cbn [length List.rev]; try lia; try reflexivity; intros.
+  revert dependent n; induction ls as [|x xs IHxs]; cbn [length List.rev]; try reflexivity; intros; try ((idtac + exfalso); lia).
   { rewrite nth_error_app, List.rev_length, Nat.sub_succ.
     destruct lt_dec.
     { rewrite IHxs by lia.
