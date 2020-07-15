@@ -251,3 +251,7 @@ For `Language.v`, there is a semi-arbitrary split between two files
   + interp and wf proofs for the passes to/from Flat
 
 - `UnderLetsProofs.v`: wf and interp lemmas for the various passes defined in `UnderLets.v`
+
+### Extended Walkthrough
+
+There's an extended description of much of the codebase in [`rewriting-extended.md`](./rewriting-extended.md).
