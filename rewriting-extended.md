@@ -1176,13 +1176,13 @@
             := { pf : projT1 x = projT1 y
                | R _ (rew pf in projT2 x) (projT2 y) }.
 
-                    Definition related_unification_resultT {var1 var2} (R : forall t, var1 t -> var2 t -> Prop) {t p}
-                      : @unification_resultT _ t p -> @unification_resultT _ t p -> Prop
-                      := related_sigT_by_eq (@related_unification_resultT' _ _ R t p).
+          Definition related_unification_resultT {var1 var2} (R : forall t, var1 t -> var2 t -> Prop) {t p}
+            : @unification_resultT _ t p -> @unification_resultT _ t p -> Prop
+            := related_sigT_by_eq (@related_unification_resultT' _ _ R t p).
 
-                    Definition wf_unification_resultT (G : list {t1 : type & (var1 t1 * var2 t1)%type}) {t p}
-                      : @unification_resultT (@value var1) t p -> @unification_resultT (@value var2) t p -> Prop
-                      := @related_unification_resultT _ _ (fun _ => wf_value G) t p.
+          Definition wf_unification_resultT (G : list {t1 : type & (var1 t1 * var2 t1)%type}) {t p}
+            : @unification_resultT (@value var1) t p -> @unification_resultT (@value var2) t p -> Prop
+            := @related_unification_resultT _ _ (fun _ => wf_value G) t p.
           ```
         - The `wf` correctness condition is then that if we have two `wf_rawexpr`-related `rawexpr`s, invoking `unify_pattern` on each `rawexpr` to unify it with a singular pattern `p`, with continuation `Some`, results either in `None` in both cases, or in two `unification_resultT`s which are `wf_unification_resultT`-related.
         - The interpretation correctness condition is a bit of a mouthful.
