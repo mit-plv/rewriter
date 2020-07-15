@@ -1360,7 +1360,8 @@
                                    (fun fv
                                     => Some (fv <-- fv;
                                                fv <-- maybe_do_again should_do_again (base_type_of (type_of_rawexpr e')) (tr fv);
-                                               UnderLets.Base (tr' fv))%under_lets))%option)%cps)%option)%cps)%cps).```
+                                               UnderLets.Base (tr' fv))%under_lets))%option)%cps)%option)%cps)%cps).
+    ```
     - We once again do not have any `wf` correctness condition for `rewrite_with_rule`; we merely unfold it as needed.
     - To write down the correctness condition for `rewrite_with_rule`, we must first define what it means for `rewrite_rule_data` to be "good".
       - Here is where we use `normalize_deep_rewrite_rule`.  Replacement rule data is good with respect to an interpretation value if normalizing it gives an appropriately interp-related thing to that interpretation value:
