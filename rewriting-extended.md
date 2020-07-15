@@ -682,7 +682,7 @@
                end.
           ```
         - The functions `pattern.base.relax` and `pattern.type.relax` take a PHOAST type and turn it into a pattern type, which just happens to have no pattern type variables.
-          ```
+          ```coq
           Module base.
             Fixpoint relax (t : Compilers.base.type) : type
               := match t with
@@ -755,7 +755,7 @@
           ```
       - In a possibly-gratuitous use of dependent typing to ensure that no uses of `PositiveMap.t` remain after rewrite-rule-compilation, we define a dependently typed data structure indexed over the pattern type which holds the mapping of each pattern type variable to a corresponding type.  This step cannot be fully reduced at rewrite-rule-compilation time, because we may not know enough type structure in the `rawexpr`.  We then collect these variables into a `PositiveMap.t`; this step *can* be fully reduced at rewrite-rule-compilation time, because the pattern always has a well-defined type structure, and so we know *which* type variables will have assignments in the `PositiveMap.t`, even if we don't necessarily know concretely (at rewrite-rule-compilation time) *what* those type variables will be assigned to.  We must also add a final check that substituting into the pattern type according the resulting `PositiveMap.t` actually does give the expected type; we do not want `'1 -> '1` and `nat -> bool` to unify.  We could check at each addition to the `PositiveMap.t` that we are not replacing one type with a different type.  However, the proofs are much simpler if we simply do a wholesale check at the very end.  We eventually perform this check in `unify_types`.
         - We thus define the dependently typed structures:
-          ```
+          ```coq
           Module base.
             Fixpoint var_types_of (t : type) : Set
               := match t with
@@ -793,7 +793,7 @@
           End type.
           ```
         - We can now write down the unifier that produces `var_types_of` from a unification problem; it is straightforward:
-          ```
+          ```coq
           Module base.
             Fixpoint unify_extracted
                      (ptype : type) (etype : Compilers.base.type)
