@@ -30,6 +30,10 @@ jobs:
       language: c
       script: CUR=all ./etc/ci/travis.sh -j2 all
     - stage: all
+      env: COQ_VERSION="v8.12"  COQ_PACKAGE="coq libcoq-ocaml-dev"               PPA="ppa:jgross-h/coq-8.12-daily"
+      language: c
+      script: CUR=all ./etc/ci/travis.sh -j2 all
+    - stage: all
       env: COQ_VERSION="v8.11"  COQ_PACKAGE="coq libcoq-ocaml-dev"               PPA="ppa:jgross-h/coq-8.11-daily"
       language: c
       script: CUR=all ./etc/ci/travis.sh -j2 all
@@ -42,7 +46,15 @@ jobs:
       language: c
       script: CUR=all ./etc/ci/travis.sh -j2 all
     - stage: all
-      env: COQ_VERSION="8.10.0" COQ_PACKAGE="coq-8.10.0 libcoq-8.10.0-ocaml-dev" PPA="ppa:jgross-h/many-coq-versions-ocaml-4-05"
+      env: COQ_VERSION="8.12.0" COQ_PACKAGE="coq-8.12.0 libcoq-8.12.0-ocaml-dev" PPA="ppa:jgross-h/many-coq-versions-ocaml-4-05"
+      language: c
+      script: CUR=all ./etc/ci/travis.sh -j2 all
+    - stage: all
+      env: COQ_VERSION="8.11.1" COQ_PACKAGE="coq-8.11.1 libcoq-8.11.1-ocaml-dev" PPA="ppa:jgross-h/many-coq-versions-ocaml-4-05"
+      language: c
+      script: CUR=all ./etc/ci/travis.sh -j2 all
+    - stage: all
+      env: COQ_VERSION="8.10.1" COQ_PACKAGE="coq-8.10.1 libcoq-8.10.1-ocaml-dev" PPA="ppa:jgross-h/many-coq-versions-ocaml-4-05"
       language: c
       script: CUR=all ./etc/ci/travis.sh -j2 all
     - stage: all
