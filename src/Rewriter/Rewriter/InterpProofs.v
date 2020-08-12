@@ -33,6 +33,7 @@ Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.HProp.
 Require Import Rewriter.Util.Decidable.
+Require Import Rewriter.Util.Equality.
 Require Import Rewriter.Util.Bool.Reflect.
 Require Import Rewriter.Util.Notations.
 Import ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
@@ -802,9 +803,11 @@ Module Compilers.
                := eq_type_of_rawexpr_of_types_match_with' Ht Ht')
           : exists resv : _,
               unification_resultT'_interp_related res resv
-              /\ app_transport_with_unification_resultT'_cps
-                   (pattern_default_interp' p evm' id) resv _ (@Some _)
-                 = Some (rew Hty in v).
+              /\ option_eq
+                   type.eqv
+                   (app_transport_with_unification_resultT'_cps
+                      (pattern_default_interp' p evm' id) resv _ (@Some _))
+                   (Some (rew Hty in v)).
         Proof using pident_unify_unknown_correct pident_unify_to_typed try_make_transport_base_cps_correct.
           clear -reflect_base_beq try_make_transport_base_cps_correct pident_unify_unknown_correct pident_unify_to_typed Hre H Ht Ht' Hty type_base base'.
           clearbody Hty.
@@ -816,7 +819,7 @@ Module Compilers.
                      (repeat first [ progress intros
                                    | rewrite pident_unify_unknown_correct in *
                                    | progress cbv [Option.bind option_bind'] in *
-                                   | progress cbn [fst snd rawexpr_interp_related eq_rect rawexpr_types_ok] in *
+                                   | progress cbn [fst snd rawexpr_interp_related eq_rect rawexpr_types_ok option_eq] in *
                                    | progress inversion_option
                                    | progress destruct_head'_ex
                                    | progress destruct_head'_and
@@ -844,8 +847,12 @@ Module Compilers.
                                      | [ |- exists x : _ * _, (_ /\ _) /\ _ ] => eexists (_, _); split; [ split; eassumption | ]
                                      | [ |- exists res, value_interp_related (value_of_rawexpr _) res ]
                                        => eexists; eapply value_of_rawexpr_interp_related; eassumption
+                                     | [ |- exists res, value_interp_related (value_of_rawexpr _) res /\ _ ]
+                                       => eexists; split; [ eapply value_of_rawexpr_interp_related; eassumption | ]
                                      | [ |- value_interp_related (value_of_rawexpr _) _ ]
                                        => eapply value_of_rawexpr_interp_related; eassumption
+                                     | [ H : rawexpr_interp_related ?r ?v |- ?v == ?v ]
+                                       => eapply eqv_of_rawexpr_interp_related; eassumption
                                      | [ |- Some _ = Some _ ] => apply f_equal
                                      | [ H : context[eq_type_of_rawexpr_of_types_match_with' ?H1 ?H2] |- _ ]
                                        => generalize dependent (eq_type_of_rawexpr_of_types_match_with' H1 H2)
@@ -877,12 +884,16 @@ Module Compilers.
                                           | _ => idtac
                                           end;
                                           setoid_rewrite (@app_transport_with_unification_resultT'_pattern_default_interp'_cps_id _ _ _ _ _ argsv kv Tv k'v)
-                                     | [ H : app_transport_with_unification_resultT'_cps ?f ?x _ (@Some _) = ?a,
+                                     | [ H : context[app_transport_with_unification_resultT'_cps ?f ?x _ (@Some _)],
                                              H' : app_transport_with_unification_resultT'_cps ?f' ?x _ (@Some _) = ?a'
                                          |- _ ]
                                        => unify f f';
-                                          assert (a = a') by (etransitivity; (idtac + symmetry); eassumption);
-                                          clear H'
+                                          rewrite H' in H
+                                     | [ H : context[rew [?P] ?H1 in rew [?P] ?H2 in ?v] |- _ ]
+                                       => rewrite <- eq_trans_rew_distr in H; generalize dependent (eq_trans H2 H1); intros
+                                     | [ H : ?f == rew ?pf1 in ?g, H' : ?x == rew ?pf2 in ?y |- ?f ?x == ?g ?y ]
+                                       => clear -H H' reflect_base_beq; cbn in H; specialize (H _ _ H'); clear H';
+                                          try destruct pf2; cbn [eq_rect] in *
                                      | [ H : context[ex _] |- _ ]
                                        => unshelve edestruct H; clear H;
                                           lazymatch goal with
@@ -897,10 +908,6 @@ Module Compilers.
                                      | [ |- types_match_with _ _ _ ] => solve [ solve_side_condition_equations ]
                                      end ]));
                   shelve_unifiable).
-          1-2:match goal with
-              | [ H : ?x == ?y |- ?x = ?y ]
-                => apply (type.eqv_iff_eq_of_funext (fun _ _ => functional_extensionality)), H
-              end.
         Qed.
 
         Lemma rawexpr_types_ok_of_reveal_rawexpr_of_pattern_as_necessary'
@@ -1072,13 +1079,22 @@ Module Compilers.
               (evm' := mk_new_evm (projT1 res) (pattern_collect_vars p))
           : exists resv,
             unification_resultT_interp_related res resv
-            /\ exists Hty, (app_with_unification_resultT_cps (@pattern_default_interp t p) resv _ (@Some _) = Some (existT (fun evm => type.interp (base.interp base_interp) (pattern.type.subst_default t evm)) evm' (rew Hty in v))).
+            /\ exists Hty,
+              option_eq
+                (fun '(existT evm1 v1) '(existT evm2 v2)
+                 => exists pf : evm1 = evm2,
+                     (rew [fun evm => type.interp (base.interp base_interp) (pattern.type.subst_default t evm)]
+                          pf
+                       in v1)
+                     == v2)
+                (app_with_unification_resultT_cps (@pattern_default_interp t p) resv _ (@Some _))
+                (Some (existT (fun evm => type.interp (base.interp base_interp) (pattern.type.subst_default t evm)) evm' (rew Hty in v))).
         Proof using pident_unify_unknown_correct pident_unify_to_typed try_make_transport_base_cps_correct.
           subst evm'; cbv [unify_pattern unification_resultT_interp_related unification_resultT related_unification_resultT app_with_unification_resultT_cps pattern_default_interp cpscall] in *.
           repeat
             (unshelve
                (repeat first [ progress cbv [Option.bind related_sigT_by_eq] in *
-                             | progress cbn [projT1 projT2 eq_rect] in *
+                             | progress cbn [projT1 projT2 eq_rect option_eq] in *
                              | progress destruct_head'_ex
                              | progress destruct_head'_and
                              | progress inversion_option
@@ -1093,8 +1109,12 @@ Module Compilers.
                                     first [ epose proof (interp_unify_pattern' _ H _ H'')
                                           | epose proof (interp_unify_pattern' _ H _ (rawexpr_types_ok_of_reveal_rawexpr_of_pattern_as_necessary' H'')) ]
                                | [ H : pattern.type.app_forall_vars (pattern.type.lam_forall_vars _) _ = Some _ |- _ ] => pose proof (pattern.type.app_forall_vars_lam_forall_vars H); clear H
-                               | [ H : pattern.type.app_forall_vars (pattern.type.lam_forall_vars _) _ = None |- None = Some _ ]
-                                 => exfalso; revert H;
+                               | [ H : pattern.type.app_forall_vars (pattern.type.lam_forall_vars _) _ = None |- _ ]
+                                 => lazymatch goal with
+                                    | [ |- None = Some _ ] => idtac
+                                    | [ |- Some _ = None ] => idtac
+                                    end;
+                                    exfalso; revert H;
                                     lazymatch goal with
                                     | [ |- ?x = None -> False ]
                                       => change (x <> None)
@@ -1107,6 +1127,7 @@ Module Compilers.
                              | progress cps_id'_no_option reveal_rawexpr_of_pattern_as_necessary_cps_id
                              | break_innermost_match_hyps_step
                              | break_innermost_match_step
+                             | (exists eq_refl)
                              | match goal with
                                | [ |- exists x : sigT _, _ ] => eexists (existT _ _ _)
                                | [ |- { pf : _ = _ | _ } ] => exists eq_refl
@@ -1125,7 +1146,7 @@ Module Compilers.
                                          (eq_sym (type_of_reveal_rawexpr_of_pattern_as_necessary _ _ _ _))
                                          (eq_type_of_rawexpr_of_types_match_with' ltac:(eassumption) ltac:(now apply rawexpr_types_ok_of_reveal_rawexpr_of_pattern_as_necessary')))
                              | progress cbv [eq_rect_r] in *
-                             | rewrite <- eq_trans_rew_distr
+                             | rewrite <- eq_trans_rew_distr in *
                              | match goal with
                                | [ |- rew ?pf in _ = rew ?pf' in _ ]
                                  => cut (pf = pf'); generalize pf pf'; [ intros; subst; reflexivity | clear; cbv beta zeta; intros ];
@@ -1181,7 +1202,7 @@ Module Compilers.
                        | progress type_beq_to_eq
                        | progress intros
                        | progress cbv [option_bind'] in *
-                       | progress cbn [Option.bind projT1 projT2 UnderLets.interp eq_rect UnderLets_interp_related] in *
+                       | progress cbn [Option.bind projT1 projT2 UnderLets.interp eq_rect UnderLets_interp_related option_eq] in *
                        | progress destruct_head'_sigT
                        | progress destruct_head'_sig
                        | progress inversion_option
@@ -1197,12 +1218,13 @@ Module Compilers.
                          end ].
           repeat first [ progress destruct_head'_ex
                        | progress destruct_head'_sig
+                       | progress destruct_head'_sigT
                        | progress destruct_head'_and
                        | exfalso; assumption
                        | progress inversion_option
                        | progress subst
                        | progress cbv [related_sigT_by_eq] in *
-                       | progress cbn [projT1 projT2 eq_rect] in *
+                       | progress cbn [projT1 projT2 eq_rect option_eq] in *
                        | match goal with
                          | [ H : unify_pattern _ _ _ _ _ = Some _ |- _ ] => eapply interp_unify_pattern in H; [ | eassumption | eassumption ]
                          | [ H : unification_resultT_interp_related _ _, Hrewr : rewrite_rule_data_interp_goodT _ |- _ ]
@@ -1238,7 +1260,13 @@ Module Compilers.
                                 => rewrite <- eq_trans_rew_distr
                               | [ |- context[rew ?pf in _] ]
                                 => tryif is_var pf then destruct pf else generalize pf
+                              | [ H : ?x == rew ?pf1 in ?y |- rew ?pf2 in ?x = ?y ]
+                                => clear -H reflect_base_beq; destruct pf2
                               end ].
+          1:match goal with
+            | [ H : ?x == ?y |- ?x = ?y ]
+              => apply (type.eqv_iff_eq_of_funext (fun _ _ => functional_extensionality)), H
+            end.
         Qed.
 
         Lemma interp_eval_rewrite_rules

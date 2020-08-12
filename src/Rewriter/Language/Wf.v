@@ -11,6 +11,7 @@ Require Import Rewriter.Util.Tactics.DestructHead.
 Require Import Rewriter.Util.Tactics.UniquePose.
 Require Import Rewriter.Util.Tactics.SplitInContext.
 Require Import Rewriter.Util.Tactics.SpecializeBy.
+Require Import Rewriter.Util.Tactics.SpecializeAllWays.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Sigma.
@@ -356,6 +357,60 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
                             | progress destruct_head'_and
                             | progress subst
                             | match goal with H : _ |- _ => apply H; clear H end ].
+        Qed.
+
+        Lemma eqv_of_interp_related_gen {var R t e v1 v2}
+              (HR_iff : forall t v1 v2, (exists v, R t v v1 /\ R t v v2) <-> v1 == v2)
+          : expr.interp_related_gen interp_ident (var:=var) R e v1
+            -> expr.interp_related_gen interp_ident (var:=var) R e v2
+            -> @type.eqv t v1 v2.
+        Proof using Type.
+          split_iff.
+          induction e; cbn;
+            repeat first [ progress split_iff
+                         | progress cbv beta in *
+                         | match goal with
+                           | [ H : forall x y z, ex _ -> _ |- _ ] => specialize (fun x y z a b => H x y z (ex_intro _ a b))
+                           | [ H : ?x == ?y, H' : forall t v1 v2, v1 == v2 -> ex _ |- ?f ?x == ?g ?y ]
+                             => specialize (H' _ _ _ H); destruct H'
+                           | [ H1 : ?P ?x1, H2 : ?P ?x2, H : forall a b, ?P a -> ?P b -> _ == _ |- ?x1 _ == ?x2 _ ]
+                             => specialize (H _ _ H1 H2)
+                           | [ H1 : ?P ?x1, H2 : ?P ?x2, H : forall a b, ?P a -> ?P b -> _ == _ |- _ ?x1 == _ ?x2 ]
+                             => specialize (H _ _ H1 H2)
+                           end
+                         | progress destruct_head'_and
+                         | progress destruct_head'_ex
+                         | progress subst
+                         | solve [ eauto ]
+                         | intros; etransitivity; (idtac + symmetry); eassumption
+                         | intro ].
+        Qed.
+
+        Lemma eqv_of_interp_related2 {t e1 e2 v1 v2}
+              (H : e1 = e2 \/ expr.interp interp_ident e1 == expr.interp interp_ident e2)
+          : expr.interp_related interp_ident e1 v1
+            -> expr.interp_related interp_ident e2 v2
+            -> @type.eqv t v1 v2.
+        Proof using Type.
+          intros H1 H2.
+          apply eqv_of_interp_related in H1.
+          apply eqv_of_interp_related in H2.
+          destruct H; subst;
+            repeat first [ etransitivity; (idtac + symmetry); eassumption
+                         | etransitivity; (idtac + symmetry); try eassumption; [] ].
+        Qed.
+
+        Lemma eqv_iff_interp_related_gen {var R}
+              (HR_iff : forall t v1 v2, (exists v, R t v v1 /\ R t v v2) <-> v1 == v2)
+          : forall t v1 v2,
+            (exists e, expr.interp_related_gen interp_ident (var:=var) R e v1
+                       /\ expr.interp_related_gen interp_ident (var:=var) R e v2)
+            <-> @type.eqv t v1 v2.
+        Proof using Type.
+          intros t v1 v2; split; [ intros [? [? ?] ] | intros ].
+          { eapply eqv_of_interp_related_gen; eassumption. }
+          { destruct (proj2 (HR_iff t v1 v2) ltac:(eassumption)) as [v ?];
+              exists (expr.Var v); cbn; assumption. }
         Qed.
 
         Lemma interp_related_gen_of_wf {var R G t e1 e2}

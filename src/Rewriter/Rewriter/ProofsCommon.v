@@ -2401,6 +2401,7 @@ Module Compilers.
           Definition unification_resultT_interp_related {t p}
             : @unification_resultT (@value var) t p -> @unification_resultT var t p -> Prop
             := related_unification_resultT (fun t => value_interp_related).
+
           Lemma interp_reify_reflect {with_lets t} e v
             : expr.interp ident_interp e == v -> expr.interp ident_interp (@reify _ with_lets t (reflect e)) == v.
           Proof using Type.
@@ -2605,6 +2606,81 @@ Module Compilers.
             clear -reflect_base_beq; generalize dependent (type_of_rawexpr re1); intros; subst.
             eliminate_hprop_eq.
             assumption.
+          Qed.
+
+          Lemma eqv_of_value_interp_related {t with_lets v v1 v2}
+            : @value_interp_related t with_lets v v1
+              -> @value_interp_related t with_lets v v2
+              -> v1 == v2.
+          Proof using Type.
+            clear.
+            revert dependent with_lets; induction t; cbn [value_interp_related].
+            all: repeat first [ break_innermost_match_step
+                              | break_innermost_match_hyps_step
+                              | match goal with
+                                | [ H : UnderLets_interp_related _ _ |- _ ]
+                                  => setoid_rewrite UnderLets.to_expr_interp_related_gen_iff in H
+                                end
+                              | eapply expr.eqv_of_interp_related2; [ left; reflexivity | .. ]; eassumption
+                              | intro ].
+            (* This is a bit less reversible, so we separate it into a separate tactic *)
+            unshelve
+              (repeat
+                 repeat
+                 first [ etransitivity; (idtac + symmetry); eassumption
+                       | match goal with
+                         | [ H : _ |- _ ] => eapply H; clear H
+                         | [ |- value_interp_related ?e _ ] => has_evar e; eapply reflect_interp_related
+                         | [ |- expr_interp_related ?e _ ] => is_evar e; instantiate (1:=expr.Var _)
+                         end
+                       | progress cbn [expr.interp_related_gen expr.interp_related] ]); now constructor.
+          Qed.
+
+          Lemma eqv_of_rawexpr_interp_related_rew {re t v1 v2}
+                H1 H2
+            : rawexpr_interp_related re (rew [type.interp base_type_interp] H1 in v1)
+              -> rawexpr_interp_related re (rew [type.interp base_type_interp] H2 in v2)
+              -> @type.eqv t v1 v2.
+          Proof using reflect_base_beq.
+            clear -reflect_base_beq.
+            revert dependent t; induction re; cbn [rawexpr_interp_related];
+              repeat first [ progress intros
+                           | progress destruct_head'_and
+                           | progress destruct_head'_ex
+                           | progress inversion_sigma
+                           | progress subst
+                           | progress cbn [eq_rect type_of_rawexpr expr.interp] in *
+                           | progress eliminate_hprop_eq
+                           | etransitivity; (idtac + symmetry); eassumption
+                           | eapply expr.eqv_of_interp_related2; [ left; reflexivity | eassumption.. ]
+                           | eapply eqv_of_value_interp_related; eassumption
+                           | exfalso; assumption
+                           | break_innermost_match_hyps_step
+                           | match goal with
+                             | [ IH : forall t v1 v2 H1 H2, rawexpr_interp_related ?re _ -> rawexpr_interp_related ?r2 _ -> _,
+                                   H : rawexpr_interp_related ?re ?x, H' : rawexpr_interp_related ?re ?y |- _ ]
+                               => lazymatch goal with
+                                  | [ |- _ x == _ y ] => idtac
+                                  | [ |- x _ == y _ ] => idtac
+                                  end;
+                                  specialize (IH _ _ _ eq_refl eq_refl H H')
+                             | [ IH : forall t v1 v2 H1 H2, rawexpr_interp_related ?re _ -> rawexpr_interp_related ?r2 _ -> _,
+                                   H : rawexpr_interp_related ?re (rew ?H1' in ?x), H' : rawexpr_interp_related ?re (rew ?H2' in ?y) |- _ ]
+                               => lazymatch goal with
+                                  | [ |- _ x == _ y ] => idtac
+                                  | [ |- x _ == y _ ] => idtac
+                                  end;
+                                  specialize (IH _ _ _ H1' H2' H H')
+                             | [ H : ?f == ?g |- ?f _ == ?g _ ] => cbn in H; apply H; clear H
+                             end ].
+          Qed.
+
+          Lemma eqv_of_rawexpr_interp_related {re v1 v2}
+            : rawexpr_interp_related re v1
+              -> rawexpr_interp_related re v2
+              -> v1 == v2.
+          Proof using reflect_base_beq.
+            refine (eqv_of_rawexpr_interp_related_rew eq_refl eq_refl).
           Qed.
 
           Fixpoint pattern_default_interp' {K t} (p : pattern t) evm {struct p} : (var (pattern.type.subst_default t evm) -> K) -> @with_unification_resultT' var t p evm K
