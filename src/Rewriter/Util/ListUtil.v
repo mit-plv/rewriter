@@ -40,17 +40,11 @@ Definition list_case_nodep {A} P : P -> (A -> list A -> P) -> list A -> P
   := @list_case A (fun _ => P).
 Definition list_rect_arrow_nodep {A P Q} := @list_rect_nodep A (P -> Q).
 
-Module Thunked.
-  Definition list_rect {A} P (N : Datatypes.unit -> P) (C : A -> list A -> P -> P) (ls : list A) : P
-    := Datatypes.list_rect (fun _ => P) (N tt) C ls.
-  Definition list_case {A} P (N : Datatypes.unit -> P) (C : A -> list A -> P) (ls : list A) : P
-    := list_case (fun _ => P) (N tt) C ls.
-End Thunked.
 (** Strongly prefer unfolding these versions of [list_rect] to the
     underlying [list_rect] principle.  Possibly -1 would suffice rather
     than expand, but I don't think there's harm in [expand] because
     [list_rect] ought not be much more complicated than any of these *)
-Global Strategy expand [list_rect_arrow_nodep list_rect_nodep Thunked.list_rect list_case_nodep Thunked.list_case].
+Global Strategy expand [list_rect_arrow_nodep list_rect_nodep].
 
 Global Instance list_rect_Proper_dep_gen {A P} (RP : forall x : list A, P x -> P x -> Prop)
   : Proper (RP nil ==> forall_relation (fun x => forall_relation (fun xs => RP xs ==> RP (cons x xs))) ==> forall_relation RP) (@list_rect A P) | 10.
@@ -82,6 +76,33 @@ Global Instance list_rect_arrow_Proper {A P Q}
 Proof. eapply list_rect_Proper_gen. Qed.
 Global Instance list_case_Proper {A P} : Proper (eq ==> pointwise_relation _ (pointwise_relation _ eq) ==> eq ==> eq) (@list_case A (fun _ => P)).
 Proof. repeat intro; subst; apply (@list_case_Proper_dep A (fun _ => P)); eauto. Qed.
+
+Global Instance list_rect_nodep_Proper {A P}
+  : Proper (eq ==> (eq ==> eq ==> eq ==> eq) ==> eq ==> eq) (@list_rect_nodep A P) | 10.
+Proof. cbv [respectful Proper list_rect_nodep]; intros; subst; apply list_rect_Proper; repeat intro; subst; eauto. Qed.
+
+Global Instance list_case_nodep_Proper {A P}
+  : Proper (eq ==> (eq ==> eq ==> eq) ==> eq ==> eq) (@list_case_nodep A P) | 10.
+Proof. cbv [respectful Proper list_case_nodep]; intros; subst; apply list_case_Proper; repeat intro; subst; eauto. Qed.
+Global Instance list_rect_arrow_nodep_Proper {A P Q}
+  : Proper ((eq ==> eq) ==> (eq ==> eq ==> (eq ==> eq) ==> eq ==> eq) ==> eq ==> eq ==> eq) (@list_rect_arrow_nodep A P Q) | 10.
+Proof. cbv [respectful Proper list_rect_arrow_nodep]; intros; subst; apply list_rect_arrow_Proper; repeat intro; subst; eauto. Qed.
+
+Module Thunked.
+  Definition list_rect {A} P (N : Datatypes.unit -> P) (C : A -> list A -> P -> P) (ls : list A) : P
+    := Datatypes.list_rect (fun _ => P) (N tt) C ls.
+  Definition list_case {A} P (N : Datatypes.unit -> P) (C : A -> list A -> P) (ls : list A) : P
+    := list_case (fun _ => P) (N tt) C ls.
+
+  Global Instance list_rect_Proper {A P}
+    : Proper ((eq ==> eq) ==> (eq ==> eq ==> eq ==> eq) ==> eq ==> eq) (@list_rect A P) | 10.
+  Proof. cbv [Proper respectful list_rect]; intros; subst; eapply list_rect_Proper; repeat intro; subst; eauto. Qed.
+
+  Global Instance list_case_Proper {A P}
+    : Proper ((eq ==> eq) ==> (eq ==> eq ==> eq) ==> eq ==> eq) (@list_case A P) | 10.
+  Proof. cbv [Proper respectful list_case]; intros; subst; eapply list_case_Proper; repeat intro; subst; eauto. Qed.
+End Thunked.
+Global Strategy expand [Thunked.list_rect list_case_nodep Thunked.list_case].
 
 Create HintDb distr_length discriminated.
 Create HintDb simpl_set_nth discriminated.

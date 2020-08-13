@@ -1,14 +1,21 @@
 (*** Boolean Utility Lemmas and Databases *)
 Require Import Coq.Bool.Bool.
+Require Import Coq.Classes.Morphisms.
 
 (* We would use [Scheme Minimality for bool Sort Type.], but we want
    [bool_rect_nodep] to unfold directly to [bool_rect] so that
    unification doesn't have a hard time unifying [bool_rect] and
    [bool_rect_nodep] on large arguments. *)
 Definition bool_rect_nodep {P} := @bool_rect (fun _ => P).
+Global Instance bool_rect_nodep_Proper {P}
+  : Proper (eq ==> eq ==> eq ==> eq) (@bool_rect_nodep P) | 10.
+Proof. repeat intro; subst; reflexivity. Qed.
 Module Thunked.
   Definition bool_rect P (t f : Datatypes.unit -> P) (b : bool) : P
     := Datatypes.bool_rect (fun _ => P) (t tt) (f tt) b.
+  Global Instance bool_rect_Proper {P}
+    : Proper ((eq ==> eq) ==> (eq ==> eq) ==> eq ==> eq) (@bool_rect P) | 10.
+  Proof. cbv; intros ??? ??? [] ??; subst; eauto. Qed.
 End Thunked.
 (** Strongly prefer unfolding these versions of [bool_rect] to the
     underlying [bool_rect] principle.  Possibly -1 would suffice rather

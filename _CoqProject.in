@@ -72,6 +72,7 @@ src/Rewriter/Util/Tactics/BreakMatch.v
 src/Rewriter/Util/Tactics/CPSId.v
 src/Rewriter/Util/Tactics/CacheTerm.v
 src/Rewriter/Util/Tactics/ConstrFail.v
+src/Rewriter/Util/Tactics/Contains.v
 src/Rewriter/Util/Tactics/DebugPrint.v
 src/Rewriter/Util/Tactics/DestructHead.v
 src/Rewriter/Util/Tactics/DestructHyps.v
@@ -86,6 +87,7 @@ src/Rewriter/Util/Tactics/PrintGoal.v
 src/Rewriter/Util/Tactics/RewriteHyp.v
 src/Rewriter/Util/Tactics/RunTacticAsConstr.v
 src/Rewriter/Util/Tactics/SetEvars.v
+src/Rewriter/Util/Tactics/SetoidSubst.v
 src/Rewriter/Util/Tactics/SpecializeAllWays.v
 src/Rewriter/Util/Tactics/SpecializeBy.v
 src/Rewriter/Util/Tactics/SplitInContext.v

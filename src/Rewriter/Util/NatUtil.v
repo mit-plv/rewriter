@@ -16,9 +16,31 @@ Definition nat_rect_nodep {P} : P -> (nat -> P -> P) -> nat -> P
   := nat_rect (fun _ => P).
 Definition nat_rect_arrow_nodep {P Q} := @nat_rect_nodep (P -> Q).
 
+Global Instance nat_rect_nodep_Proper {P}
+  : Proper (Logic.eq ==> (Logic.eq ==> Logic.eq ==> Logic.eq) ==> Logic.eq ==> Logic.eq) (@nat_rect_nodep P) | 10.
+Proof.
+  cbv [Proper respectful nat_rect_nodep].
+  intros x y ???? n m ?; subst m y.
+  revert x; induction n; cbn; intros; auto.
+Qed.
+
+Global Instance nat_rect_arrow_nodep_Proper {P Q}
+  : Proper ((Logic.eq ==> Logic.eq) ==> (Logic.eq ==> (Logic.eq ==> Logic.eq) ==> Logic.eq ==> Logic.eq) ==> Logic.eq ==> Logic.eq ==> Logic.eq) (@nat_rect_arrow_nodep P Q) | 10.
+Proof.
+  cbv [Proper respectful nat_rect_nodep].
+  intros ??? ??? n m ?; subst m.
+  induction n; cbn; intros; eauto.
+Qed.
+
 Module Thunked.
   Definition nat_rect P (O_case : unit -> P) (S_case : nat -> P -> P) (n : nat) : P
     := Datatypes.nat_rect (fun _ => P) (O_case tt) S_case n.
+
+  Global Instance nat_rect_Proper {P}
+    : Proper ((Logic.eq ==> Logic.eq) ==> (Logic.eq ==> Logic.eq ==> Logic.eq) ==> Logic.eq ==> Logic.eq) (@nat_rect P) | 10.
+  Proof.
+    repeat intro; eapply nat_rect_nodep_Proper; eauto.
+  Qed.
 End Thunked.
 (** Strongly prefer unfolding these versions of [nat_rect] to the
     underlying [nat_rect] principle.  Possibly -1 would suffice rather

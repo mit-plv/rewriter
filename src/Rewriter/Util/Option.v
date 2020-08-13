@@ -13,10 +13,16 @@ Arguments option_beq {_} _ _ _.
    [option_rect_nodep] on large arguments. *)
 Definition option_rect_nodep {A P} : (A -> P) -> P -> option A -> P
   := @option_rect A (fun _ => P).
+Global Instance option_rect_nodep_Proper {A P}
+  : Proper ((eq ==> eq) ==> eq ==> eq ==> eq) (@option_rect_nodep A P) | 10.
+Proof. cbv; intros; subst; destruct_head' option; eauto. Qed.
 
 Module Thunked.
   Definition option_rect {A} P (S_case : A -> P) (N_case : unit -> P) (o : option A) : P
     := Datatypes.option_rect (fun _ => P) S_case (N_case tt) o.
+  Global Instance option_rect_Proper {A P}
+    : Proper ((eq ==> eq) ==> (eq ==> eq) ==> eq ==> eq) (@option_rect A P) | 10.
+  Proof. repeat intro; eapply option_rect_nodep_Proper; eauto. Qed.
 End Thunked.
 (** Strongly prefer unfolding these versions of [option_rect] to the
     underlying [option_rect] principle.  Possibly -1 would suffice rather
