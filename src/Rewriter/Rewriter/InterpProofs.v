@@ -5,7 +5,6 @@ Require Import Coq.Lists.List.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.MSets.MSetPositive.
 Require Import Coq.FSets.FMapPositive.
-Require Import Coq.Logic.FunctionalExtensionality.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.Inversion.
 Require Import Rewriter.Language.Wf.
@@ -24,6 +23,7 @@ Require Import Rewriter.Util.Tactics.Head.
 Require Import Rewriter.Util.Tactics.CPSId.
 Require Import Rewriter.Util.Tactics.SetEvars.
 Require Import Rewriter.Util.Tactics.SubstEvars.
+Require Import Rewriter.Util.Tactics.SetoidSubst.
 Require Import Rewriter.Util.Tactics.TransparentAssert.
 Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Util.Sigma.Related.
@@ -486,6 +486,8 @@ Module Compilers.
           subst; reflexivity.
         Qed.
 
+        Local Hint Resolve expr.eqv_iff_ex_eqv2 expr.eqv_iff_interp_related : core.
+
         Lemma interp_reify_and_let_binds {with_lets t v1 v}
           : value_interp_related v1 v
             -> UnderLets_interp_related (@reify_and_let_binds_cps with_lets t v1 _ UnderLets.Base) v.
@@ -497,9 +499,9 @@ Module Compilers.
                          | progress subst
                          | solve [ eauto ]
                          | apply reify_interp_related
-                         | eapply @UnderLets.splice_interp_related_of_ex with (RA:=expr_interp_related);
+                         | eapply @UnderLets.splice_interp_related_of_ex with (RA:=expr_interp_related); try exact _; eauto;
                            eexists (fun x => x), _; repeat apply conj;
-                           [ eassumption | | reflexivity ] ].
+                           [ eassumption | | try reflexivity ] ].
         Qed.
 
         Fixpoint types_match_with (evm : EvarMap) {t} (e : rawexpr) (p : pattern t) {struct p} : Prop
@@ -906,6 +908,9 @@ Module Compilers.
                                           [ shelve.. | ]
                                      | [ |- type_of_rawexpr _ = _ ] => solve [ solve_side_condition_equations ]
                                      | [ |- types_match_with _ _ _ ] => solve [ solve_side_condition_equations ]
+                                     | [ H : rawexpr_interp_related _ ?x |- _ ]
+                                       => unique assert (x == x) by now eapply eqv_of_rawexpr_interp_related2 in H; try eassumption
+                                     | [ H : _ == ?x |- _ ] => is_var x; setoid_subst x
                                      end ]));
                   shelve_unifiable).
         Qed.
@@ -1174,6 +1179,10 @@ Module Compilers.
             assumption.
         Qed.
 
+        Local Hint Resolve
+              eqv_iff_expr_should_do_again_interp_related
+          : core.
+
         Lemma interp_rewrite_with_rule
               (do_again : forall t : base_type, @expr.expr base_type ident value t -> UnderLets (expr t))
               (Hdo_again : forall t e v,
@@ -1240,15 +1249,18 @@ Module Compilers.
                               cbn [projT1] in H'; subst evm
                          end
                        | progress cbv [deep_rewrite_ruleTP_gen_good_relation] in *
-                       | unshelve (eapply UnderLets.splice_interp_related_of_ex; eexists (fun x => rew _ in x), _; repeat apply conj;
-                                   [ eassumption | intros | ]);
+                       | unshelve (eapply UnderLets.splice_interp_related_of_ex;
+                                   [ now try exact _; eauto ..
+                                   | eexists (fun x => rew _ in x), _; repeat apply conj;
+                                     [ eassumption | intros | ] ]);
                          [ etransitivity; eassumption | .. ]
                        | match goal with
                          | [ H : ?R ?xv ?v
                              |- UnderLets_interp_related (fv <-- maybe_do_again _ _ _ ((rew _ in fun x => x) ?xv); _) _ ]
                            => unshelve (eapply UnderLets.splice_interp_related_of_ex;
-                                        eexists (fun x => rew _ in x), (rew _ in v); repeat apply conj;
-                                        [ eapply interp_maybe_do_again; try eassumption | | ])
+                                        [ now try exact _; eauto ..
+                                        | eexists (fun x => rew _ in x), (rew _ in v); repeat apply conj;
+                                          [ eapply interp_maybe_do_again; try eassumption | | ] ])
                          end ].
           all: repeat first [ assumption
                             | progress intros
@@ -1260,13 +1272,11 @@ Module Compilers.
                                 => rewrite <- eq_trans_rew_distr
                               | [ |- context[rew ?pf in _] ]
                                 => tryif is_var pf then destruct pf else generalize pf
-                              | [ H : ?x == rew ?pf1 in ?y |- rew ?pf2 in ?x = ?y ]
+                              | [ H : ?x == rew ?pf1 in ?y |- rew ?pf2 in ?x == ?y ]
                                 => clear -H reflect_base_beq; destruct pf2
+                              | [ H : expr_should_do_again_interp_related _ _ _ ?x |- ?x == ?x ]
+                                => eapply eqv_of_expr_should_do_again_interp_related2; eassumption
                               end ].
-          1:match goal with
-            | [ H : ?x == ?y |- ?x = ?y ]
-              => apply (type.eqv_iff_eq_of_funext (fun _ _ => functional_extensionality)), H
-            end.
         Qed.
 
         Lemma interp_eval_rewrite_rules
@@ -1365,24 +1375,30 @@ Module Compilers.
               all: clear.
               all: generalize dependent (type_of_rawexpr re); intros; subst; assumption. }
             cbn [rawexpr_interp_related type.interp type_of_rawexpr].
-            do 2 eexists.
+            lazymatch goal with
+            | [ |- exists fv xv pf1 pf2, _ /\ _ /\ _ /\ _ /\ fv xv == ?f ?x ]
+              => exists f, x
+            end.
             exists (eq_sym Ht).
             unshelve eexists.
             { clear; cbv [rValueOrExpr2 type_of_rawexpr]; destruct s; reflexivity. }
             repeat apply conj.
-            all: grepeat_progress
-                   ltac:(first [ instantiate (1:=ltac:(eassumption))
-                               | match goal with
-                                 | [ |- expr_interp_related (rew [?P] ?H in ?v) ?ev ]
-                                   => is_evar ev;
-                                      refine (_ : expr_interp_related (rew [P] H in v) (rew [type.interp base.interp] H in _))
-                                 end
-                               | assumption
-                               | progress cbv [eq_sym eq_rect]
-                               | break_innermost_match_step
-                               | reflexivity
-                               | apply expr_of_rawexpr_interp_related
-                               | apply reify_interp_related ]). }
+            all: repeat first [ assumption
+                              | progress cbv [eq_sym eq_rect]
+                              | break_innermost_match_step
+                              | reflexivity
+                              | apply expr_of_rawexpr_interp_related
+                              | apply reify_interp_related
+                              | progress subst
+                              | solve [ eauto ]
+                              | match goal with
+                                | [ H : rawexpr_interp_related _ ?v |- context[?v] ]
+                                  => eapply eqv_of_rawexpr_interp_related2 in H; [ | eassumption ]
+                                | [ H : value_interp_related _ ?v |- context[?v] ]
+                                  => eapply eqv_of_value_interp_related2 in H; [ | eassumption ]
+                                | [ H : type_of_rawexpr ?x = _ |- _ ]
+                                  => generalize dependent (type_of_rawexpr x); intros
+                                end ]. }
         Qed.
 
         Lemma interp_assemble_identifier_rewriters
@@ -1456,30 +1472,41 @@ Module Compilers.
                   (interp_rewrite_head : forall t idc v, ident_interp _ idc == v -> value_interp_related (rewrite_head t idc) v).
 
           Local Ltac t :=
-            repeat first [ apply interp_Base_value
-                         | eassumption
-                         | progress cbv beta
-                         | progress intros
-                         | progress destruct_head'_ex
-                         | progress destruct_head'_and
-                         | progress subst
-                         | match goal with
-                           | [ IH : forall v, expr.interp_related_gen _ _ ?e v -> _, H' : expr.interp_related_gen _ _ ?e _ |- _ ]
-                             => specialize (IH _ H')
-                           end
-                         | apply reflect_interp_related
-                         | eapply interp_splice_value_with_lets_of_ex;
-                           do 2 eexists; repeat apply conj; [ eassumption | | reflexivity ]
-                         | eapply @interp_splice_under_lets_with_value_of_ex with (R:=expr_interp_related);
-                           do 2 eexists; repeat apply conj
-                         | apply interp_reify_and_let_binds
-                         | apply UnderLets.reify_and_let_binds_base_interp_related
-                         | match goal with
-                           | [ H : _ |- _ ] => eapply H; clear H; solve [ t ]
-                           | [ |- ?f ?x = ?f ?y ] => is_evar x; reflexivity
-                           | [ |- ?x = ?x ] => reflexivity
-                           end ].
+            repeat
+              repeat
+              first [ apply interp_Base_value
+                    | eassumption
+                    | progress cbv beta
+                    | progress intros
+                    | progress destruct_head'_ex
+                    | progress destruct_head'_and
+                    | progress subst
+                    | match goal with
+                      | [ IH : forall v, expr.interp_related_gen _ _ ?e v -> _, H' : expr.interp_related_gen _ _ ?e _ |- _ ]
+                        => specialize (IH _ H')
+                      end
+                    | apply reflect_interp_related
+                    | eapply interp_splice_value_with_lets_of_ex;
+                      [ now try exact _; eauto ..
+                      | do 2 eexists; repeat apply conj; [ eassumption | | try reflexivity ] ]
+                    | eapply @interp_splice_under_lets_with_value_of_ex with (R:=expr_interp_related);
+                      [ now try exact _; eauto ..
+                      | do 2 eexists; repeat apply conj ]
+                    | apply interp_reify_and_let_binds
+                    | apply UnderLets.reify_and_let_binds_base_interp_related
+                    | solve [ eauto ]
+                    | match goal with
+                      | [ H : _ |- _ ] => eapply H; clear H; solve [ t ]
+                      | [ |- ?f ?x = ?f ?y ] => is_evar x; reflexivity
+                      | [ |- ?x = ?x ] => reflexivity
+                      | [ H : forall a b, ?R a b -> expr.interp_related_gen _ _ _ (?f b) |- ?f _ == ?f _ ]
+                        => eapply expr.eqv_of_interp_related_gen; [ | eapply H | eapply H ]; eauto
+                      end ].
 
+          Local Hint Resolve
+                expr.eqv_iff_interp_related
+                eqv_iff_value_interp_related
+            : core.
           Lemma interp_rewrite_bottomup {t e v}
                 (He : expr.interp_related_gen (@ident_interp) (fun t => value_interp_related) e v)
             : value_interp_related (@rewrite_bottomup var rewrite_head t e) v.
@@ -1540,6 +1567,8 @@ Module Compilers.
           apply reify_interp_related, interp_repeat_rewrite; auto.
         Qed.
 
+        Local Hint Resolve eqv_iff_value_interp_related : core.
+
         Lemma interp_rewrite
               {rewrite_head fuel G t e1 e2}
               (retT := expr.interp (@ident_interp) (@rewrite _ rewrite_head fuel t e1) == expr.interp (@ident_interp) e2)
@@ -1556,7 +1585,7 @@ Module Compilers.
           : retT.
         Proof using try_make_transport_base_cps_correct ident_interp_Proper buildInvertIdentCorrect buildInterpIdentCorrect.
           apply expr.eqv_of_interp_related, interp_related_rewrite; try assumption; [].
-          eapply expr.interp_related_gen_of_wf; eassumption.
+          eapply expr.interp_related_gen_of_wf; try eassumption; eauto.
         Qed.
 
         Lemma InterpRewrite

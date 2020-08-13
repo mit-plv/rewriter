@@ -20,6 +20,7 @@ Require Import Rewriter.Util.Tactics.SpecializeBy.
 Require Import Rewriter.Util.Tactics.RewriteHyp.
 Require Import Rewriter.Util.Tactics.UniquePose.
 Require Import Rewriter.Util.Tactics.Head.
+Require Import Rewriter.Util.Tactics.PrintGoal.
 Require Import Rewriter.Util.Tactics.RewriteHyp.
 Require Import Rewriter.Util.Tactics.CPSId.
 Require Import Rewriter.Util.Tactics.WarnIfGoalsRemain.
@@ -457,6 +458,46 @@ Module Compilers.
                        | [ |- _ = _ ] => reflexivity
                        end ].
 
+      Ltac make_Proper_of_type T :=
+        lazymatch (eval cbv beta in T) with
+        | ?A -> ?B
+          => let tA := make_Proper_of_type A in
+             let tB := make_Proper_of_type B in
+             constr:((tA ==> tB)%signature)
+        | ?T => constr:(@eq T)
+        end.
+      Ltac strip_simply_typed_args v :=
+        lazymatch v with
+        | ?f ?x
+          => let t := type of f in
+             lazymatch (eval cbv beta in t) with
+             | ?A -> ?B => strip_simply_typed_args f
+             | _ => v
+             end
+        | _ => v
+        end.
+      Ltac make_Proper_type term :=
+        let f := strip_simply_typed_args term in
+        let t := type of f in
+        let R := make_Proper_of_type t in
+        constr:(Proper R f).
+      Ltac prove_eq_by_Proper :=
+        lazymatch goal with
+        | [ |- ?LHS = ?RHS ]
+          => let T := make_Proper_type LHS in
+             cut T;
+             [ now
+                 let H := fresh in
+                 cbv [Proper respectful] in *;
+                 intro H; eapply H; intros; subst; eauto
+             | first [ now typeclasses eauto
+                     | idtac "WARNING: Could not find Proper instance";
+                       clear;
+                       print_context_and_goal ();
+                       let G := match goal with |- ?G => G end in
+                       fail 1 "Could not find Proper instance" G ] ]
+        end.
+
       Ltac handle_reified_rewrite_rules_interp exprInfo exprExtraInfo base_interp_head ident_interp_head ident_interp_Proper :=
         let not_arrow t := lazymatch t with _ -> _ => fail | _ => idtac end in
         repeat first [ assumption
@@ -508,12 +549,19 @@ Module Compilers.
                             let xh := fresh in
                             set (xh := x);
                             cbn [expr.interp_related_gen]; subst fh xh;
-                            exists F, X; repeat apply conj; [ | | reflexivity ]
+                            exists F, X; repeat apply conj; [ | | try reflexivity ]
 
                        | [ |- _ = _ ] => solve [ fin_tac ]
                        | [ |- type.eqv _ _ ] => cbn [ident_interp_head type.related]; cbv [respectful]; intros; subst
                        end
-                     | progress repeat (do 2 eexists; repeat apply conj; [ | | reflexivity ]) ].
+                     | progress repeat (do 2 eexists; repeat apply conj; [ | | reflexivity ])
+                     | prove_eq_by_Proper ];
+        [ >
+          idtac "============================";
+          idtac "WARNING: UNSOLVED GOAL:";
+          print_context_and_goal ();
+          idtac "============================"
+                .. ].
 
       Module Export Tactic.
         Ltac prove_interp_good _ :=
