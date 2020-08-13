@@ -15,6 +15,7 @@ Require Export Rewriter.Util.Tactics.DestructHead.
 Require Import Rewriter.Util.Tactics.SpecializeBy.
 Require Import Rewriter.Util.Tactics.RewriteHyp.
 Require Import Rewriter.Util.Tactics.ConstrFail.
+Require Import Rewriter.Util.Tactics.SplitInContext.
 Import ListNotations.
 Local Open Scope list_scope.
 
@@ -124,7 +125,7 @@ Hint Rewrite
 
 Hint Extern 1 => progress autorewrite with distr_length in * : distr_length.
 Ltac distr_length := autorewrite with distr_length in *;
-  try solve [simpl in *; lia].
+  try solve [simpl in *; intros; (idtac + exfalso); lia].
 
 Module Export List.
   Local Set Implicit Arguments.
@@ -304,6 +305,9 @@ Module Export List.
 
   End Cutting.
 
+  (** new operations *)
+  Definition enumerate {A} (ls : list A) : list (nat * A)
+    := combine (seq 0 (length ls)) ls.
 End List.
 
 Hint Rewrite @firstn_skipn : simpl_firstn.
@@ -425,12 +429,13 @@ Ltac nth_tac' :=
     | [ H: Some _ = None |- _ ] => inversion H
     | [ |- Some _ = Some _ ] => apply f_equal
   end); eauto; try (autorewrite with list in *); try lia; eauto.
-Lemma nth_error_map : forall A B (f:A->B) i xs y,
+Lemma nth_error_map {A B f n l}
+  : nth_error (@map A B f l) n = option_map f (nth_error l n).
+Proof. revert n; induction l, n; nth_tac'. Qed.
+Lemma nth_error_map_ex : forall A B (f:A->B) i xs y,
   nth_error (map f xs) i = Some y ->
   exists x, nth_error xs i = Some x /\ f x = y.
-Proof.
-  induction i; destruct xs; nth_tac'.
-Qed.
+Proof. intros *; rewrite nth_error_map; edestruct nth_error; nth_tac'. Qed.
 
 Lemma nth_error_seq : forall i start len,
   nth_error (seq start len) i =
@@ -478,7 +483,7 @@ Hint Rewrite @map_nth_default using lia : push_nth_default.
 
 Ltac nth_tac :=
   repeat progress (try nth_tac'; try (match goal with
-    | [ H: nth_error (map _ _) _ = Some _ |- _ ] => destruct (nth_error_map _ _ _ _ _ _ H); clear H
+    | [ H: nth_error (map _ _) _ = Some _ |- _ ] => destruct (nth_error_map_ex _ _ _ _ _ _ H); clear H
     | [ H: nth_error (seq _ _) _ = Some _ |- _ ] => rewrite nth_error_seq in H
     | [H: nth_error _ _ = None |- _ ] => specialize (nth_error_error_length _ _ _ H); intro; clear H
   end)).
@@ -1562,6 +1567,10 @@ Lemma sum_app x y : sum (x ++ y) = (sum x + sum y)%Z.
 Proof. induction x; rewrite ?app_nil_l, <-?app_comm_cons; autorewrite with push_sum; lia. Qed.
 Hint Rewrite sum_app : push_sum.
 
+Lemma sum_rev x : sum (rev x) = sum x.
+Proof. induction x; cbn [rev]; autorewrite with push_sum; lia. Qed.
+Hint Rewrite sum_rev : push_sum.
+
 Lemma nth_error_skipn : forall {A} n (l : list A) m,
 nth_error (skipn n l) m = nth_error l (n + m).
 Proof.
@@ -1738,6 +1747,7 @@ Section OpaqueMap2.
     rewrite IHls1; auto.
   Qed.
 End OpaqueMap2.
+Hint Rewrite @map2_length : distr_length.
 
 Lemma firstn_update_nth {A}
   : forall f m n (xs : list A), firstn m (update_nth n f xs) = update_nth n f (firstn m xs).
@@ -2079,13 +2089,22 @@ Lemma fold_right_flat_map A B C (f : A -> list B) xs (F : _ -> _ -> C) v
   : fold_right F v (flat_map f xs) = fold_right (fun x y => fold_right F y (f x)) v xs.
 Proof. revert v; induction xs; cbn; intros; rewrite ?fold_right_app; congruence. Qed.
 
+Lemma fold_right_ext A B f g v xs : (forall x y, f x y = g x y) -> @fold_right A B f v xs = fold_right g v xs.
+Proof. induction xs; cbn; intro H; rewrite ?H, ?IHxs; auto. Qed.
+
 Lemma fold_right_id_ext A B f v xs : (forall x y, f x y = y) -> @fold_right A B f v xs = v.
 Proof. induction xs; cbn; intro H; rewrite ?H; auto. Qed.
-Lemma nth_default_repeat A (v:A) n (d:A) i : nth_default d (repeat v n) i = if dec (i < n)%nat then v else d.
+Lemma nth_error_repeat_alt {A} (v : A) n i
+  : nth_error (repeat v n) i = if dec (i < n)%nat then Some v else None.
 Proof.
   revert i; induction n as [|n IHn], i; cbn; try reflexivity.
-  rewrite nth_default_cons_S, IHn; do 2 edestruct dec; try reflexivity; lia.
+  cbn [nth_error]; rewrite IHn; do 2 edestruct dec; try reflexivity; lia.
 Qed.
+Lemma nth_default_repeat A (v:A) n (d:A) i : nth_default d (repeat v n) i = if dec (i < n)%nat then v else d.
+Proof.
+  cbv [nth_default]; rewrite nth_error_repeat_alt; now break_innermost_match.
+Qed.
+Hint Rewrite nth_default_repeat : push_nth_default simpl_nth_default.
 Lemma fold_right_if_dec_eq_seq A start len i f (x v : A)
   : ((start <= i < start + len)%nat -> f i v = x)
     -> (forall j v, (i <> j)%nat -> f j v = v)
@@ -2170,7 +2189,7 @@ Qed.
 Lemma nth_error_rev A n ls : List.nth_error (@List.rev A ls) n = if lt_dec n (length ls) then List.nth_error ls (length ls - S n) else None.
 Proof.
   destruct lt_dec; [ | rewrite nth_error_length_error; rewrite ?List.rev_length; try reflexivity; lia ].
-  revert dependent n; induction ls as [|x xs IHxs]; cbn [length List.rev]; try reflexivity; intros; try ((idtac + exfalso); lia).
+  revert dependent n; induction ls as [|x xs IHxs]; cbn [length List.rev]; try reflexivity; intros; try lia.
   { rewrite nth_error_app, List.rev_length, Nat.sub_succ.
     destruct lt_dec.
     { rewrite IHxs by lia.
@@ -2232,6 +2251,14 @@ Proof. induction k; cbn; f_equal; assumption. Qed.
 Lemma map_const {A B} (v : B) (ls : list A)
   : List.map (fun _ => v) ls = List.repeat v (List.length ls).
 Proof. induction ls; cbn; f_equal; assumption. Qed.
+
+Lemma Forall2_rev {A B R ls1 ls2}
+  : @List.Forall2 A B R ls1 ls2
+    -> List.Forall2 R (rev ls1) (rev ls2).
+Proof using Type.
+  induction 1; cbn [rev]; [ constructor | ].
+  apply Forall2_app; auto.
+Qed.
 
 Lemma Forall2_update_nth {A B f g n R ls1 ls2}
   : @List.Forall2 A B R ls1 ls2
@@ -2506,3 +2533,114 @@ Lemma eq_update_nth_nat_rect {A} n f xs
         n
         xs.
 Proof using Type. revert xs; induction n, xs; cbn; f_equal; auto. Qed.
+
+Lemma flat_map_const_nil {A B} ls : @flat_map A B (fun _ => nil) ls = nil.
+Proof using Type. induction ls; cbn; auto. Qed.
+
+Lemma fold_left_map A B C f f' l a
+  : @fold_left A B f (@List.map C _ f' l) a = fold_left (fun x y => f x (f' y)) l a.
+Proof using Type. revert a; induction l; cbn [List.map List.fold_left]; auto. Qed.
+
+Lemma Forall_map_iff {A B} (f : A -> B) ls P
+  : Forall P (List.map f ls) <-> Forall (fun x => P (f x)) ls.
+Proof.
+  induction ls as [|?? IH]; cbn [List.map]; split; intro H; inversion_clear H; constructor; split_iff; auto.
+Qed.
+
+Lemma ForallOrdPairs_map_iff {A B} (f : A -> B) ls P
+  : ForallOrdPairs P (List.map f ls) <-> ForallOrdPairs (fun x y => P (f x) (f y)) ls.
+Proof.
+  pose proof (@Forall_map_iff A B f) as HF.
+  induction ls as [|?? IH]; cbn [List.map]; split; intro H; inversion_clear H; constructor; split_iff; auto.
+Qed.
+
+Lemma HdRel_map_iff {A B} (f : A -> B) R x xs
+  : HdRel R (f x) (List.map f xs) <-> HdRel (fun x y => R (f x) (f y)) x xs.
+Proof.
+  destruct xs; split; intro H; inversion_clear H; constructor; auto.
+Qed.
+
+Lemma Sorted_map_iff {A B} (f : A -> B) R ls
+  : Sorted R (List.map f ls) <-> Sorted (fun x y => R (f x) (f y)) ls.
+Proof.
+  induction ls as [|?? IH]; cbn [List.map]; split; intro H; inversion_clear H;
+    constructor; split_iff; auto; now apply HdRel_map_iff.
+Qed.
+
+Lemma In_nth_error_iff {A l x}
+  : In x l <-> exists n : nat, @nth_error A l n = Some x.
+Proof.
+  split; [ now apply In_nth_error | intros [? ?]; eapply nth_error_In; eassumption ].
+Qed.
+
+Lemma fold_right_fun_apply {A B C} (ls : list B) (f : B -> C -> (A -> C)) init x
+  : fold_right (fun b F a => f b (F a) a) init ls x = fold_right (fun b c => f b c x) (init x) ls.
+Proof. induction ls as [|?? IH]; cbn; now f_equal. Qed.
+
+Ltac make_fold_right_fun_apply ty :=
+  multimatch ty with
+  | context[@fold_right ?AC ?B ?f ?init ?ls ?x]
+    => let fv := fresh in
+       let b := fresh "b" in
+       let F := fresh "F" in
+       let a := fresh "a" in
+       let f := lazymatch
+             constr:(
+               fun b F a
+               => match f b F a return _ with
+                  | fv
+                    => ltac:(let fv := (eval cbv [fv] in fv) in
+                             lazymatch (eval pattern a, (F a), b in fv) with
+                             | ?f _ _ _ => refine (fun x y z => f z y x)
+                             end)
+                  end) with
+           | fun _ _ _ => ?f => (eval cbv beta in f)
+           | ?f => idtac "failed to eliminate the functional dependencies of" f;
+                   fail 0 "failed to eliminate the functional dependencies of" f
+           end in
+       constr:(@fold_right_fun_apply _ _ _ ls f init x)
+  end.
+
+Ltac rewrite_fold_right_fun_apply :=
+  match goal with
+  | [ H : ?T |- _ ] => let pf := make_fold_right_fun_apply T in
+                       rewrite pf in H
+  | [ |- ?T ] => let pf := make_fold_right_fun_apply T in
+                 rewrite pf
+  end.
+
+Lemma fold_left_fun_apply {A B C} (ls : list B) (f : C -> B -> (A -> C)) init x
+  : fold_left (fun F b a => f (F a) b a) ls init x = fold_left (fun b c => f b c x) ls (init x).
+Proof. rewrite <- !fold_left_rev_right; now rewrite_fold_right_fun_apply. Qed.
+
+Ltac make_fold_left_fun_apply ty :=
+  multimatch ty with
+  | context[@fold_left ?AC ?B ?f ?ls ?init ?x]
+    => let fv := fresh in
+       let b := fresh "b" in
+       let F := fresh "F" in
+       let a := fresh "a" in
+       let f := lazymatch
+             constr:(
+               fun F b a
+               => match f F b a return _ with
+                  | fv
+                    => ltac:(let fv := (eval cbv [fv] in fv) in
+                             lazymatch (eval pattern a, b, (F a) in fv) with
+                             | ?f _ _ _ => refine (fun x y z => f z y x)
+                             end)
+                  end) with
+           | fun _ _ _ => ?f => (eval cbv beta in f)
+           | ?f => idtac "failed to eliminate the functional dependencies of" f;
+                   fail 0 "failed to eliminate the functional dependencies of" f
+           end in
+       constr:(@fold_left_fun_apply _ _ _ ls f init x)
+  end.
+
+Ltac rewrite_fold_left_fun_apply :=
+  match goal with
+  | [ H : ?T |- _ ] => let pf := make_fold_left_fun_apply T in
+                       rewrite pf in H
+  | [ |- ?T ] => let pf := make_fold_left_fun_apply T in
+                 rewrite pf
+  end.
