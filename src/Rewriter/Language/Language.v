@@ -629,7 +629,7 @@ Module Compilers.
                 => exists fv xv,
                     @interp_related_gen var R _ f fv
                     /\ @interp_related_gen var R _ x xv
-                    /\ fv xv = v2
+                    /\ fv xv == v2
            | expr.Ident t idc
              => fun v2 => interp_ident _ idc == v2
            | expr.Abs s d f1
@@ -644,7 +644,7 @@ Module Compilers.
                     /\ (forall x1 x2,
                            R _ x1 x2
                            -> @interp_related_gen var R d (f x1) (fv x2))
-                    /\ fv xv = v2
+                    /\ fv xv == v2
            end.
 
       Definition interp_related {t} (e : @expr base_type ident (type.interp interp_base_type) t) : type.interp interp_base_type t -> Prop

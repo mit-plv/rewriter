@@ -11,6 +11,7 @@ Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Tactics.DestructHead.
 Require Import Rewriter.Util.Tactics.BreakMatch.
 Require Import Rewriter.Util.Tactics.RewriteHyp.
+Require Import Rewriter.Util.Tactics.SpecializeAllWays.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.FixCoqMistakes.
 
@@ -1050,8 +1051,9 @@ Module Compilers.
                                 | [ H : forall a x y, x = y -> _ |- _ ] => specialize (fun a x => H a x x eq_refl)
                                 | [ H : forall x y, _ = ?f x y, H' : context[?f _ _] |- _ ] => rewrite <- H in H'
                                 | [ H : _ |- _ ] => apply H; clear H
-                                | [ |- ex _ ] => do 2 eexists; repeat apply conj; [ | | reflexivity ]
-                                end ].
+                                | [ |- ex _ ] => (do 2 eexists; repeat apply conj; [ | | intros; subst; reflexivity ])
+                                end
+                              | specialize_all_ways; congruence ].
           Qed.
 
           Lemma reflect_list_interp_related_gen_iff {R t ls ls' v}

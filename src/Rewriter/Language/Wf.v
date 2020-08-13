@@ -12,6 +12,7 @@ Require Import Rewriter.Util.Tactics.UniquePose.
 Require Import Rewriter.Util.Tactics.SplitInContext.
 Require Import Rewriter.Util.Tactics.SpecializeBy.
 Require Import Rewriter.Util.Tactics.SpecializeAllWays.
+Require Import Rewriter.Util.Tactics.SetoidSubst.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Sigma.
@@ -68,8 +69,8 @@ Module Compilers.
       Qed.
 
       Local Instance related_Transitive {t} {R : forall t, relation (interp_base_type t)}
-             {R_sym : forall t, Symmetric (R t)}
-             {R_trans : forall t, Transitive (R t)}
+            {R_sym : forall t, Symmetric (R t)}
+            {R_trans : forall t, Transitive (R t)}
         : Transitive (@type.related base_type interp_base_type R t) | 100.
       Proof.
         induction t; cbn [type.related]; [ exact _ | ].
@@ -81,6 +82,139 @@ Module Compilers.
 
       Global Instance eqv_Transitive {t} : Transitive (@eqv t) | 10 := _.
       Global Instance eqv_Symmetric {t} : Symmetric (@eqv t) | 10 := _.
+
+      Local Ltac t :=
+        try split; repeat intro; subst;
+        repeat first [ etransitivity; (idtac + symmetry); eassumption
+                     | etransitivity; (idtac + symmetry); try eassumption; [] ].
+
+      Section proper.
+        Context {R : forall t, relation (interp_base_type t)}
+                {R_sym : forall t, Symmetric (R t)}
+                {R_trans : forall t, Transitive (R t)}.
+
+        Global Instance related_Proper_related1_impl {t}
+          : Proper (type.related R ==> eq ==> Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related2_impl {t}
+          : Proper (eq ==> type.related R ==> Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related12_impl {t}
+          : Proper (type.related R ==> type.related R ==> Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related1f_impl {t}
+          : Proper (Basics.flip (type.related R) ==> eq ==> Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related2f_impl {t}
+          : Proper (eq ==> Basics.flip (type.related R) ==> Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related1f2f_impl {t}
+          : Proper (Basics.flip (type.related R) ==> Basics.flip (type.related R) ==> Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related12f_impl {t}
+          : Proper (type.related R ==> Basics.flip (type.related R) ==> Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related1f2_impl {t}
+          : Proper (Basics.flip (type.related R) ==> type.related R ==> Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+
+        Global Instance related_Proper_related1_flip_impl {t}
+          : Proper (type.related R ==> eq ==> Basics.flip Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related2_flip_impl {t}
+          : Proper (eq ==> type.related R ==> Basics.flip Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related12_flip_impl {t}
+          : Proper (type.related R ==> type.related R ==> Basics.flip Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related1f_flip_impl {t}
+          : Proper (Basics.flip (type.related R) ==> eq ==> Basics.flip Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related2f_flip_impl {t}
+          : Proper (eq ==> Basics.flip (type.related R) ==> Basics.flip Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related1f2f_flip_impl {t}
+          : Proper (Basics.flip (type.related R) ==> Basics.flip (type.related R) ==> Basics.flip Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related12f_flip_impl {t}
+          : Proper (type.related R ==> Basics.flip (type.related R) ==> Basics.flip Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related1f2_flip_impl {t}
+          : Proper (Basics.flip (type.related R) ==> type.related R ==> Basics.flip Basics.impl)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+
+        Global Instance related_Proper_related1_iff {t}
+          : Proper (type.related R ==> eq ==> iff)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related2_iff {t}
+          : Proper (eq ==> type.related R ==> iff)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related12_iff {t}
+          : Proper (type.related R ==> type.related R ==> iff)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related1f_iff {t}
+          : Proper (Basics.flip (type.related R) ==> eq ==> iff)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related2f_iff {t}
+          : Proper (eq ==> Basics.flip (type.related R) ==> iff)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related1f2f_iff {t}
+          : Proper (Basics.flip (type.related R) ==> Basics.flip (type.related R) ==> iff)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related12f_iff {t}
+          : Proper (type.related R ==> Basics.flip (type.related R) ==> iff)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+
+        Global Instance related_Proper_related1f2_iff {t}
+          : Proper (Basics.flip (type.related R) ==> type.related R ==> iff)
+                   (@type.related base_type interp_base_type R t) | 10.
+        Proof using R_sym R_trans. t. Qed.
+      End proper.
     End eqv.
     Hint Extern 100 (Symmetric (@type.related ?base_type ?interp_base_type ?R ?t))
     => (tryif has_evar R then fail else simple apply (@related_Symmetric base_type interp_base_type t R)) : typeclass_instances.
@@ -345,20 +479,6 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
                 {interp_ident : forall t, ident t -> type.interp interp_base_type t}
                 {interp_ident_Proper : forall t, Proper (eq ==> type.eqv) (interp_ident t)}.
 
-        Lemma eqv_of_interp_related {t e v}
-          : expr.interp_related interp_ident e v
-            -> @type.eqv t (expr.interp interp_ident e) v.
-        Proof using Type.
-          cbv [expr.interp_related]; induction e; cbn [expr.interp_related_gen expr.interp type.related]; cbv [respectful LetIn.Let_In].
-          all: repeat first [ progress intros
-                            | assumption
-                            | solve [ eauto ]
-                            | progress destruct_head'_ex
-                            | progress destruct_head'_and
-                            | progress subst
-                            | match goal with H : _ |- _ => apply H; clear H end ].
-        Qed.
-
         Lemma eqv_of_interp_related_gen {var R t e v1 v2}
               (HR_iff : forall t v1 v2, (exists v, R t v v1 /\ R t v v2) <-> v1 == v2)
           : expr.interp_related_gen interp_ident (var:=var) R e v1
@@ -383,21 +503,10 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
                          | progress subst
                          | solve [ eauto ]
                          | intros; etransitivity; (idtac + symmetry); eassumption
-                         | intro ].
-        Qed.
-
-        Lemma eqv_of_interp_related2 {t e1 e2 v1 v2}
-              (H : e1 = e2 \/ expr.interp interp_ident e1 == expr.interp interp_ident e2)
-          : expr.interp_related interp_ident e1 v1
-            -> expr.interp_related interp_ident e2 v2
-            -> @type.eqv t v1 v2.
-        Proof using Type.
-          intros H1 H2.
-          apply eqv_of_interp_related in H1.
-          apply eqv_of_interp_related in H2.
-          destruct H; subst;
-            repeat first [ etransitivity; (idtac + symmetry); eassumption
-                         | etransitivity; (idtac + symmetry); try eassumption; [] ].
+                         | intro
+                         | match goal with
+                           | [ H : _ == ?x |- _ ] => is_var x; setoid_subst x
+                           end ].
         Qed.
 
         Lemma eqv_iff_interp_related_gen {var R}
@@ -413,7 +522,133 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
               exists (expr.Var v); cbn; assumption. }
         Qed.
 
+        Lemma eqv_iff_interp_related_gen1 {var R}
+              (HR_iff : forall t v1 v2, (exists v, R t v v1 /\ R t v v2) <-> v1 == v2)
+          : forall t v,
+            (exists e, expr.interp_related_gen interp_ident (var:=var) R e v)
+            <-> @type.eqv t v v.
+        Proof using Type.
+          intros; erewrite <- eqv_iff_interp_related_gen by eassumption.
+          split; intros; destruct_head'_ex; destruct_head'_and; eauto.
+        Qed.
+
+        Lemma interp_related_gen_Proper_eqv_impl {var R t}
+              {R_Proper : forall t, Proper (eq ==> type.eqv ==> Basics.impl) (R t)}
+              (HR_iff : forall t v1 v2, (exists v, R t v v1 /\ R t v v2) <-> v1 == v2)
+          : Proper (eq ==> type.eqv ==> Basics.impl) (expr.interp_related_gen (var:=var) (t:=t) interp_ident R).
+        Proof using Type.
+          intros e e' ? x y H H'; subst e'.
+          induction e; cbn [expr.interp_related_gen] in *.
+          all: repeat first [ etransitivity; (idtac + symmetry); eassumption
+                            | eapply R_Proper; try eassumption; reflexivity
+                            | eexists; split; eassumption
+                            | progress destruct_head'_ex
+                            | progress destruct_head'_and
+                            | intro
+                            | (do 2 eexists; repeat apply conj; [ eassumption | eassumption | ])
+                            | match goal with H : _ |- _ => cbn in H; eapply H; clear H end ].
+        Qed.
+
+        Local Hint Extern 5 => symmetry : sym.
+        Lemma interp_related_gen_Proper_eqv_flip_impl {var R t}
+              {R_Proper : forall t, Proper (eq ==> type.eqv ==> Basics.flip Basics.impl) (R t)}
+              (HR_iff : forall t v1 v2, (exists v, R t v v1 /\ R t v v2) <-> v1 == v2)
+          : Proper (eq ==> type.eqv ==> Basics.flip Basics.impl) (expr.interp_related_gen (var:=var) (t:=t) interp_ident R).
+        Proof using Type.
+          repeat intro; subst; eapply @interp_related_gen_Proper_eqv_impl;
+            cbv [Proper respectful Basics.flip Basics.impl] in *;
+            intros; subst; eauto with core sym.
+        Qed.
+
+        Lemma interp_related_gen_Proper_eqv_iff {var R t}
+              {R_Proper : forall t, Proper (eq ==> type.eqv ==> iff) (R t)}
+              (HR_iff : forall t v1 v2, (exists v, R t v v1 /\ R t v v2) <-> v1 == v2)
+          : Proper (eq ==> type.eqv ==> iff) (expr.interp_related_gen (var:=var) (t:=t) interp_ident R).
+        Proof using Type.
+          repeat intro; subst; split; eapply @interp_related_gen_Proper_eqv_impl;
+            cbv [Proper respectful Basics.flip Basics.impl] in *;
+            split_iff; try split;
+              intros; subst; eauto with core sym.
+        Qed.
+
+        Lemma eqv_iff_ex_eqv2 {t} {v1 v2 : type.interp interp_base_type t}
+          : (exists v, v == v1 /\ v == v2) <-> v1 == v2.
+        Proof using Type.
+          clear.
+          split; [ intros [v [? ?] ] | exists v1; split ];
+            try assumption;
+            try (etransitivity; (idtac + symmetry); eassumption).
+        Qed.
+
+        Local Hint Resolve eqv_iff_ex_eqv2 : core.
+
+        Lemma eqv_of_interp_related2 {t e v1 v2}
+          : expr.interp_related interp_ident e v1
+            -> expr.interp_related interp_ident e v2
+            -> @type.eqv t v1 v2.
+        Proof using Type. now apply eqv_of_interp_related_gen. Qed.
+
+
+        Lemma eqv_iff_interp_related
+          : forall t v1 v2,
+            (exists e, expr.interp_related interp_ident e v1
+                       /\ expr.interp_related interp_ident e v2)
+            <-> @type.eqv t v1 v2.
+        Proof using Type. now apply eqv_iff_interp_related_gen. Qed.
+
+        Lemma eqv_iff_interp_related1
+          : forall t v,
+            (exists e, expr.interp_related interp_ident e v)
+            <-> @type.eqv t v v.
+        Proof using Type. now apply eqv_iff_interp_related_gen1. Qed.
+
+        Global Instance interp_related_Proper_eqv_impl {t}
+          : Proper (eq ==> type.eqv ==> Basics.impl) (expr.interp_related (t:=t) interp_ident) | 20.
+        Proof using Type. now apply interp_related_gen_Proper_eqv_impl. Qed.
+
+        Global Instance interp_related_Proper_eqv_flip_impl {t}
+          : Proper (eq ==> type.eqv ==> Basics.flip Basics.impl) (expr.interp_related (t:=t) interp_ident) | 30.
+        Proof using Type. now apply interp_related_gen_Proper_eqv_flip_impl. Qed.
+
+        Global Instance interp_related_Proper_eqv_iff {t}
+          : Proper (eq ==> type.eqv ==> iff) (expr.interp_related (t:=t) interp_ident) | 10.
+        Proof using Type. now apply interp_related_gen_Proper_eqv_iff. Qed.
+
+
+        Lemma eqv_of_interp_related {t e v}
+          : expr.interp_related interp_ident e v
+            -> @type.eqv t (expr.interp interp_ident e) v.
+        Proof using Type.
+          cbv [expr.interp_related]; induction e; cbn [expr.interp_related_gen expr.interp type.related]; cbv [respectful LetIn.Let_In].
+          all: repeat first [ progress intros
+                            | assumption
+                            | solve [ eauto ]
+                            | progress destruct_head'_ex
+                            | progress destruct_head'_and
+                            | progress subst
+                            | match goal with
+                              | [ H : _ == ?x |- _ ] => is_var x; setoid_subst x
+                              end
+                            | match goal with H : _ |- _ => eapply H; clear H end
+                            | match goal with H : _ |- _ => cbn in H; etransitivity; [ eapply H | ]; clear H end ].
+        Qed.
+
+        Lemma eqv_of_interp_related2_or {t e1 e2 v1 v2}
+              (H : e1 = e2 \/ expr.interp interp_ident e1 == expr.interp interp_ident e2)
+          : expr.interp_related interp_ident e1 v1
+            -> expr.interp_related interp_ident e2 v2
+            -> @type.eqv t v1 v2.
+        Proof using Type.
+          intros H1 H2.
+          apply eqv_of_interp_related in H1.
+          apply eqv_of_interp_related in H2.
+          destruct H; subst;
+            repeat first [ etransitivity; (idtac + symmetry); eassumption
+                         | etransitivity; (idtac + symmetry); try eassumption; [] ].
+        Qed.
+
         Lemma interp_related_gen_of_wf {var R G t e1 e2}
+              (HR_iff : forall t v1 v2, (exists v, R t v v1 /\ R t v v2) <-> v1 == v2)
               (HG : forall t v1 v2, List.In (existT _ t (v1, v2)) G -> (R t v1 v2 : Prop))
               (Hwf : wf G e1 e2)
           : @expr.interp_related_gen _ _ _ interp_ident var R t e1 (expr.interp interp_ident e2).
@@ -431,12 +666,35 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
                             | progress subst
                             | apply interp_ident_Proper
                             | match goal with
+                              | [ H : expr.interp_related_gen _ _ _ (expr.interp _ ?f) |- _ ]
+                                => lazymatch goal with
+                                   | [ |- expr.interp _ ?f _ == expr.interp _ ?f _ ] => idtac
+                                   | [ |- expr.interp _ ?f == expr.interp _ ?f ] => idtac
+                                   end;
+                                   eapply eqv_of_interp_related_gen in H; [ | eassumption | eassumption ];
+                                   try (cbn in H; apply H)
+                              | [ H : forall v1 v2, _ -> expr.interp_related_gen _ _ _ (expr.interp _ (?f v2)),
+                                    Hv : _ == ?v
+                                    |- expr.interp _ (?f ?v) == expr.interp _ (?f ?v) ]
+                                => let v1 := fresh "v" in
+                                   destruct (proj2 (HR_iff _ _ _) Hv) as [v1 [? ?] ];
+                                   let T := open_constr:(_) in
+                                   let H' := fresh in
+                                   unshelve (evar (H' : T);
+                                             specialize (H v1 v H'); subst H')
                               | [ |- exists fv xv, _ /\ _ /\ _ ]
                                 => eexists (expr.interp interp_ident (expr.Abs _)), _;
-                                   cbn [expr.interp]; repeat apply conj; [ eassumption | | reflexivity ]
-                              | [ H : _ |- _ ] => apply H; clear H
-                              end ].
+                                   cbn [expr.interp]; repeat apply conj; [ eassumption | | ]
+                              | [ H : _ |- _ ] => tryif constr_eq H HR_iff then fail else (apply H; clear H)
+                              end
+                            | (do 2 eexists; repeat apply conj; [ eassumption | eassumption | ]) ].
         Qed.
+
+        Lemma interp_related_of_wf {G t e1 e2}
+              (HG : forall t v1 v2, List.In (existT _ t (v1, v2)) G -> v1 == v2)
+              (Hwf : wf G e1 e2)
+          : expr.interp_related interp_ident (t:=t) e1 (expr.interp interp_ident e2).
+        Proof using interp_ident_Proper. now eapply interp_related_gen_of_wf; try eassumption. Qed.
       End with_interp.
 
       Section with_var3.
