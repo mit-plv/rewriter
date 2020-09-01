@@ -765,7 +765,7 @@ Module Compilers.
 
           Context (cast_Literal_base_pattern_interp
                    : forall (evm : EvarMap) (t : base),
-                      unification_resultT' (var:=var) arg_types (make_base_Literal_pattern_folded t) evm
+                      unification_resultT' (var:=var) (@arg_types) (make_base_Literal_pattern_folded t) evm
                       -> base.interp base_interp (pattern.base.subst_default (ptype_base' t) evm)).
 
           Fixpoint make_Literal_pattern_interp_helper {t evm T}
@@ -887,7 +887,7 @@ Module Compilers.
                end.
 
           Definition make_interp_rewrite' {t} (idc : ident t)
-                     (pidc := pattern.Ident (of_typed_ident _ idc))
+                     (pidc := pattern.Ident (@of_typed_ident _ idc))
                      (val : with_unification_resultT pidc (type.interp (base.interp base_interp)))
             : option rewrite_ruleT
             := match make_interp_rewrite_pattern pidc as p
