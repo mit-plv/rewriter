@@ -1547,7 +1547,7 @@ Module Compilers.
               dummy_count : nat;
               dtree : @Compile.decision_tree raw_ident;
 
-              rewrite_rules : forall var, @Compile.rewrite_rulesT base ident var pattern_ident arg_types ;
+              rewrite_rules : forall var, @Compile.rewrite_rulesT base ident var pattern_ident (@arg_types) ;
               all_rewrite_rules (* adjusted version *) : _;
               all_rewrite_rules_eq : all_rewrite_rules = rewrite_rules;
 
@@ -1555,10 +1555,10 @@ Module Compilers.
 
               rewrite_head0
               := (fun var
-                  => @Compile.assemble_identifier_rewriters base _ base_beq ident var eta_ident_cps pattern_ident arg_types (@unify _ _ pkg) (@unify_unknown _ _ pkg) raw_ident full_types (@invert_bind_args _ _ pkg) (@invert_bind_args_unknown _ _ pkg) type_of raw_to_typed is_simple (Some dtree) (all_rewrite_rules var));
+                  => @Compile.assemble_identifier_rewriters base _ base_beq ident var eta_ident_cps pattern_ident (@arg_types) (@unify _ _ pkg) (@unify_unknown _ _ pkg) raw_ident full_types (@invert_bind_args _ _ pkg) (@invert_bind_args_unknown _ _ pkg) type_of raw_to_typed is_simple (Some dtree) (all_rewrite_rules var));
               rewrite_head_no_dtree0
               := (fun var
-                  => @Compile.assemble_identifier_rewriters base _ base_beq ident var eta_ident_cps pattern_ident arg_types (@unify _ _ pkg) (@unify_unknown _ _ pkg) raw_ident full_types (@invert_bind_args _ _ pkg) (@invert_bind_args_unknown _ _ pkg) type_of raw_to_typed is_simple None (all_rewrite_rules var));
+                  => @Compile.assemble_identifier_rewriters base _ base_beq ident var eta_ident_cps pattern_ident (@arg_types) (@unify _ _ pkg) (@unify_unknown _ _ pkg) raw_ident full_types (@invert_bind_args _ _ pkg) (@invert_bind_args_unknown _ _ pkg) type_of raw_to_typed is_simple None (all_rewrite_rules var));
               rewrite_head (* adjusted version *)
               : forall var (do_again : forall t, @expr.expr (base.type base) ident (@Compile.value _ ident var) (type.base t) -> @UnderLets.UnderLets _ ident var (@expr.expr (base.type base) ident var (type.base t)))
                        t (idc : ident t), @Compile.value_with_lets (base.type base) ident var t;

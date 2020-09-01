@@ -3923,7 +3923,7 @@ Module Compilers.
         Definition Wf_GoalT {exprInfo : ExprInfoT} {exprExtraInfo : ExprExtraInfoT} {pkg : package} (Rewriter : RewriterT) : Prop
           := forall var1 var2,
             @Compile.rewrite_rules_goodT
-              base _ ident pattern_ident arg_types var1 var2
+              base _ ident pattern_ident (@arg_types) var1 var2
               (Make.GoalType.rewrite_rules (Rewriter_data Rewriter) _)
               (Make.GoalType.rewrite_rules (Rewriter_data Rewriter) _).
       End GoalType.
@@ -3944,7 +3944,7 @@ Module Compilers.
           := plet data := Rewriter_data Rewriter in
                    specT data
                    -> @Compile.rewrite_rules_interp_goodT
-                        base _ ident pattern_ident arg_types to_typed base_interp ident_interp
+                        base _ ident pattern_ident (@arg_types) (@to_typed) base_interp ident_interp
                         (Make.GoalType.rewrite_rules data _).
       End GoalType.
     End InterpTactics.
