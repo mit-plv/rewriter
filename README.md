@@ -28,6 +28,14 @@ The logs with raw timing data live in the subdirectories of [`src/Rewriter/Rewri
 The text and csv files were generated with `make perf-csv`.
 (The targets `perf-Slow` and `perf-VerySlow` exist but take a very, very, very long time to run.)
 
+License
+-------
+
+This project is distributed under the terms of the MIT License, the Apache License (Version 2.0), and the BSD 1-Clause License; users may pick which license to apply.
+
+See [`COPYRIGHT`](./COPYRIGHT), [`LICENSE-MIT`](./LICENSE-MIT), [`LICENSE-APACHE`](./LICENSE-APACHE), and [`LICENSE-BSD-1`](./LICENSE-BSD-1) for details.
+
+
 Reading The Code
 ----------------
 
