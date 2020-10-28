@@ -1,62 +1,112 @@
-Require Import Coq.Lists.List.
-Require Import Coq.ZArith.ZArith.
-Require Import Coq.Sorting.Mergesort.
+Require Import Coq.QArith.QArith.
 Require Import Coq.Structures.Orders.
-Require Export Rewriter.Rewriter.Examples.PerfTesting.Settings.
-Require Rewriter.Rewriter.Examples.LiftLetsMap.
-Require Rewriter.Rewriter.Examples.Plus0Tree.
-Require Rewriter.Rewriter.Examples.SieveOfEratosthenes.
-Require Rewriter.Rewriter.Examples.UnderLetsPlus0.
-Import ListNotations.
-Global Set Printing Width 200.
+Require Import Coq.micromega.Lia.
+Require Import Coq.Bool.Bool.
+Require Import Coq.Sorting.Mergesort.
+Require Export Coq.Lists.List.
+Require Export Coq.ZArith.ZArith.
+Export ListNotations.
+
+Global Set Printing Width 1000.
 Global Open Scope Z_scope.
 Global Open Scope nat_scope.
-Local Open Scope list_scope.
+Global Open Scope list_scope.
 
 (** divisions should be roughly:
+- The [Sanity] tests should be just enough to ensure that the code compiles and runs.
 - All [SuperFast] tests in a file should finish in under 10 seconds total
-- The [Fast] tests should take under 10 seconds each
+- The [Fast] test files should take about a minute each
 - The [Medium] tests should go up to about a minute each
 - The [Slow] tests should go up to about 10 minutes each
 - The [VerySlow] tests may take longer than 10 minutes each *)
 
-Inductive size := SuperFast | Fast | Medium | Slow | VerySlow.
+Inductive size := Sanity | SuperFast | Fast | Medium | Slow | VerySlow.
 
-Ltac test_for_of_size sz test_for_safe test_for :=
-  let do_test_for := lazymatch sz with
-                     | SuperFast => test_for_safe
-                     | _ => test_for
-                     end in
-  let do_optimize_heap
-      := lazymatch sz with
-         | SuperFast => fun _ => constr:(I)
-         | Fast => fun _ => constr:(I)
-         | _
-           => fun _
-              => let __ := match constr:(Set) with _ => optimize_heap end in
-                 constr:(I)
-         end in
-  (* now we insert optimize_heap if necessary *)
-  fun timetest =>
-    let timetest := fun arg => let __ := do_optimize_heap () in
-                               timetest arg in
-    do_test_for timetest.
+Definition seconds_of_size (sz : size) : nat
+  := match sz with
+     | Sanity => 1
+     | SuperFast => 10
+     | Fast => 120
+     | Medium => 600
+     | Slow => 3600
+     | VerySlow => 3600 * 10
+     end.
+
+Notation "'subst!' x 'for' y 'in' f"
+  := (match x return _ with y => f end) (only parsing, at level 200, x at level 200, y ident, f at level 200).
+
+Notation "'eta_size' ( sz' => f ) sz"
+  := match sz with
+     | Sanity => subst! Sanity for sz' in f
+     | SuperFast => subst! SuperFast for sz' in f
+     | Fast => subst! Fast for sz' in f
+     | Medium => subst! Medium for sz' in f
+     | Slow => subst! Slow for sz' in f
+     | VerySlow => subst! VerySlow for sz' in f
+     end (only parsing, at level 70, sz' ident).
+
+Local Lemma eta_size_sanity : forall T f k, eta_size (k => f k) k = f k :> T.
+Proof. intros; repeat match goal with |- context[match ?e with _ => _ end] => destruct e end; reflexivity. Qed.
+
+Definition Zseconds_of_size (sz : size) : Z
+  := Z.of_nat (seconds_of_size sz).
+
+Definition Qseconds_of_size (sz : size) : Q
+  := inject_Z (Zseconds_of_size sz).
+
+Definition standard_max_seconds_of_size (sz : size) : nat
+  := match sz with
+     | Sanity => 10
+     | SuperFast => 10
+     | Fast => 10
+     | Medium => 60
+     | Slow => 60
+     | VerySlow => 60
+     end%nat.
+Definition Zstandard_max_seconds_of_size (sz : size) : Z
+  := Z.of_nat (standard_max_seconds_of_size sz).
+Definition Qstandard_max_seconds_of_size (sz : size) : Q
+  := inject_Z (Zstandard_max_seconds_of_size sz).
+
+Definition standard_max_seconds : nat := standard_max_seconds_of_size Fast.
+Definition Zstandard_max_seconds : Z := Z.of_nat standard_max_seconds.
+Definition Qstandard_max_seconds : Q := inject_Z Zstandard_max_seconds.
+
+Definition nat_of_size (sz : size) : nat
+  := match sz with
+     | Sanity => 0
+     | SuperFast => 1
+     | Fast => 2
+     | Medium => 3
+     | Slow => 4
+     | VerySlow => 5
+     end%nat.
 
 Definition smaller_sizes (sz : size) : list size
   := match sz with
-     | SuperFast => []
-     | Fast => [SuperFast]
-     | Medium => [SuperFast; Fast]
-     | Slow => [SuperFast; Fast; Medium]
-     | VerySlow => [SuperFast; Fast; Medium; Slow]
+     | Sanity => []
+     | SuperFast => [Sanity]
+     | Fast => [Sanity; SuperFast]
+     | Medium => [Sanity; SuperFast; Fast]
+     | Slow => [Sanity; SuperFast; Fast; Medium]
+     | VerySlow => [Sanity; SuperFast; Fast; Medium; Slow]
+     end.
+
+Definition size_pred (sz : size) : option size
+  := match sz with
+     | Sanity => None
+     | SuperFast => Some Sanity
+     | Fast => Some SuperFast
+     | Medium => Some Fast
+     | Slow => Some Medium
+     | VerySlow => Some Slow
      end.
 
 Fixpoint uniquify {T} (T_beq : T -> T -> bool) (ls : list T) : list T
   := match ls with
      | nil => nil
      | cons x xs
-       => (if existsb (T_beq x) xs then (fun xs => xs) else cons x)
-            (uniquify T_beq xs)
+       => x :: filter (fun y => negb (T_beq x y)) (uniquify T_beq xs)
      end.
 
 Definition remove_smaller_args_of_size {T} (T_beq : T -> T -> bool) (sz : size)
@@ -94,7 +144,7 @@ Module NatProdOrder <: TotalLeBool.
   Qed.
 End NatProdOrder.
 
-Module Import NatProdSort := Sort NatProdOrder.
+Module NatProdSort := Sort NatProdOrder.
 Notation sort_by_prod := NatProdSort.sort.
 
 Module NatFstOrder <: TotalLeBool.
@@ -119,210 +169,231 @@ Module NatFstOrder <: TotalLeBool.
   Qed.
 End NatFstOrder.
 
-Module Import NatFstSort := Sort NatFstOrder.
+Module NatFstSort := Sort NatFstOrder.
 Notation sort_by_fst := NatFstSort.sort.
 
-Module LiftLetsMap.
-  Import Examples.LiftLetsMap.
-  Global Open Scope nat_scope.
+Module ZProdOrder <: TotalLeBool.
+  Local Open Scope Z_scope.
+  Definition t := (Z * Z)%type.
+  Definition t_to_Z (v : t) : Z := (fst v * snd v)%Z.
+  Definition ltb (x y : t) : bool
+    := (t_to_Z x <? t_to_Z y)%Z
+       || (((t_to_Z x =? t_to_Z y)%Z)
+             && ((fst x <? fst y)
+                 || ((fst x =? fst y) && (snd x <? snd y)))).
+  Definition leb (x y : t) : bool
+    := ltb x y || ((fst x =? fst y) && (snd x =? snd y)).
+  Theorem leb_total : forall a1 a2, leb a1 a2 = true \/ leb a2 a1 = true.
+  Proof.
+    cbv [leb ltb]; intros a1 a2.
+    repeat first [ rewrite !Bool.andb_true_iff
+                 | rewrite !Bool.orb_true_iff
+                 | rewrite !Z.eqb_eq
+                 | rewrite !Z.ltb_lt
+                 | rewrite !Z.ltb_lt ].
+    destruct (Z.lt_total (t_to_Z a1) (t_to_Z a2)) as [?|[?|?]];
+      try solve [ auto ]; [].
+    destruct (Z.lt_total (fst a1) (fst a2)) as [?|[?|?]];
+      try solve [ auto 6 ]; [].
+    destruct (Z.lt_total (snd a1) (snd a2)) as [?|[?|?]];
+      solve [ auto 7 ].
+  Qed.
+End ZProdOrder.
 
-  Definition args_of_size' (test_tac_n : nat) (s : size)
-    := let '(n_count, m_count)
-           := match test_tac_n, s with
-              | 0, SuperFast => (10, 10)
-              | 3, SuperFast => (50, 50)
-              | 4, SuperFast => (50, 50)
-              | _, SuperFast => (5, 4)
-              | 0, Fast => (90, 90)
-              | 3, Fast => (150, 150) (* N.B. test 3 stack overflows on larger than ~160, 160 *)
-              | 4, Fast => (150, 150)
-              | _, Fast => (6, 5)
-              | 0, Medium => (115, 115) (* maybe should be (150, 150), but (115, 115) already takes over 11 h, I think *)
-              | 5, Medium => (7, 8)
-              | _, Medium => (6, 7)
-              | 0, Slow => (200, 200) (* ??? *)
-              | _, Slow => (10, 10) (* ??? *)
-              | 0, VerySlow => (400, 400) (* ??? *)
-              | _, VerySlow => (100, 100) (* ??? *)
+Module ZProdSort := Sort ZProdOrder.
+Notation Zsort_by_prod := ZProdSort.sort.
+
+Module ZFstOrder <: TotalLeBool.
+  Local Open Scope Z_scope.
+  Definition t := (Z * Z)%type.
+  Definition ltb (x y : t) : bool
+    := (fst x <? fst y)
+       || ((fst x =? fst y)
+             && (snd x <? snd y)).
+  Definition leb (x y : t) : bool
+    := ltb x y || ((fst x =? fst y) && (snd x =? snd y)).
+  Theorem leb_total : forall a1 a2, leb a1 a2 = true \/ leb a2 a1 = true.
+  Proof.
+    cbv [leb ltb]; intros a1 a2.
+    repeat first [ rewrite !Bool.andb_true_iff
+                 | rewrite !Bool.orb_true_iff
+                 | rewrite !Z.eqb_eq
+                 | rewrite !Z.ltb_lt ].
+    destruct (Z.lt_total (fst a1) (fst a2)) as [?|[?|?]];
+      try solve [ auto 6 ]; [].
+    destruct (Z.lt_total (snd a1) (snd a2)) as [?|[?|?]];
+      solve [ auto 7 ].
+  Qed.
+End ZFstOrder.
+
+Module ZFstSort := Sort ZFstOrder.
+Notation Zsort_by_fst := ZFstSort.sort.
+
+
+Module ZOrder <: TotalLeBool.
+  Local Open Scope Z_scope.
+  Definition t := Z.
+  Definition ltb := Z.ltb.
+  Definition leb := Z.leb.
+  Theorem leb_total : forall a1 a2, leb a1 a2 = true \/ leb a2 a1 = true.
+  Proof.
+    cbv [leb ltb]; intros a1 a2.
+    repeat first [ rewrite !Bool.andb_true_iff
+                 | rewrite !Bool.orb_true_iff
+                 | rewrite !Z.eqb_eq
+                 | rewrite !Z.ltb_lt
+                 | rewrite !Z.leb_le ].
+    lia.
+  Qed.
+End ZOrder.
+
+Module ZSort := Sort ZOrder.
+
+Module Import LocalReflect.
+  Definition reflect := reflect. (* a local copy *)
+  Existing Class reflect.
+  Notation reflect_rel R1 R2 := (forall x y, reflect (R1 x y) (R2 x y)).
+End LocalReflect.
+Global Hint Opaque reflect : typeclass_instances.
+
+Lemma reflect_of_beq {beq : bool} {R : Prop}
+      (bp : beq = true -> R)
+      (pb : R -> beq = true)
+  : reflect R beq.
+Proof.
+  destruct beq; constructor; intuition (discriminate || auto).
+Qed.
+
+Definition reflect_rel_of_beq {T} {beq : T -> T -> bool} {R : T -> T -> Prop}
+      (bp : forall x y, beq x y = true -> R x y)
+      (pb : forall x y, R x y -> beq x y = true)
+  : reflect_rel R beq
+  := fun x y => reflect_of_beq (bp x y) (pb x y).
+
+Definition reflect_rel_of_beq_iff {T} {beq : T -> T -> bool} {R : T -> T -> Prop}
+      (bp : forall x y, beq x y = true <-> R x y)
+  : reflect_rel R beq
+  := reflect_rel_of_beq (fun x y => proj1 (bp x y)) (fun x y => proj2 (bp x y)).
+
+Definition reflect_rel_to_beq_iff {T} {beq : T -> T -> bool} {R : T -> T -> Prop}
+           (Hr : reflect_rel R beq)
+  : forall x y, beq x y = true <-> R x y.
+Proof.
+  intros x y; specialize (Hr x y); destruct Hr; intuition (eauto; congruence).
+Qed.
+
+Instance reflect_eq_nat : reflect_rel (@eq nat) Nat.eqb
+  := reflect_rel_of_beq_iff Nat.eqb_eq.
+
+Instance reflect_eq_Z : reflect_rel (@eq Z) Z.eqb
+  := reflect_rel_of_beq_iff Z.eqb_eq.
+
+Local Set Implicit Arguments.
+Scheme Equality for prod.
+
+Definition prod_beq_iff {A B eqA eqB}
+           (A_iff : forall x y : A, eqA x y = true <-> x = y)
+           (B_iff : forall x y : B, eqB x y = true <-> x = y)
+  : forall x y, prod_beq eqA eqB x y = true <-> x = y.
+Proof.
+  split; [ apply internal_prod_dec_bl | apply internal_prod_dec_lb ];
+    first [ apply A_iff | apply B_iff ].
+Defined.
+Local Unset Implicit Arguments.
+
+Instance reflect_eq_prod {A B eqA eqB} {_ : reflect_rel (@eq A) eqA} {_ : reflect_rel (@eq B) eqB}
+  : reflect_rel (@eq (A * B)) (prod_beq eqA eqB)
+  := reflect_rel_of_beq_iff (prod_beq_iff (reflect_rel_to_beq_iff _) (reflect_rel_to_beq_iff _)).
+
+Class has_sub T := sub : T -> T -> T.
+Instance: has_sub nat := Nat.sub.
+Instance: has_sub Z := Z.sub.
+
+Class has_succ T := succ : T -> T.
+Instance: has_succ nat := S.
+Instance: has_succ Z := Z.succ.
+
+Class has_zero T := zero : T.
+Instance: has_zero nat := O.
+Instance: has_zero Z := Z0.
+
+Class has_sort T := sort : list T -> list T.
+Instance: has_sort nat := NatSort.sort.
+Instance: has_sort Z := ZSort.sort.
+
+Definition remove_smaller_args_of_size_by_reflect
+           {T} {T_beq : T -> T -> bool}
+           {T_reflect : reflect_rel (@eq T) T_beq}
+           (sz : size)
+           (args_of_size : size -> list T)
+  : list T
+  := let args := uniquify T_beq (args_of_size sz) in
+     let smaller_args := flat_map args_of_size (smaller_sizes sz) in
+     filter (fun v => negb (existsb (T_beq v) smaller_args)) args.
+
+Ltac default_describe_goal x :=
+  idtac "Params: n=" x.
+
+Ltac runtests args_of_size describe_goal mkgoal redgoal time_solve_goal sz :=
+  let args := (eval vm_compute in (remove_smaller_args_of_size_by_reflect sz args_of_size)) in
+  let rec iter ls :=
+      lazymatch ls with
+      | [] => idtac
+      | ?x :: ?xs
+        => describe_goal x;
+           let T := mkgoal x in
+           try (solve [ assert T by (redgoal x; once (time_solve_goal x + fail 2 "time_solve_goal failed!")) ]; []);
+           iter xs
+      end in
+  iter args.
+
+Ltac runtests_verify_sanity args_of_size describe_goal mkgoal redgoal time_solve_goal do_verify sz :=
+  let time_solve_goal'
+      := lazymatch sz with
+         | Sanity
+           => fun x => time_solve_goal x; do_verify ()
+         | _
+           => fun x => time_solve_goal x
+         end in
+  runtests args_of_size describe_goal mkgoal redgoal time_solve_goal' sz.
+
+Ltac step_goal_from_to_constr step_goal cur_n target_n G :=
+  let test := match constr:(Set) with
+              | _ => let __ := match constr:(Set) with _ => constr_eq cur_n target_n end in
+                     true
+              | _ => false
               end in
-       sort_by_prod (flat_map (fun n => map (fun m => (n, m)) (seq 1 m_count)) (seq 1 n_count)).
-  Definition args_of_size (test_tac_n : nat) (s : size)
-    := remove_smaller_args_of_size (Prod.prod_beq _ _ Nat.eqb Nat.eqb) s (args_of_size' test_tac_n).
+  lazymatch test with
+  | true => G
+  | false
+    => let next_n := (eval cbv in (succ cur_n)) in
+       let G := step_goal next_n G in
+       step_goal_from_to_constr step_goal next_n target_n G
+  end.
 
-  Ltac run test_tac_n size :=
-    let test_for_tac := test_for_of_size size test_for_safe test_for in
-    let args := (eval vm_compute in (args_of_size test_tac_n size)) in
-    let test_tac := lazymatch test_tac_n with
-                    | 0 => timetest0
-                    | 1 => timetest1
-                    | 2 => timetest2
-                    | 3 => timetest3
-                    | 4 => timetest4
-                    | 5 => timetest5
-                    end in
-    let rec iter ls :=
-        lazymatch ls with
-        | [] => idtac
-        | (?n, ?m) :: ?ls
-          => test_for test_tac test_tac_n n m;
-             iter ls
-        end in
-    iter args.
-End LiftLetsMap.
+Ltac runtests_step_arg_constr args_of_size describe_goal step_goal redgoal_constr redgoal time_solve_goal sz G extra_args :=
+  let args := (eval vm_compute in (remove_smaller_args_of_size_by_reflect sz args_of_size)) in
+  let T := lazymatch type of args with list ?T => T end in
+  let rec iter cur ls G :=
+      lazymatch ls with
+      | [] => idtac
+      | ?x :: ?xs
+        => let G := step_goal_from_to_constr step_goal cur x G in
+           let G := redgoal_constr x G in
+           describe_goal x;
+           try (solve [ redgoal x; once (time_solve_goal x G extra_args + fail 2 "time_solve_goal failed!") ]; []);
+           iter x xs G
+      end in
+  let zero := (eval cbv in (@zero T _)) in
+  iter zero args G.
 
-Module Plus0Tree.
-  Import Examples.Plus0Tree.
-  Global Open Scope nat_scope.
+Ltac runtests_step_constr args_of_size describe_goal step_goal redgoal_constr time_solve_goal sz G :=
+  runtests_step_arg_constr args_of_size describe_goal step_goal redgoal_constr ltac:(fun _ => idtac) ltac:(fun n G args => time_solve_goal n G) sz G ().
 
-  Definition args_of_size' (test_tac_n : nat) (s : size)
-    := let ls
-           := match test_tac_n, s with
-              | 0, SuperFast => [(11, 2); (7, 4)]
-              | 1, SuperFast => [(12, 3)]
-              | 2, SuperFast => [(8, 3)]
-              | 3, SuperFast => [(9, 3)]
-              | 4, SuperFast => [(7, 3)]
-              | 0, Fast => [(14, 5); (13, 20); (9, 1000)]
-              | 1, Fast => [(14, 2); (13, 3); (9, 18); (5, 50); (4, 130); (3, 200); (2, 340); (1, 600)]
-              | 2, Fast => [(10, 2); (9, 3); (8, 5); (7, 9); (6, 15); (5, 30); (4, 40); (3, 95); (2, 180); (1, 380)]
-              | 3, Fast => [(10, 1); (9, 3); (8, 7); (7, 15); (6, 25); (5, 50); (4, 80); (3, 150); (2, 270); (1, 550)]
-              | 4, Fast => [(9, 1); (8, 2); (7, 3); (6, 5); (5, 11); (4, 30); (3, 60); (2, 110); (1, 260)]
-              | 0, Medium => [(16, 3); (12, 100)]
-              | 1, Medium => [(15, 3); (9, 40)]
-              | 2, Medium => [(11, 2); (10, 3); (9, 10)]
-              | 3, Medium => [(11, 2); (10, 3); (9, 12)]
-              | 4, Medium => [(9, 2); (8, 3); (10, 1)]
-              | 0, Slow => [(16, 4)] (* ??? *)
-              | 1, Slow => [(16, 4)] (* ??? *)
-              | 2, Slow => [(12, 4)] (* ? (11, 3) is 122.176s *)
-              | 3, Slow => [(12, 4)] (* ? (11, 3) is 165.575s *)
-              | 4, Slow => [(9, 3); (10, 2); (11, 1)] (* ? should we have more for smaller fst of the pair? *)
-              | _, VerySlow => [(1000, 1000)] (* ??? *)
-              | _, _ => []
-              end in
-       sort_by_fst
-         (flat_map
-            (fun '(n_count, m_count)
-             => flat_map (fun n => map (fun m => (n, m)) (seq 1 m_count)) (seq 1 n_count))
-            ls).
-  Definition args_of_size (test_tac_n : nat) (s : size)
-    := remove_smaller_args_of_size (Prod.prod_beq _ _ Nat.eqb Nat.eqb) s (args_of_size' test_tac_n).
+Ltac constr_run_tac f x :=
+  lazymatch goal with
+  | _ => f x
+  end.
 
-  Ltac run test_tac_n size :=
-    let test_for_tac := test_for_of_size size test_for_safe test_for in
-    let args := (eval vm_compute in (args_of_size test_tac_n size)) in
-    let test_tac := lazymatch test_tac_n with
-                    | 0 => timetest0
-                    | 1 => timetest1
-                    | 2 => timetest2
-                    | 3 => timetest3
-                    | 4 => timetest4
-                    end in
-    let rec iter ls :=
-        lazymatch ls with
-        | [] => idtac
-        | (?n, ?m) :: ?ls
-          => test_for test_tac n m;
-             iter ls
-        end in
-    iter args.
-End Plus0Tree.
-
-Module SieveOfEratosthenes.
-  Import Examples.SieveOfEratosthenes.
-  Global Open Scope nat_scope.
-
-  Definition args_of_size (test_tac_n : nat) (s : size)
-    := match test_tac_n, s with
-       | 0%nat, SuperFast => [(2, 3, 1); (5, 49, 2)]
-       | 1%nat, SuperFast => [(2, 3, 1); (5, 1199, 2)]
-       | 2%nat, SuperFast => [(2, 3, 1); (5, 449, 2)]
-       | 3%nat, SuperFast => [(2, 3, 1); (5, 499, 2)]
-       | 4%nat, SuperFast => [(2, 3, 1); (5, 39, 2)]
-       | 5%nat, SuperFast => [(2, 3, 1); (5, 39, 2)]
-       | 6%nat, SuperFast => [(2, 3, 1); (5, 39, 2)]
-       | 0%nat, Fast => [(51, 4999, 2)]
-       | 1%nat, Fast => [(1201, 4999, 2)]
-       | 2%nat, Fast => [(451, 3999, 2)]
-       | 3%nat, Fast => [(501, 4999, 2)]
-       | 4%nat, Fast => [(41, 4999, 2)]
-       | 5%nat, Fast => [(41, 79, 2)]
-       | 6%nat, Fast => [(41, 79, 2)]
-       | 2%nat, Medium => [(4001, 4999, 2)]
-       | 5%nat, Medium => [(81, 149, 2)]
-       | 6%nat, Medium => [(81, 149, 2)]
-       | 5%nat, Slow => [(151, 189, 2)]
-       | 6%nat, Slow => [(151, 189, 2)]
-       | 5%nat, VerySlow => [(191, 4999, 2)]
-       | 6%nat, VerySlow => [(191, 4999, 2)]
-       | 0%nat, _ | 1%nat, _ | 2%nat, _ | 3%nat, _ | 4%nat, _ => []
-       | _, _ => []
-       end%Z.
-
-  Ltac run test_tac_n size :=
-    let test_from_to_tac := test_for_of_size size test_from_to_safe test_from_to in
-    let args := (eval vm_compute in (args_of_size test_tac_n size)) in
-    let test_tac := lazymatch test_tac_n with
-                    | 0 => timetest0
-                    | 1 => timetest1
-                    | 2 => timetest2
-                    | 3 => timetest3
-                    | 4 => timetest4
-                    | 5 => timetest5
-                    | 6 => timetest6
-                    end in
-    let rec iter ls :=
-        lazymatch ls with
-        | [] => idtac
-        | (?min, ?max, ?step) :: ?ls
-          => test_from_to_tac test_tac min max step;
-             iter ls
-        end in
-    iter args.
-End SieveOfEratosthenes.
-
-Module UnderLetsPlus0.
-  Import Examples.UnderLetsPlus0.
-  Global Open Scope nat_scope.
-
-  Definition args_of_size (test_tac_n : nat) (s : size)
-    := match test_tac_n, s with
-       | 0, SuperFast => [(1, 70, 1)]
-       | 1, SuperFast => [(1, 70, 1)]
-       | 2, SuperFast => [(1, 30, 1)]
-       | 3, SuperFast => [(1, 30, 1)]
-       | 0, Fast => [(71, 5000, 1)]
-       | 1, Fast => [(71, 200, 1)]
-       | 2, Fast => [(31, 60, 1)]
-       | 3, Fast => [(31, 60, 1)]
-       | 1, Medium => [(201, 371, 1)]
-       | 2, Medium => [(61, 90, 1)]
-       | 3, Medium => [(61, 90, 1)]
-       | 1, Slow => [(372, 1000, 1)] (* ??? *)
-       | 2, Slow => [(91, 600, 1)] (* ??? *)
-       | 3, Slow => [(91, 600, 1)] (* ??? *)
-       | 1, VerySlow => [(1001, 5000, 1)]
-       | 2, VerySlow => [(601, 5000, 1)]
-       | 3, VerySlow => [(601, 5000, 1)]
-       | 0, _ => []
-       | _, _ => []
-       end.
-
-  Ltac run test_tac_n size :=
-    let test_from_to_tac := test_for_of_size size test_from_to_safe test_from_to in
-    let args := (eval vm_compute in (args_of_size test_tac_n size)) in
-    let test_tac := lazymatch test_tac_n with
-                    | 0 => timetest0
-                    | 1 => timetest1
-                    | 2 => timetest2
-                    | 3 => timetest3
-                    end in
-    let rec iter ls :=
-        lazymatch ls with
-        | [] => idtac
-        | (?min, ?max, ?step) :: ?ls
-          => test_from_to_tac test_tac min max step;
-             iter ls
-        end in
-    iter args.
-End UnderLetsPlus0.
+Ltac runtests_step args_of_size describe_goal step_goal redgoal time_solve_goal sz :=
+  runtests_step_arg_constr args_of_size describe_goal ltac:(fun n G => constr_run_tac step_goal n) ltac:(fun _ G => G) redgoal ltac:(fun n G args => time_solve_goal n) sz () ().

@@ -1,0 +1,63 @@
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+PERF_ABS_DIR := $(patsubst %/,%,$(dir $(mkfile_path)))
+
+include $(PERF_ABS_DIR)/Makefile.variables
+
+$(foreach size,$(SIZES),$(eval $(call makesize,$(size))))
+$(foreach kind,$(KINDS),$(eval $(call makekind,$(kind))))
+$(foreach kind,$(SH_KINDS),$(eval $(call makekind_sh,$(kind))))
+$(foreach kind,$(SPECIAL_KINDS),$(eval $(call makekind_special,$(kind))))
+
+.PHONY: sizes
+sizes:
+	@echo $(addprefix perf-,$(SIZES))
+
+.PHONY: kinds
+kinds:
+	@echo $(addprefix perf-,$(ALL_KINDS))
+
+.PHONY: perf
+perf: $(ALL_PERF_LOGS)
+
+$(ALL_PERF_LOGS) : %.log : %.v
+	$(SHOW)'$(TIMEOUT_SHOW)COQC $(<:$(PERF_DIR)/%.v=%) > LOG'
+	$(HIDE)($(PERF_SET_LIMITS) $(TIMEOUT_CMD) $(TIMER) $(COQC) $(COQDEBUG) $(COQFLAGS) $(COQLIBS) $<) > $@.tmp
+	$(HIDE)mv $@.tmp $@
+
+ifneq ($(EXTERNAL_PERF_DEPENDENCIES),1)
+$(ALL_PERF_LOGS): $(PERF_DIR)/Harness.vo
+endif
+
+EXTRA_PERF_CSVS := $(KINDS:%=perf-%.csv)
+
+.PHONY: perf-csv
+perf-csv: perf.csv perf-txts # $(EXTRA_PERF_CSVS)
+
+.PHONY: perf.csv
+perf.csv:
+	$(SHOW)'PYTHON3 aggregate.py -o $@'
+	$(HIDE)$(PYTHON3) $(PERF_DIR)/aggregate.py -o $@ $(wildcard $(ALL_PERF_LOGS))
+
+# the find trick is from https://stackoverflow.com/a/4264351/377022
+.PHONY: copy-perf
+copy-perf::
+	cp -t $(OUTPUT) perf.csv $(wildcard *.txt)
+	for d in */; do if test -n "$$(find "$$d" -maxdepth 1 -name '*.log' -print -quit)"; then mkdir -p $(OUTPUT)/$$d; cp -t $(OUTPUT)/$$d $$d/*.log; fi; done
+
+perf-txts: perf.csv
+	$(PYTHON3) $(PERF_DIR)/csv_to_txt.py $<
+.PHONY: perf-txts
+
+%.gnuplot: %.txt $(PERF_DIR)/txt_to_gnuplot.py
+	$(PYTHON3) $(PERF_DIR)/txt_to_gnuplot.py $< -o $@
+
+%.txt-fits.dat: %.gnuplot %.txt
+	gnuplot $<
+
+perf-gnuplots::
+	$(MAKE) $(patsubst %.txt,%.gnuplot,$(wildcard *.txt))
+.PHONY: perf-gnuplots
+
+perf-fits::
+	$(MAKE) $(addsuffix -fits.dat,$(wildcard *.txt))
+.PHONY: perf-fits

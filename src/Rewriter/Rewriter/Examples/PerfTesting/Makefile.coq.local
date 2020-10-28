@@ -1,0 +1,6 @@
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+PERF_ABS_DIR := $(patsubst %/,%,$(dir $(mkfile_path)))
+
+include $(PERF_ABS_DIR)/Makefile.timing
+include $(PERF_ABS_DIR)/Makefile.generated-files
+include $(PERF_ABS_DIR)/Makefile.coq-versions-files

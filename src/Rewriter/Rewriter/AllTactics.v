@@ -317,12 +317,15 @@ Module Compilers.
                time_if_perf3 time_vm_cast_no_check ltac:(fun _ => rewrite_default_cast_no_check (eq_refl RHS)) ()
           end ].
 
-      Ltac do_final_cbv verified_rewriter_package base_interp ident_interp :=
+      Ltac do_final_cbv verified_rewriter_package :=
         idtac;
-        let base_interp_head := head base_interp in
-        let ident_interp_head := head ident_interp in
-        let verified_rewriter_package_head := head verified_rewriter_package in
-        cbv [expr.Interp expr.interp Classes.ident_interp Classes.base GoalType.exprInfo type.interp base.interp base_interp_head ident_interp_head verified_rewriter_package_head ident.literal ident.eagerly].
+        lazymatch (eval hnf in (RewriteRules.GoalType.exprInfo verified_rewriter_package)) with
+        | {| base_interp := ?base_interp ; ident_interp := ?ident_interp |}
+          => let base_interp_head := head base_interp in
+             let ident_interp_head := head ident_interp in
+             let verified_rewriter_package_head := head verified_rewriter_package in
+             cbv [expr.Interp expr.interp Classes.ident_interp Classes.base GoalType.exprInfo type.interp base.interp base_interp_head ident_interp_head verified_rewriter_package_head ident.literal ident.eagerly]
+        end.
 
       Ltac Rewrite_for_gen verified_rewriter_package skip_cbv do_lhs do_rhs :=
         once
@@ -357,7 +360,7 @@ Module Compilers.
                               guard n = 0 (* assert that all goals are solved; we don't use [solve] because it eats error messages of inner tactics *));
                           lazymatch skip_cbv with
                           | true => idtac
-                          | false => time_if_perf2 time_cbv ltac:(fun _ => do_final_cbv verified_rewriter_package base_interp ident_interp) ()
+                          | false => time_if_perf2 time_cbv ltac:(fun _ => do_final_cbv verified_rewriter_package) ()
                           end
                      end) ()).
     End FinalTacticHelpers.

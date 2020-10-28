@@ -1,0 +1,1 @@
+include src/Rewriter/Rewriter/Examples/PerfTesting/Makefile.coq.local

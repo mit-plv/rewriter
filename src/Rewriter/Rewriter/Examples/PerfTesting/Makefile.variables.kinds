@@ -1,0 +1,53 @@
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+PERF_ABS_DIR := $(patsubst %/,%,$(dir $(mkfile_path)))
+
+include $(PERF_ABS_DIR)/Makefile.coq-versions-lite
+
+KINDS := \
+	# end of list
+
+LTAC2_KINDS := \
+	# end of list
+
+VERSION_8_9_OR_NEWER_KINDS := \
+	# end of list
+
+Q_DECIMAL_NOTATION_KINDS := \
+	LiftLetsMap \
+	Plus0Tree \
+	SieveOfEratosthenes \
+	UnderLetsPlus0 \
+	# end of list
+
+VERSION_8_10_OR_NEWER_KINDS := \
+	$(Q_DECIMAL_NOTATION_KINDS) \
+	# end of list
+
+DISABLED_FILES?=
+
+ifneq (,$(IS_8_9_OR_NEWER))
+KINDS += $(VERSION_8_9_OR_NEWER_KINDS)
+else
+DISABLED_FILES += $(addsuffix .v,$(VERSION_8_9_OR_NEWER_KINDS))
+endif
+
+ifneq (,$(IS_8_10_OR_NEWER))
+KINDS += $(VERSION_8_10_OR_NEWER_KINDS)
+else
+DISABLED_FILES += $(addsuffix .v,$(VERSION_8_10_OR_NEWER_KINDS))
+endif
+
+ifneq (,$(HAS_LTAC2))
+KINDS += $(LTAC2_KINDS)
+else
+DISABLED_FILES += $(addsuffix .v,$(LTAC2_KINDS)) \
+	rewrite_repeated_app_common_ltac2.v \
+	# end of list
+endif
+
+SH_KINDS :=
+
+SPECIAL_KINDS :=
+
+ALL_VKINDS := $(KINDS) $(SPECIAL_KINDS)
+ALL_KINDS := $(ALL_VKINDS) $(SH_KINDS)

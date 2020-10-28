@@ -1,0 +1,3 @@
+Require Import Rewriter.Rewriter.Examples.PerfTesting.Harness.
+Require Import Rewriter.Rewriter.Examples.PerfTesting.@EXAMPLE@.
+Goal True. run@ARGS@. Abort.
