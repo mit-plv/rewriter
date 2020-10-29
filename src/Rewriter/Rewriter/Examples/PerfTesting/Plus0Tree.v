@@ -3,7 +3,9 @@ Require Import Coq.ZArith.ZArith.
 Require Import Coq.QArith.QArith.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Setoids.Setoid.
+Require Import Coq.Strings.String.
 Require Import Coq.Lists.List.
+Require Import Rewriter.Util.Option Rewriter.Util.Strings.ParseArithmetic.
 Require Import Rewriter.Rewriter.Examples.PerfTesting.Harness.
 Require Import Rewriter.Util.plugins.RewriterBuild.
 Require Rewriter.Rewriter.Examples.PerfTesting.Sample.
@@ -245,6 +247,12 @@ Map[{#[[1]], Normal[#[[2]]] /. n -> 0 /. m -> x} &, fits2]
   fits]]*)
  *)
 
+Local Notation parse x := (invert_Some (parseQ_arith_strict x)) (only parsing).
+Local Notation parse_poly_expr p x := (invert_Some (parseQexpr_arith_with_vars [("x"%string, x)] p)) (only parsing).
+Local Notation red_vm_compute x := (ltac:(let z := (eval vm_compute in x) in
+                                          exact z)) (only parsing).
+Local Notation parse_poly p x := (invert_Some (eval_Qexpr_strict (red_vm_compute (parse_poly_expr p x)))) (only parsing).
+
 Definition size_of_kind (k : kind_of_rewrite) (arg : Z * Z) : Q
   := let termsize := size_of_arg arg in
      let x := inject_Z termsize in
@@ -252,48 +260,48 @@ Definition size_of_kind (k : kind_of_rewrite) (arg : Z * Z) : Q
      match k with
      | kind_rewrite_strat bottomup
        => (*-0.218 + 3.68E-03*x + 6.64E-06*x^2*)
-       -0.964971 + 0.00567641*x + 0.000133294*x^2
+       parse_poly "-0.964971 + 0.00567641*x + 0.000133294*x^2" x
 (*       -0.0419087 - 0.015458 * 2^n - 0.000126407 * 2^(2 * n) -
  1.08304E-7 * 2^(3 * n) - 0.0248191 * m + 0.00639815 * 2^n * m +
  0.00021925 * 2^(2 * n) * m + 0.000265979 * m^2 + 0.000269755 * 2^n * m^2 -
  3.14699E-6 * m^3*)
      | kind_rewrite_strat topdown
        => (*0.141 + -8.55E-04*x + 3.28E-06*x^2*)
-       -0.151224 + 0.000230063*x + 4.83713E-6*x^2 + 4.31671E-10*x^3
+       parse_poly "-0.151224 + 0.000230063*x + 4.83713E-6*x^2 + 4.31671E-10*x^3" x
 (*       -0.144716 - 0.00652151 * 2^n + 0.0000138788 * 2^(2 * n) -
  7.77221E-9 * 2^(3 * n) - 0.00374702 * m + 0.00397668 * 2^n * m +
  4.03926E-7 * 2^(2 * n) * m - 0.0000288226 * m^2 + 0.0000336598 * 2^n * m^2 +
  4.31671E-10 * m^3*)
      | kind_setoid_rewrite
        => (*3.51E-03 + 4.45E-04*x + 3.73E-06*x^2*)
-       -0.169646 + 0.00123046*x + 8.46486E-6*x^2
+       parse_poly "-0.169646 + 0.00123046*x + 8.46486E-6*x^2" x
 (*       -0.0916119 - 0.0127236 * 2^n + 0.0000322477 * 2^(2 * n) -
  7.57294E-8 * 2^(3 * n) - 0.00446198 * m + 0.00482246 * 2^n * m +
  0.0000287754 * 2^(2 * n) * m - 0.0000508636 * m^2 + 0.0000606788 * 2^n * m^2 -
  5.46448E-10 * m^3*)
      | kind_rewrite
        => (*5.67E-03 + 1.33E-04*x + 1.1E-06*x^2*)
-       -0.0698785 + 0.000620073*x + 3.63E-6*x^2 + 9.61722E-10*x^3
+       parse_poly "-0.0698785 + 0.000620073*x + 3.63E-6*x^2 + 9.61722E-10*x^3" x
 (*       -0.0683191 - 0.00156502 * 2^n + 5.57927E-6 * 2^(2 * n) -
  1.73021E-9 * 2^(3 * n) - 0.000478266 * m + 0.00110145 * 2^n * m -
  3.1091E-6 * 2^(2 * n) * m - 0.0000256011 * m^2 + 0.0000292311 * 2^n * m^2 +
  9.61722E-10 * m^3*)
      | kind_autorewrite
        => (*0.0219 + 2.31E-04*x + 1.02E-06*x^2*)
-       -0.0585252 + 0.00014934*x + 4.96778E-6*x^2 + 2.96753E-10*x^3
+       parse_poly "-0.0585252 + 0.00014934*x + 4.96778E-6*x^2 + 2.96753E-10*x^3" x
 (*       -0.0586838 + 0.000158133 *2^n + 4.35038E-7 *2^(2* n) +
  5.13011E-10 *2^(3* n) - 0.000282043 * m + 0.000432666 *2^n* m -
  1.28322E-6 *2^(2 *n) *m - 0.0000307768 *m^2 + 0.0000357446 * 2^n * m^2 +
  2.96753E-10 *m^3*)
      | kind_ssr_rewrite
        => (*3.98E-03 + 2.32E-04*x + 2.01E-06*x^2*)
-       -0.0684302 + 0.000469109*x + 7.5704E-6*x^2 + 5.51547E-10*x^3
+       parse_poly "-0.0684302 + 0.000469109*x + 7.5704E-6*x^2 + 5.51547E-10*x^3" x
 (*       -0.0667915 - 0.00164326 * 2^n + 4.56044E-6 * 2^(2 * n) -
  1.29764E-9 * 2^(3 * n) - 0.000935073 * m + 0.00140678 * 2^n * m -
  2.59326E-6 * 2^(2 * n) * m - 0.0000493663 * m^2 + 0.0000569367 * 2^n * m^2 +
  5.51547E-10 * m^3*)
      | kind_rewrite_lhs_for
-       => 0.256649 - 8.2992E-7 *x + 7.03001E-10 *x^2
+       => parse_poly "0.256649 - 8.2992E-7 *x + 7.03001E-10 *x^2" x
      end%Q.
 
 Definition max_input_of_kind (k : kind_of_rewrite) : option (Z * Z)

@@ -4,8 +4,10 @@ Require Import Coq.Classes.Morphisms.
 Require Import Coq.Setoids.Setoid.
 Require Export Coq.ZArith.ZArith.
 Require Import Coq.Lists.List.
+Require Import Coq.Strings.String.
 Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Util.Bool.Reflect.
+Require Import Rewriter.Util.Option Rewriter.Util.Strings.ParseArithmetic.
 Require Import Rewriter.Rewriter.Examples.PerfTesting.Harness.
 Require Rewriter.Rewriter.Examples.PerfTesting.Sample.
 Require Import Rewriter.Util.plugins.RewriterBuild.
@@ -110,24 +112,30 @@ Local Notation "'eta_kind' ( k' => f ) k"
 Local Lemma sanity : forall T f k, eta_kind (k => f k) k = f k :> T.
 Proof. intros; repeat match goal with |- context[match ?e with _ => _ end] => destruct e end; reflexivity. Qed.
 
+Local Notation parse x := (invert_Some (parseQ_arith_strict x)) (only parsing).
+Local Notation parse_poly_expr p x := (invert_Some (parseQexpr_arith_with_vars [("x"%string, x)] p)) (only parsing).
+Local Notation red_vm_compute x := (ltac:(let z := (eval vm_compute in x) in
+                                          exact z)) (only parsing).
+Local Notation parse_poly p x := (invert_Some (eval_Qexpr_strict (red_vm_compute (parse_poly_expr p x)))) (only parsing).
+
 Definition size_of_kind (k : red_kind) (arg : Z) : Q
   := let x := inject_Z arg in
      match k with
      | vm
-       => 9.56E-04 + 9.75E-06*x + 1.55E-08*x^2
+       => parse_poly "9.56E-04 + 9.75E-06*x + 1.55E-08*x^2" x
      | native
-       => (0.0963 + 6.75E-06*x + 4.29E-09*x^2)
+       => parse_poly "(0.0963 + 6.75E-06*x + 4.29E-09*x^2)" x
           (* * 2 *)
      | cbv
-       => 1.93E-03 + 4.25E-05*x + 3.01E-07*x^2
+       => parse_poly "1.93E-03 + 4.25E-05*x + 3.01E-07*x^2" x
      | lazy
-       => 1.07E-03 + 3.93E-05*x + 7.6E-07*x^2
+       => parse_poly "1.07E-03 + 3.93E-05*x + 7.6E-07*x^2" x
      | rewrite_lhs_for
-       => 1.08365515226278e-06*x^2+0.00014590531005911*x+0.518568221580904
+       => parse_poly "1.08365515226278e-06*x^2+0.00014590531005911*x+0.518568221580904" x
      | cbn
-       => -2.11 + 0.262*x + -3.49E-03*x^2 + 3.16E-05*x^3
+       => parse_poly "-2.11 + 0.262*x + -3.49E-03*x^2 + 3.16E-05*x^3" x
      | simpl
-       => -1.48 + 0.162*x + -1.52E-03*x^2 + 2.45E-05*x^3
+       => parse_poly "-1.48 + 0.162*x + -1.52E-03*x^2 + 2.45E-05*x^3" x
      end%Q.
 
 Definition max_input_of_kind (k : red_kind) : option Z

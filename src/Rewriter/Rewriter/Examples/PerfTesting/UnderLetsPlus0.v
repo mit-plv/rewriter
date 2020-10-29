@@ -4,6 +4,8 @@ Require Import Coq.QArith.QArith.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Setoids.Setoid.
 Require Import Coq.Lists.List.
+Require Import Coq.Strings.String.
+Require Import Rewriter.Util.Option Rewriter.Util.Strings.ParseArithmetic.
 Require Import Rewriter.Rewriter.Examples.PerfTesting.Harness.
 Require Import Rewriter.Util.plugins.RewriterBuild.
 Require Export Rewriter.Rewriter.Examples.PerfTesting.Settings.
@@ -86,18 +88,23 @@ Proof. intros; repeat match goal with |- context[match ?e with _ => _ end] => de
        | _, _ => []
        end.
 *)
+Local Notation parse x := (invert_Some (parseQ_arith_strict x)) (only parsing).
+Local Notation parse_poly_expr p x := (invert_Some (parseQexpr_arith_with_vars [("x"%string, x)] p)) (only parsing).
+Local Notation red_vm_compute x := (ltac:(let z := (eval vm_compute in x) in
+                                          exact z)) (only parsing).
+Local Notation parse_poly p x := (invert_Some (eval_Qexpr_strict (red_vm_compute (parse_poly_expr p x)))) (only parsing).
 
 Definition size_of_kind (k : kind_of_rewrite) (arg : Z) : Q
   := let x := inject_Z arg in
      match k with
      | kind_rewrite_strat bottomup
-       => -9.07 + 0.926*x + -0.0169*x^2 + 9.36E-05*x^3
+       => parse_poly "-9.07 + 0.926*x + -0.0169*x^2 + 9.36E-05*x^3" x
      | kind_rewrite_strat topdown
-       => -9.31 + 0.947*x + -0.0172*x^2 + 9.45E-05*x^3
+       => parse_poly "-9.31 + 0.947*x + -0.0172*x^2 + 9.45E-05*x^3" x
      | kind_setoid_rewrite
-       => -0.074 + 7.79E-03*x + -7.08E-05*x^2 + 1.42E-06*x^3
+       => parse_poly "-0.074 + 7.79E-03*x + -7.08E-05*x^2 + 1.42E-06*x^3" x
      | kind_rewrite_lhs_for
-       => 4.6006941637196e-07*x^2+0.000270526826521966*x+0.170329400639576
+       => parse_poly "4.6006941637196e-07*x^2+0.000270526826521966*x+0.170329400639576" x
      end%Q.
 
 Definition max_input_of_kind (k : kind_of_rewrite) : option Z

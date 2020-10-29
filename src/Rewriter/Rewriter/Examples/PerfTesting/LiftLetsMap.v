@@ -1,9 +1,11 @@
+Require Import Coq.Strings.String.
 Require Import Coq.micromega.Lia.
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.QArith.QArith.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Setoids.Setoid.
 Require Import Coq.Lists.List.
+Require Import Rewriter.Util.Option Rewriter.Util.Strings.ParseArithmetic.
 Require Import Rewriter.Rewriter.Examples.PerfTesting.Harness.
 Require Rewriter.Rewriter.Examples.PerfTesting.Sample.
 Require Export Rewriter.Util.LetIn Rewriter.Rewriter.Examples.PerfTesting.ListRectInstances.
@@ -149,33 +151,39 @@ Proof. cbv [size_of_arg invert_size_of_arg_dumb]; cbn [fst snd]; lia. Qed.
 Local Instance Z_prod_has_compress : Sample.has_compress (Z * Z) Z := size_of_arg.
 Local Instance Z_prod_has_make : Sample.has_make (Z * Z) Z := { make_T := invert_size_of_arg_dumb ; make_T_correct := invert_size_of_arg_dumb_correct }.
 
+Local Notation parse x := (invert_Some (parseQ_arith_strict x)) (only parsing).
+Local Notation parse_poly_expr p x := (invert_Some (parseQexpr_arith_with_vars [("x"%string, x)] p)) (only parsing).
+Local Notation red_vm_compute x := (ltac:(let z := (eval vm_compute in x) in
+                                          exact z)) (only parsing).
+Local Notation parse_poly p x := (invert_Some (eval_Qexpr_strict (red_vm_compute (parse_poly_expr p x)))) (only parsing).
+
 Definition size_of_kind (k : kind_of_rewrite) (arg : Z * Z) : Q
   := let termsize := size_of_arg arg in
      let x := inject_Z termsize in
      (* N.B. vm,cbv,lazy,native are expressions for all the data; the others are for when n=1, and are upper bounds in other cases *)
      match k with
      | kind_rewrite_strat bottomup_bottomup
-       => 0.0144 * Sample.Qexp (0.415 * x)
+       => parse "0.0144" * Sample.Qexp (parse "0.415" * x)
      | kind_rewrite_strat topdown_bottomup
-       => 0.0176 * Sample.Qexp (0.407 * x)
+       => parse "0.0176" * Sample.Qexp (parse "0.407" * x)
      | kind_setoid_rewrite
-       => -9.89E-03 + 0.0529*x + -0.016*x^2 + 2.61E-03*x^3
+       => parse_poly "-9.89E-03 + 0.0529*x + -0.016*x^2 + 2.61E-03*x^3" x
      | kind_rewrite_lhs_for
-       => 0.000112762559379643*x^2+-0.00416717446992044*x+0.167216961702978
+       => parse_poly "0.000112762559379643*x^2+-0.00416717446992044*x+0.167216961702978" x
      | kind_rewrite_lhs_for_skip_cbv
-       => 8.20501484647041e-05*x^2+-0.00308837001696622*x+0.151415270300558
+       => parse_poly "8.20501484647041e-05*x^2+-0.00308837001696622*x+0.151415270300558" x
      | kind_red vm
-       => 5.19E-05 + 5.01E-06*x + 3.5E-10*x^2
+       => parse_poly "5.19E-05 + 5.01E-06*x + 3.5E-10*x^2" x
      | kind_red native
-       => 0.0685 + 1.09E-05*x + 1.71E-10*x^2
+       => parse_poly "0.0685 + 1.09E-05*x + 1.71E-10*x^2" x
      | kind_red cbv
-       => -6.28E-04 + 3.01E-06*x + 1.23E-10*x^2
+       => parse_poly "-6.28E-04 + 3.01E-06*x + 1.23E-10*x^2" x
      | kind_red lazy
-       => -2.68E-03 + 4.72E-06*x + 1.39E-10*x^2
+       => parse_poly "-2.68E-03 + 4.72E-06*x + 1.39E-10*x^2" x
      | kind_red cbn
-       => 0.0183 + 6.42E-04*x + 8.04E-06*x^2
+       => parse_poly "0.0183 + 6.42E-04*x + 8.04E-06*x^2" x
      | kind_red simpl
-       => -0.0116 + 2.8E-04*x + 2.28E-06*x^2
+       => parse_poly "-0.0116 + 2.8E-04*x + 2.28E-06*x^2" x
      end%Q.
 
 Definition max_input_of_kind (k : kind_of_rewrite) : option (Z * Z)

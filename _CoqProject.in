@@ -68,6 +68,11 @@ src/Rewriter/Util/Logic/ProdForall.v
 src/Rewriter/Util/MSetPositive/Equality.v
 src/Rewriter/Util/MSetPositive/Facts.v
 src/Rewriter/Util/Sigma/Related.v
+src/Rewriter/Util/Strings/Ascii.v
+src/Rewriter/Util/Strings/Decimal.v
+src/Rewriter/Util/Strings/ParseArithmetic.v
+src/Rewriter/Util/Strings/String.v
+src/Rewriter/Util/Strings/Parse/Common.v
 src/Rewriter/Util/Tactics/AssertSucceedsPreserveError.v
 src/Rewriter/Util/Tactics/BreakMatch.v
 src/Rewriter/Util/Tactics/CPSId.v
