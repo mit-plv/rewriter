@@ -97,7 +97,7 @@ Definition size_of_kind (k : kind_of_rewrite) (arg : Z) : Q
      | kind_setoid_rewrite
        => -0.074 + 7.79E-03*x + -7.08E-05*x^2 + 1.42E-06*x^3
      | kind_rewrite_lhs_for
-       => -0.074 + 7.79E-03*x + -7.08E-05*x^2 + 1.42E-06*x^3 (* TEMP *)
+       => 4.6006941637196e-07*x^2+0.000270526826521966*x+0.170329400639576
      end%Q.
 
 Definition max_input_of_kind (k : kind_of_rewrite) : option Z

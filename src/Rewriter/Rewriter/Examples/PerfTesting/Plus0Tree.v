@@ -204,7 +204,10 @@ tbl = Map[
    Map[(If[StringLength[#] == 0, Null,
         If[StringMatchQ[#, NumberString], ToExpression[#], #]]) &,
      StringSplit[#, ",", All]] &, StringSplit[datastr, "\n"]];
-cols = Transpose[tbl];
+cols = Transpose[tbl] /. {x_String, ___} :>
+    Sequence[] /;
+     Not[StringMatchQ[x, "param-" ~~ ___] ||
+       StringMatchQ[x, ___ ~~ "-regression-" ~~ ___ ~~ "-real"]];
 data = Map[{#[[1]],
       Transpose[{Drop[cols[[1]], 1], Drop[#, 1]}] /. {_, Null} :>
         Sequence[]} &, cols] /. {x_String, _} :>
@@ -223,7 +226,7 @@ fits2 = Map[{#[[1]],
      NonlinearModelFit[#[[2]],
       a + b X + c Y + d X Y + e X^2 + f Y^2 /. {X -> 2^n, Y -> m}, {a,
         b, c, d, e, f}, {n, m}]} &, data3D];
-ListPlot[Map[#[[2]] &, data], PlotLegends -> Map[#[[1]] &, data]]
+ListPlot[Map[#[[2]] &, data], PlotLegends -> Map[#[[1]] &, data], PlotRange -> Full]
 ListPointPlot3D[Map[#[[2]] &, data3D],
  PlotLegends -> Map[#[[1]] &, data3D], PlotRange -> Full,
  AxesLabel -> {n, m, z}]
@@ -232,9 +235,9 @@ Table[Function[{d}, {Show[
       PlotLegends -> Map[#[[1]] &, data3D[[{d}]]],
       PlotRange -> {Full, Full, {0, 10}}, AxesLabel -> {n, m, z}],
      Plot3D[fits[[d]][[2]][n, m], {n, 0, 10}, {m, 0, 1500}(*,
-      PlotLegends->{Normal[fits[[d]][[2]]]}*)],
-     ImageSize -> Large
-     ], Normal[fits[[d]][[2]]]}][d], {d, 1, Length[data3D]}]
+      PlotLegends\[Rule]{Normal[fits[[d]][[2]]]}*)],
+     ImageSize -> Large], Normal[fits[[d]][[2]]]}][d], {d, 1,
+  Length[data3D]}]
 Map[{#[[1]], Normal[#[[2]]] /. n -> 0 /. m -> x} &, fits]
 Map[{#[[1]], Normal[#[[2]]] /. n -> 0 /. m -> x} &, fits2]
 (*ExpandAll[
@@ -290,7 +293,7 @@ Definition size_of_kind (k : kind_of_rewrite) (arg : Z * Z) : Q
  2.59326E-6 * 2^(2 * n) * m - 0.0000493663 * m^2 + 0.0000569367 * 2^n * m^2 +
  5.51547E-10 * m^3*)
      | kind_rewrite_lhs_for
-       => 6.40827465965626e-08*x^2+2.93866959009441e-05*x+0.234353695282892
+       => 0.256649 - 8.2992E-7 *x + 7.03001E-10 *x^2
      end%Q.
 
 Definition max_input_of_kind (k : kind_of_rewrite) : option (Z * Z)
