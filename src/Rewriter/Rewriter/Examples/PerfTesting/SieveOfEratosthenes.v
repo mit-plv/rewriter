@@ -122,20 +122,20 @@ Definition size_of_kind (k : red_kind) (arg : Z) : Q
   := let x := inject_Z arg in
      match k with
      | vm
-       => parse_poly "9.56E-04 + 9.75E-06*x + 1.55E-08*x^2" x
+       => parse_poly "9.56E-04 + 9.75E-06*x + 1.55E-08*x^2"%string x
      | native
-       => parse_poly "(0.0963 + 6.75E-06*x + 4.29E-09*x^2)" x
+       => parse_poly "(0.0963 + 6.75E-06*x + 4.29E-09*x^2)"%string x
           (* * 2 *)
      | cbv
-       => parse_poly "1.93E-03 + 4.25E-05*x + 3.01E-07*x^2" x
+       => parse_poly "1.93E-03 + 4.25E-05*x + 3.01E-07*x^2"%string x
      | lazy
-       => parse_poly "1.07E-03 + 3.93E-05*x + 7.6E-07*x^2" x
+       => parse_poly "1.07E-03 + 3.93E-05*x + 7.6E-07*x^2"%string x
      | rewrite_lhs_for
-       => parse_poly "1.08365515226278e-06*x^2+0.00014590531005911*x+0.518568221580904" x
+       => parse_poly "1.08365515226278e-06*x^2+0.00014590531005911*x+0.518568221580904"%string x
      | cbn
-       => parse_poly "-2.11 + 0.262*x + -3.49E-03*x^2 + 3.16E-05*x^3" x
+       => parse_poly "-2.11 + 0.262*x + -3.49E-03*x^2 + 3.16E-05*x^3"%string x
      | simpl
-       => parse_poly "-1.48 + 0.162*x + -1.52E-03*x^2 + 2.45E-05*x^3" x
+       => parse_poly "-1.48 + 0.162*x + -1.52E-03*x^2 + 2.45E-05*x^3"%string x
      end%Q.
 
 Definition max_input_of_kind (k : red_kind) : option Z

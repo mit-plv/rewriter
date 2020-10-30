@@ -167,23 +167,23 @@ Definition size_of_kind (k : kind_of_rewrite) (arg : Z * Z) : Q
      | kind_rewrite_strat topdown_bottomup
        => parse "0.0176" * Sample.Qexp (parse "0.407" * x)
      | kind_setoid_rewrite
-       => parse_poly "-9.89E-03 + 0.0529*x + -0.016*x^2 + 2.61E-03*x^3" x
+       => parse_poly "-9.89E-03 + 0.0529*x + -0.016*x^2 + 2.61E-03*x^3"%string x
      | kind_rewrite_lhs_for
-       => parse_poly "0.000112762559379643*x^2+-0.00416717446992044*x+0.167216961702978" x
+       => parse_poly "0.000112762559379643*x^2+-0.00416717446992044*x+0.167216961702978"%string x
      | kind_rewrite_lhs_for_skip_cbv
-       => parse_poly "8.20501484647041e-05*x^2+-0.00308837001696622*x+0.151415270300558" x
+       => parse_poly "8.20501484647041e-05*x^2+-0.00308837001696622*x+0.151415270300558"%string x
      | kind_red vm
-       => parse_poly "5.19E-05 + 5.01E-06*x + 3.5E-10*x^2" x
+       => parse_poly "5.19E-05 + 5.01E-06*x + 3.5E-10*x^2"%string x
      | kind_red native
-       => parse_poly "0.0685 + 1.09E-05*x + 1.71E-10*x^2" x
+       => parse_poly "0.0685 + 1.09E-05*x + 1.71E-10*x^2"%string x
      | kind_red cbv
-       => parse_poly "-6.28E-04 + 3.01E-06*x + 1.23E-10*x^2" x
+       => parse_poly "-6.28E-04 + 3.01E-06*x + 1.23E-10*x^2"%string x
      | kind_red lazy
-       => parse_poly "-2.68E-03 + 4.72E-06*x + 1.39E-10*x^2" x
+       => parse_poly "-2.68E-03 + 4.72E-06*x + 1.39E-10*x^2"%string x
      | kind_red cbn
-       => parse_poly "0.0183 + 6.42E-04*x + 8.04E-06*x^2" x
+       => parse_poly "0.0183 + 6.42E-04*x + 8.04E-06*x^2"%string x
      | kind_red simpl
-       => parse_poly "-0.0116 + 2.8E-04*x + 2.28E-06*x^2" x
+       => parse_poly "-0.0116 + 2.8E-04*x + 2.28E-06*x^2"%string x
      end%Q.
 
 Definition max_input_of_kind (k : kind_of_rewrite) : option (Z * Z)

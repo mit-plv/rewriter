@@ -98,13 +98,13 @@ Definition size_of_kind (k : kind_of_rewrite) (arg : Z) : Q
   := let x := inject_Z arg in
      match k with
      | kind_rewrite_strat bottomup
-       => parse_poly "-9.07 + 0.926*x + -0.0169*x^2 + 9.36E-05*x^3" x
+       => parse_poly "-9.07 + 0.926*x + -0.0169*x^2 + 9.36E-05*x^3"%string x
      | kind_rewrite_strat topdown
-       => parse_poly "-9.31 + 0.947*x + -0.0172*x^2 + 9.45E-05*x^3" x
+       => parse_poly "-9.31 + 0.947*x + -0.0172*x^2 + 9.45E-05*x^3"%string x
      | kind_setoid_rewrite
-       => parse_poly "-0.074 + 7.79E-03*x + -7.08E-05*x^2 + 1.42E-06*x^3" x
+       => parse_poly "-0.074 + 7.79E-03*x + -7.08E-05*x^2 + 1.42E-06*x^3"%string x
      | kind_rewrite_lhs_for
-       => parse_poly "4.6006941637196e-07*x^2+0.000270526826521966*x+0.170329400639576" x
+       => parse_poly "4.6006941637196e-07*x^2+0.000270526826521966*x+0.170329400639576"%string x
      end%Q.
 
 Definition max_input_of_kind (k : kind_of_rewrite) : option Z
