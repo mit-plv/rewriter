@@ -395,5 +395,8 @@ Ltac constr_run_tac f x :=
   | _ => f x
   end.
 
+Ltac runtests_step_arg args_of_size describe_goal step_goal redgoal time_solve_goal sz extra_args :=
+  runtests_step_arg_constr args_of_size describe_goal ltac:(fun n G => constr_run_tac step_goal n) ltac:(fun _ G => G) redgoal ltac:(fun n G args => time_solve_goal n args) sz () extra_args.
+
 Ltac runtests_step args_of_size describe_goal step_goal redgoal time_solve_goal sz :=
-  runtests_step_arg_constr args_of_size describe_goal ltac:(fun n G => constr_run_tac step_goal n) ltac:(fun _ G => G) redgoal ltac:(fun n G args => time_solve_goal n) sz () ().
+  runtests_step_arg args_of_size describe_goal step_goal redgoal ltac:(fun n args => time_solve_goal n) sz ().
