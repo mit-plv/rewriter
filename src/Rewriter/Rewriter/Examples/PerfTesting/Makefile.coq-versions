@@ -4,5 +4,5 @@ PERF_ABS_DIR := $(patsubst %/,%,$(dir $(mkfile_path)))
 include $(PERF_ABS_DIR)/Makefile.coq-versions-lite
 include $(PERF_ABS_DIR)/Makefile.coq.conf
 
-COQ_VERSION_OCAML_VERSION := $(shell $(COQMF_OCAMLFIND) opt -version 2>/dev/null)
-COQ_VERSION_OCAML_CONFIG_CMD := $(COQMF_OCAMLFIND) opt -config # 2>/dev/null
+COQ_VERSION_OCAML_VERSION := $(shell "$(COQMF_OCAMLFIND)" opt -version 2>/dev/null)
+COQ_VERSION_OCAML_CONFIG_CMD := "$(COQMF_OCAMLFIND)" opt -config # 2>/dev/null
