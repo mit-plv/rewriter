@@ -1372,12 +1372,17 @@ Module Compilers.
            | expr.Ident t idc => Some idc
            | _ => None
            end.
-      Definition invert_App {t} (e : expr t)
-        : option { s : _ & expr (s -> t) * expr s }%type
+      Definition invert_App_cps {t P Q} (e : expr t)
+                 (F1 : forall s d, expr (s -> d) -> P s d)
+                 (F2 : forall t, expr t -> Q t)
+        : option { s : _ & P s t * Q s }%type
         := match e with
-           | expr.App A B f x => Some (existT _ A (f, x))
+           | expr.App A B f x => Some (existT _ A (F1 _ _ f, F2 _ x))
            | _ => None
            end.
+      Definition invert_App {t} (e : expr t)
+        : option { s : _ & expr (s -> t) * expr s }%type
+        := invert_App_cps e (fun _ _ x => x) (fun _ x => x).
       Definition invert_Abs {s d} (e : expr (s -> d))
         : option (var s -> expr d)%type
         := match e in expr.expr t return option (if_arrow (fun s d => var s -> expr d) t) with
@@ -1390,25 +1395,40 @@ Module Compilers.
            | expr.LetIn A B x f => Some (existT _ A (x, f))
            | _ => None
            end.
+      Definition invert_App2_cps {t P Q R} (e : expr t)
+                 (F1 : forall s d, expr (s -> d) -> P s d)
+                 (F2 : forall t, expr t -> Q t)
+                 (F3 : forall t, expr t -> R t)
+        : option { ss' : _ & P (fst ss') (snd ss' -> t)%etype * Q (fst ss') * R (snd ss') }%type
+        := (v1 <- invert_App_cps e (fun _ _ f => invert_App_cps f F1 F2) F3;
+           let '(existT s (v2, r)) := v1 in
+           v2 <- v2;
+           let '(existT s' (p, q)) := v2 in
+           Some (existT _ (s', s) (p, q, r)))%option.
       Definition invert_App2 {t} (e : expr t)
         : option { ss' : _ & expr (fst ss' -> snd ss' -> t) * expr (fst ss') * expr (snd ss') }%type
-        := (e <- invert_App e;
-              let '(existT s' (f', x')) := e in
-              f' <- invert_App f';
-                let '(existT s (f, x)) := f' in
-                Some (existT _ (s, s') (f, x, x')))%option.
+        := invert_App2_cps e (fun _ _ x => x) (fun _ x => x) (fun _ x => x).
+      Definition invert_AppIdent_cps {t P} (e : expr t)
+                 (F : forall t, expr t -> P t)
+        : option { s : _ & ident (s -> t) * P s }%type
+        := (e <- invert_App_cps e (fun _ _ f => f) F;
+           let '(existT s (f, x)) := e in
+           f' <- invert_Ident f;
+           Some (existT _ s (f', x)))%option.
       Definition invert_AppIdent {t} (e : expr t)
         : option { s : _ & ident (s -> t) * expr s }%type
-        := (e <- invert_App e;
-              let '(existT s (f, x)) := e in
-              f' <- invert_Ident f;
-                Some (existT _ s (f', x)))%option.
+        := invert_AppIdent_cps e (fun _ x => x).
+      Definition invert_AppIdent2_cps {t Q R} (e : expr t)
+                 (F1 : forall t, expr t -> Q t)
+                 (F2 : forall t, expr t -> R t)
+        : option { ss' : _ & ident (fst ss' -> snd ss' -> t) * Q (fst ss') * R (snd ss') }%type
+        := (e <- invert_App2_cps e (fun _ _ x => x) F1 F2;
+           let '(existT ss' (f, x, x')) := e in
+           f' <- invert_Ident f;
+           Some (existT _ ss' (f', x, x')))%option.
       Definition invert_AppIdent2 {t} (e : expr t)
         : option { ss' : _ & ident (fst ss' -> snd ss' -> t) * expr (fst ss') * expr (snd ss') }%type
-        := (e <- invert_App2 e;
-              let '(existT ss' (f, x, x')) := e in
-              f' <- invert_Ident f;
-                Some (existT _ ss' (f', x, x')))%option.
+        := invert_AppIdent2_cps e (fun _ x => x) (fun _ x => x).
       Definition invert_Var {t} (e : expr t)
         : option (var t)
         := match e with
@@ -1571,15 +1591,20 @@ Module Compilers.
         : option (list (expr (type.base t)))
         := reflect_list_cps e id.
 
+      Definition invert_pair_cps {t P Q} (e : expr t)
+                 (F1 : forall t, expr t -> P t)
+                 (F2 : forall t, expr t -> Q t)
+                 (A := match t with type.base (base.type.prod A B) => A | _ => t end)
+                 (B := match t with type.base (base.type.prod A B) => B | _ => t end)
+        : option (P A * Q B)
+        := (v <- invert_AppIdent2_cps e F1 F2;
+           let '(existT _ (maybe_pair, a, b)) := v in
+           if is_pair maybe_pair
+           then a <- try_transport a; b <- try_transport b; Some (a, b)%core
+           else None)%option.
       Definition invert_pair {A B} (e : expr (A * B))
         : option (expr A * expr B)
-        := match e with
-           | #maybe_pair @ a @ b
-             => if is_pair maybe_pair
-                then a <- try_transport a; b <- try_transport b; Some (a, b)%core
-                else None
-           | _ => None
-           end%expr_pat%expr%option.
+        := invert_pair_cps e (fun _ x => x) (fun _ x => x).
       Definition invert_Literal {t} (e : expr t)
         : option (type.interp (base.interp base_interp) t)
         := match e with
@@ -1619,15 +1644,20 @@ Module Compilers.
            | false, None => None
            end.
 
+      Definition invert_cons_cps {t P Q} (e : expr t)
+                 (F1 : forall t, expr t -> P t)
+                 (F2 : forall t, expr t -> Q t)
+                 (A := match t with type.base (base.type.list A) => A | _ => base.type.unit end)
+        : option (P A * Q (base.type.list A))
+        := (v <- invert_AppIdent2_cps e F1 F2;
+           let '(existT _ (maybe_cons, a, b)) := v in
+           if is_cons maybe_cons
+           then a <- try_transport a; b <- try_transport b; Some (a, b)%core
+           else None)%option.
+
       Definition invert_cons {t} (e : expr (base.type.list t))
         : option (expr t * expr (base.type.list t))
-        := match invert_AppIdent2 e with
-           | Some (existT _ (idc, x, xs))
-             => if is_cons idc
-                then (x' <- try_transport x; xs' <- try_transport xs; Some (x', xs'))%option
-                else None
-           | _ => None
-           end.
+        := invert_cons_cps e (fun _ x => x) (fun _ x => x).
 
       Fixpoint reflect_smart_Literal {t : base_type} : expr t -> option (base.interp base_interp t)
         := match t with

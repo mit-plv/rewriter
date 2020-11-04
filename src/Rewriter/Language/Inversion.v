@@ -481,6 +481,29 @@ Module Compilers.
           end;
           t'.
 
+        Lemma invert_App_cps_id {t P Q e F1 F2} : @invert_expr.invert_App_cps _ _ _ t P Q e F1 F2 = option_map (fun '(existT s (x, y)) => existT _ s (F1 _ _ x, F2 _ y)) (@invert_expr.invert_App base_type ident var _ e).
+        Proof. now destruct e. Qed.
+        Lemma invert_App2_cps_id {t P Q R e F1 F2 F3} : @invert_expr.invert_App2_cps _ _ _ t P Q R e F1 F2 F3 = option_map (fun '(existT ss' (x, y, z)) => existT _ ss' (F1 _ _ x, F2 _ y, F3 _ z)) (@invert_expr.invert_App2 base_type ident var _ e).
+        Proof.
+          cbv [invert_expr.invert_App2 invert_expr.invert_App2_cps];
+            repeat first [ reflexivity
+                         | rewrite !invert_App_cps_id
+                         | progress cbv [option_map Option.bind]
+                         | break_innermost_match_step ].
+        Qed.
+        Lemma invert_AppIdent_cps_id {t P e F} : @invert_expr.invert_AppIdent_cps _ _ _ t P e F = option_map (fun '(existT s (idc, x)) => existT _ s (idc, F _ x)) (@invert_expr.invert_AppIdent base_type ident var _ e).
+        Proof.
+          cbv [invert_expr.invert_AppIdent_cps invert_expr.invert_AppIdent];
+            rewrite !invert_App_cps_id; cbv [option_map Option.bind];
+              break_innermost_match; reflexivity.
+        Qed.
+        Lemma invert_AppIdent2_cps_id {t Q R e F1 F2} : @invert_expr.invert_AppIdent2_cps _ _ _ t Q R e F1 F2 = option_map (fun '(existT ss' (idc, x, y)) => existT _ ss' (idc, F1 _ x, F2 _ y)) (@invert_expr.invert_AppIdent2 base_type ident var _ e).
+        Proof.
+          cbv [invert_expr.invert_AppIdent2 invert_expr.invert_AppIdent2_cps];
+            rewrite !invert_App2_cps_id; cbv [option_map Option.bind];
+              break_innermost_match; reflexivity.
+        Qed.
+
         Lemma invert_Ident_Some {t} {e : expr t} {v} : invert_expr.invert_Ident e = Some v -> e = expr.Ident v.
         Proof. t. Defined.
         Lemma invert_Var_Some {t} {e : expr t} {v} : invert_expr.invert_Var e = Some v -> e = expr.Var v.
@@ -493,7 +516,7 @@ Module Compilers.
         Proof. t. Defined.
 
         Local Ltac t'' :=
-          cbv [invert_expr.invert_App2 invert_expr.invert_AppIdent2 invert_expr.invert_App invert_expr.invert_AppIdent invert_expr.invert_Ident]; intros;
+          cbv [invert_expr.invert_App2 invert_expr.invert_AppIdent2 invert_expr.invert_App invert_expr.invert_AppIdent invert_expr.invert_Ident invert_expr.invert_App2_cps invert_expr.invert_App_cps invert_expr.invert_AppIdent_cps invert_expr.invert_AppIdent2_cps]; intros;
           repeat first [ reflexivity
                        | progress subst
                        | progress cbn [Option.bind projT1 projT2 proj1_sig proj2_sig fst snd type.final_codomain eq_rect eq_ind eq_ind_r] in *
@@ -639,16 +662,24 @@ Module Compilers.
         => guard_tac H; apply (@invert_App_curried_Some_sig base_type ident var t e args) in H
       | [ H : @invert_expr.invert_AppIdent_curried ?base_type ?ident ?var ?t ?e = Some ?v |- _ ]
         => guard_tac H; apply (@invert_AppIdent_curried_Some_sig base_type ident var t e) in H
+      | [ H : context[@invert_expr.invert_App_cps ?base_type ?ident ?var ?t ?P ?Q ?e ?F1 ?F2] |- _ ]
+        => guard_tac H; rewrite (@invert_App_cps_id base_type ident var t P Q e F1 F2) in H; cbv [option_map] in H
+      | [ H : context[@invert_expr.invert_App2_cps ?base_type ?ident ?var ?t ?P ?Q ?R ?e ?F1 ?F2 ?F3] |- _ ]
+        => guard_tac H; rewrite (@invert_App2_cps_id base_type ident var t P Q R e F1 F2 F3) in H; cbv [option_map] in H
+      | [ H : context[@invert_expr.invert_AppIdent_cps ?base_type ?ident ?var ?t ?P ?e ?F1] |- _ ]
+        => guard_tac H; rewrite (@invert_AppIdent_cps_id base_type ident var t P e F1) in H; cbv [option_map] in H
+      | [ H : context[@invert_expr.invert_AppIdent2_cps ?base_type ?ident ?var ?t ?P ?Q ?e ?F1 ?F2] |- _ ]
+        => guard_tac H; rewrite (@invert_AppIdent2_cps_id base_type ident var t P Q e F1 F2) in H; cbv [option_map] in H
       end.
     Ltac invert_subst_simple_step :=
       first [ progress cbv beta iota in *
             | invert_subst_simple_step_helper ltac:(fun _ => idtac)
-            | subst ].
+            | progress subst ].
     Ltac invert_subst_simple := repeat invert_subst_simple_step.
 
     Ltac induction_expr_in_using H rect :=
       induction H as [H] using (rect _ _ _);
-      cbv [code invert_expr.invert_Var invert_expr.invert_LetIn invert_expr.invert_App invert_expr.invert_LetIn invert_expr.invert_Ident invert_expr.invert_Abs] in H;
+      cbv [code invert_expr.invert_Var invert_expr.invert_LetIn invert_expr.invert_App invert_expr.invert_LetIn invert_expr.invert_Ident invert_expr.invert_Abs invert_expr.invert_App_cps Option.bind] in H;
       try lazymatch type of H with
           | Some _ = Some _ => apply option_leq_to_eq in H; unfold option_eq in H
           | Some _ = None => exfalso; clear -H; solve [ inversion H ]
@@ -781,10 +812,20 @@ Module Compilers.
                 | progress eliminate_hprop_eq ].
         Local Ltac t := repeat t_step.
 
+        Lemma invert_pair_cps_id {A B P Q e F1 F2} : @invert_expr.invert_pair_cps _ _ _ _ _ _ (A * B) P Q e F1 F2 = option_map (fun '(a, b) => (F1 _ a, F2 _ b)) (invert_expr.invert_pair (var:=var) e).
+        Proof.
+          cbv [invert_expr.invert_pair invert_pair_cps].
+          rewrite !invert_AppIdent2_cps_id; cbv [option_map]; t.
+        Qed.
+        Lemma invert_cons_cps_id {t P Q e F1 F2} : @invert_expr.invert_cons_cps _ _ _ _ _ _ (base.type.list t) P Q e F1 F2 = option_map (fun '(a, b) => (F1 _ a, F2 _ b)) (invert_expr.invert_cons (var:=var) e).
+        Proof.
+          cbv [invert_expr.invert_cons invert_cons_cps].
+          rewrite !invert_AppIdent2_cps_id; cbv [option_map]; t.
+        Qed.
         Lemma invert_pair_Some_iff {A B} {e : expr (A * B)} {v}
           : invert_expr.invert_pair e = Some v <-> e = (fst v, snd v)%expr.
-        Proof. cbv [invert_expr.invert_pair]; t. Qed.
-        Lemma invert_Literal_Some_iff {t} {e : expr t} {v}
+        Proof. cbv [invert_expr.invert_pair invert_expr.invert_pair_cps Option.bind]; t. Qed.
+       Lemma invert_Literal_Some_iff {t} {e : expr t} {v}
           : invert_expr.invert_Literal e = Some v <-> match t return expr t -> type.interp (base.interp base_interp) t -> Prop with
                                                       | type.base (base.type.type_base t) => fun e v => e = expr.Ident (ident.ident_Literal (t:=t) v)
                                                       | _ => fun _ _ => False
@@ -795,7 +836,7 @@ Module Compilers.
         Proof. cbv [invert_expr.invert_nil]; t. Qed.
         Lemma invert_cons_Some_iff {t} {e : expr (base.type.list t)} {v}
           : invert_expr.invert_cons e = Some v <-> e = (fst v :: snd v)%expr.
-        Proof. cbv [invert_expr.invert_cons]; t. Qed.
+        Proof. cbv [invert_expr.invert_cons invert_expr.invert_cons_cps Option.bind]; t. Qed.
         Lemma invert_None_Some_iff {t} {e : expr (base.type.option t)}
           : invert_expr.invert_None e = true <-> e = (#ident.ident_None)%expr.
         Proof. cbv [invert_expr.invert_None]; t. Qed.
@@ -1088,10 +1129,12 @@ Module Compilers.
       first [ invert_subst_simple_step_helper guard_tac
             | match goal with
               | [ H : invert_expr.invert_pair ?e = Some _ |- _ ] => guard_tac H; apply invert_pair_Some in H
+              | [ H : context[invert_expr.invert_pair_cps ?e ?F1 ?F2] |- _ ] => guard_tac H; rewrite invert_pair_cps_id in H; cbv [option_map] in H
               | [ H : invert_expr.invert_Literal ?e = Some _ |- _ ] => guard_tac H; apply invert_Literal_Some in H
               | [ H : invert_expr.reflect_smart_Literal ?e = Some _ |- _ ] => guard_tac H; apply reflect_smart_Literal_Some in H
               | [ H : invert_expr.invert_nil ?e = true |- _ ] => guard_tac H; apply invert_nil_Some in H
               | [ H : invert_expr.invert_cons ?e = Some _ |- _ ] => guard_tac H; apply invert_cons_Some in H
+              | [ H : context[invert_expr.invert_cons_cps ?e ?F1 ?F2] |- _ ] => guard_tac H; rewrite invert_cons_cps_id in H; cbv [option_map] in H
               | [ H : invert_expr.invert_tt ?e = true |- _ ] => guard_tac H; apply invert_tt_Some in H
               | [ H : invert_expr.reflect_list ?e = Some _ |- _ ]
                 => guard_tac H; first [ apply reflect_list_Some_nil in H | apply reflect_list_Some in H ];
