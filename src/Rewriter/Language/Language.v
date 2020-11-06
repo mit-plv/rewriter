@@ -285,11 +285,11 @@ Module Compilers.
            end.
     End interpM.
 
-    Definition domain {base_type} (default : base_type) (t : type base_type)
+    Definition domain {base_type} (t : type base_type)
       : type base_type
       := match t with
          | arrow s d => s
-         | base _ => base default
+         | base _ => t
          end.
 
     Definition codomain {base_type} (t : type base_type) : type base_type
