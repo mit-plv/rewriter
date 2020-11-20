@@ -247,7 +247,7 @@ Module Compilers.
             Context (all_pattern_idents : list { T : Type & T })
                     (pattern_ident_index : forall t, cident t -> nat)
                     (eta_pattern_ident_cps_gen
-                     : forall {T : forall t, cident t -> Type}
+                     : forall (T : forall t, cident t -> Type)
                               (f : forall t idc, T t idc),
                         { f' : forall t idc, T t idc | forall t idc, f' t idc = f t idc }).
             Context (ident : Set)
@@ -255,7 +255,7 @@ Module Compilers.
                     (ident_index : ident -> nat)
                     (ident_index_idempotent : forall idc, List.nth_error all_idents (ident_index idc) = Some idc)
                     (eta_ident_cps_gen
-                     : forall {T : ident -> Type}
+                     : forall (T : ident -> Type)
                               (f : forall idc, T idc),
                         { f' : forall idc, T idc | forall idc, f' idc = f idc }).
 
@@ -500,7 +500,7 @@ Module Compilers.
           Context (all_pattern_idents : list { T : Type & T })
                   (pattern_ident_index : forall t, cident t -> nat)
                   (eta_pattern_ident_cps_gen eta_pattern_ident_cps_gen_expand_literal
-                   : forall {T : forall t, cident t -> Type}
+                   : forall (T : forall t, cident t -> Type)
                             (f : forall t idc, T t idc),
                       { f' : forall t idc, T t idc | forall t idc, f' t idc = f t idc }).
           Context (raw_ident : Set)
@@ -508,12 +508,12 @@ Module Compilers.
                   (raw_ident_index : raw_ident -> nat)
                   (raw_ident_index_idempotent : forall idc, List.nth_error all_raw_idents (raw_ident_index idc) = Some idc)
                   (eta_raw_ident_cps_gen
-                   : forall {T : raw_ident -> Type}
+                   : forall (T : raw_ident -> Type)
                             (f : forall idc, T idc),
                       { f' : forall idc, T idc | forall idc, f' idc = f idc }).
           Context (raw_ident_infos_of : raw_ident -> Raw.ident.ident_infos)
                   (split_raw_ident_gen
-                   : forall {t} (idc : cident t),
+                   : forall t (idc : cident t),
                       { ridc : raw_ident
                                & { args : Raw.ident.ident_args (preinfos (raw_ident_infos_of ridc))
                                  | { pf : _ = _
