@@ -442,7 +442,7 @@ Module Compilers.
         Local Notation base_type := (base.type base).
         Local Notation pattern_base_type := (pattern.base.type base).
         Context {ident var : type.type base_type -> Type}
-                (eta_ident_cps : forall {T : type.type base_type -> Type} {t} (idc : ident t)
+                (eta_ident_cps : forall (T : type.type base_type -> Type) t (idc : ident t)
                                         (f : forall t', ident t' -> T t'),
                     T t)
                 {pident : type.type pattern_base_type -> Type}

@@ -65,7 +65,7 @@ Module Compilers.
                 {try_make_transport_base_cps : type.try_make_transport_cpsT base}
                 {try_make_transport_base_cps_correct : type.try_make_transport_cps_correctT base}
                 {ident : type -> Type}
-                (eta_ident_cps : forall {T : type -> Type} {t} (idc : ident t)
+                (eta_ident_cps : forall (T : type -> Type) t (idc : ident t)
                                         (f : forall t', ident t' -> T t'),
                     T t)
                 {pident : ptype -> Type}
