@@ -1,0 +1,10 @@
+Params: n= 5
+Tactic call rewrite_strat(bottomup)-regression-exponential ran for 0.005 secs (0.005u,0.s) (success)
+Params: n= 7
+Tactic call rewrite_strat(bottomup)-regression-exponential ran for 0.008 secs (0.008u,0.s) (success)
+Params: n= 10
+Tactic call rewrite_strat(bottomup)-regression-exponential ran for 0.08 secs (0.08u,0.s) (success)
+Params: n= 12
+Tactic call rewrite_strat(bottomup)-regression-exponential ran for 0.016 secs (0.016u,0.s) (success)
+Params: n= 15
+Tactic call rewrite_strat(bottomup)-regression-exponential ran for 0.023 secs (0.023u,0.s) (success)

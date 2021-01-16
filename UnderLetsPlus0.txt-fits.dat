@@ -1,0 +1,4 @@
+Rewrite-lhs-for-regression-quadratic: 5.20146441720775e-07*x^2+0.000289664622400087*x+0.0454203838793986
+rewrite-strat(bottomup)-regression-exponential: 0.99996048204028*Qexp(0.993742174467433*x)
+rewrite-strat(topdown)-regression-exponential: 0.999960475681799*Qexp(0.99374116757676*x)
+setoid-rewrite-regression-cubic: 7.93774049643002e-08*x^3+3.85362852650737e-05*x^2+0.00113242724348798*x+-0.00792351503122098

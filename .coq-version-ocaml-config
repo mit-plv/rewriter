@@ -1,0 +1,53 @@
+version: 4.06.1
+standard_library_default: /home/jgross/.opam/4.06.1+fp/lib/ocaml
+standard_library: /home/jgross/.opam/4.06.1+fp/lib/ocaml
+standard_runtime: /home/jgross/.opam/4.06.1+fp/bin/ocamlrun
+ccomp_type: cc
+c_compiler: gcc
+ocamlc_cflags: -O2 -fno-strict-aliasing -fwrapv -g  -fno-omit-frame-pointer -fPIC
+ocamlc_cppflags: -D_FILE_OFFSET_BITS=64 -D_REENTRANT
+ocamlopt_cflags: -O2 -fno-strict-aliasing -fwrapv -g  -fno-omit-frame-pointer
+ocamlopt_cppflags: -D_FILE_OFFSET_BITS=64 -D_REENTRANT
+bytecomp_c_compiler: gcc -O2 -fno-strict-aliasing -fwrapv -g  -fno-omit-frame-pointer -fPIC -D_FILE_OFFSET_BITS=64 -D_REENTRANT
+native_c_compiler: gcc -O2 -fno-strict-aliasing -fwrapv -g  -fno-omit-frame-pointer -D_FILE_OFFSET_BITS=64 -D_REENTRANT
+bytecomp_c_libraries: -lm  -ldl -lcurses -lpthread                  
+native_c_libraries: -lm  -ldl
+native_pack_linker: ld -r -o 
+ranlib: ranlib
+cc_profile: -pg
+architecture: amd64
+model: default
+int_size: 63
+word_size: 64
+system: linux
+asm: as
+asm_cfi_supported: true
+with_frame_pointers: true
+ext_exe: 
+ext_obj: .o
+ext_asm: .s
+ext_lib: .a
+ext_dll: .so
+os_type: Unix
+default_executable_name: a.out
+systhread_supported: true
+host: x86_64-unknown-linux-gnu
+target: x86_64-unknown-linux-gnu
+profiling: true
+flambda: false
+spacetime: false
+safe_string: false
+default_safe_string: true
+flat_float_array: true
+afl_instrument: false
+windows_unicode: false
+exec_magic_number: Caml1999X011
+cmi_magic_number: Caml1999I022
+cmo_magic_number: Caml1999O022
+cma_magic_number: Caml1999A022
+cmx_magic_number: Caml1999Y022
+cmxa_magic_number: Caml1999Z022
+ast_impl_magic_number: Caml1999M022
+ast_intf_magic_number: Caml1999N022
+cmxs_magic_number: Caml1999D022
+cmt_magic_number: Caml1999T022

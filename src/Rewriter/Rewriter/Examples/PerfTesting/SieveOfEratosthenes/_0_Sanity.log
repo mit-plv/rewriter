@@ -1,0 +1,18 @@
+Params: n= 2
+Tactic call vm_compute-regression-quadratic ran for 0. secs (0.u,0.s) (success)
+Params: n= 3
+Tactic call vm_compute-regression-quadratic ran for 0. secs (0.u,0.s) (success)
+Params: n= 4
+Tactic call vm_compute-regression-quadratic ran for 0. secs (0.u,0.s) (success)
+Params: n= 5
+Tactic call vm_compute-regression-quadratic ran for 0. secs (0.u,0.s) (success)
+Params: n= 6
+Tactic call vm_compute-regression-quadratic ran for 0. secs (0.u,0.s) (success)
+Params: n= 7
+Tactic call vm_compute-regression-quadratic ran for 0. secs (0.u,0.s) (success)
+Params: n= 8
+Tactic call vm_compute-regression-quadratic ran for 0. secs (0.u,0.s) (success)
+Params: n= 9
+Tactic call vm_compute-regression-quadratic ran for 0. secs (0.u,0.s) (success)
+Params: n= 10
+Tactic call vm_compute-regression-quadratic ran for 0. secs (0.u,0.s) (success)

@@ -90,30 +90,30 @@ src/Rewriter/Util/plugins/inductive_from_elim_plugin.ml4
 src/Rewriter/Util/plugins/rewriter_build_plugin.ml4
 src/Rewriter/Util/plugins/strategy_tactic_plugin.ml4
 
-/.coq-version
-/.coq-version-compilation-date
-/.coq-version-config
-/.coq-version-ocaml-config
-/.coq-version-ocaml-version
-/.coq-version-short
-/.coq-version-short-date
-/.machine
-/.machine-extended
+#/.coq-version
+#/.coq-version-compilation-date
+#/.coq-version-config
+#/.coq-version-ocaml-config
+#/.coq-version-ocaml-version
+#/.coq-version-short
+#/.coq-version-short-date
+#/.machine
+#/.machine-extended
 
 
 # perf testing
 
 src/Rewriter/Rewriter/Examples/PerfTesting/*/*.v
-src/Rewriter/Rewriter/Examples/PerfTesting/*/*.log
-/perf.csv
-/perf-LiftLetsMap.csv
-/perf-Plus0Tree.csv
-/perf-SieveOfEratosthenes.csv
-/perf-UnderLetsPlus0.csv
-/LiftLetsMap.txt
-/Plus0Tree.txt
-/SieveOfEratosthenes.txt
-/UnderLetsPlus0.txt
-/*.txt-fits.dat
+#src/Rewriter/Rewriter/Examples/PerfTesting/*/*.log
+#/perf.csv
+#/perf-LiftLetsMap.csv
+#/perf-Plus0Tree.csv
+#/perf-SieveOfEratosthenes.csv
+#/perf-UnderLetsPlus0.csv
+#/LiftLetsMap.txt
+#/Plus0Tree.txt
+#/SieveOfEratosthenes.txt
+#/UnderLetsPlus0.txt
+#/*.txt-fits.dat
 
 native_compute_profile_*.data
