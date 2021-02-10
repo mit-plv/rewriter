@@ -198,7 +198,7 @@ Definition max_input_of_kind (k : kind_of_rewrite) : option (Z * Z)
      | kind_red vm
        => Some (110, 110) (* stack overflows on things much larger than this *)
      | kind_red native
-       => Some (130, 130) (* stack overflows on (20880, 1) *)
+       => Some (110, 110) (* works with 130, 130, but we fallback to vm when native is not available *) (* stack overflows on (20880, 1) *)
      | kind_red cbv
        => Some (140, 140) (* stack overflows on (25760, 1) *)
      | kind_red lazy
