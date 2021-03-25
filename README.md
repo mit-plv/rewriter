@@ -3,7 +3,7 @@ Rewriter
 
 Building
 -----
-[![CI (Coq)](https://github.com/mit-plv/rewrite/actions/workflows/coq.yml/badge.svg?branch=master)](https://github.com/mit-plv/rewrite/actions/workflows/coq.yml?query=branch%3Amaster)
+[![CI (Coq)](https://github.com/mit-plv/rewriter/actions/workflows/coq.yml/badge.svg?branch=master)](https://github.com/mit-plv/rewriter/actions/workflows/coq.yml?query=branch%3Amaster)
 
 This repository requires Coq 8.9 or later, and requires that the version of OCaml used to build Coq be installed and accessible on the system.
 
