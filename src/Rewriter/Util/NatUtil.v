@@ -54,7 +54,7 @@ Hint Resolve mod_bound_pos plus_le_compat : arith.
 
 Lemma mod_bound_nonneg x y : 0 <= x mod y.
 Proof.
-  destruct y; [ reflexivity | apply Nat.mod_bound_pos ]; lia.
+  apply Nat.le_0_l.
 Qed.
 
 Lemma mod_bound_lt x y : 0 < y -> x mod y < y.
