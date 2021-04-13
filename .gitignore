@@ -18,34 +18,61 @@ tramp
 *.pyc
 
 # coq
-*.aux
-*.d
+.*.aux
+.*.d
+*.a
+*.cma
+*.cmi
+*.cmo
+*.cmx
+*.cmxa
+*.cmxs
 *.glob
+*.ml.d
+*.ml4.d
+*.mlg.d
+*.mli.d
+*.mllib.d
+*.mlpack.d
+*.native
+*.o
+*.v.d
 *.vio
 *.vo
-*.vos
 *.vok
+*.vos
+.coq-native
+.csdp.cache
+.lia.cache
+.nia.cache
+.nlia.cache
+.nra.cache
+csdp.cache
+lia.cache
+nia.cache
+nlia.cache
+nra.cache
+native_compute_profile_*.data
+
+# generated timing files
+*.timing.diff
+*.v.after-timing
+*.v.before-timing
 *.v.timing
+time-of-build-after.log
+time-of-build-before.log
+time-of-build-both.log
+time-of-build-pretty.log
+
+# specific coq files
 CoqMakefile.conf
 Makefile.bak
 Makefile.coq
 Makefile.coq.conf
 Makefile.coq.bak
 Makefile-old.conf
-csdp.cache
-lia.cache
-nlia.cache
-nia.cache
-nra.cache
-.csdp.cache
-.lia.cache
-.nlia.cache
-.nia.cache
-.nra.cache
 
 /finished.ok
-/time-of-build-pretty.log
-/time-of-build.log
 
 /_CoqProject
 
@@ -115,5 +142,3 @@ src/Rewriter/Rewriter/Examples/PerfTesting/*/*.log
 /SieveOfEratosthenes.txt
 /UnderLetsPlus0.txt
 /*.txt-fits.dat
-
-native_compute_profile_*.data
