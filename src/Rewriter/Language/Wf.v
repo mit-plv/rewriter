@@ -1292,7 +1292,10 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
           rewrite wf_reify_list, Forall2_map_map_iff, Forall2_Forall, Forall_forall; cbv [Proper]; auto.
         Qed.
 
-        Lemma wf_reify {t} v G : expr.wf G (GallinaReify.base.reify (var:=var1) (t:=t) v) (GallinaReify.base.reify (var:=var2) (t:=t) v).
+        Lemma wf_base_reify {t} v G : expr.wf G (GallinaReify.base.reify (var:=var1) (t:=t) v) (GallinaReify.base.reify (var:=var2) (t:=t) v).
+        Proof using reflect_base_beq. exact wf_smart_Literal. Qed.
+
+        Lemma wf_reify {t} v G : expr.wf G (GallinaReify.reify (var:=var1) (t:=type.base t) v) (GallinaReify.base.reify (var:=var2) (t:=t) v).
         Proof using reflect_base_beq. exact wf_smart_Literal. Qed.
 
         Lemma wf_smart_Literal_eq {t v1 v2 G}
@@ -1300,10 +1303,16 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
         Proof using reflect_base_beq. intro; subst; apply wf_smart_Literal. Qed.
       End with_var2.
 
-      Lemma Wf_Reify_as {t} v : expr.Wf (GallinaReify.base.Reify_as t v).
+      Lemma Wf_base_Reify_as {t} v : expr.Wf (GallinaReify.base.Reify_as t v).
       Proof. repeat intro; apply wf_reify. Qed.
 
-      Lemma Wf_reify {t} v : expr.Wf (fun var => GallinaReify.base.reify (t:=t) v).
+      Lemma Wf_Reify_as {t} (v : base.interp base_interp t) : expr.Wf (GallinaReify.Reify_as (type.base t) (fun _ => v)).
+      Proof. repeat intro; apply wf_reify. Qed.
+
+      Lemma Wf_base_reify {t} v : expr.Wf (fun var => GallinaReify.base.reify (t:=t) v).
+      Proof. repeat intro; apply wf_reify. Qed.
+
+      Lemma Wf_reify {t} (v : base.interp base_interp t) : expr.Wf (fun var => GallinaReify.reify (t:=type.base t) v).
       Proof. repeat intro; apply wf_reify. Qed.
 
       Section interp.
@@ -1385,16 +1394,19 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
     End invert.
 
     (** [Reify] is a notation for [Reify_as] + better type inference, so we make [Wf_Reify] available for ease of memory / lookup *)
+    Notation Wf_base_Reify := Wf_base_Reify_as.
     Notation Wf_Reify := Wf_Reify_as.
     Notation Interp_Reify := Interp_Reify_as.
   End expr.
 
   Hint Constructors expr.wf : wf.
-  Hint Resolve expr.Wf_APP expr.Wf_Reify expr.Wf_reify : wf.
+  Hint Resolve expr.Wf_APP expr.Wf_Reify expr.Wf_reify expr.Wf_base_Reify expr.Wf_base_reify : wf.
   (** Work around COQBUG(https://github.com/coq/coq/issues/11536) *)
-  Hint Extern 1 (expr.Wf (GallinaReify.base.Reify_as _ _)) => simple apply (@expr.Wf_Reify) : wf.
+  Hint Extern 1 (expr.Wf (GallinaReify.base.Reify_as _ _)) => simple apply (@expr.Wf_base_Reify) : wf.
+  Hint Extern 1 (expr.Wf (GallinaReify.Reify_as _ _)) => simple apply (@expr.Wf_Reify) : wf.
   (** Work around COQBUG(https://github.com/coq/coq/issues/11536) *)
-  Hint Extern 1 (expr.Wf (fun var => GallinaReify.base.reify _)) => simple apply (@expr.Wf_reify) : wf.
+  Hint Extern 1 (expr.Wf (fun var => GallinaReify.base.reify _)) => simple apply (@expr.Wf_base_reify) : wf.
+  Hint Extern 1 (expr.Wf (fun var => GallinaReify.reify _)) => simple apply (@expr.Wf_reify) : wf.
   Hint Opaque expr.APP GallinaReify.Reify_as GallinaReify.base.reify : wf interp rewrite.
   Hint Rewrite @expr.Interp_Reify @expr.interp_reify @expr.interp_reify_list @expr.interp_reify_option @expr.Interp_reify @expr.Interp_APP : interp.
 
