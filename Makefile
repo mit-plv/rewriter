@@ -65,11 +65,10 @@ ifneq (,$(STRICT_DEPS))
 EXTRA_SED_FOR_DEPS:=| sed s'/-include $$(ALLDFILES)/include $$(ALLDFILES)/g'
 endif
 
-# Note that the OTHERFLAGS bit is to work around COQBUG(https://github.com/coq/coq/issues/10905)
-# We must also work around COQBUG(https://github.com/coq/coq/issues/10907) and fix the conf target
+# We must work around COQBUG(https://github.com/coq/coq/issues/10907) and fix the conf target
 Makefile.coq Makefile-old.conf: Makefile _CoqProject $(COQ_VERSION_FILE)
 	$(SHOW)'COQ_MAKEFILE -f _CoqProject > Makefile.coq'
-	$(HIDE)(($(COQBIN)coq_makefile -f _CoqProject -o Makefile-old && cat Makefile-old | sed s'/OTHERFLAGS        :=/OTHERFLAGS        ?=/g' | sed s'/Makefile-old.conf:/Makefile-old-old.conf:/g' | sed s'/Makefile-old.local/Makefile.local/g' $(EXTRA_SED_FOR_DEPS)); echo; echo 'include Makefile.local-late') > Makefile.coq && rm Makefile-old
+	$(HIDE)(($(COQBIN)coq_makefile -f _CoqProject -o Makefile-old && cat Makefile-old | sed s'/Makefile-old.conf:/Makefile-old-old.conf:/g' | sed s'/Makefile-old.local/Makefile.local/g' $(EXTRA_SED_FOR_DEPS)); echo; echo 'include Makefile.local-late') > Makefile.coq && rm Makefile-old
 
 Makefile.coq: | Makefile-old.conf
 
