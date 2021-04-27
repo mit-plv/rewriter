@@ -267,6 +267,29 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
       eauto.
     Qed.
 
+    Lemma eq_and_map_for_each_lhs_of_arrow {base_type f1 g1 F1 f2 g2 F2 P t arg1 arg2}
+      : type.and_for_each_lhs_of_arrow
+          P
+          (@type.map_for_each_lhs_of_arrow base_type f1 g1 F1 t arg1)
+          (@type.map_for_each_lhs_of_arrow base_type f2 g2 F2 t arg2)
+        = type.and_for_each_lhs_of_arrow (fun t x y => P t (F1 t x) (F2 t y)) arg1 arg2.
+    Proof using Type.
+      induction t; [ reflexivity | ].
+      repeat first [ progress cbn in *
+                   | progress destruct_head'_and
+                   | progress destruct_head'_prod
+                   | apply f_equal2; [ reflexivity | ]
+                   | solve [ eauto ] ].
+    Qed.
+
+    Lemma and_map_for_each_lhs_of_arrow_iff {base_type f1 g1 F1 f2 g2 F2 P t arg1 arg2}
+      : type.and_for_each_lhs_of_arrow
+          P
+          (@type.map_for_each_lhs_of_arrow base_type f1 g1 F1 t arg1)
+          (@type.map_for_each_lhs_of_arrow base_type f2 g2 F2 t arg2)
+        <-> type.and_for_each_lhs_of_arrow (fun t x y => P t (F1 t x) (F2 t y)) arg1 arg2.
+    Proof using Type. rewrite eq_and_map_for_each_lhs_of_arrow; reflexivity. Qed.
+
     Global Hint Immediate and_eqv_for_each_lhs_of_arrow_not_higher_order : typeclass_instances.
 
     Global Instance andb_bool_for_each_lhs_of_arrow_Proper
@@ -326,6 +349,14 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
     Proof.
       cbv [forall_relation pointwise_relation respectful]; intros ? ? H t ? ? ? ? ? ?; subst.
       induction t; cbn [type.and_for_each_lhs_of_arrow]; split_iff; intuition eauto.
+    Qed.
+
+    Global Instance and_for_each_lhs_of_arrow_Proper_impl {base_type f g}
+      : Proper (forall_relation (fun t => pointwise_relation _ (pointwise_relation _ Basics.impl)) ==> forall_relation (fun t => eq ==> eq ==> Basics.impl))
+               (@type.and_for_each_lhs_of_arrow base_type f g) | 10.
+    Proof.
+      cbv [forall_relation pointwise_relation respectful Basics.impl]; intros ? ? H t ? ? ? ? ? ?; subst.
+      induction t; cbn [type.and_for_each_lhs_of_arrow]; intuition eauto.
     Qed.
 
     Lemma related_iff_app_curried {base_type base_interp R} t F G
@@ -1011,6 +1042,29 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
           induction t; cbn [type.and_for_each_lhs_of_arrow type.for_each_lhs_of_arrow App_curried] in *; [ assumption | ].
           destruct_head'_and.
           apply IHt2; try constructor; try assumption.
+        Qed.
+
+        Lemma wf_smart_App_curried {t e1 args1 e2 args2 G}
+              (Hwfe : expr.wf G (t:=t) e1 e2)
+              (Hwfargs : type.and_for_each_lhs_of_arrow (fun t v1 v2 => List.In (existT _ t (v1, v2)) G) args1 args2)
+          : expr.wf G (ident:=ident) (var1:=var1) (var2:=var2) (smart_App_curried e1 args1) (smart_App_curried e2 args2).
+        Proof using Type.
+          induction Hwfe; cbn [smart_App_curried]; try apply wf_App_curried; repeat constructor.
+          all: repeat first [ assumption
+                            | rewrite type.eq_and_map_for_each_lhs_of_arrow
+                            | progress cbn [List.In eq_rect fst snd type.and_for_each_lhs_of_arrow] in *
+                            | progress intros
+                            | progress subst
+                            | progress destruct_head'_and
+                            | progress inversion_sigma
+                            | progress inversion_prod
+                            | progress destruct_head'_or
+                            | solve [ eapply @type.and_for_each_lhs_of_arrow_Proper_impl; [ .. | eassumption ]; try reflexivity;
+                                      repeat intro; constructor; assumption ]
+                            | match goal with
+                              | [ H : context[wf (_ :: ?G) _ _] |- wf ?G _ _ ]
+                                => eapply wf_Proper_list; [ | eapply H ]
+                              end ].
         Qed.
 
         Lemma wf_invert_App_curried {t e1 args1 e2 args2 G}
