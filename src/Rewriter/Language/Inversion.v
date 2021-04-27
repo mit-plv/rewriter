@@ -677,6 +677,9 @@ Module Compilers.
             | progress subst ].
     Ltac invert_subst_simple := repeat invert_subst_simple_step.
 
+    Ltac simpl_invert_expr_in_all :=
+      cbn [invert_expr.invert_Var invert_expr.invert_LetIn invert_expr.invert_App invert_expr.invert_LetIn invert_expr.invert_Ident invert_expr.invert_Abs invert_expr.invert_App_cps] in *.
+
     Ltac induction_expr_in_using H rect :=
       induction H as [H] using (rect _ _ _);
       cbv [code invert_expr.invert_Var invert_expr.invert_LetIn invert_expr.invert_App invert_expr.invert_LetIn invert_expr.invert_Ident invert_expr.invert_Abs invert_expr.invert_App_cps Option.bind] in H;
