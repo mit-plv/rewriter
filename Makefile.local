@@ -1,1 +1,8 @@
+PROFILE?=
+# Remove -undeclared-scope once we stop supporting 8.9
+OTHERFLAGS += -w -notation-overridden,-undeclared-scope,-deprecated-hint-without-locality
+ifneq ($(PROFILE),)
+OTHERFLAGS += -profile-ltac
+endif
+
 include src/Rewriter/Rewriter/Examples/PerfTesting/Makefile.coq.local
