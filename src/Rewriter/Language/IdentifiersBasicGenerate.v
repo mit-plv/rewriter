@@ -762,23 +762,25 @@ Module Compilers.
 
       Ltac build_base_interp_beq base_interp :=
         (eval cbv beta in
-            (ltac:(let t := fresh "t" in
-                   intro t; destruct t;
+            (ltac:(let t1 := fresh "t1" in
+                   let t2 := fresh "t2" in
+                   intros t1 t2; destruct t1, t2;
                    let h := head base_interp in
                    cbv [h];
-                   refine ((fun T (beq : T -> T -> Datatypes.bool) (_ : reflect_rel (@eq T) beq) => beq) _ _ _);
+                   first [ refine ((fun T (beq : T -> T -> Datatypes.bool) (_ : reflect_rel (@eq T) beq) => beq) _ _ _)
+                         | exact false ];
                    lazymatch goal with
                    | [ |- reflect_rel (@eq ?T) _ ]
                      => let exp := uconstr:(reflect_rel (@eq T) ?[beq]) in
                         fail 0 "Could not find a typeclass instance for boolean equality of" T ":" exp
                    end)
-             : forall t, base_interp t -> base_interp t -> Datatypes.bool)).
+             : forall t1 t2, base_interp t1 -> base_interp t2 -> Datatypes.bool)).
       Ltac make_base_interp_beq base_interp := let v := build_base_interp_beq base_interp in refine v.
 
       Ltac build_reflect_base_interp_beq base_interp base_interp_beq :=
         constr:(ltac:(let t := fresh "t" in
                       intro t; destruct t; cbv [base_interp base_interp_beq]; typeclasses eauto)
-                : forall t, reflect_rel (@eq (base_interp t)) (@base_interp_beq t)).
+                : forall t, reflect_rel (@eq (base_interp t)) (@base_interp_beq t t)).
       Ltac make_reflect_base_interp_beq base_interp base_interp_beq :=
         let res := build_reflect_base_interp_beq base_interp base_interp_beq in refine res.
 

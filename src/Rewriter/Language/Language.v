@@ -443,6 +443,31 @@ Module Compilers.
     Proof. induction t; cbn [interp interp_beq]; eauto with typeclass_instances. Qed.
     Global Hint Extern 1 (reflect (@eq (interp ?base_interp ?t) ?x ?y) _) => notypeclasses refine (@reflect_interp_eq _ base_interp _ _ x y) : typeclass_instances.
 
+    Fixpoint interp_beq_hetero {base base_interp} (base_interp_beq_hetero : forall b1 b2 : base, base_interp b1 -> base_interp b2 -> bool) {t1 t2}
+      : interp base_interp t1 -> interp base_interp t2 -> bool
+      := match t1, t2 return interp base_interp t1 -> interp base_interp t2 -> bool with
+         | type.type_base t1, type.type_base t2 => @base_interp_beq_hetero t1 t2
+         | type.prod A1 B1, type.prod A2 B2
+           => prod_beq_hetero (@interp_beq_hetero _ _ base_interp_beq_hetero A1 A2) (@interp_beq_hetero _ _ base_interp_beq_hetero B1 B2)
+         | type.list A1, type.list A2 => list_beq_hetero (@interp_beq_hetero _ _ base_interp_beq_hetero A1 A2)
+         | type.option A1, type.option A2 => option_beq_hetero (@interp_beq_hetero _ _ base_interp_beq_hetero A1 A2)
+         | type.unit, type.unit => fun _ _ => true
+         | type.type_base _, _
+         | type.prod _ _, _
+         | type.list _, _
+         | type.option _, _
+         | type.unit, _
+           => fun _ _ => false
+         end.
+
+    Lemma reflect_interp_eq_hetero_uniform {base base_interp}
+          {base_interp_beq_hetero : forall t1 t2, base_interp t1 -> base_interp t2 -> bool}
+          {reflect_base_interp_eq_hetero_uniform : forall b : base, reflect_rel (@eq (base_interp b)) (base_interp_beq_hetero b b)} {t}
+      : reflect_rel (@eq (interp base_interp t)) (@interp_beq_hetero base base_interp base_interp_beq_hetero t t).
+    Proof. induction t; cbn [interp interp_beq]; eauto with typeclass_instances. Qed.
+    Global Hint Extern 1 (reflect _ (@interp_beq_hetero ?base ?base_interp ?base_interp_beq_hetero ?t ?t ?x ?y))
+    => notypeclasses refine (@reflect_interp_eq base base_interp base_interp_beq_hetero _ t x y) : typeclass_instances.
+
     Fixpoint try_make_transport_cps
              {base}
              {try_make_transport_base_type_cps : @type.try_make_transport_cpsT base}
@@ -1984,7 +2009,7 @@ Module Compilers.
     Class ExprExtraInfoT {exprInfo : ExprInfoT} :=
       {
         base_beq : base -> base -> bool;
-        base_interp_beq : forall {t}, base_interp t -> base_interp t -> bool;
+        base_interp_beq : forall {t1 t2}, base_interp t1 -> base_interp t2 -> bool;
         try_make_transport_base_cps :> type.try_make_transport_cpsT base;
         baseHasNat :> base.type.BaseTypeHasNatT base;
         buildIdent :> ident.BuildIdentT base_interp ident;
@@ -1993,7 +2018,7 @@ Module Compilers.
         invertIdent :> InvertIdentT base_interp ident;
         defaultBase :> @DefaultValue.type.base.DefaultT base base_interp;
         reflect_base_beq :> reflect_rel (@eq base) base_beq;
-        reflect_base_interp_beq :> forall {t}, reflect_rel (@eq (base_interp t)) (@base_interp_beq t);
+        reflect_base_interp_beq :> forall {t}, reflect_rel (@eq (base_interp t)) (@base_interp_beq t t);
         try_make_transport_base_cps_correct :> type.try_make_transport_cps_correctT base;
         baseHasNatCorrect :> base.BaseHasNatCorrectT base_interp;
         toFromRestrictedIdent :> ident.ToFromRestrictedIdentT ident;

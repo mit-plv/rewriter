@@ -73,6 +73,7 @@ Reserved Infix ">>" (at level 30, no associativity).
 Reserved Infix ">>>" (at level 30, no associativity).
 Reserved Infix "&'" (at level 50). (* N.B.  If we used '&', it would conflict with [{ a : T & P}] for [sigT] *)
 Reserved Infix "&''" (at level 50).
+Reserved Infix "|'" (at level 50).
 Reserved Infix "∣" (at level 50).
 Reserved Infix "∣'" (at level 50).
 Reserved Infix "~=" (at level 70).
@@ -125,6 +126,8 @@ Reserved Notation "A <--- X ; B" (at level 70, X at next level, right associativ
 Reserved Notation "A <---- X ; B" (at level 70, X at next level, right associativity, format "'[v' A  <----  X ; '/' B ']'").
 Reserved Notation "A <----- X ; B" (at level 70, X at next level, right associativity, format "'[v' A  <-----  X ; '/' B ']'").
 Reserved Notation "A ;; B" (at level 70, right associativity, format "'[v' A ;; '/' B ']'").
+Reserved Notation "A ';;L' B" (at level 70, right associativity, format "'[v' A ';;L' '/' B ']'").
+Reserved Notation "A ';;R' B" (at level 70, right associativity, format "'[v' A ';;R' '/' B ']'").
 Reserved Notation "A ;;->{ f } B" (at level 70, right associativity, format "'[v' A ;;->{ f } '/' B ']'").
 Reserved Notation "A ;;; B" (at level 70, right associativity, format "'[v' A ;;; '/' B ']'").
 Reserved Notation "u [ i ]" (at level 30).
@@ -133,6 +136,8 @@ Reserved Notation "u {{ i }}" (at level 30).
 Reserved Notation "a # b" (at level 55, no associativity). (* match with theories/QArith/QArith_base.v *)
 Reserved Notation "'olet' x .. y <- X ; Y"
          (at level 70, X at next level, x binder, y binder, right associativity, format "'[v' 'olet'  x  ..  y  <-  X ; '/' Y ']'").
+Reserved Notation "'slet' x .. y <- X ; Y"
+         (at level 70, X at next level, x binder, y binder, right associativity, format "'[v' 'slet'  x  ..  y  <-  X ; '/' Y ']'").
 Reserved Notation "'plet' x := y 'in' z"
          (at level 200, z at level 200, format "'plet'  x  :=  y  'in' '//' z").
 Reserved Notation "'subst_let' x := y 'in' z"

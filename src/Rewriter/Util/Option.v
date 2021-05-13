@@ -70,11 +70,16 @@ Definition sequence_return {A} (v1 : option A) (v2 : A) : A
      end.
 Global Arguments sequence {A} !v1 v2.
 Global Arguments sequence_return {A} !v1 v2.
+Notation or_else := sequence (only parsing).
+(* After OCaml's [value] *)
+Notation value := sequence_return (only parsing).
+Notation get_default := sequence_return (only parsing).
 
 Module Export Notations.
   Delimit Scope option_scope with option.
   Bind Scope option_scope with option.
 
+  Notation "'olet' x .. y <- X ; B" := (bind X (fun x => .. (fun y => B%option) .. )) : option_scope.
   Notation "A <- X ; B" := (bind X (fun A => B%option)) : option_scope.
   Infix ";;" := sequence : option_scope.
   Infix ";;;" := sequence_return : option_scope.
@@ -141,6 +146,24 @@ Lemma option_lb_hetero {A B} {AB_beq : A -> B -> bool} {AB_R : A -> B -> Prop}
 Proof using Type.
   destruct x, y; cbn in *; eauto; intuition congruence.
 Qed.
+
+Lemma option_beq_hetero_uniform {A : Type} A_beq {x y}
+  : option_beq_hetero A_beq x y = @option_beq A A_beq x y.
+Proof. destruct x, y; reflexivity. Qed.
+
+Lemma option_bl_hetero_eq {A}
+      {A_beq : A -> A -> bool}
+      (A_bl : forall x y, A_beq x y = true -> x = y)
+      {x y}
+  : option_beq_hetero A_beq x y = true -> x = y.
+Proof using Type. rewrite option_beq_hetero_uniform; now apply internal_option_dec_bl. Qed.
+
+Lemma option_lb_hetero_eq {A}
+      {A_beq : A -> A -> bool}
+      (A_lb : forall x y, x = y -> A_beq x y = true)
+      {x y}
+  : x = y -> option_beq_hetero A_beq x y = true.
+Proof using Type. rewrite option_beq_hetero_uniform; now apply internal_option_dec_lb. Qed.
 
 Global Instance bind_Proper {A B}
   : Proper (eq ==> (pointwise_relation _ eq) ==> eq) (@bind A B).
@@ -288,6 +311,21 @@ Lemma UIP_None {A} (p q : @None A = @None A) : p = q.
 Proof.
   rewrite <- (option_leq_to_eq_to_leq p), <- (option_leq_to_eq_to_leq q); simpl; reflexivity.
 Qed.
+
+Definition is_None {A} (x : option A) : bool
+  := match x with
+     | Some _ => false
+     | None => true
+     end.
+
+Definition is_Some {A} (x : option A) : bool
+  := match x with
+     | Some _ => true
+     | None => false
+     end.
+
+Lemma is_None_eq_None_iff {A x} : @is_None A x = true <-> x = None.
+Proof. destruct x; cbv; split; congruence. Qed.
 
 Definition invert_Some {A} (x : option A) : match x with
                                             | Some _ => A

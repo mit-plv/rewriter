@@ -9,6 +9,7 @@ Require Import Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Pointed.
 Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Util.Decidable.
+Require Rewriter.Util.Option.
 Require Export Rewriter.Util.FixCoqMistakes.
 Require Export Rewriter.Util.Tactics.BreakMatch.
 Require Export Rewriter.Util.Tactics.DestructHead.
@@ -144,7 +145,7 @@ Hint Rewrite
   @prod_length
   : distr_length.
 
-Hint Extern 1 => progress autorewrite with distr_length in * : distr_length.
+Global Hint Extern 1 => progress autorewrite with distr_length in * : distr_length.
 Ltac distr_length := autorewrite with distr_length in *;
   try solve [simpl in *; intros; (idtac + exfalso); lia].
 
@@ -343,6 +344,14 @@ Hint Rewrite @firstn_all2 @removelast_firstn @firstn_removelast using lia : simp
 Local Arguments value / _ _.
 Local Arguments error / _.
 
+Definition list_beq_hetero {A B} (f : A -> B -> bool)
+  := fix list_beq_hetero (l1 : list A) (l2 : list B) : bool
+       := match l1, l2 with
+          | [], [] => true
+          | [], _ | _, [] => false
+          | x :: xs, y :: ys => f x y && list_beq_hetero xs ys
+          end%bool.
+
 Definition sum_firstn l n := fold_right Z.add 0%Z (firstn n l).
 
 Definition sum xs := sum_firstn xs (length xs).
@@ -362,15 +371,15 @@ End map2.
 
 (* xs[n] := f xs[n] *)
 Fixpoint update_nth {T} n f (xs:list T) {struct n} :=
-	match n with
-	| O => match xs with
-				 | nil => nil
-				 | x'::xs' => f x'::xs'
-				 end
-	| S n' =>  match xs with
-				 | nil => nil
-				 | x'::xs' => x'::update_nth n' f xs'
-				 end
+        match n with
+        | O => match xs with
+                                 | nil => nil
+                                 | x'::xs' => f x'::xs'
+                                 end
+        | S n' =>  match xs with
+                                 | nil => nil
+                                 | x'::xs' => x'::update_nth n' f xs'
+                                 end
   end.
 
 (* xs[n] := x *)
@@ -408,6 +417,82 @@ Ltac boring_list :=
          | _ => progress boring
          | _ => progress autorewrite with distr_length simpl_nth_default simpl_update_nth simpl_set_nth simpl_nth_error in *
          end.
+
+Section Relations.
+  Fixpoint list_eq {A B} eq (x : list A) (y : list B) :=
+    match x, y with
+    | [], [] => True
+    | [], _ | _, [] => False
+    | x :: xs, y :: ys => eq x y /\ list_eq eq xs ys
+    end.
+
+  Local Ltac t :=
+    repeat first [ progress cbn in *
+                 | progress break_match
+                 | intro
+                 | intuition congruence
+                 | progress destruct_head'_and
+                 | solve [ apply reflexivity
+                         | apply symmetry; eassumption
+                         | eapply transitivity; eassumption
+                         | eauto ] ].
+
+  Global Instance Reflexive_list_eq {T} {R} {Reflexive_R:@Reflexive T R}
+    : Reflexive (list_eq R) | 1. Proof. intro l; induction l; t. Qed.
+
+  Lemma list_eq_sym {A B} {R1 R2 : _ -> _ -> Prop} (HR : forall v1 v2, R1 v1 v2 -> R2 v2 v1)
+    : forall v1 v2, @list_eq A B R1 v1 v2 -> list_eq R2 v2 v1.
+  Proof. induction v1; t. Qed.
+
+  Lemma list_eq_trans {A B C} {R1 R2 R3 : _ -> _ -> Prop}
+        (HR : forall v1 v2 v3, R1 v1 v2 -> R2 v2 v3 -> R3 v1 v3)
+    : forall v1 v2 v3, @list_eq A B R1 v1 v2 -> @list_eq B C R2 v2 v3 -> @list_eq A C R3 v1 v3.
+  Proof. induction v1; t. Qed.
+
+  Global Instance Transitive_list_eq {T} {R} {Transitive_R:@Transitive T R}
+    : Transitive (list_eq R) | 1 := list_eq_trans Transitive_R.
+
+  Global Instance Symmetric_list_eq {T} {R} {Symmetric_R:@Symmetric T R}
+    : Symmetric (list_eq R) | 1 := list_eq_sym Symmetric_R.
+
+  Global Instance Equivalence_list_eq {T} {R} {Equivalence_R:@Equivalence T R}
+    : Equivalence (list_eq R). Proof. split; exact _. Qed.
+End Relations.
+
+Lemma list_bl_hetero {A B} {AB_beq : A -> B -> bool} {AB_R : A -> B -> Prop}
+      (AB_bl : forall x y, AB_beq x y = true -> AB_R x y)
+  : forall {x y},
+    list_beq_hetero AB_beq x y = true -> list_eq AB_R x y.
+Proof using Type.
+  induction x, y; cbn in *; eauto; try congruence.
+  rewrite Bool.andb_true_iff; intuition eauto.
+Qed.
+
+Lemma list_lb_hetero {A B} {AB_beq : A -> B -> bool} {AB_R : A -> B -> Prop}
+      (AB_lb : forall x y, AB_R x y -> AB_beq x y = true)
+  : forall {x y},
+    list_eq AB_R x y -> list_beq_hetero AB_beq x y = true.
+Proof using Type.
+  induction x, y; cbn in *; rewrite ?Bool.andb_true_iff; intuition (congruence || eauto).
+Qed.
+
+Lemma list_beq_hetero_uniform {A : Type} A_beq {x y}
+  : list_beq_hetero A_beq x y = @list_beq A A_beq x y.
+Proof. destruct x, y; cbn; reflexivity. Qed.
+
+Lemma list_bl_hetero_eq {A}
+      {A_beq : A -> A -> bool}
+      (A_bl : forall x y, A_beq x y = true -> x = y)
+      {x y}
+  : list_beq_hetero A_beq x y = true -> x = y.
+Proof using Type. rewrite list_beq_hetero_uniform; now apply internal_list_dec_bl. Qed.
+
+Lemma list_lb_hetero_eq {A}
+      {A_beq : A -> A -> bool}
+      (A_lb : forall x y, x = y -> A_beq x y = true)
+      {x y}
+  : x = y -> list_beq_hetero A_beq x y = true.
+Proof using Type. rewrite list_beq_hetero_uniform; now apply internal_list_dec_lb. Qed.
 
 Lemma nth_default_cons : forall {T} (x u0 : T) us, nth_default x (u0 :: us) 0 = u0.
 Proof. auto. Qed.
@@ -484,7 +569,7 @@ Lemma nth_error_length_error : forall A i (xs:list A),
 Proof.
   induction i as [|? IHi]; destruct xs; nth_tac'; rewrite IHi by lia; auto.
 Qed.
-Hint Resolve nth_error_length_error : core.
+Global Hint Resolve nth_error_length_error : core.
 Hint Rewrite @nth_error_length_error using lia : simpl_nth_error.
 
 Lemma map_nth_default : forall (A B : Type) (f : A -> B) n x y l,
@@ -517,13 +602,13 @@ Lemma unfold_set_nth {T} n x
     @set_nth T n x xs
     = match n with
       | O => match xs with
-	     | nil => nil
-	     | x'::xs' => x::xs'
-	     end
+             | nil => nil
+             | x'::xs' => x::xs'
+             end
       | S n' =>  match xs with
-		 | nil => nil
-		 | x'::xs' => x'::set_nth n' x xs'
-		 end
+                 | nil => nil
+                 | x'::xs' => x'::set_nth n' x xs'
+                 end
       end.
 Proof.
   induction n; destruct xs; reflexivity.
@@ -1023,11 +1108,10 @@ Lemma length_tl {A} ls : length (@tl A ls) = (length ls - 1)%nat.
 Proof. destruct ls; cbn [tl length]; lia. Qed.
 Hint Rewrite @length_tl : distr_length.
 
-Lemma length_snoc : forall {T} xs (x:T),
-  length xs = pred (length (xs++x::nil)).
-Proof.
-  boring; simpl_list; boring.
-Qed.
+Lemma length_snoc {A : Type} (l : list A) a : length (l ++ [a]) = S (length l).
+Proof. simpl_list; boring. Qed.
+
+Hint Rewrite @length_snoc : distr_length.
 
 Lemma combine_cons : forall {A B} a b (xs:list A) (ys:list B),
   combine (a :: xs) (b :: ys) = (a,b) :: combine xs ys.
@@ -1243,12 +1327,10 @@ Qed.
 Lemma nth_default_in_bounds : forall {T} (d' d : T) n us, (n < length us)%nat ->
   nth_default d us n = nth_default d' us n.
 Proof.
-  intros; erewrite !nth_default_nth_dep; reflexivity.
-  Grab Existential Variables.
-  assumption.
+  intros; now unshelve erewrite !nth_default_nth_dep.
 Qed.
 
-Hint Resolve nth_default_in_bounds : simpl_nth_default.
+Global Hint Resolve nth_default_in_bounds : simpl_nth_default.
 
 Lemma cons_eq_head : forall {T} (x y:T) xs ys, x::xs = y::ys -> x=y.
 Proof.
@@ -1288,6 +1370,25 @@ Proof.
   { f_equal; lia. }
   { rewrite IHa; do 3 f_equal; lia. }
 Qed.
+
+Lemma map_seq_ext {A} (f g : nat -> A) (n m k : nat)
+      (H : forall i : nat, n <= i <= m + k -> f i = g (i + (m - n))%nat)
+      (Hnm : n <= m) :
+  map f (seq n k) = map g (seq m k).
+Proof.
+  generalize dependent m; generalize dependent n; induction k as [|k IHk]; intros; simpl.
+  - reflexivity.
+  - simpl; rewrite H by lia; replace (n + (m - n))%nat with m by lia.
+    rewrite (IHk (S n) (S m)); [reflexivity| |lia].
+    intros; rewrite Nat.sub_succ; apply H; lia. Qed.
+
+Lemma map_seq_pred n m :
+  seq n m = map (fun i => (i - 1)%nat) (seq (S n) m).
+Proof. rewrite <- map_id at 1; apply map_seq_ext; intros; lia. Qed.
+
+Lemma map_seq_succ n m :
+  seq (S n) m = map (fun i => (i + 1)%nat) (seq n m).
+Proof. rewrite <- map_id at 1; symmetry; apply map_seq_ext; intros; lia. Qed.
 
 Lemma fold_right_and_True_forall_In_iff : forall {T} (l : list T) (P : T -> Prop),
   (forall x, In x l -> P x) <-> fold_right and True (map P l).
@@ -1556,7 +1657,7 @@ Proof.
       intuition auto with zarith. }
 Qed.
 
-Hint Resolve sum_firstn_nonnegative : znonzero.
+Global Hint Resolve sum_firstn_nonnegative : znonzero.
 
 Lemma sum_firstn_app : forall xs ys n,
   sum_firstn (xs ++ ys) n = (sum_firstn xs n + sum_firstn ys (n - length xs))%Z.
@@ -2665,3 +2766,142 @@ Ltac rewrite_fold_left_fun_apply :=
   | [ |- ?T ] => let pf := make_fold_left_fun_apply T in
                  rewrite pf
   end.
+
+Fixpoint takeWhile {A} (f : A -> bool) (ls : list A) : list A
+  := match ls with
+     | nil => nil
+     | x :: xs => if f x then x :: takeWhile f xs else nil
+     end.
+
+Fixpoint dropWhile {A} (f : A -> bool) (ls : list A) : list A
+  := match ls with
+     | nil => nil
+     | x :: xs => if f x then dropWhile f xs else ls
+     end.
+
+Lemma takeWhile_app_dropWhile {A} f xs
+  : @takeWhile A f xs ++ @dropWhile A f xs = xs.
+Proof. induction xs; cbn; break_innermost_match; boring. Qed.
+
+Lemma filter_takeWhile {A} f xs
+  : filter f (@takeWhile A f xs) = @takeWhile A f xs.
+Proof. induction xs; cbn; break_innermost_match; boring. Qed.
+
+Definition is_nil {A} (x : list A) : bool
+  := match x with
+     | nil => true
+     | _ => false
+     end.
+
+Lemma is_nil_eq_nil_iff {A x} : @is_nil A x = true <-> x = nil.
+Proof. destruct x; cbv; split; congruence. Qed.
+
+Lemma find_none_iff {A} (f : A -> bool) (xs : list A) : find f xs = None <-> forall x, In x xs -> f x = false.
+Proof.
+  split; try apply find_none.
+  pose proof (find_some f xs) as H.
+  edestruct find; [ specialize (H _ eq_refl) | reflexivity ].
+  destruct H as [H1 H2].
+  intro H'; specialize (H' _ H1); congruence.
+Qed.
+
+Lemma find_none_iff_nth_error {A} (f : A -> bool) (xs : list A) : find f xs = None <-> forall n a, nth_error xs n = Some a -> f a = false.
+Proof.
+  rewrite find_none_iff.
+  setoid_rewrite In_nth_error_iff.
+  intuition (destruct_head'_ex; eauto).
+Qed.
+
+Lemma find_some_iff {A} (f : A -> bool) (xs : list A) x
+  : find f xs = Some x
+    <-> exists n, nth_error xs n = Some x /\ f x = true /\ forall n', n' < n -> forall a, nth_error xs n' = Some a -> f a = false.
+Proof.
+  induction xs as [|y xs IHxs]; cbn [find].
+  all: repeat first [ apply conj
+                    | progress intros
+                    | progress destruct_head'_ex
+                    | progress destruct_head'_and
+                    | progress Option.inversion_option
+                    | progress break_innermost_match_hyps
+                    | progress subst
+                    | progress cbn in *
+                    | assumption
+                    | exists 0; cbn; repeat split; try assumption; (idtac + (intros; exfalso)); lia
+                    | progress break_innermost_match
+                    | reflexivity
+                    | congruence
+                    | match goal with
+                      | [ H : nth_error nil ?i = _ |- _ ] => is_var i; destruct i
+                      | [ H : nth_error (cons _ _) ?i = _ |- _ ] => is_var i; destruct i
+                      | [ H : ?T <-> _, H' : ?T |- _ ] => destruct H as [H _]; specialize (H H')
+                      | [ H : S ?x < S ?y |- _ ] => assert (x < y) by lia; clear H
+                      | [ H : forall a, Some _ = Some a -> _ |- _ ] => specialize (H _ eq_refl)
+                      | [ H : forall a, Some a = Some _ -> _ |- _ ] => specialize (H _ eq_refl)
+                      | [ H : forall n, n < S ?v -> @?P n |- _ ]
+                        => assert (forall n, n < v -> P (S n)) by (intros ? ?; apply H; lia);
+                           specialize (H 0 ltac:(lia))
+                      end
+                    | eexists (S _); cbn; repeat apply conj; [ eassumption | .. ]; try assumption; intros [|?]
+                    | progress split_iff
+                    | solve [ eauto with nocore ]
+                    | progress specialize_by eauto ].
+Qed.
+
+Section find_index.
+  Context {A} (f : A -> bool).
+
+  Definition find_index (xs : list A) : option nat
+    := option_map (@fst _ _) (find (fun v => f (snd v)) (enumerate xs)).
+
+  Lemma find_index_none_iff xs
+    : find_index xs = None <-> forall i a, nth_error xs i = Some a -> f a = false.
+  Proof.
+    cbv [find_index enumerate].
+    edestruct find eqn:H; cbn; [ split; [ congruence | ] | split; [ intros _ | reflexivity ] ].
+    { rewrite find_some_iff in H.
+      destruct H as [n H]; intro H'; specialize (H' n).
+      rewrite nth_error_combine, nth_error_seq in H.
+      break_innermost_match_hyps; destruct_head'_and; Option.inversion_option; subst; cbn in *.
+      specialize (H' _ eq_refl); congruence. }
+    { rewrite find_none_iff_nth_error in H.
+      intros n a; specialize (H n (n, a)).
+      rewrite nth_error_combine, nth_error_seq in H.
+      edestruct lt_dec; [ | rewrite nth_error_length_error by lia; congruence ].
+      edestruct nth_error eqn:?; intros; Option.inversion_option; subst; specialize (H eq_refl); assumption. }
+  Qed.
+
+  Lemma find_index_some_iff xs n
+    : find_index xs = Some n
+      <-> ((exists x, nth_error xs n = Some x /\ f x = true) /\ forall n', n' < n -> forall a, nth_error xs n' = Some a -> f a = false).
+  Proof.
+    cbv [find_index enumerate].
+    edestruct find eqn:H; cbn; [ | split; [ congruence | ] ].
+    { rewrite find_some_iff in H.
+      destruct H as [n' H].
+      rewrite nth_error_combine, nth_error_seq in H.
+      setoid_rewrite nth_error_combine in H.
+      setoid_rewrite nth_error_seq in H.
+      break_innermost_match_hyps; split; intro H'; destruct_head'_and; Option.inversion_option; subst; cbn in *.
+      all: repeat apply conj; eauto.
+      { let H := match goal with H : forall n, n < _ -> _ |- _ => H end in
+        intros i H' a' H''; specialize (H i H' (i, a'));
+          rewrite H'' in H;
+          break_innermost_match_hyps; [ specialize (H eq_refl); assumption | ].
+        rewrite nth_error_length_error in H'' by lia; congruence. }
+      { match goal with |- Some ?n = Some ?m => destruct (lt_eq_lt_dec n m) end; destruct_head' sumbool; subst; try reflexivity.
+        all: match goal with H : forall n', n' < _ -> _ |- _ => specialize (H _ ltac:(eassumption)) end.
+        { match goal with H : forall a, nth_error _ _ = Some _ -> _ |- _ => specialize (H _ ltac:(eassumption)); congruence end. }
+        { destruct_head'_ex; destruct_head'_and.
+          break_innermost_match_hyps; try congruence; try lia.
+          Option.inversion_option; subst.
+          match goal with H : forall x, Some _ = Some x -> _ |- _ => specialize (H _ eq_refl) end.
+          cbn in *.
+          congruence. } } }
+    { rewrite find_none_iff_nth_error in H.
+      intros [ [a [H0 H1]] ?]; specialize (H n (n, a)).
+      rewrite nth_error_combine, nth_error_seq, H0 in H.
+      break_innermost_match_hyps; [ | rewrite nth_error_length_error in H0 by lia; congruence ].
+      specialize (H eq_refl); cbn in *.
+      congruence. }
+  Qed.
+End find_index.
