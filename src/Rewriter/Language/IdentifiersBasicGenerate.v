@@ -768,7 +768,7 @@ Module Compilers.
                    let h := head base_interp in
                    cbv [h];
                    first [ refine ((fun T (beq : T -> T -> Datatypes.bool) (_ : reflect_rel (@eq T) beq) => beq) _ _ _)
-                         | exact false ];
+                         | exact (fun _ _ => false) ];
                    lazymatch goal with
                    | [ |- reflect_rel (@eq ?T) _ ]
                      => let exp := uconstr:(reflect_rel (@eq T) ?[beq]) in

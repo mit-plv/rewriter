@@ -447,6 +447,9 @@ Module Compilers.
                  | context term' [base_interp_beq ?t x ?y]
                    => let __ := is_good y in
                       constr:(Some (base_interp_beq t x y))
+                 | context term' [base_interp_beq ?t1 ?t2 x ?y] (* heterogenous form *)
+                   => let __ := is_good y in
+                      constr:(Some (base_interp_beq t1 t2 x y))
                  | _ => constr:(@None unit)
                  end in
         lazymatch y with
