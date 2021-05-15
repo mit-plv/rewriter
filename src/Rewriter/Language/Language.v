@@ -170,6 +170,13 @@ Module Compilers.
          | arrow s d => f s * @for_each_lhs_of_arrow _ f d
          end.
 
+    Fixpoint forall_each_lhs_of_arrow {base_type} {F : type base_type -> Type} (f : forall t, F t) {t : type base_type}
+      : for_each_lhs_of_arrow F t
+      := match t with
+         | base t => tt
+         | arrow s d => (f s, @forall_each_lhs_of_arrow _ F f d)
+         end.
+
     Fixpoint andb_each_lhs_of_arrow {base_type} (f : type base_type -> bool) (t : type base_type) : bool
       := match t with
          | base t => true
