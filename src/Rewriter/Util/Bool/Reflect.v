@@ -325,13 +325,13 @@ Proof. exact _. Qed.
 Global Instance reflect_eq_sigT_hprop {A P eqA} `{reflect_rel (@eq A) eqA, forall a : A, IsHProp (P a)} : reflect_rel (@eq (@sigT A P)) (sigT_beq eqA (fun _ _ _ _ => true)) | 10. exact _. Qed.
 Global Instance reflect_eq_sig_hprop {A eqA} {P : A -> Prop} `{reflect_rel (@eq A) eqA, forall a : A, IsHProp (P a)} : reflect_rel (@eq (@sig A P)) (sig_beq eqA (fun _ _ _ _ => true)) | 10. exact _. Qed.
 Global Instance reflect_eq_comparison : reflect_rel (@eq comparison) comparison_beq | 10. exact _. Qed.
-Global Instance reflect_eq_None_r {A x} : reflect (x = @None A) (is_None x) | 10.
+Global Instance reflect_eq_None_r {A x} : reflect (x = @None A) (is_None x) | 100.
 Proof. destruct x; cbv; constructor; congruence. Qed.
-Global Instance reflect_eq_None_l {A x} : reflect (@None A = x) (is_None x) | 10.
+Global Instance reflect_eq_None_l {A x} : reflect (@None A = x) (is_None x) | 100.
 Proof. destruct x; cbv; constructor; congruence. Qed.
-Global Instance reflect_eq_nil_r {A x} : reflect (x = @nil A) (is_nil x) | 10.
+Global Instance reflect_eq_nil_r {A x} : reflect (x = @nil A) (is_nil x) | 100.
 Proof. destruct x; cbv; constructor; congruence. Qed.
-Global Instance reflect_eq_nil_l {A x} : reflect (@nil A = x) (is_nil x) | 10.
+Global Instance reflect_eq_nil_l {A x} : reflect (@nil A = x) (is_nil x) | 100.
 Proof. destruct x; cbv; constructor; congruence. Qed.
 
 Module Export Primitive.
