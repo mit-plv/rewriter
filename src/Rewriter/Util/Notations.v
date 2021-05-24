@@ -13,7 +13,6 @@ Reserved Notation "()" (at level 0).
 Reserved Infix "∘" (at level 40, left associativity).
 Reserved Infix "∘ᶠ" (at level 40, left associativity).
 Reserved Infix "∘f" (at level 40, left associativity).
-Reserved Infix "'o'" (at level 40, left associativity).
 Reserved Infix "==" (at level 70, no associativity).
 Reserved Infix "===" (at level 70, no associativity).
 Reserved Infix "====" (at level 70, no associativity).
