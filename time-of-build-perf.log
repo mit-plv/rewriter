@@ -1183,3 +1183,409 @@ Finished transaction in 1.811 secs (1.112u,0.127s) (successful)
 File "./src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes.v", line 283, characters 0-32:
 Warning: There is no option NativeCompute Timing. [unknown-option,option]
 src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes.vo (real: 42.50, user: 41.93, sys: 0.54, mem: 964980 ko)
+COQC LiftLetsMap/_3_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_3_Sanity.log (real: 1.30, user: 1.12, sys: 0.17, mem: 559276 ko)
+COQC LiftLetsMap/_1_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_1_Sanity.log (real: 1.32, user: 1.11, sys: 0.20, mem: 559108 ko)
+COQC LiftLetsMap/_0_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_0_Sanity.log (real: 1.39, user: 1.24, sys: 0.15, mem: 559008 ko)
+COQC LiftLetsMap/_2_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_2_Sanity.log (real: 1.72, user: 1.53, sys: 0.18, mem: 559556 ko)
+COQC LiftLetsMap/_10_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_10_Sanity.log (real: 2.22, user: 2.00, sys: 0.21, mem: 564668 ko)
+COQC LiftLetsMap/_5_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_5_Sanity.log (real: 1.27, user: 1.06, sys: 0.20, mem: 559172 ko)
+COQC LiftLetsMap/_6_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_6_Sanity.log (real: 1.27, user: 1.12, sys: 0.14, mem: 558968 ko)
+COQC LiftLetsMap/_7_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_7_Sanity.log (real: 1.28, user: 1.13, sys: 0.14, mem: 558900 ko)
+COQC LiftLetsMap/_8_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_8_Sanity.log (real: 1.22, user: 1.00, sys: 0.20, mem: 558656 ko)
+COQC LiftLetsMap/_4_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_4_Sanity.log (real: 2.16, user: 1.58, sys: 0.58, mem: 559080 ko)
+COQC Plus0Tree/_0_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_0_Sanity.log (real: 1.26, user: 1.05, sys: 0.19, mem: 563476 ko)
+COQC Plus0Tree/_1_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_1_Sanity.log (real: 1.27, user: 1.08, sys: 0.19, mem: 563256 ko)
+COQC Plus0Tree/_2_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_2_Sanity.log (real: 1.27, user: 1.09, sys: 0.18, mem: 563240 ko)
+COQC Plus0Tree/_3_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_3_Sanity.log (real: 1.27, user: 1.10, sys: 0.16, mem: 563564 ko)
+COQC LiftLetsMap/_9_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_9_Sanity.log (real: 2.17, user: 1.96, sys: 0.20, mem: 564780 ko)
+COQC Plus0Tree/_4_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_4_Sanity.log (real: 1.28, user: 1.09, sys: 0.18, mem: 563476 ko)
+COQC Plus0Tree/_5_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_5_Sanity.log (real: 1.27, user: 1.13, sys: 0.13, mem: 563180 ko)
+COQC SieveOfEratosthenes/_0_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_0_Sanity.log (real: 1.30, user: 1.08, sys: 0.21, mem: 560536 ko)
+COQC SieveOfEratosthenes/_2_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_2_Sanity.log (real: 1.31, user: 1.15, sys: 0.15, mem: 560484 ko)
+COQC SieveOfEratosthenes/_3_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_3_Sanity.log (real: 1.32, user: 1.12, sys: 0.20, mem: 560800 ko)
+COQC SieveOfEratosthenes/_4_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_4_Sanity.log (real: 1.49, user: 1.34, sys: 0.15, mem: 561200 ko)
+COQC Plus0Tree/_6_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_6_Sanity.log (real: 2.92, user: 2.72, sys: 0.19, mem: 577328 ko)
+COQC SieveOfEratosthenes/_5_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_5_Sanity.log (real: 1.48, user: 1.30, sys: 0.17, mem: 561120 ko)
+COQC SieveOfEratosthenes/_1_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_1_Sanity.log (real: 3.37, user: 2.28, sys: 1.07, mem: 561412 ko)
+COQC UnderLetsPlus0/_0_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_0_Sanity.log (real: 1.25, user: 1.06, sys: 0.18, mem: 552128 ko)
+COQC UnderLetsPlus0/_1_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_1_Sanity.log (real: 1.25, user: 1.13, sys: 0.11, mem: 551992 ko)
+COQC UnderLetsPlus0/_2_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_2_Sanity.log (real: 1.28, user: 1.13, sys: 0.15, mem: 552144 ko)
+COQC UnderLetsPlus0/_3_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_3_Sanity.log (real: 1.94, user: 1.75, sys: 0.19, mem: 558700 ko)
+COQC LiftLetsMap/_10_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_10_SuperFast.log (real: 2.47, user: 2.26, sys: 0.20, mem: 572976 ko)
+COQC SieveOfEratosthenes/_6_Sanity > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_6_Sanity.log (real: 4.99, user: 4.79, sys: 0.19, mem: 590996 ko)
+COQC LiftLetsMap/_1_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_1_SuperFast.log (real: 4.22, user: 4.05, sys: 0.17, mem: 576332 ko)
+COQC LiftLetsMap/_0_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_0_SuperFast.log (real: 4.40, user: 4.17, sys: 0.22, mem: 576868 ko)
+COQC LiftLetsMap/_2_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_2_SuperFast.log (real: 6.35, user: 6.13, sys: 0.22, mem: 574492 ko)
+COQC LiftLetsMap/_3_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_3_SuperFast.log (real: 7.61, user: 7.38, sys: 0.22, mem: 766868 ko)
+COQC LiftLetsMap/_7_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_7_SuperFast.log (real: 5.14, user: 4.95, sys: 0.18, mem: 571988 ko)
+COQC LiftLetsMap/_6_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_6_SuperFast.log (real: 8.45, user: 8.16, sys: 0.27, mem: 892368 ko)
+COQC LiftLetsMap/_5_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_5_SuperFast.log (real: 8.72, user: 8.37, sys: 0.33, mem: 891472 ko)
+COQC LiftLetsMap/_8_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_8_SuperFast.log (real: 4.34, user: 4.19, sys: 0.14, mem: 570436 ko)
+COQC Plus0Tree/_1_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_1_SuperFast.log (real: 1.95, user: 1.74, sys: 0.20, mem: 577328 ko)
+COQC LiftLetsMap/_9_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_9_SuperFast.log (real: 2.40, user: 2.22, sys: 0.18, mem: 569584 ko)
+COQC LiftLetsMap/_4_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_4_SuperFast.log (real: 12.80, user: 8.24, sys: 4.53, mem: 651980 ko)
+COQC Plus0Tree/_0_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_0_SuperFast.log (real: 3.96, user: 3.74, sys: 0.20, mem: 755200 ko)
+COQC Plus0Tree/_5_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_5_SuperFast.log (real: 3.22, user: 2.99, sys: 0.22, mem: 606304 ko)
+COQC Plus0Tree/_4_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_4_SuperFast.log (real: 5.88, user: 5.70, sys: 0.17, mem: 634320 ko)
+COQC Plus0Tree/_3_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_3_SuperFast.log (real: 6.31, user: 6.12, sys: 0.19, mem: 654812 ko)
+COQC SieveOfEratosthenes/_0_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_0_SuperFast.log (real: 4.83, user: 4.60, sys: 0.22, mem: 570160 ko)
+COQC Plus0Tree/_2_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_2_SuperFast.log (real: 9.24, user: 9.00, sys: 0.23, mem: 688368 ko)
+COQC SieveOfEratosthenes/_2_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_2_SuperFast.log (real: 4.67, user: 4.48, sys: 0.18, mem: 575276 ko)
+COQC SieveOfEratosthenes/_4_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_4_SuperFast.log (real: 1.83, user: 1.62, sys: 0.21, mem: 560836 ko)
+COQC SieveOfEratosthenes/_5_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_5_SuperFast.log (real: 2.06, user: 1.84, sys: 0.21, mem: 561972 ko)
+COQC SieveOfEratosthenes/_3_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_3_SuperFast.log (real: 5.14, user: 4.87, sys: 0.26, mem: 802344 ko)
+COQC UnderLetsPlus0/_0_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_0_SuperFast.log (real: 1.38, user: 1.21, sys: 0.16, mem: 552264 ko)
+COQC SieveOfEratosthenes/_1_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_1_SuperFast.log (real: 8.47, user: 7.43, sys: 1.03, mem: 604980 ko)
+COQC UnderLetsPlus0/_1_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_1_SuperFast.log (real: 1.36, user: 1.18, sys: 0.18, mem: 552356 ko)
+COQC SieveOfEratosthenes/_6_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_6_SuperFast.log (real: 6.42, user: 6.23, sys: 0.18, mem: 619044 ko)
+COQC Plus0Tree/_6_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_6_SuperFast.log (real: 16.29, user: 16.02, sys: 0.24, mem: 790024 ko)
+COQC UnderLetsPlus0/_2_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_2_SuperFast.log (real: 4.47, user: 4.29, sys: 0.17, mem: 574716 ko)
+COQC UnderLetsPlus0/_3_SuperFast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_3_SuperFast.log (real: 5.79, user: 5.54, sys: 0.25, mem: 825472 ko)
+COQC LiftLetsMap/_0_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_0_Fast.log (real: 14.49, user: 14.32, sys: 0.17, mem: 625804 ko)
+COQC LiftLetsMap/_1_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_1_Fast.log (real: 13.52, user: 13.31, sys: 0.21, mem: 619660 ko)
+COQC LiftLetsMap/_10_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_10_Fast.log (real: 16.30, user: 16.04, sys: 0.23, mem: 698764 ko)
+COQC LiftLetsMap/_3_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_3_Fast.log (real: 24.96, user: 24.67, sys: 0.28, mem: 890972 ko)
+COQC LiftLetsMap/_2_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_2_Fast.log (real: 28.11, user: 27.89, sys: 0.21, mem: 674420 ko)
+COQC LiftLetsMap/_5_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_5_Fast.log (real: 30.74, user: 30.38, sys: 0.33, mem: 972776 ko)
+COQC LiftLetsMap/_9_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_9_Fast.log (real: 17.20, user: 16.98, sys: 0.22, mem: 695316 ko)
+COQC LiftLetsMap/_6_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_6_Fast.log (real: 45.29, user: 44.80, sys: 0.44, mem: 973796 ko)
+COQC Plus0Tree/_1_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_1_Fast.log (real: 12.00, user: 11.75, sys: 0.23, mem: 723400 ko)
+COQC LiftLetsMap/_8_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_8_Fast.log (real: 50.09, user: 49.73, sys: 0.34, mem: 1202044 ko)
+COQC LiftLetsMap/_7_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_7_Fast.log (real: 53.74, user: 53.45, sys: 0.27, mem: 699268 ko)
+COQC Plus0Tree/_3_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_3_Fast.log (real: 27.09, user: 26.79, sys: 0.28, mem: 915588 ko)
+COQC LiftLetsMap/_4_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_4_Fast.log (real: 97.26, user: 57.70, sys: 39.43, mem: 1086260 ko)
+COQC Plus0Tree/_4_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_4_Fast.log (real: 34.07, user: 33.80, sys: 0.27, mem: 883124 ko)
+COQC Plus0Tree/_2_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_2_Fast.log (real: 41.45, user: 41.09, sys: 0.29, mem: 932700 ko)
+COQC Plus0Tree/_0_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_0_Fast.log (real: 55.35, user: 54.92, sys: 0.42, mem: 1297276 ko)
+COQC Plus0Tree/_5_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_5_Fast.log (real: 22.19, user: 21.89, sys: 0.28, mem: 812612 ko)
+COQC SieveOfEratosthenes/_2_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_2_Fast.log (real: 58.30, user: 58.02, sys: 0.27, mem: 791680 ko)
+COQC SieveOfEratosthenes/_0_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_0_Fast.log (real: 60.98, user: 60.76, sys: 0.21, mem: 685620 ko)
+COQC SieveOfEratosthenes/_3_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_3_Fast.log (real: 68.60, user: 67.99, sys: 0.53, mem: 1601596 ko)
+COQC SieveOfEratosthenes/_4_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_4_Fast.log (real: 26.73, user: 26.51, sys: 0.21, mem: 569060 ko)
+COQC SieveOfEratosthenes/_5_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_5_Fast.log (real: 26.98, user: 26.72, sys: 0.25, mem: 695616 ko)
+COQC SieveOfEratosthenes/_1_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_1_Fast.log (real: 123.88, user: 110.32, sys: 13.50, mem: 817232 ko)
+COQC UnderLetsPlus0/_1_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_1_Fast.log (real: 49.89, user: 49.68, sys: 0.21, mem: 608012 ko)
+COQC UnderLetsPlus0/_0_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_0_Fast.log (real: 51.89, user: 51.73, sys: 0.16, mem: 609848 ko)
+COQC SieveOfEratosthenes/_6_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_6_Fast.log (real: 75.10, user: 74.72, sys: 0.27, mem: 810352 ko)
+COQC UnderLetsPlus0/_2_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_2_Fast.log (real: 53.17, user: 52.85, sys: 0.31, mem: 797308 ko)
+COQC LiftLetsMap/_0_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_0_Medium.log (real: 48.93, user: 48.64, sys: 0.28, mem: 752304 ko)
+COQC LiftLetsMap/_10_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_10_Medium.log (real: 13.86, user: 13.58, sys: 0.27, mem: 760924 ko)
+COQC LiftLetsMap/_3_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_3_Medium.log (real: 1.54, user: 1.39, sys: 0.14, mem: 558948 ko)
+COQC UnderLetsPlus0/_3_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_3_Fast.log (real: 64.40, user: 63.72, sys: 0.67, mem: 2263132 ko)
+COQC LiftLetsMap/_5_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_5_Medium.log (real: 1.53, user: 1.36, sys: 0.16, mem: 558800 ko)
+COQC LiftLetsMap/_6_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_6_Medium.log (real: 11.56, user: 11.32, sys: 0.24, mem: 973628 ko)
+COQC LiftLetsMap/_1_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_1_Medium.log (real: 72.70, user: 72.18, sys: 0.42, mem: 813760 ko)
+COQC LiftLetsMap/_4_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_4_Medium.log (real: 82.15, user: 49.79, sys: 32.20, mem: 1240688 ko)
+COQC LiftLetsMap/_9_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_9_Medium.log (real: 15.55, user: 15.30, sys: 0.24, mem: 738832 ko)
+COQC LiftLetsMap/_2_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_2_Medium.log (real: 155.87, user: 155.40, sys: 0.47, mem: 1298296 ko)
+COQC Plus0Tree/_1_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_1_Medium.log (real: 72.87, user: 72.49, sys: 0.28, mem: 883092 ko)
+COQC Plus0Tree/_0_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_0_Medium.log (real: 148.77, user: 147.82, sys: 0.93, mem: 2878612 ko)
+COQC LiftLetsMap/_7_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_7_Medium.log (real: 242.53, user: 242.08, sys: 0.43, mem: 1328084 ko)
+COQC LiftLetsMap/_8_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_8_Medium.log (real: 266.25, user: 265.25, sys: 0.98, mem: 3362000 ko)
+COQC Plus0Tree/_4_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_4_Medium.log (real: 113.67, user: 113.07, sys: 0.58, mem: 1944376 ko)
+COQC Plus0Tree/_5_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_5_Medium.log (real: 122.28, user: 121.25, sys: 0.86, mem: 1790184 ko)
+COQC SieveOfEratosthenes/_0_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_0_Medium.log (real: 277.31, user: 276.58, sys: 0.38, mem: 812636 ko)
+COQC Plus0Tree/_3_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_3_Medium.log (real: 658.31, user: 657.93, sys: 0.37, mem: 1296972 ko)
+COQC SieveOfEratosthenes/_2_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_2_Medium.log (real: 271.99, user: 271.68, sys: 0.29, mem: 813564 ko)
+COQC SieveOfEratosthenes/_1_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_1_Medium.log (real: 533.98, user: 515.44, sys: 18.37, mem: 973636 ko)
+COQC SieveOfEratosthenes/_4_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_4_Medium.log (real: 196.88, user: 196.61, sys: 0.26, mem: 679068 ko)
+COQC SieveOfEratosthenes/_3_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_3_Medium.log (real: 335.08, user: 332.32, sys: 2.75, mem: 5734672 ko)
+COQC Plus0Tree/_6_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_6_Medium.log (real: 1201.81, user: 1200.70, sys: 1.06, mem: 2547224 ko)
+COQC SieveOfEratosthenes/_5_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_5_Medium.log (real: 183.50, user: 183.20, sys: 0.29, mem: 810612 ko)
+COQC UnderLetsPlus0/_0_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_0_Medium.log (real: 167.89, user: 167.60, sys: 0.27, mem: 694672 ko)
+COQC UnderLetsPlus0/_1_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_1_Medium.log (real: 166.10, user: 165.77, sys: 0.31, mem: 695120 ko)
+COQC SieveOfEratosthenes/_6_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_6_Medium.log (real: 367.13, user: 366.51, sys: 0.60, mem: 816708 ko)
+SED Template.v.in > LiftLetsMap/_0_Slow.v
+SED Template.v.in > LiftLetsMap/_1_Slow.v
+SED Template.v.in > LiftLetsMap/_10_Slow.v
+SED Template.v.in > LiftLetsMap/_2_Slow.v
+SED Template.v.in > LiftLetsMap/_3_Slow.v
+SED Template.v.in > LiftLetsMap/_4_Slow.v
+SED Template.v.in > LiftLetsMap/_5_Slow.v
+SED Template.v.in > LiftLetsMap/_6_Slow.v
+SED Template.v.in > LiftLetsMap/_7_Slow.v
+SED Template.v.in > LiftLetsMap/_8_Slow.v
+SED Template.v.in > LiftLetsMap/_9_Slow.v
+SED Template.v.in > Plus0Tree/_0_Slow.v
+SED Template.v.in > Plus0Tree/_1_Slow.v
+SED Template.v.in > Plus0Tree/_2_Slow.v
+SED Template.v.in > Plus0Tree/_3_Slow.v
+SED Template.v.in > Plus0Tree/_4_Slow.v
+SED Template.v.in > Plus0Tree/_5_Slow.v
+SED Template.v.in > Plus0Tree/_6_Slow.v
+SED Template.v.in > SieveOfEratosthenes/_0_Slow.v
+SED Template.v.in > SieveOfEratosthenes/_1_Slow.v
+SED Template.v.in > SieveOfEratosthenes/_2_Slow.v
+SED Template.v.in > SieveOfEratosthenes/_3_Slow.v
+SED Template.v.in > SieveOfEratosthenes/_4_Slow.v
+SED Template.v.in > SieveOfEratosthenes/_5_Slow.v
+SED Template.v.in > SieveOfEratosthenes/_6_Slow.v
+SED Template.v.in > UnderLetsPlus0/_0_Slow.v
+SED Template.v.in > UnderLetsPlus0/_1_Slow.v
+SED Template.v.in > UnderLetsPlus0/_2_Slow.v
+SED Template.v.in > UnderLetsPlus0/_3_Slow.v
+SED Template.v.in > LiftLetsMap/_0_VerySlow.v
+SED Template.v.in > LiftLetsMap/_1_VerySlow.v
+SED Template.v.in > LiftLetsMap/_10_VerySlow.v
+SED Template.v.in > LiftLetsMap/_2_VerySlow.v
+SED Template.v.in > LiftLetsMap/_3_VerySlow.v
+SED Template.v.in > LiftLetsMap/_4_VerySlow.v
+SED Template.v.in > LiftLetsMap/_5_VerySlow.v
+SED Template.v.in > LiftLetsMap/_6_VerySlow.v
+SED Template.v.in > LiftLetsMap/_7_VerySlow.v
+SED Template.v.in > LiftLetsMap/_8_VerySlow.v
+SED Template.v.in > LiftLetsMap/_9_VerySlow.v
+SED Template.v.in > Plus0Tree/_0_VerySlow.v
+SED Template.v.in > Plus0Tree/_1_VerySlow.v
+SED Template.v.in > Plus0Tree/_2_VerySlow.v
+SED Template.v.in > Plus0Tree/_3_VerySlow.v
+SED Template.v.in > Plus0Tree/_4_VerySlow.v
+SED Template.v.in > Plus0Tree/_5_VerySlow.v
+SED Template.v.in > Plus0Tree/_6_VerySlow.v
+SED Template.v.in > SieveOfEratosthenes/_0_VerySlow.v
+SED Template.v.in > SieveOfEratosthenes/_1_VerySlow.v
+SED Template.v.in > SieveOfEratosthenes/_2_VerySlow.v
+SED Template.v.in > SieveOfEratosthenes/_3_VerySlow.v
+SED Template.v.in > SieveOfEratosthenes/_4_VerySlow.v
+SED Template.v.in > SieveOfEratosthenes/_5_VerySlow.v
+SED Template.v.in > SieveOfEratosthenes/_6_VerySlow.v
+SED Template.v.in > UnderLetsPlus0/_0_VerySlow.v
+SED Template.v.in > UnderLetsPlus0/_1_VerySlow.v
+SED Template.v.in > UnderLetsPlus0/_2_VerySlow.v
+SED Template.v.in > UnderLetsPlus0/_3_VerySlow.v
+COQC UnderLetsPlus0/_2_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_2_Medium.log (real: 212.31, user: 211.99, sys: 0.30, mem: 880740 ko)
+COQC LiftLetsMap/_0_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_0_Slow.log (real: 92.62, user: 92.36, sys: 0.25, mem: 813968 ko)
+COQC Plus0Tree/_2_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_2_Medium.log (real: 1749.23, user: 1745.44, sys: 2.18, mem: 1897648 ko)
+COQC LiftLetsMap/_10_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_10_Slow.log (real: 53.95, user: 53.61, sys: 0.33, mem: 884868 ko)
+COQC LiftLetsMap/_3_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_3_Slow.log (real: 1.70, user: 1.54, sys: 0.15, mem: 559148 ko)
+COQC LiftLetsMap/_4_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_4_Slow.log (real: 1.54, user: 1.36, sys: 0.17, mem: 558960 ko)
+COQC LiftLetsMap/_5_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_5_Slow.log (real: 1.72, user: 1.53, sys: 0.18, mem: 558892 ko)
+COQC LiftLetsMap/_6_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_6_Slow.log (real: 1.59, user: 1.40, sys: 0.19, mem: 558864 ko)
+COQC LiftLetsMap/_1_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_1_Slow.log (real: 91.28, user: 90.98, sys: 0.30, mem: 843764 ko)
+COQC UnderLetsPlus0/_3_Medium > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_3_Medium.log (real: 380.74, user: 378.05, sys: 2.68, mem: 9277396 ko)
+COQC LiftLetsMap/_9_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_9_Slow.log (real: 54.16, user: 53.85, sys: 0.31, mem: 884756 ko)
+COQC LiftLetsMap/_2_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_2_Slow.log (real: 514.66, user: 514.32, sys: 0.33, mem: 1059468 ko)
+COQC Plus0Tree/_1_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_1_Slow.log (real: 235.03, user: 234.44, sys: 0.41, mem: 1057736 ko)
+COQC Plus0Tree/_0_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_0_Slow.log (real: 862.73, user: 859.75, sys: 2.95, mem: 3065128 ko)
+COQC LiftLetsMap/_7_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_7_Slow.log (real: 1288.26, user: 1287.43, sys: 0.55, mem: 1442068 ko)
+COQC Plus0Tree/_3_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_3_Slow.log (real: 347.68, user: 347.09, sys: 0.57, mem: 1173836 ko)
+COQC LiftLetsMap/_8_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_8_Slow.log (real: 1539.15, user: 1538.14, sys: 0.98, mem: 3686744 ko)
+COQC Plus0Tree/_2_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_2_Slow.log (real: 962.51, user: 959.95, sys: 1.32, mem: 1602648 ko)
+COQC Plus0Tree/_5_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_5_Slow.log (real: 688.30, user: 687.55, sys: 0.72, mem: 1173668 ko)
+COQC Plus0Tree/_4_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_4_Slow.log (real: 860.14, user: 859.67, sys: 0.43, mem: 1440812 ko)
+COQC SieveOfEratosthenes/_0_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_0_Slow.log (real: 1980.29, user: 1975.57, sys: 2.24, mem: 812532 ko)
+COQC SieveOfEratosthenes/_2_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_2_Slow.log (real: 1933.00, user: 1932.64, sys: 0.31, mem: 884252 ko)
+COQC Plus0Tree/_6_Fast > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_6_Fast.log (real: 6791.24, user: 6787.44, sys: 3.17, mem: 1209188 ko)
+COQC SieveOfEratosthenes/_4_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_4_Slow.log (real: 1168.31, user: 1167.96, sys: 0.31, mem: 810208 ko)
+COQC SieveOfEratosthenes/_5_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_5_Slow.log (real: 1126.28, user: 1125.98, sys: 0.28, mem: 810576 ko)
+COQC SieveOfEratosthenes/_1_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_1_Slow.log (real: 3804.02, user: 3726.46, sys: 77.27, mem: 1462328 ko)
+COQC SieveOfEratosthenes/_3_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_3_Slow.log (real: 2332.80, user: 2306.23, sys: 23.56, mem: 5134816 ko)
+COQC UnderLetsPlus0/_0_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_0_Slow.log (real: 1229.14, user: 1228.79, sys: 0.34, mem: 809592 ko)
+COQC UnderLetsPlus0/_1_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_1_Slow.log (real: 1210.45, user: 1209.73, sys: 0.69, mem: 809736 ko)
+COQC LiftLetsMap/_0_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_0_VerySlow.log (real: 1.32, user: 1.15, sys: 0.17, mem: 559032 ko)
+COQC LiftLetsMap/_1_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_1_VerySlow.log (real: 49.44, user: 49.11, sys: 0.33, mem: 754696 ko)
+COQC LiftLetsMap/_10_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_10_VerySlow.log (real: 167.79, user: 167.29, sys: 0.49, mem: 884472 ko)
+COQC UnderLetsPlus0/_2_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_2_Slow.log (real: 1436.87, user: 1433.79, sys: 1.43, mem: 961992 ko)
+COQC LiftLetsMap/_3_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_3_VerySlow.log (real: 1.91, user: 1.67, sys: 0.22, mem: 559472 ko)
+COQC LiftLetsMap/_4_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_4_VerySlow.log (real: 1.82, user: 1.62, sys: 0.20, mem: 559360 ko)
+COQC LiftLetsMap/_5_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_5_VerySlow.log (real: 1.75, user: 1.56, sys: 0.19, mem: 559268 ko)
+COQC LiftLetsMap/_6_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_6_VerySlow.log (real: 1.97, user: 1.75, sys: 0.22, mem: 559220 ko)
+COQC LiftLetsMap/_2_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_2_VerySlow.log (real: 340.59, user: 339.78, sys: 0.66, mem: 1298536 ko)
+COQC SieveOfEratosthenes/_6_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_6_Slow.log (real: 2459.68, user: 2459.07, sys: 0.38, mem: 969088 ko)
+COQC LiftLetsMap/_9_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_9_VerySlow.log (real: 161.97, user: 161.56, sys: 0.40, mem: 884684 ko)
+COQC UnderLetsPlus0/_3_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_3_Slow.log (real: 2304.55, user: 2279.38, sys: 23.07, mem: 12876560 ko)
+COQC Plus0Tree/_6_Slow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_6_Slow.log (real: 8284.51, user: 8281.83, sys: 2.21, mem: 2265188 ko)
+COQC Plus0Tree/_1_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_1_VerySlow.log (real: 912.60, user: 910.24, sys: 1.23, mem: 1173836 ko)
+COQC Plus0Tree/_3_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_3_VerySlow.log (real: 4674.83, user: 4667.03, sys: 5.13, mem: 2301072 ko)
+COQC Plus0Tree/_0_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_0_VerySlow.log (real: 7697.97, user: 7677.32, sys: 20.46, mem: 6766660 ko)
+COQC LiftLetsMap/_7_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_7_VerySlow.log (real: 9452.93, user: 9452.31, sys: 0.54, mem: 1605464 ko)
+COQC Plus0Tree/_2_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_2_VerySlow.log (real: 8644.32, user: 8632.64, sys: 9.25, mem: 2668176 ko)
+COQC Plus0Tree/_6_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_6_VerySlow.log (real: 1673.20, user: 1672.52, sys: 0.62, mem: 1549724 ko)
+COQC LiftLetsMap/_8_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/LiftLetsMap/_8_VerySlow.log (real: 11337.27, user: 11326.94, sys: 10.10, mem: 5760840 ko)
+COQC Plus0Tree/_5_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_5_VerySlow.log (real: 5520.91, user: 5511.19, sys: 5.83, mem: 2823580 ko)
+COQC Plus0Tree/_4_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/Plus0Tree/_4_VerySlow.log (real: 8630.76, user: 8626.44, sys: 4.19, mem: 3711652 ko)
+COQC SieveOfEratosthenes/_4_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_4_VerySlow.log (real: 882.91, user: 882.28, sys: 0.62, mem: 809964 ko)
+COQC SieveOfEratosthenes/_5_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_5_VerySlow.log (real: 870.70, user: 870.01, sys: 0.52, mem: 810628 ko)
+COQC SieveOfEratosthenes/_2_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_2_VerySlow.log (real: 13803.54, user: 13801.60, sys: 1.39, mem: 884400 ko)
+COQC SieveOfEratosthenes/_0_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_0_VerySlow.log (real: 14868.08, user: 14860.76, sys: 3.02, mem: 883044 ko)
+COQC UnderLetsPlus0/_0_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_0_VerySlow.log (real: 764.01, user: 763.70, sys: 0.30, mem: 809992 ko)
+COQC UnderLetsPlus0/_1_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_1_VerySlow.log (real: 785.20, user: 784.86, sys: 0.29, mem: 809872 ko)
+COQC UnderLetsPlus0/_2_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_2_VerySlow.log (real: 3690.47, user: 3689.19, sys: 0.83, mem: 962048 ko)
+COQC SieveOfEratosthenes/_3_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_3_VerySlow.log (real: 17436.58, user: 17208.44, sys: 222.50, mem: 5641508 ko)
+COQC SieveOfEratosthenes/_6_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_6_VerySlow.log (real: 18816.93, user: 18807.62, sys: 4.67, mem: 968648 ko)
+COQC SieveOfEratosthenes/_1_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/SieveOfEratosthenes/_1_VerySlow.log (real: 26726.92, user: 26469.02, sys: 251.04, mem: 3307888 ko)
+COQC UnderLetsPlus0/_3_VerySlow > LOG
+src/Rewriter/Rewriter/Examples/PerfTesting/UnderLetsPlus0/_3_VerySlow.log (real: 17098.70, user: 16940.73, sys: 157.57, mem: 14020576 ko)

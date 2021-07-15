@@ -1,184 +1,116 @@
-Params: n= 6 ,m= 19
-Tactic call cbv;rewrite! ran for 1.182 secs (1.156u,0.027s) (success)
-Params: n= 6 ,m= 20
-Tactic call cbv;rewrite! ran for 1.187 secs (1.183u,0.004s) (success)
-Params: n= 6 ,m= 21
-Tactic call cbv;rewrite! ran for 1.229 secs (1.22u,0.007s) (success)
-Params: n= 6 ,m= 22
-Tactic call cbv;rewrite! ran for 1.302 secs (1.287u,0.016s) (success)
-Params: n= 6 ,m= 23
-Tactic call cbv;rewrite! ran for 1.371 secs (1.368u,0.004s) (success)
-Params: n= 6 ,m= 24
-Tactic call cbv;rewrite! ran for 1.569 secs (1.56u,0.007s) (success)
-Params: n= 6 ,m= 25
-Tactic call cbv;rewrite! ran for 1.666 secs (1.651u,0.016s) (success)
-Params: n= 6 ,m= 26
-Tactic call cbv;rewrite! ran for 1.755 secs (1.752u,0.004s) (success)
-Params: n= 6 ,m= 27
-Tactic call cbv;rewrite! ran for 1.989 secs (1.991u,0.s) (success)
-Params: n= 6 ,m= 28
-Tactic call cbv;rewrite! ran for 2.45 secs (2.443u,0.004s) (success)
-Params: n= 6 ,m= 29
-Tactic call cbv;rewrite! ran for 2.585 secs (2.58u,0.s) (success)
-Params: n= 6 ,m= 30
-Tactic call cbv;rewrite! ran for 2.875 secs (2.867u,0.004s) (success)
-Params: n= 6 ,m= 31
-Tactic call cbv;rewrite! ran for 2.972 secs (2.96u,0.007s) (success)
-Params: n= 6 ,m= 32
-Tactic call cbv;rewrite! ran for 3.302 secs (3.296u,0.s) (success)
-Params: n= 6 ,m= 33
-Tactic call cbv;rewrite! ran for 3.366 secs (3.359u,0.004s) (success)
-Params: n= 6 ,m= 34
-Tactic call cbv;rewrite! ran for 3.72 secs (3.716u,0.s) (success)
-Params: n= 6 ,m= 35
-Tactic call cbv;rewrite! ran for 4.17 secs (4.164u,0.s) (success)
-Params: n= 6 ,m= 36
-Tactic call cbv;rewrite! ran for 4.157 secs (4.152u,0.s) (success)
-Params: n= 6 ,m= 37
-Tactic call cbv;rewrite! ran for 4.321 secs (4.316u,0.s) (success)
-Params: n= 6 ,m= 38
-Tactic call cbv;rewrite! ran for 4.675 secs (4.643u,0.024s) (success)
-Params: n= 6 ,m= 39
-Tactic call cbv;rewrite! ran for 4.921 secs (4.916u,0.s) (success)
-Params: n= 6 ,m= 40
-Tactic call cbv;rewrite! ran for 5.134 secs (5.119u,0.008s) (success)
-Params: n= 7 ,m= 19
-Tactic call cbv;rewrite! ran for 2.625 secs (2.623u,0.s) (success)
-Params: n= 7 ,m= 20
-Tactic call cbv;rewrite! ran for 2.835 secs (2.832u,0.s) (success)
-Params: n= 7 ,m= 21
-Tactic call cbv;rewrite! ran for 3.23 secs (3.227u,0.s) (success)
-Params: n= 7 ,m= 22
-Tactic call cbv;rewrite! ran for 3.474 secs (3.468u,0.s) (success)
-Params: n= 7 ,m= 23
-Tactic call cbv;rewrite! ran for 3.942 secs (3.931u,0.004s) (success)
-Params: n= 7 ,m= 24
-Tactic call cbv;rewrite! ran for 4.56 secs (4.556u,0.s) (success)
-Params: n= 7 ,m= 25
-Tactic call cbv;rewrite! ran for 4.568 secs (4.559u,0.003s) (success)
-Params: n= 7 ,m= 26
-Tactic call cbv;rewrite! ran for 5.052 secs (5.048u,0.s) (success)
-Params: n= 7 ,m= 27
-Tactic call cbv;rewrite! ran for 5.38 secs (5.372u,0.004s) (success)
-Params: n= 7 ,m= 28
-Tactic call cbv;rewrite! ran for 5.852 secs (5.844u,0.s) (success)
-Params: n= 7 ,m= 29
-Tactic call cbv;rewrite! ran for 6.315 secs (6.308u,0.s) (success)
-Params: n= 7 ,m= 30
-Tactic call cbv;rewrite! ran for 7.03 secs (7.019u,0.s) (success)
-Params: n= 7 ,m= 31
-Tactic call cbv;rewrite! ran for 7.245 secs (7.231u,0.004s) (success)
-Params: n= 7 ,m= 32
-Tactic call cbv;rewrite! ran for 7.962 secs (7.956u,0.s) (success)
-Params: n= 7 ,m= 33
-Tactic call cbv;rewrite! ran for 8.634 secs (8.62u,0.004s) (success)
-Params: n= 7 ,m= 34
-Tactic call cbv;rewrite! ran for 9.207 secs (9.195u,0.s) (success)
-Params: n= 7 ,m= 35
-Tactic call cbv;rewrite! ran for 9.983 secs (9.931u,0.04s) (success)
-Params: n= 7 ,m= 36
-Tactic call cbv;rewrite! ran for 10.366 secs (10.352u,0.004s) (success)
-Params: n= 7 ,m= 37
-Tactic call cbv;rewrite! ran for 10.958 secs (10.944u,0.s) (success)
-Params: n= 7 ,m= 38
-Tactic call cbv;rewrite! ran for 12.027 secs (11.976u,0.035s) (success)
-Params: n= 7 ,m= 39
-Tactic call cbv;rewrite! ran for 12.511 secs (12.496u,0.004s) (success)
-Params: n= 7 ,m= 40
-Tactic call cbv;rewrite! ran for 13.402 secs (13.383u,0.004s) (success)
-Params: n= 8 ,m= 19
-Tactic call cbv;rewrite! ran for 6.404 secs (6.396u,0.s) (success)
-Params: n= 8 ,m= 20
-Tactic call cbv;rewrite! ran for 7.444 secs (7.436u,0.004s) (success)
-Params: n= 8 ,m= 21
-Tactic call cbv;rewrite! ran for 7.937 secs (7.939u,0.s) (success)
-Params: n= 8 ,m= 22
-Tactic call cbv;rewrite! ran for 8.592 secs (8.587u,0.004s) (success)
-Params: n= 8 ,m= 23
-Tactic call cbv;rewrite! ran for 9.505 secs (9.507u,0.s) (success)
-Params: n= 8 ,m= 24
-Tactic call cbv;rewrite! ran for 11.084 secs (11.084u,0.s) (success)
-Params: n= 8 ,m= 25
-Tactic call cbv;rewrite! ran for 11.527 secs (11.528u,0.s) (success)
-Params: n= 8 ,m= 26
-Tactic call cbv;rewrite! ran for 13.004 secs (13.003u,0.s) (success)
-Params: n= 8 ,m= 27
-Tactic call cbv;rewrite! ran for 13.596 secs (13.6u,0.s) (success)
-Params: n= 8 ,m= 28
-Tactic call cbv;rewrite! ran for 15.221 secs (15.22u,0.s) (success)
-Params: n= 8 ,m= 29
-Tactic call cbv;rewrite! ran for 16.633 secs (16.632u,0.s) (success)
-Params: n= 8 ,m= 30
-Tactic call cbv;rewrite! ran for 17.884 secs (17.883u,0.s) (success)
-Params: n= 8 ,m= 31
-Tactic call cbv;rewrite! ran for 19.071 secs (19.072u,0.s) (success)
-Params: n= 8 ,m= 32
-Tactic call cbv;rewrite! ran for 20.04 secs (20.04u,0.s) (success)
-Params: n= 8 ,m= 33
-Tactic call cbv;rewrite! ran for 21.169 secs (21.123u,0.047s) (success)
-Params: n= 8 ,m= 34
-Tactic call cbv;rewrite! ran for 22.91 secs (22.892u,0.016s) (success)
-Params: n= 8 ,m= 35
-Tactic call cbv;rewrite! ran for 24.301 secs (24.3u,0.s) (success)
-Params: n= 8 ,m= 36
-Tactic call cbv;rewrite! ran for 25.741 secs (25.74u,0.s) (success)
-Params: n= 8 ,m= 37
-Tactic call cbv;rewrite! ran for 27.064 secs (27.064u,0.s) (success)
-Params: n= 8 ,m= 38
-Tactic call cbv;rewrite! ran for 27.866 secs (27.823u,0.039s) (success)
-Params: n= 8 ,m= 39
-Tactic call cbv;rewrite! ran for 30.67 secs (30.519u,0.152s) (success)
-Params: n= 8 ,m= 40
-Tactic call cbv;rewrite! ran for 31.121 secs (31.015u,0.103s) (success)
-Params: n= 9 ,m= 19
-Tactic call cbv;rewrite! ran for 15.422 secs (15.399u,0.02s) (success)
-Params: n= 9 ,m= 20
-Tactic call cbv;rewrite! ran for 17.458 secs (17.408u,0.051s) (success)
-Params: n= 9 ,m= 21
-Tactic call cbv;rewrite! ran for 18.017 secs (18.016u,0.s) (success)
-Params: n= 9 ,m= 22
-Tactic call cbv;rewrite! ran for 20.747 secs (20.747u,0.s) (success)
-Params: n= 9 ,m= 23
-Tactic call cbv;rewrite! ran for 22.582 secs (22.584u,0.s) (success)
-Params: n= 9 ,m= 24
-Tactic call cbv;rewrite! ran for 23.898 secs (23.899u,0.s) (success)
-Params: n= 9 ,m= 25
-Tactic call cbv;rewrite! ran for 27.823 secs (27.727u,0.096s) (success)
-Params: n= 9 ,m= 26
-Tactic call cbv;rewrite! ran for 28.827 secs (28.728u,0.099s) (success)
-Params: n= 9 ,m= 27
-Tactic call cbv;rewrite! ran for 31.089 secs (31.087u,0.s) (success)
-Params: n= 9 ,m= 28
-Tactic call cbv;rewrite! ran for 34.253 secs (34.139u,0.112s) (success)
-Params: n= 9 ,m= 29
-Tactic call cbv;rewrite! ran for 36.227 secs (36.227u,0.s) (success)
-Params: n= 9 ,m= 30
-Tactic call cbv;rewrite! ran for 38.177 secs (38.18u,0.s) (success)
-Params: n= 9 ,m= 31
-Tactic call cbv;rewrite! ran for 41.017 secs (41.015u,0.s) (success)
-Params: n= 9 ,m= 32
-Tactic call cbv;rewrite! ran for 44.042 secs (43.992u,0.051s) (success)
-Params: n= 9 ,m= 33
-Tactic call cbv;rewrite! ran for 47.117 secs (47.035u,0.084s) (success)
-Params: n= 9 ,m= 34
-Tactic call cbv;rewrite! ran for 49.02 secs (49.019u,0.s) (success)
-Params: n= 9 ,m= 35
-Tactic call cbv;rewrite! ran for 52.161 secs (52.16u,0.s) (success)
-Params: n= 9 ,m= 36
-Tactic call cbv;rewrite! ran for 54.455 secs (54.456u,0.s) (success)
-Params: n= 9 ,m= 37
-Tactic call cbv;rewrite! ran for 57.958 secs (57.955u,0.s) (success)
-Params: n= 9 ,m= 38
-Tactic call cbv;rewrite! ran for 61.667 secs (61.599u,0.068s) (success)
-Params: n= 9 ,m= 39
-Tactic call cbv;rewrite! ran for 64.677 secs (64.676u,0.s) (success)
-Params: n= 9 ,m= 40
-Tactic call cbv;rewrite! ran for 67.051 secs (67.051u,0.s) (success)
-Params: n= 14 ,m= 3
-Tactic call cbv;rewrite! ran for 23.781 secs (23.711u,0.071s) (success)
-Params: n= 15 ,m= 1
-Tactic call cbv;rewrite! ran for 9.291 secs (9.2u,0.092s) (success)
-Params: n= 15 ,m= 2
-Tactic call cbv;rewrite! ran for 25.084 secs (25.031u,0.052s) (success)
-Params: n= 15 ,m= 3
-Tactic call cbv;rewrite! ran for 46.905 secs (46.82u,0.088s) (success)
+Params: 0-nm= 68 , 1-n= 0 , 2-m= 68 , 3-input-size= 139 , 4-output-size= 3 , 5-num-rewrites= 68
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.164 secs (0.164u,0.s) (success)
+Params: 0-nm= 69 , 1-n= 0 , 2-m= 69 , 3-input-size= 141 , 4-output-size= 3 , 5-num-rewrites= 69
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.083 secs (0.082u,0.s) (success)
+Params: 0-nm= 70 , 1-n= 0 , 2-m= 70 , 3-input-size= 143 , 4-output-size= 3 , 5-num-rewrites= 70
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.085 secs (0.084u,0.s) (success)
+Params: 0-nm= 71 , 1-n= 0 , 2-m= 71 , 3-input-size= 145 , 4-output-size= 3 , 5-num-rewrites= 71
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.087 secs (0.087u,0.s) (success)
+Params: 0-nm= 72 , 1-n= 0 , 2-m= 72 , 3-input-size= 147 , 4-output-size= 3 , 5-num-rewrites= 72
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.094 secs (0.093u,0.s) (success)
+Params: 0-nm= 73 , 1-n= 0 , 2-m= 73 , 3-input-size= 149 , 4-output-size= 3 , 5-num-rewrites= 73
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.094 secs (0.094u,0.s) (success)
+Params: 0-nm= 75 , 1-n= 0 , 2-m= 75 , 3-input-size= 153 , 4-output-size= 3 , 5-num-rewrites= 75
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.087 secs (0.087u,0.s) (success)
+Params: 0-nm= 76 , 1-n= 0 , 2-m= 76 , 3-input-size= 155 , 4-output-size= 3 , 5-num-rewrites= 76
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.102 secs (0.102u,0.s) (success)
+Params: 0-nm= 77 , 1-n= 0 , 2-m= 77 , 3-input-size= 157 , 4-output-size= 3 , 5-num-rewrites= 77
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.105 secs (0.101u,0.003s) (success)
+Params: 0-nm= 78 , 1-n= 0 , 2-m= 78 , 3-input-size= 159 , 4-output-size= 3 , 5-num-rewrites= 78
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.093 secs (0.093u,0.s) (success)
+Params: 0-nm= 79 , 1-n= 0 , 2-m= 79 , 3-input-size= 161 , 4-output-size= 3 , 5-num-rewrites= 79
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.106 secs (0.106u,0.s) (success)
+Params: 0-nm= 80 , 1-n= 0 , 2-m= 80 , 3-input-size= 163 , 4-output-size= 3 , 5-num-rewrites= 80
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.113 secs (0.113u,0.s) (success)
+Params: 0-nm= 82 , 1-n= 0 , 2-m= 82 , 3-input-size= 167 , 4-output-size= 3 , 5-num-rewrites= 82
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.113 secs (0.113u,0.s) (success)
+Params: 0-nm= 72 , 1-n= 1 , 2-m= 24 , 3-input-size= 151 , 4-output-size= 7 , 5-num-rewrites= 72
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.079 secs (0.079u,0.s) (success)
+Params: 0-nm= 75 , 1-n= 1 , 2-m= 25 , 3-input-size= 157 , 4-output-size= 7 , 5-num-rewrites= 75
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.093 secs (0.093u,0.s) (success)
+Params: 0-nm= 81 , 1-n= 1 , 2-m= 27 , 3-input-size= 169 , 4-output-size= 7 , 5-num-rewrites= 81
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.106 secs (0.105u,0.s) (success)
+Params: 0-nm= 77 , 1-n= 2 , 2-m= 11 , 3-input-size= 169 , 4-output-size= 15 , 5-num-rewrites= 77
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.087 secs (0.087u,0.s) (success)
+Params: 0-nm= 96 , 1-n= 0 , 2-m= 96 , 3-input-size= 195 , 4-output-size= 3 , 5-num-rewrites= 96
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.154 secs (0.15u,0.003s) (success)
+Params: 0-nm= 110 , 1-n= 0 , 2-m= 110 , 3-input-size= 223 , 4-output-size= 3 , 5-num-rewrites= 110
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.186 secs (0.185u,0.s) (success)
+Params: 0-nm= 124 , 1-n= 0 , 2-m= 124 , 3-input-size= 251 , 4-output-size= 3 , 5-num-rewrites= 124
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.214 secs (0.214u,0.s) (success)
+Params: 0-nm= 138 , 1-n= 0 , 2-m= 138 , 3-input-size= 279 , 4-output-size= 3 , 5-num-rewrites= 138
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.29 secs (0.286u,0.003s) (success)
+Params: 0-nm= 152 , 1-n= 0 , 2-m= 152 , 3-input-size= 307 , 4-output-size= 3 , 5-num-rewrites= 152
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.344 secs (0.343u,0.s) (success)
+Params: 0-nm= 84 , 1-n= 1 , 2-m= 28 , 3-input-size= 175 , 4-output-size= 7 , 5-num-rewrites= 84
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.125 secs (0.125u,0.s) (success)
+Params: 0-nm= 105 , 1-n= 1 , 2-m= 35 , 3-input-size= 217 , 4-output-size= 7 , 5-num-rewrites= 105
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.163 secs (0.163u,0.s) (success)
+Params: 0-nm= 126 , 1-n= 1 , 2-m= 42 , 3-input-size= 259 , 4-output-size= 7 , 5-num-rewrites= 126
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.212 secs (0.212u,0.s) (success)
+Params: 0-nm= 147 , 1-n= 1 , 2-m= 49 , 3-input-size= 301 , 4-output-size= 7 , 5-num-rewrites= 147
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.324 secs (0.324u,0.s) (success)
+Params: 0-nm= 112 , 1-n= 2 , 2-m= 16 , 3-input-size= 239 , 4-output-size= 15 , 5-num-rewrites= 112
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.214 secs (0.214u,0.s) (success)
+Params: 0-nm= 140 , 1-n= 2 , 2-m= 20 , 3-input-size= 295 , 4-output-size= 15 , 5-num-rewrites= 140
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.26 secs (0.252u,0.007s) (success)
+Params: 0-nm= 126 , 1-n= 5 , 2-m= 2 , 3-input-size= 379 , 4-output-size= 127 , 5-num-rewrites= 126
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.187 secs (0.187u,0.s) (success)
+Params: 0-nm= 270 , 1-n= 3 , 2-m= 18 , 3-input-size= 571 , 4-output-size= 31 , 5-num-rewrites= 270
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.915 secs (0.91u,0.003s) (success)
+Params: 0-nm= 285 , 1-n= 3 , 2-m= 19 , 3-input-size= 601 , 4-output-size= 31 , 5-num-rewrites= 285
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.89 secs (0.889u,0.s) (success)
+Params: 0-nm= 300 , 1-n= 3 , 2-m= 20 , 3-input-size= 631 , 4-output-size= 31 , 5-num-rewrites= 300
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.043 secs (1.03u,0.011s) (success)
+Params: 0-nm= 315 , 1-n= 3 , 2-m= 21 , 3-input-size= 661 , 4-output-size= 31 , 5-num-rewrites= 315
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.058 secs (1.049u,0.007s) (success)
+Params: 0-nm= 330 , 1-n= 3 , 2-m= 22 , 3-input-size= 691 , 4-output-size= 31 , 5-num-rewrites= 330
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.177 secs (1.176u,0.s) (success)
+Params: 0-nm= 345 , 1-n= 3 , 2-m= 23 , 3-input-size= 721 , 4-output-size= 31 , 5-num-rewrites= 345
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.268 secs (1.267u,0.s) (success)
+Params: 0-nm= 360 , 1-n= 3 , 2-m= 24 , 3-input-size= 751 , 4-output-size= 31 , 5-num-rewrites= 360
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.375 secs (1.365u,0.007s) (success)
+Params: 0-nm= 375 , 1-n= 3 , 2-m= 25 , 3-input-size= 781 , 4-output-size= 31 , 5-num-rewrites= 375
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.433 secs (1.416u,0.011s) (success)
+Params: 0-nm= 390 , 1-n= 3 , 2-m= 26 , 3-input-size= 811 , 4-output-size= 31 , 5-num-rewrites= 390
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.655 secs (1.645u,0.003s) (success)
+Params: 0-nm= 405 , 1-n= 3 , 2-m= 27 , 3-input-size= 841 , 4-output-size= 31 , 5-num-rewrites= 405
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.79 secs (1.78u,0.003s) (success)
+Params: 0-nm= 420 , 1-n= 3 , 2-m= 28 , 3-input-size= 871 , 4-output-size= 31 , 5-num-rewrites= 420
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.953 secs (1.951u,0.s) (success)
+Params: 0-nm= 435 , 1-n= 3 , 2-m= 29 , 3-input-size= 901 , 4-output-size= 31 , 5-num-rewrites= 435
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.956 secs (1.953u,0.s) (success)
+Params: 0-nm= 450 , 1-n= 3 , 2-m= 30 , 3-input-size= 931 , 4-output-size= 31 , 5-num-rewrites= 450
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 2.267 secs (2.265u,0.s) (success)
+Params: 0-nm= 465 , 1-n= 3 , 2-m= 31 , 3-input-size= 961 , 4-output-size= 31 , 5-num-rewrites= 465
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 2.38 secs (2.377u,0.s) (success)
+Params: 0-nm= 480 , 1-n= 3 , 2-m= 32 , 3-input-size= 991 , 4-output-size= 31 , 5-num-rewrites= 480
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 2.457 secs (2.446u,0.007s) (success)
+Params: 0-nm= 495 , 1-n= 3 , 2-m= 33 , 3-input-size= 1021 , 4-output-size= 31 , 5-num-rewrites= 495
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 2.604 secs (2.589u,0.011s) (success)
+Params: 0-nm= 510 , 1-n= 3 , 2-m= 34 , 3-input-size= 1051 , 4-output-size= 31 , 5-num-rewrites= 510
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 2.735 secs (2.732u,0.s) (success)
+Params: 0-nm= 525 , 1-n= 3 , 2-m= 35 , 3-input-size= 1081 , 4-output-size= 31 , 5-num-rewrites= 525
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 3.162 secs (3.158u,0.s) (success)
+Params: 0-nm= 540 , 1-n= 3 , 2-m= 36 , 3-input-size= 1111 , 4-output-size= 31 , 5-num-rewrites= 540
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 3.215 secs (3.211u,0.s) (success)
+Params: 0-nm= 555 , 1-n= 3 , 2-m= 37 , 3-input-size= 1141 , 4-output-size= 31 , 5-num-rewrites= 555
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 3.374 secs (3.37u,0.s) (success)
+Params: 0-nm= 570 , 1-n= 3 , 2-m= 38 , 3-input-size= 1171 , 4-output-size= 31 , 5-num-rewrites= 570
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 3.813 secs (3.805u,0.004s) (success)
+Params: 0-nm= 585 , 1-n= 3 , 2-m= 39 , 3-input-size= 1201 , 4-output-size= 31 , 5-num-rewrites= 585
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 3.75 secs (3.746u,0.s) (success)
+Params: 0-nm= 600 , 1-n= 3 , 2-m= 40 , 3-input-size= 1231 , 4-output-size= 31 , 5-num-rewrites= 600
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 3.914 secs (3.91u,0.s) (success)
+Params: 0-nm= 615 , 1-n= 3 , 2-m= 41 , 3-input-size= 1261 , 4-output-size= 31 , 5-num-rewrites= 615
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 4.11 secs (4.101u,0.003s) (success)
+Params: 0-nm= 630 , 1-n= 3 , 2-m= 42 , 3-input-size= 1291 , 4-output-size= 31 , 5-num-rewrites= 630
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 4.185 secs (4.18u,0.s) (success)
+Params: 0-nm= 645 , 1-n= 3 , 2-m= 43 , 3-input-size= 1321 , 4-output-size= 31 , 5-num-rewrites= 645
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 4.558 secs (4.553u,0.s) (success)
+Params: 0-nm= 248 , 1-n= 4 , 2-m= 8 , 3-input-size= 559 , 4-output-size= 63 , 5-num-rewrites= 248
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.683 secs (0.683u,0.s) (success)
+Params: 0-nm= 465 , 1-n= 4 , 2-m= 15 , 3-input-size= 993 , 4-output-size= 63 , 5-num-rewrites= 465
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 2.143 secs (2.141u,0.s) (success)
+Params: 0-nm= 511 , 1-n= 8 , 2-m= 1 , 3-input-size= 2045 , 4-output-size= 1023 , 5-num-rewrites= 511
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.283 secs (1.282u,0.s) (success)

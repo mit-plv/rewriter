@@ -1,0 +1,132 @@
+Params: n= 38
+Tactic call cbn-regression-cubic ran for 1.468 secs (1.464u,0.004s) (success)
+Params: n= 41
+Tactic call cbn-regression-cubic ran for 1.702 secs (1.702u,0.s) (success)
+Params: n= 44
+Tactic call cbn-regression-cubic ran for 2.096 secs (2.096u,0.s) (success)
+Params: n= 47
+Tactic call cbn-regression-cubic ran for 2.604 secs (2.604u,0.s) (success)
+Params: n= 53
+Tactic call cbn-regression-cubic ran for 3.413 secs (3.413u,0.s) (success)
+Params: n= 57
+Tactic call cbn-regression-cubic ran for 4.176 secs (4.176u,0.s) (success)
+Params: n= 58
+Tactic call cbn-regression-cubic ran for 4.401 secs (4.401u,0.s) (success)
+Params: n= 59
+Tactic call cbn-regression-cubic ran for 4.642 secs (4.642u,0.s) (success)
+Params: n= 60
+Tactic call cbn-regression-cubic ran for 4.838 secs (4.838u,0.s) (success)
+Params: n= 61
+Tactic call cbn-regression-cubic ran for 5.071 secs (5.067u,0.003s) (success)
+Params: n= 62
+Tactic call cbn-regression-cubic ran for 5.351 secs (5.35u,0.s) (success)
+Params: n= 64
+Tactic call cbn-regression-cubic ran for 5.496 secs (5.496u,0.s) (success)
+Params: n= 65
+Tactic call cbn-regression-cubic ran for 5.832 secs (5.824u,0.007s) (success)
+Params: n= 66
+Tactic call cbn-regression-cubic ran for 6.151 secs (6.147u,0.003s) (success)
+Params: n= 67
+Tactic call cbn-regression-cubic ran for 6.464 secs (6.464u,0.s) (success)
+Params: n= 68
+Tactic call cbn-regression-cubic ran for 6.653 secs (6.653u,0.s) (success)
+Params: n= 69
+Tactic call cbn-regression-cubic ran for 7.052 secs (7.052u,0.s) (success)
+Params: n= 71
+Tactic call cbn-regression-cubic ran for 7.762 secs (7.758u,0.004s) (success)
+Params: n= 72
+Tactic call cbn-regression-cubic ran for 7.855 secs (7.852u,0.003s) (success)
+Params: n= 74
+Tactic call cbn-regression-cubic ran for 8.638 secs (8.634u,0.004s) (success)
+Params: n= 75
+Tactic call cbn-regression-cubic ran for 9.053 secs (9.052u,0.s) (success)
+Params: n= 76
+Tactic call cbn-regression-cubic ran for 9.37 secs (9.37u,0.s) (success)
+Params: n= 77
+Tactic call cbn-regression-cubic ran for 9.853 secs (9.853u,0.s) (success)
+Params: n= 78
+Tactic call cbn-regression-cubic ran for 10.383 secs (10.382u,0.s) (success)
+Params: n= 79
+Tactic call cbn-regression-cubic ran for 10.761 secs (10.761u,0.s) (success)
+Params: n= 80
+Tactic call cbn-regression-cubic ran for 10.591 secs (10.591u,0.s) (success)
+Params: n= 81
+Tactic call cbn-regression-cubic ran for 11.027 secs (11.023u,0.003s) (success)
+Params: n= 82
+Tactic call cbn-regression-cubic ran for 11.496 secs (11.491u,0.003s) (success)
+Params: n= 83
+Tactic call cbn-regression-cubic ran for 11.942 secs (11.942u,0.s) (success)
+Params: n= 84
+Tactic call cbn-regression-cubic ran for 12.371 secs (12.371u,0.s) (success)
+Params: n= 85
+Tactic call cbn-regression-cubic ran for 12.938 secs (12.938u,0.s) (success)
+Params: n= 86
+Tactic call cbn-regression-cubic ran for 13.501 secs (13.501u,0.s) (success)
+Params: n= 87
+Tactic call cbn-regression-cubic ran for 14.098 secs (14.09u,0.007s) (success)
+Params: n= 88
+Tactic call cbn-regression-cubic ran for 14.19 secs (14.181u,0.007s) (success)
+Params: n= 89
+Tactic call cbn-regression-cubic ran for 14.68 secs (14.676u,0.003s) (success)
+Params: n= 90
+Tactic call cbn-regression-cubic ran for 15.435 secs (15.435u,0.s) (success)
+Params: n= 92
+Tactic call cbn-regression-cubic ran for 16.414 secs (16.414u,0.s) (success)
+Params: n= 93
+Tactic call cbn-regression-cubic ran for 17.164 secs (17.164u,0.s) (success)
+Params: n= 94
+Tactic call cbn-regression-cubic ran for 17.864 secs (17.864u,0.s) (success)
+Params: n= 96
+Tactic call cbn-regression-cubic ran for 18.009 secs (18.009u,0.s) (success)
+Params: n= 97
+Tactic call cbn-regression-cubic ran for 18.56 secs (18.56u,0.s) (success)
+Params: n= 98
+Tactic call cbn-regression-cubic ran for 19.311 secs (19.311u,0.s) (success)
+Params: n= 99
+Tactic call cbn-regression-cubic ran for 19.961 secs (19.956u,0.003s) (success)
+Params: n= 100
+Tactic call cbn-regression-cubic ran for 20.458 secs (20.458u,0.s) (success)
+Params: n= 101
+Tactic call cbn-regression-cubic ran for 21.115 secs (21.107u,0.007s) (success)
+Params: n= 102
+Tactic call cbn-regression-cubic ran for 21.758 secs (21.753u,0.004s) (success)
+Params: n= 103
+Tactic call cbn-regression-cubic ran for 22.307 secs (22.307u,0.s) (success)
+Params: n= 105
+Tactic call cbn-regression-cubic ran for 22.262 secs (22.262u,0.s) (success)
+Params: n= 106
+Tactic call cbn-regression-cubic ran for 23.082 secs (23.081u,0.s) (success)
+Params: n= 107
+Tactic call cbn-regression-cubic ran for 23.808 secs (23.807u,0.s) (success)
+Params: n= 108
+Tactic call cbn-regression-cubic ran for 24.332 secs (24.332u,0.s) (success)
+Params: n= 111
+Tactic call cbn-regression-cubic ran for 27.086 secs (27.085u,0.s) (success)
+Params: n= 112
+Tactic call cbn-regression-cubic ran for 26.73 secs (26.73u,0.s) (success)
+Params: n= 114
+Tactic call cbn-regression-cubic ran for 28.493 secs (28.488u,0.003s) (success)
+Params: n= 116
+Tactic call cbn-regression-cubic ran for 30.131 secs (30.126u,0.004s) (success)
+Params: n= 117
+Tactic call cbn-regression-cubic ran for 31.181 secs (31.176u,0.004s) (success)
+Params: n= 119
+Tactic call cbn-regression-cubic ran for 33.27 secs (33.27u,0.s) (success)
+Params: n= 120
+Tactic call cbn-regression-cubic ran for 33.676 secs (33.675u,0.s) (success)
+Params: n= 122
+Tactic call cbn-regression-cubic ran for 35.501 secs (35.501u,0.s) (success)
+Params: n= 124
+Tactic call cbn-regression-cubic ran for 37.45 secs (37.445u,0.s) (success)
+Params: n= 125
+Tactic call cbn-regression-cubic ran for 38.512 secs (38.509u,0.s) (success)
+Params: n= 130
+Tactic call cbn-regression-cubic ran for 42.418 secs (42.418u,0.s) (success)
+Params: n= 133
+Tactic call cbn-regression-cubic ran for 45.699 secs (45.698u,0.s) (success)
+Params: n= 136
+Tactic call cbn-regression-cubic ran for 48.417 secs (48.416u,0.s) (success)
+Params: n= 139
+Tactic call cbn-regression-cubic ran for 52.246 secs (52.245u,0.s) (success)
+Params: n= 142
+Tactic call cbn-regression-cubic ran for 56.249 secs (56.249u,0.s) (success)

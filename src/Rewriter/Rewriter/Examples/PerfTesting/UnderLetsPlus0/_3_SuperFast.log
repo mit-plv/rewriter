@@ -1,60 +1,100 @@
-Params: n= 1
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.003 secs (0.004u,0.s) (success)
-Params: n= 2
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.044 secs (0.04u,0.004s) (success)
-Params: n= 3
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.009 secs (0.008u,0.s) (success)
-Params: n= 4
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.013 secs (0.016u,0.s) (success)
-Params: n= 5
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.017 secs (0.016u,0.s) (success)
-Params: n= 6
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.095 secs (0.091u,0.s) (success)
-Params: n= 7
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.029 secs (0.028u,0.s) (success)
-Params: n= 8
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.037 secs (0.036u,0.s) (success)
-Params: n= 9
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.045 secs (0.048u,0.s) (success)
-Params: n= 10
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.057 secs (0.06u,0.s) (success)
-Params: n= 11
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.069 secs (0.067u,0.s) (success)
-Params: n= 12
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.083 secs (0.084u,0.s) (success)
-Params: n= 13
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.101 secs (0.1u,0.s) (success)
-Params: n= 14
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.12 secs (0.119u,0.s) (success)
-Params: n= 15
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.142 secs (0.139u,0.s) (success)
-Params: n= 16
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.17 secs (0.172u,0.s) (success)
-Params: n= 17
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.196 secs (0.195u,0.s) (success)
-Params: n= 18
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.229 secs (0.227u,0.s) (success)
-Params: n= 19
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.268 secs (0.268u,0.s) (success)
-Params: n= 20
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.307 secs (0.308u,0.s) (success)
-Params: n= 21
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.354 secs (0.355u,0.s) (success)
-Params: n= 22
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.404 secs (0.403u,0.s) (success)
-Params: n= 23
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.461 secs (0.459u,0.s) (success)
-Params: n= 24
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.525 secs (0.524u,0.s) (success)
-Params: n= 25
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.596 secs (0.596u,0.s) (success)
-Params: n= 26
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.667 secs (0.667u,0.s) (success)
-Params: n= 27
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.751 secs (0.751u,0.s) (success)
-Params: n= 28
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.845 secs (0.847u,0.s) (success)
-Params: n= 29
-Tactic call cbv;rewrite_strat(bottomup) ran for 0.944 secs (0.944u,0.004s) (success)
-Params: n= 30
-Tactic call cbv;rewrite_strat(bottomup) ran for 1.049 secs (1.048u,0.s) (success)
+Params: n= 307
+Tactic call Rewrite_for_gen:etransitivity_for_sides ran for 0. secs (0.u,0.s) (success)
+Tactic call Rewrite_for_gen:generalize_hyps_for_rewriting ran for 0.008 secs (0.008u,0.s) (success)
+Tactic call do_reify_rhs_with:notypeclasses_refine ran for 0. secs (0.u,0.s) (success)
+Tactic call do_reify_rhs_with:reify_hint ran for 0.173 secs (0.173u,0.s) (success)
+Tactic call reification ran for 0.182 secs (0.182u,0.s) (success)
+Tactic call do_rewrite_with:refine_trans ran for 0. secs (0.u,0.s) (success)
+Tactic call do_rewrite_with:refine_interp_rewrite ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call prove_Wf_with:refine ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call prove_Wf_with:vm_compute ran for 0.005 secs (0.005u,0.s) (success)
+Tactic call prove_Wf_with:split ran for 0.004 secs (0.004u,0.s) (success)
+Tactic call prove_Wf_with:reflexivity ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call prove_Wf_with:reflexivity ran for 0. secs (0.u,0.s) (success)
+Tactic call prove_Wf ran for 0.013 secs (0.013u,0.s) (success)
+Tactic call vm_compute_and_unify_in_rewrite ran for 0.113 secs (0.113u,0.s) (success)
+Tactic call do_rewrite_with:vm_cast_no_check ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call rewriting ran for 0.131 secs (0.131u,0.s) (success)
+Tactic call final_cbv ran for 0.024 secs (0.024u,0.s) (success)
+Tactic call Rewrite_for_gen ran for 0.363 secs (0.363u,0.s) (success)
+Tactic call Rewrite_lhs_for-regression-quadratic ran for 0.363 secs (0.363u,0.s) (success)
+Params: n= 614
+Tactic call Rewrite_for_gen:etransitivity_for_sides ran for 0. secs (0.u,0.s) (success)
+Tactic call Rewrite_for_gen:generalize_hyps_for_rewriting ran for 0.01 secs (0.01u,0.s) (success)
+Tactic call do_reify_rhs_with:notypeclasses_refine ran for 0. secs (0.u,0.s) (success)
+Tactic call do_reify_rhs_with:reify_hint ran for 0.089 secs (0.089u,0.s) (success)
+Tactic call reification ran for 0.098 secs (0.098u,0.s) (success)
+Tactic call do_rewrite_with:refine_trans ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call do_rewrite_with:refine_interp_rewrite ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call prove_Wf_with:refine ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call prove_Wf_with:vm_compute ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call prove_Wf_with:split ran for 0.004 secs (0.004u,0.s) (success)
+Tactic call prove_Wf_with:reflexivity ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call prove_Wf_with:reflexivity ran for 0. secs (0.u,0.s) (success)
+Tactic call prove_Wf ran for 0.011 secs (0.011u,0.s) (success)
+Tactic call vm_compute_and_unify_in_rewrite ran for 0.285 secs (0.282u,0.003s) (success)
+Tactic call do_rewrite_with:vm_cast_no_check ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call rewriting ran for 0.302 secs (0.297u,0.004s) (success)
+Tactic call final_cbv ran for 0.062 secs (0.058u,0.003s) (success)
+Tactic call Rewrite_for_gen ran for 0.486 secs (0.478u,0.007s) (success)
+Tactic call Rewrite_lhs_for-regression-quadratic ran for 0.486 secs (0.478u,0.007s) (success)
+Params: n= 920
+Tactic call Rewrite_for_gen:etransitivity_for_sides ran for 0. secs (0.u,0.s) (success)
+Tactic call Rewrite_for_gen:generalize_hyps_for_rewriting ran for 0.007 secs (0.007u,0.s) (success)
+Tactic call do_reify_rhs_with:notypeclasses_refine ran for 0. secs (0.u,0.s) (success)
+Tactic call do_reify_rhs_with:reify_hint ran for 0.092 secs (0.092u,0.s) (success)
+Tactic call reification ran for 0.101 secs (0.101u,0.s) (success)
+Tactic call do_rewrite_with:refine_trans ran for 0. secs (0.u,0.s) (success)
+Tactic call do_rewrite_with:refine_interp_rewrite ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call prove_Wf_with:refine ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call prove_Wf_with:vm_compute ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call prove_Wf_with:split ran for 0.004 secs (0.004u,0.s) (success)
+Tactic call prove_Wf_with:reflexivity ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call prove_Wf_with:reflexivity ran for 0. secs (0.u,0.s) (success)
+Tactic call prove_Wf ran for 0.01 secs (0.01u,0.s) (success)
+Tactic call vm_compute_and_unify_in_rewrite ran for 0.57 secs (0.562u,0.007s) (success)
+Tactic call do_rewrite_with:vm_cast_no_check ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call rewriting ran for 0.586 secs (0.578u,0.008s) (success)
+Tactic call final_cbv ran for 0.108 secs (0.105u,0.003s) (success)
+Tactic call Rewrite_for_gen ran for 0.817 secs (0.805u,0.011s) (success)
+Tactic call Rewrite_lhs_for-regression-quadratic ran for 0.817 secs (0.806u,0.011s) (success)
+Params: n= 1227
+Tactic call Rewrite_for_gen:etransitivity_for_sides ran for 0. secs (0.u,0.s) (success)
+Tactic call Rewrite_for_gen:generalize_hyps_for_rewriting ran for 0.007 secs (0.007u,0.s) (success)
+Tactic call do_reify_rhs_with:notypeclasses_refine ran for 0. secs (0.u,0.s) (success)
+Tactic call do_reify_rhs_with:reify_hint ran for 0.106 secs (0.106u,0.s) (success)
+Tactic call reification ran for 0.114 secs (0.114u,0.s) (success)
+Tactic call do_rewrite_with:refine_trans ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call do_rewrite_with:refine_interp_rewrite ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call prove_Wf_with:refine ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call prove_Wf_with:vm_compute ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call prove_Wf_with:split ran for 0.004 secs (0.004u,0.s) (success)
+Tactic call prove_Wf_with:reflexivity ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call prove_Wf_with:reflexivity ran for 0. secs (0.u,0.s) (success)
+Tactic call prove_Wf ran for 0.01 secs (0.01u,0.s) (success)
+Tactic call vm_compute_and_unify_in_rewrite ran for 0.822 secs (0.81u,0.011s) (success)
+Tactic call do_rewrite_with:vm_cast_no_check ran for 0.003 secs (0.003u,0.s) (success)
+Tactic call rewriting ran for 0.84 secs (0.828u,0.012s) (success)
+Tactic call final_cbv ran for 0.204 secs (0.196u,0.007s) (success)
+Tactic call Rewrite_for_gen ran for 1.18 secs (1.16u,0.02s) (success)
+Tactic call Rewrite_lhs_for-regression-quadratic ran for 1.181 secs (1.161u,0.02s) (success)
+Params: n= 1533
+Tactic call Rewrite_for_gen:etransitivity_for_sides ran for 0. secs (0.u,0.s) (success)
+Tactic call Rewrite_for_gen:generalize_hyps_for_rewriting ran for 0.007 secs (0.007u,0.s) (success)
+Tactic call do_reify_rhs_with:notypeclasses_refine ran for 0. secs (0.u,0.s) (success)
+Tactic call do_reify_rhs_with:reify_hint ran for 0.091 secs (0.091u,0.s) (success)
+Tactic call reification ran for 0.1 secs (0.1u,0.s) (success)
+Tactic call do_rewrite_with:refine_trans ran for 0. secs (0.u,0.s) (success)
+Tactic call do_rewrite_with:refine_interp_rewrite ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call prove_Wf_with:refine ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call prove_Wf_with:vm_compute ran for 0.005 secs (0.005u,0.s) (success)
+Tactic call prove_Wf_with:split ran for 0.004 secs (0.004u,0.s) (success)
+Tactic call prove_Wf_with:reflexivity ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call prove_Wf_with:reflexivity ran for 0. secs (0.u,0.s) (success)
+Tactic call prove_Wf ran for 0.014 secs (0.014u,0.s) (success)
+Tactic call vm_compute_and_unify_in_rewrite ran for 1.224 secs (1.196u,0.027s) (success)
+Tactic call do_rewrite_with:vm_cast_no_check ran for 0.004 secs (0.004u,0.s) (success)
+Tactic call rewriting ran for 1.245 secs (1.217u,0.027s) (success)
+Tactic call final_cbv ran for 0.341 secs (0.341u,0.s) (success)
+Tactic call Rewrite_for_gen ran for 1.707 secs (1.679u,0.027s) (success)
+Tactic call Rewrite_lhs_for-regression-quadratic ran for 1.708 secs (1.68u,0.028s) (success)

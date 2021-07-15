@@ -1,1000 +1,202 @@
-Params: n= 4001
-Tactic call lazy ran for 13.417 secs (13.152u,0.264s) (success)
-Params: n= 4003
-Tactic call lazy ran for 13.902 secs (13.696u,0.207s) (success)
-Params: n= 4005
-Tactic call lazy ran for 12.726 secs (12.488u,0.24s) (success)
-Params: n= 4007
-Tactic call lazy ran for 12.837 secs (12.584u,0.252s) (success)
-Params: n= 4009
-Tactic call lazy ran for 12.862 secs (12.579u,0.28s) (success)
-Params: n= 4011
-Tactic call lazy ran for 12.838 secs (12.575u,0.263s) (success)
-Params: n= 4013
-Tactic call lazy ran for 12.915 secs (12.664u,0.248s) (success)
-Params: n= 4015
-Tactic call lazy ran for 12.914 secs (12.664u,0.247s) (success)
-Params: n= 4017
-Tactic call lazy ran for 12.939 secs (12.644u,0.291s) (success)
-Params: n= 4019
-Tactic call lazy ran for 12.966 secs (12.743u,0.224s) (success)
-Params: n= 4021
-Tactic call lazy ran for 12.987 secs (12.715u,0.271s) (success)
-Params: n= 4023
-Tactic call lazy ran for 13.099 secs (12.907u,0.192s) (success)
-Params: n= 4025
-Tactic call lazy ran for 13.058 secs (12.807u,0.251s) (success)
-Params: n= 4027
-Tactic call lazy ran for 13.098 secs (12.84u,0.255s) (success)
-Params: n= 4029
-Tactic call lazy ran for 13.089 secs (12.768u,0.323s) (success)
-Params: n= 4031
-Tactic call lazy ran for 13.125 secs (12.852u,0.272s) (success)
-Params: n= 4033
-Tactic call lazy ran for 13.096 secs (12.812u,0.283s) (success)
-Params: n= 4035
-Tactic call lazy ran for 13.16 secs (12.851u,0.307s) (success)
-Params: n= 4037
-Tactic call lazy ran for 13.149 secs (12.888u,0.259s) (success)
-Params: n= 4039
-Tactic call lazy ran for 13.075 secs (12.783u,0.292s) (success)
-Params: n= 4041
-Tactic call lazy ran for 13.288 secs (13.063u,0.224s) (success)
-Params: n= 4043
-Tactic call lazy ran for 13.204 secs (12.936u,0.272s) (success)
-Params: n= 4045
-Tactic call lazy ran for 13.196 secs (12.92u,0.275s) (success)
-Params: n= 4047
-Tactic call lazy ran for 13.404 secs (13.099u,0.304s) (success)
-Params: n= 4049
-Tactic call lazy ran for 13.23 secs (12.971u,0.259s) (success)
-Params: n= 4051
-Tactic call lazy ran for 13.16 secs (12.924u,0.24s) (success)
-Params: n= 4053
-Tactic call lazy ran for 14.703 secs (14.423u,0.279s) (success)
-Params: n= 4055
-Tactic call lazy ran for 13.267 secs (12.983u,0.284s) (success)
-Params: n= 4057
-Tactic call lazy ran for 13.295 secs (13.u,0.295s) (success)
-Params: n= 4059
-Tactic call lazy ran for 13.281 secs (13.055u,0.227s) (success)
-Params: n= 4061
-Tactic call lazy ran for 13.335 secs (13.096u,0.24s) (success)
-Params: n= 4063
-Tactic call lazy ran for 13.345 secs (13.063u,0.279s) (success)
-Params: n= 4065
-Tactic call lazy ran for 13.371 secs (13.1u,0.272s) (success)
-Params: n= 4067
-Tactic call lazy ran for 13.42 secs (13.184u,0.236s) (success)
-Params: n= 4069
-Tactic call lazy ran for 13.468 secs (13.252u,0.215s) (success)
-Params: n= 4071
-Tactic call lazy ran for 13.463 secs (13.223u,0.239s) (success)
-Params: n= 4073
-Tactic call lazy ran for 13.42 secs (13.175u,0.243s) (success)
-Params: n= 4075
-Tactic call lazy ran for 13.461 secs (13.144u,0.315s) (success)
-Params: n= 4077
-Tactic call lazy ran for 13.455 secs (13.179u,0.275s) (success)
-Params: n= 4079
-Tactic call lazy ran for 13.431 secs (13.176u,0.256s) (success)
-Params: n= 4081
-Tactic call lazy ran for 13.438 secs (13.208u,0.227s) (success)
-Params: n= 4083
-Tactic call lazy ran for 13.47 secs (13.223u,0.248s) (success)
-Params: n= 4085
-Tactic call lazy ran for 13.542 secs (13.264u,0.28s) (success)
-Params: n= 4087
-Tactic call lazy ran for 13.521 secs (13.284u,0.236s) (success)
-Params: n= 4089
-Tactic call lazy ran for 13.486 secs (13.187u,0.299s) (success)
-Params: n= 4091
-Tactic call lazy ran for 13.527 secs (13.251u,0.275s) (success)
-Params: n= 4093
-Tactic call lazy ran for 14.818 secs (14.488u,0.332s) (success)
-Params: n= 4095
-Tactic call lazy ran for 14.952 secs (14.611u,0.339s) (success)
-Params: n= 4097
-Tactic call lazy ran for 14.907 secs (14.675u,0.231s) (success)
-Params: n= 4099
-Tactic call lazy ran for 13.573 secs (13.344u,0.228s) (success)
-Params: n= 4101
-Tactic call lazy ran for 13.528 secs (13.244u,0.283s) (success)
-Params: n= 4103
-Tactic call lazy ran for 13.532 secs (13.307u,0.224s) (success)
-Params: n= 4105
-Tactic call lazy ran for 13.519 secs (13.196u,0.323s) (success)
-Params: n= 4107
-Tactic call lazy ran for 13.523 secs (13.264u,0.259s) (success)
-Params: n= 4109
-Tactic call lazy ran for 13.569 secs (13.288u,0.284s) (success)
-Params: n= 4111
-Tactic call lazy ran for 13.641 secs (13.379u,0.263s) (success)
-Params: n= 4113
-Tactic call lazy ran for 13.612 secs (13.415u,0.196s) (success)
-Params: n= 4115
-Tactic call lazy ran for 13.375 secs (13.152u,0.224s) (success)
-Params: n= 4117
-Tactic call lazy ran for 13.444 secs (13.172u,0.271s) (success)
-Params: n= 4119
-Tactic call lazy ran for 13.446 secs (13.159u,0.288s) (success)
-Params: n= 4121
-Tactic call lazy ran for 13.492 secs (13.219u,0.271s) (success)
-Params: n= 4123
-Tactic call lazy ran for 13.527 secs (13.232u,0.295s) (success)
-Params: n= 4125
-Tactic call lazy ran for 13.565 secs (13.331u,0.236s) (success)
-Params: n= 4127
-Tactic call lazy ran for 13.587 secs (13.348u,0.24s) (success)
-Params: n= 4129
-Tactic call lazy ran for 13.589 secs (13.316u,0.275s) (success)
-Params: n= 4131
-Tactic call lazy ran for 13.553 secs (13.292u,0.263s) (success)
-Params: n= 4133
-Tactic call lazy ran for 13.569 secs (13.323u,0.243s) (success)
-Params: n= 4135
-Tactic call lazy ran for 13.569 secs (13.244u,0.324s) (success)
-Params: n= 4137
-Tactic call lazy ran for 13.581 secs (13.331u,0.252s) (success)
-Params: n= 4139
-Tactic call lazy ran for 13.489 secs (13.288u,0.204s) (success)
-Params: n= 4141
-Tactic call lazy ran for 13.547 secs (13.316u,0.231s) (success)
-Params: n= 4143
-Tactic call lazy ran for 13.574 secs (13.344u,0.227s) (success)
-Params: n= 4145
-Tactic call lazy ran for 13.652 secs (13.435u,0.216s) (success)
-Params: n= 4147
-Tactic call lazy ran for 13.679 secs (13.364u,0.315s) (success)
-Params: n= 4149
-Tactic call lazy ran for 13.72 secs (13.423u,0.296s) (success)
-Params: n= 4151
-Tactic call lazy ran for 13.717 secs (13.451u,0.268s) (success)
-Params: n= 4153
-Tactic call lazy ran for 13.719 secs (13.436u,0.283s) (success)
-Params: n= 4155
-Tactic call lazy ran for 13.724 secs (13.468u,0.255s) (success)
-Params: n= 4157
-Tactic call lazy ran for 13.731 secs (13.483u,0.247s) (success)
-Params: n= 4159
-Tactic call lazy ran for 13.697 secs (13.415u,0.279s) (success)
-Params: n= 4161
-Tactic call lazy ran for 13.695 secs (13.399u,0.295s) (success)
-Params: n= 4163
-Tactic call lazy ran for 13.74 secs (13.399u,0.339s) (success)
-Params: n= 4165
-Tactic call lazy ran for 13.736 secs (13.488u,0.248s) (success)
-Params: n= 4167
-Tactic call lazy ran for 13.788 secs (13.451u,0.335s) (success)
-Params: n= 4169
-Tactic call lazy ran for 13.777 secs (13.496u,0.28s) (success)
-Params: n= 4171
-Tactic call lazy ran for 13.854 secs (13.6u,0.256s) (success)
-Params: n= 4173
-Tactic call lazy ran for 13.903 secs (13.607u,0.295s) (success)
-Params: n= 4175
-Tactic call lazy ran for 13.815 secs (13.48u,0.335s) (success)
-Params: n= 4177
-Tactic call lazy ran for 13.717 secs (13.439u,0.275s) (success)
-Params: n= 4179
-Tactic call lazy ran for 13.675 secs (13.367u,0.307s) (success)
-Params: n= 4181
-Tactic call lazy ran for 13.695 secs (13.448u,0.247s) (success)
-Params: n= 4183
-Tactic call lazy ran for 13.713 secs (13.412u,0.3s) (success)
-Params: n= 4185
-Tactic call lazy ran for 13.729 secs (13.407u,0.319s) (success)
-Params: n= 4187
-Tactic call lazy ran for 13.758 secs (13.42u,0.339s) (success)
-Params: n= 4189
-Tactic call lazy ran for 13.785 secs (13.491u,0.295s) (success)
-Params: n= 4191
-Tactic call lazy ran for 13.855 secs (13.607u,0.248s) (success)
-Params: n= 4193
-Tactic call lazy ran for 13.873 secs (13.571u,0.3s) (success)
-Params: n= 4195
-Tactic call lazy ran for 13.928 secs (13.66u,0.272s) (success)
-Params: n= 4197
-Tactic call lazy ran for 13.918 secs (13.624u,0.295s) (success)
-Params: n= 4199
-Tactic call lazy ran for 13.907 secs (13.635u,0.272s) (success)
-Params: n= 4201
-Tactic call lazy ran for 13.837 secs (13.564u,0.271s) (success)
-Params: n= 4203
-Tactic call lazy ran for 13.872 secs (13.556u,0.315s) (success)
-Params: n= 4205
-Tactic call lazy ran for 13.875 secs (13.592u,0.283s) (success)
-Params: n= 4207
-Tactic call lazy ran for 13.894 secs (13.615u,0.28s) (success)
-Params: n= 4209
-Tactic call lazy ran for 13.872 secs (13.591u,0.28s) (success)
-Params: n= 4211
-Tactic call lazy ran for 13.895 secs (13.66u,0.235s) (success)
-Params: n= 4213
-Tactic call lazy ran for 14.018 secs (13.708u,0.307s) (success)
-Params: n= 4215
-Tactic call lazy ran for 14.041 secs (13.703u,0.335s) (success)
-Params: n= 4217
-Tactic call lazy ran for 14.027 secs (13.731u,0.295s) (success)
-Params: n= 4219
-Tactic call lazy ran for 14.062 secs (13.703u,0.356s) (success)
-Params: n= 4221
-Tactic call lazy ran for 14.006 secs (13.756u,0.247s) (success)
-Params: n= 4223
-Tactic call lazy ran for 14.032 secs (13.707u,0.323s) (success)
-Params: n= 4225
-Tactic call lazy ran for 14.032 secs (13.716u,0.316s) (success)
-Params: n= 4227
-Tactic call lazy ran for 13.936 secs (13.672u,0.268s) (success)
-Params: n= 4229
-Tactic call lazy ran for 13.98 secs (13.715u,0.264s) (success)
-Params: n= 4231
-Tactic call lazy ran for 13.991 secs (13.764u,0.228s) (success)
-Params: n= 4233
-Tactic call lazy ran for 14.022 secs (13.707u,0.311s) (success)
-Params: n= 4235
-Tactic call lazy ran for 14.013 secs (13.736u,0.276s) (success)
-Params: n= 4237
-Tactic call lazy ran for 14.023 secs (13.7u,0.323s) (success)
-Params: n= 4239
-Tactic call lazy ran for 14.12 secs (13.824u,0.295s) (success)
-Params: n= 4241
-Tactic call lazy ran for 14.118 secs (13.843u,0.275s) (success)
-Params: n= 4243
-Tactic call lazy ran for 14.06 secs (13.824u,0.235s) (success)
-Params: n= 4245
-Tactic call lazy ran for 14.076 secs (13.831u,0.243s) (success)
-Params: n= 4247
-Tactic call lazy ran for 14.078 secs (13.799u,0.28s) (success)
-Params: n= 4249
-Tactic call lazy ran for 14.066 secs (13.803u,0.263s) (success)
-Params: n= 4251
-Tactic call lazy ran for 14.097 secs (13.868u,0.231s) (success)
-Params: n= 4253
-Tactic call lazy ran for 14.11 secs (13.78u,0.327s) (success)
-Params: n= 4255
-Tactic call lazy ran for 14.149 secs (13.823u,0.328s) (success)
-Params: n= 4257
-Tactic call lazy ran for 14.177 secs (13.92u,0.256s) (success)
-Params: n= 4259
-Tactic call lazy ran for 14.181 secs (13.892u,0.287s) (success)
-Params: n= 4261
-Tactic call lazy ran for 14.184 secs (13.848u,0.335s) (success)
-Params: n= 4263
-Tactic call lazy ran for 14.217 secs (13.971u,0.247s) (success)
-Params: n= 4265
-Tactic call lazy ran for 14.17 secs (13.895u,0.276s) (success)
-Params: n= 4267
-Tactic call lazy ran for 14.177 secs (13.884u,0.295s) (success)
-Params: n= 4269
-Tactic call lazy ran for 13.982 secs (13.783u,0.196s) (success)
-Params: n= 4271
-Tactic call lazy ran for 13.989 secs (13.799u,0.188s) (success)
-Params: n= 4273
-Tactic call lazy ran for 14.018 secs (13.848u,0.171s) (success)
-Params: n= 4275
-Tactic call lazy ran for 14.069 secs (13.94u,0.131s) (success)
-Params: n= 4277
-Tactic call lazy ran for 14.106 secs (13.892u,0.212s) (success)
-Params: n= 4279
-Tactic call lazy ran for 14.11 secs (13.884u,0.224s) (success)
-Params: n= 4281
-Tactic call lazy ran for 14.094 secs (13.896u,0.199s) (success)
-Params: n= 4283
-Tactic call lazy ran for 14.128 secs (13.928u,0.199s) (success)
-Params: n= 4285
-Tactic call lazy ran for 14.285 secs (14.004u,0.283s) (success)
-Params: n= 4287
-Tactic call lazy ran for 14.337 secs (14.119u,0.216s) (success)
-Params: n= 4289
-Tactic call lazy ran for 14.281 secs (14.016u,0.263s) (success)
-Params: n= 4291
-Tactic call lazy ran for 14.289 secs (14.012u,0.275s) (success)
+Params: n= 25
+Tactic call cbv-regression-quadratic ran for 0. secs (0.u,0.s) (success)
+Params: n= 49
+Tactic call cbv-regression-quadratic ran for 0.002 secs (0.002u,0.s) (success)
+Params: n= 72
+Tactic call cbv-regression-quadratic ran for 0.003 secs (0.003u,0.s) (success)
+Params: n= 119
+Tactic call cbv-regression-quadratic ran for 0.008 secs (0.008u,0.s) (success)
+Params: n= 142
+Tactic call cbv-regression-quadratic ran for 0.01 secs (0.01u,0.s) (success)
+Params: n= 166
+Tactic call cbv-regression-quadratic ran for 0.033 secs (0.029u,0.003s) (success)
+Params: n= 189
+Tactic call cbv-regression-quadratic ran for 0.016 secs (0.016u,0.s) (success)
+Params: n= 213
+Tactic call cbv-regression-quadratic ran for 0.021 secs (0.021u,0.s) (success)
+Params: n= 236
+Tactic call cbv-regression-quadratic ran for 0.024 secs (0.024u,0.s) (success)
+Params: n= 283
+Tactic call cbv-regression-quadratic ran for 0.034 secs (0.034u,0.s) (success)
+Params: n= 306
+Tactic call cbv-regression-quadratic ran for 0.037 secs (0.037u,0.s) (success)
+Params: n= 330
+Tactic call cbv-regression-quadratic ran for 0.044 secs (0.044u,0.s) (success)
+Params: n= 376
+Tactic call cbv-regression-quadratic ran for 0.055 secs (0.055u,0.s) (success)
+Params: n= 400
+Tactic call cbv-regression-quadratic ran for 0.06 secs (0.06u,0.s) (success)
+Params: n= 423
+Tactic call cbv-regression-quadratic ran for 0.067 secs (0.067u,0.s) (success)
+Params: n= 470
+Tactic call cbv-regression-quadratic ran for 0.082 secs (0.082u,0.s) (success)
+Params: n= 493
+Tactic call cbv-regression-quadratic ran for 0.088 secs (0.088u,0.s) (success)
+Params: n= 517
+Tactic call cbv-regression-quadratic ran for 0.096 secs (0.096u,0.s) (success)
+Params: n= 540
+Tactic call cbv-regression-quadratic ran for 0.103 secs (0.103u,0.s) (success)
+Params: n= 564
+Tactic call cbv-regression-quadratic ran for 0.111 secs (0.111u,0.s) (success)
+Params: n= 587
+Tactic call cbv-regression-quadratic ran for 0.118 secs (0.118u,0.s) (success)
+Params: n= 634
+Tactic call cbv-regression-quadratic ran for 0.138 secs (0.138u,0.s) (success)
+Params: n= 657
+Tactic call cbv-regression-quadratic ran for 0.148 secs (0.148u,0.s) (success)
+Params: n= 681
+Tactic call cbv-regression-quadratic ran for 0.156 secs (0.156u,0.s) (success)
+Params: n= 727
+Tactic call cbv-regression-quadratic ran for 0.175 secs (0.175u,0.s) (success)
+Params: n= 751
+Tactic call cbv-regression-quadratic ran for 0.187 secs (0.187u,0.s) (success)
+Params: n= 774
+Tactic call cbv-regression-quadratic ran for 0.197 secs (0.197u,0.s) (success)
+Params: n= 798
+Tactic call cbv-regression-quadratic ran for 0.21 secs (0.21u,0.s) (success)
+Params: n= 821
+Tactic call cbv-regression-quadratic ran for 0.217 secs (0.217u,0.s) (success)
+Params: n= 844
+Tactic call cbv-regression-quadratic ran for 0.229 secs (0.225u,0.003s) (success)
+Params: n= 891
+Tactic call cbv-regression-quadratic ran for 0.255 secs (0.255u,0.s) (success)
+Params: n= 915
+Tactic call cbv-regression-quadratic ran for 0.266 secs (0.266u,0.s) (success)
+Params: n= 938
+Tactic call cbv-regression-quadratic ran for 0.281 secs (0.277u,0.004s) (success)
+Params: n= 961
+Tactic call cbv-regression-quadratic ran for 0.292 secs (0.292u,0.s) (success)
+Params: n= 985
+Tactic call cbv-regression-quadratic ran for 0.305 secs (0.305u,0.s) (success)
+Params: n= 1008
+Tactic call cbv-regression-quadratic ran for 0.324 secs (0.324u,0.s) (success)
+Params: n= 1032
+Tactic call cbv-regression-quadratic ran for 0.334 secs (0.334u,0.s) (success)
+Params: n= 1055
+Tactic call cbv-regression-quadratic ran for 0.348 secs (0.348u,0.s) (success)
+Params: n= 1078
+Tactic call cbv-regression-quadratic ran for 0.365 secs (0.365u,0.s) (success)
+Params: n= 1102
+Tactic call cbv-regression-quadratic ran for 0.377 secs (0.377u,0.s) (success)
+Params: n= 1125
+Tactic call cbv-regression-quadratic ran for 0.392 secs (0.392u,0.s) (success)
+Params: n= 1149
+Tactic call cbv-regression-quadratic ran for 0.406 secs (0.406u,0.s) (success)
+Params: n= 1172
+Tactic call cbv-regression-quadratic ran for 0.422 secs (0.422u,0.s) (success)
+Params: n= 1195
+Tactic call cbv-regression-quadratic ran for 0.436 secs (0.436u,0.s) (success)
+Params: n= 1219
+Tactic call cbv-regression-quadratic ran for 0.453 secs (0.453u,0.s) (success)
+Params: n= 1242
+Tactic call cbv-regression-quadratic ran for 0.472 secs (0.472u,0.s) (success)
+Params: n= 1266
+Tactic call cbv-regression-quadratic ran for 0.485 secs (0.485u,0.s) (success)
+Params: n= 1289
+Tactic call cbv-regression-quadratic ran for 0.51 secs (0.51u,0.s) (success)
+Params: n= 1312
+Tactic call cbv-regression-quadratic ran for 0.521 secs (0.521u,0.s) (success)
+Params: n= 1336
+Tactic call cbv-regression-quadratic ran for 0.538 secs (0.538u,0.s) (success)
+Params: n= 1359
+Tactic call cbv-regression-quadratic ran for 0.556 secs (0.556u,0.s) (success)
+Params: n= 1383
+Tactic call cbv-regression-quadratic ran for 0.587 secs (0.587u,0.s) (success)
+Params: n= 1406
+Tactic call cbv-regression-quadratic ran for 0.599 secs (0.599u,0.s) (success)
+Params: n= 1429
+Tactic call cbv-regression-quadratic ran for 0.616 secs (0.616u,0.s) (success)
+Params: n= 1453
+Tactic call cbv-regression-quadratic ran for 0.638 secs (0.638u,0.s) (success)
+Params: n= 1476
+Tactic call cbv-regression-quadratic ran for 0.675 secs (0.671u,0.003s) (success)
+Params: n= 1500
+Tactic call cbv-regression-quadratic ran for 0.678 secs (0.678u,0.s) (success)
+Params: n= 1523
+Tactic call cbv-regression-quadratic ran for 0.697 secs (0.697u,0.s) (success)
+Params: n= 1546
+Tactic call cbv-regression-quadratic ran for 0.716 secs (0.716u,0.s) (success)
+Params: n= 1570
+Tactic call cbv-regression-quadratic ran for 0.736 secs (0.728u,0.008s) (success)
+Params: n= 1593
+Tactic call cbv-regression-quadratic ran for 0.752 secs (0.751u,0.s) (success)
+Params: n= 1617
+Tactic call cbv-regression-quadratic ran for 0.776 secs (0.772u,0.003s) (success)
+Params: n= 1640
+Tactic call cbv-regression-quadratic ran for 0.8 secs (0.796u,0.004s) (success)
+Params: n= 1663
+Tactic call cbv-regression-quadratic ran for 0.818 secs (0.818u,0.s) (success)
+Params: n= 1687
+Tactic call cbv-regression-quadratic ran for 0.84 secs (0.84u,0.s) (success)
+Params: n= 1710
+Tactic call cbv-regression-quadratic ran for 0.865 secs (0.865u,0.s) (success)
+Params: n= 1734
+Tactic call cbv-regression-quadratic ran for 0.888 secs (0.888u,0.s) (success)
+Params: n= 1757
+Tactic call cbv-regression-quadratic ran for 0.904 secs (0.904u,0.s) (success)
+Params: n= 1849
+Tactic call cbv-regression-quadratic ran for 0.996 secs (0.996u,0.s) (success)
+Params: n= 1942
+Tactic call cbv-regression-quadratic ran for 1.091 secs (1.091u,0.s) (success)
+Params: n= 2034
+Tactic call cbv-regression-quadratic ran for 1.193 secs (1.193u,0.s) (success)
+Params: n= 2127
+Tactic call cbv-regression-quadratic ran for 1.289 secs (1.289u,0.s) (success)
+Params: n= 2219
+Tactic call cbv-regression-quadratic ran for 1.404 secs (1.404u,0.s) (success)
+Params: n= 2312
+Tactic call cbv-regression-quadratic ran for 1.516 secs (1.512u,0.003s) (success)
+Params: n= 2404
+Tactic call cbv-regression-quadratic ran for 1.632 secs (1.632u,0.s) (success)
+Params: n= 2496
+Tactic call cbv-regression-quadratic ran for 1.784 secs (1.78u,0.003s) (success)
+Params: n= 2589
+Tactic call cbv-regression-quadratic ran for 1.897 secs (1.897u,0.s) (success)
+Params: n= 2681
+Tactic call cbv-regression-quadratic ran for 2.027 secs (2.027u,0.s) (success)
+Params: n= 2774
+Tactic call cbv-regression-quadratic ran for 2.157 secs (2.157u,0.s) (success)
+Params: n= 2866
+Tactic call cbv-regression-quadratic ran for 2.308 secs (2.308u,0.s) (success)
+Params: n= 2958
+Tactic call cbv-regression-quadratic ran for 2.468 secs (2.468u,0.s) (success)
+Params: n= 3051
+Tactic call cbv-regression-quadratic ran for 2.637 secs (2.637u,0.s) (success)
+Params: n= 3143
+Tactic call cbv-regression-quadratic ran for 2.814 secs (2.814u,0.s) (success)
+Params: n= 3236
+Tactic call cbv-regression-quadratic ran for 2.93 secs (2.922u,0.008s) (success)
+Params: n= 3328
+Tactic call cbv-regression-quadratic ran for 3.09 secs (3.086u,0.003s) (success)
+Params: n= 3421
+Tactic call cbv-regression-quadratic ran for 3.283 secs (3.279u,0.003s) (success)
+Params: n= 3513
+Tactic call cbv-regression-quadratic ran for 3.432 secs (3.432u,0.s) (success)
+Params: n= 3708
+Tactic call cbv-regression-quadratic ran for 3.762 secs (3.762u,0.s) (success)
+Params: n= 3903
+Tactic call cbv-regression-quadratic ran for 4.18 secs (4.176u,0.003s) (success)
+Params: n= 4098
+Tactic call cbv-regression-quadratic ran for 4.628 secs (4.627u,0.s) (success)
 Params: n= 4293
-Tactic call lazy ran for 14.303 secs (14.063u,0.24s) (success)
-Params: n= 4295
-Tactic call lazy ran for 14.327 secs (14.159u,0.167s) (success)
-Params: n= 4297
-Tactic call lazy ran for 14.372 secs (14.079u,0.292s) (success)
-Params: n= 4299
-Tactic call lazy ran for 14.376 secs (14.188u,0.192s) (success)
-Params: n= 4301
-Tactic call lazy ran for 14.423 secs (14.152u,0.271s) (success)
-Params: n= 4303
-Tactic call lazy ran for 14.44 secs (14.204u,0.235s) (success)
-Params: n= 4305
-Tactic call lazy ran for 14.456 secs (14.183u,0.275s) (success)
-Params: n= 4307
-Tactic call lazy ran for 14.453 secs (14.199u,0.251s) (success)
-Params: n= 4309
-Tactic call lazy ran for 14.425 secs (14.192u,0.231s) (success)
-Params: n= 4311
-Tactic call lazy ran for 14.256 secs (13.976u,0.28s) (success)
-Params: n= 4313
-Tactic call lazy ran for 14.23 secs (13.912u,0.316s) (success)
-Params: n= 4315
-Tactic call lazy ran for 14.226 secs (13.943u,0.28s) (success)
-Params: n= 4317
-Tactic call lazy ran for 14.202 secs (13.9u,0.303s) (success)
-Params: n= 4319
-Tactic call lazy ran for 14.22 secs (13.955u,0.263s) (success)
-Params: n= 4321
-Tactic call lazy ran for 14.215 secs (13.956u,0.259s) (success)
-Params: n= 4323
-Tactic call lazy ran for 14.265 secs (14.008u,0.256s) (success)
-Params: n= 4325
-Tactic call lazy ran for 14.319 secs (14.099u,0.219s) (success)
-Params: n= 4327
-Tactic call lazy ran for 14.281 secs (14.003u,0.275s) (success)
-Params: n= 4329
-Tactic call lazy ran for 14.325 secs (14.084u,0.239s) (success)
-Params: n= 4331
-Tactic call lazy ran for 14.328 secs (14.068u,0.263s) (success)
-Params: n= 4333
-Tactic call lazy ran for 14.398 secs (14.144u,0.251s) (success)
-Params: n= 4335
-Tactic call lazy ran for 14.352 secs (14.083u,0.268s) (success)
-Params: n= 4337
-Tactic call lazy ran for 14.404 secs (14.175u,0.228s) (success)
-Params: n= 4339
-Tactic call lazy ran for 14.425 secs (14.159u,0.264s) (success)
-Params: n= 4341
-Tactic call lazy ran for 14.435 secs (14.203u,0.231s) (success)
-Params: n= 4343
-Tactic call lazy ran for 14.414 secs (14.164u,0.252s) (success)
-Params: n= 4345
-Tactic call lazy ran for 14.456 secs (14.192u,0.264s) (success)
-Params: n= 4347
-Tactic call lazy ran for 14.453 secs (14.115u,0.335s) (success)
-Params: n= 4349
-Tactic call lazy ran for 14.476 secs (14.132u,0.344s) (success)
-Params: n= 4351
-Tactic call lazy ran for 14.52 secs (14.244u,0.275s) (success)
-Params: n= 4353
-Tactic call lazy ran for 14.565 secs (14.271u,0.292s) (success)
-Params: n= 4355
-Tactic call lazy ran for 14.566 secs (14.248u,0.32s) (success)
-Params: n= 4357
-Tactic call lazy ran for 14.416 secs (14.16u,0.256s) (success)
-Params: n= 4359
-Tactic call lazy ran for 14.384 secs (14.107u,0.275s) (success)
-Params: n= 4361
-Tactic call lazy ran for 14.392 secs (14.112u,0.283s) (success)
-Params: n= 4363
-Tactic call lazy ran for 14.412 secs (14.088u,0.324s) (success)
-Params: n= 4365
-Tactic call lazy ran for 14.412 secs (14.123u,0.287s) (success)
-Params: n= 4367
-Tactic call lazy ran for 14.41 secs (14.124u,0.287s) (success)
-Params: n= 4369
-Tactic call lazy ran for 14.396 secs (14.076u,0.323s) (success)
-Params: n= 4371
-Tactic call lazy ran for 14.348 secs (14.119u,0.228s) (success)
-Params: n= 4373
-Tactic call lazy ran for 14.352 secs (14.096u,0.256s) (success)
-Params: n= 4375
-Tactic call lazy ran for 14.389 secs (14.112u,0.276s) (success)
-Params: n= 4377
-Tactic call lazy ran for 14.49 secs (14.155u,0.332s) (success)
-Params: n= 4379
-Tactic call lazy ran for 14.527 secs (14.243u,0.283s) (success)
-Params: n= 4381
-Tactic call lazy ran for 14.525 secs (14.231u,0.292s) (success)
-Params: n= 4383
-Tactic call lazy ran for 14.509 secs (14.175u,0.335s) (success)
-Params: n= 4385
-Tactic call lazy ran for 14.58 secs (14.304u,0.276s) (success)
-Params: n= 4387
-Tactic call lazy ran for 14.581 secs (14.291u,0.287s) (success)
-Params: n= 4389
-Tactic call lazy ran for 14.584 secs (14.327u,0.256s) (success)
-Params: n= 4391
-Tactic call lazy ran for 14.572 secs (14.248u,0.323s) (success)
-Params: n= 4393
-Tactic call lazy ran for 14.601 secs (14.307u,0.295s) (success)
-Params: n= 4395
-Tactic call lazy ran for 14.616 secs (14.331u,0.283s) (success)
-Params: n= 4397
-Tactic call lazy ran for 14.627 secs (14.375u,0.251s) (success)
-Params: n= 4399
-Tactic call lazy ran for 14.65 secs (14.387u,0.259s) (success)
-Params: n= 4401
-Tactic call lazy ran for 14.681 secs (14.367u,0.311s) (success)
-Params: n= 4403
-Tactic call lazy ran for 14.692 secs (14.371u,0.319s) (success)
-Params: n= 4405
-Tactic call lazy ran for 14.715 secs (14.431u,0.284s) (success)
-Params: n= 4407
-Tactic call lazy ran for 14.604 secs (14.395u,0.207s) (success)
-Params: n= 4409
-Tactic call lazy ran for 14.454 secs (14.259u,0.195s) (success)
-Params: n= 4411
-Tactic call lazy ran for 14.432 secs (14.231u,0.2s) (success)
-Params: n= 4413
-Tactic call lazy ran for 14.439 secs (14.299u,0.14s) (success)
-Params: n= 4415
-Tactic call lazy ran for 14.471 secs (14.24u,0.231s) (success)
-Params: n= 4417
-Tactic call lazy ran for 14.467 secs (14.243u,0.224s) (success)
-Params: n= 4419
-Tactic call lazy ran for 14.575 secs (14.36u,0.216s) (success)
-Params: n= 4421
-Tactic call lazy ran for 14.593 secs (14.423u,0.168s) (success)
-Params: n= 4423
-Tactic call lazy ran for 14.596 secs (14.336u,0.263s) (success)
-Params: n= 4425
-Tactic call lazy ran for 14.598 secs (14.427u,0.168s) (success)
-Params: n= 4427
-Tactic call lazy ran for 14.547 secs (14.367u,0.179s) (success)
-Params: n= 4429
-Tactic call lazy ran for 14.576 secs (14.355u,0.219s) (success)
-Params: n= 4431
-Tactic call lazy ran for 14.532 secs (14.344u,0.188s) (success)
-Params: n= 4433
-Tactic call lazy ran for 14.54 secs (14.367u,0.171s) (success)
-Params: n= 4435
-Tactic call lazy ran for 14.62 secs (14.327u,0.292s) (success)
-Params: n= 4437
-Tactic call lazy ran for 14.625 secs (14.408u,0.216s) (success)
-Params: n= 4439
-Tactic call lazy ran for 14.667 secs (14.452u,0.216s) (success)
-Params: n= 4441
-Tactic call lazy ran for 14.676 secs (14.471u,0.204s) (success)
-Params: n= 4443
-Tactic call lazy ran for 14.717 secs (14.496u,0.224s) (success)
-Params: n= 4445
-Tactic call lazy ran for 14.706 secs (14.544u,0.164s) (success)
-Params: n= 4447
-Tactic call lazy ran for 14.727 secs (14.532u,0.195s) (success)
-Params: n= 4449
-Tactic call lazy ran for 14.761 secs (14.556u,0.203s) (success)
-Params: n= 4451
-Tactic call lazy ran for 14.666 secs (14.487u,0.179s) (success)
-Params: n= 4453
-Tactic call lazy ran for 14.714 secs (14.539u,0.176s) (success)
-Params: n= 4455
-Tactic call lazy ran for 14.717 secs (14.559u,0.16s) (success)
-Params: n= 4457
-Tactic call lazy ran for 14.742 secs (14.508u,0.231s) (success)
-Params: n= 4459
-Tactic call lazy ran for 14.805 secs (14.547u,0.256s) (success)
-Params: n= 4461
-Tactic call lazy ran for 14.802 secs (14.615u,0.188s) (success)
-Params: n= 4463
-Tactic call lazy ran for 14.903 secs (14.659u,0.243s) (success)
-Params: n= 4465
-Tactic call lazy ran for 15.083 secs (14.771u,0.307s) (success)
-Params: n= 4467
-Tactic call lazy ran for 15.113 secs (14.744u,0.363s) (success)
-Params: n= 4469
-Tactic call lazy ran for 15.001 secs (14.699u,0.3s) (success)
-Params: n= 4471
-Tactic call lazy ran for 14.965 secs (14.679u,0.287s) (success)
-Params: n= 4473
-Tactic call lazy ran for 14.963 secs (14.635u,0.323s) (success)
-Params: n= 4475
-Tactic call lazy ran for 14.968 secs (14.684u,0.284s) (success)
-Params: n= 4477
-Tactic call lazy ran for 14.996 secs (14.728u,0.268s) (success)
-Params: n= 4479
-Tactic call lazy ran for 15.064 secs (14.795u,0.268s) (success)
-Params: n= 4481
-Tactic call lazy ran for 15.09 secs (14.835u,0.256s) (success)
-Params: n= 4483
-Tactic call lazy ran for 15.117 secs (14.812u,0.307s) (success)
-Params: n= 4485
-Tactic call lazy ran for 15.127 secs (14.86u,0.263s) (success)
-Params: n= 4487
-Tactic call lazy ran for 15.136 secs (14.847u,0.287s) (success)
-Params: n= 4489
-Tactic call lazy ran for 15.164 secs (14.911u,0.251s) (success)
-Params: n= 4491
-Tactic call lazy ran for 15.083 secs (14.852u,0.231s) (success)
-Params: n= 4493
-Tactic call lazy ran for 15.104 secs (14.799u,0.304s) (success)
-Params: n= 4495
-Tactic call lazy ran for 15.104 secs (14.816u,0.288s) (success)
-Params: n= 4497
-Tactic call lazy ran for 15.117 secs (14.788u,0.331s) (success)
-Params: n= 4499
-Tactic call lazy ran for 15.164 secs (14.864u,0.299s) (success)
-Params: n= 4501
-Tactic call lazy ran for 15.193 secs (14.864u,0.327s) (success)
-Params: n= 4503
-Tactic call lazy ran for 15.251 secs (14.935u,0.316s) (success)
-Params: n= 4505
-Tactic call lazy ran for 15.237 secs (14.908u,0.328s) (success)
-Params: n= 4507
-Tactic call lazy ran for 15.239 secs (14.911u,0.328s) (success)
-Params: n= 4509
-Tactic call lazy ran for 15.276 secs (14.923u,0.352s) (success)
-Params: n= 4511
-Tactic call lazy ran for 15.232 secs (14.988u,0.243s) (success)
-Params: n= 4513
-Tactic call lazy ran for 15.229 secs (14.987u,0.239s) (success)
-Params: n= 4515
-Tactic call lazy ran for 15.241 secs (14.976u,0.268s) (success)
-Params: n= 4517
-Tactic call lazy ran for 15.253 secs (14.963u,0.292s) (success)
-Params: n= 4519
-Tactic call lazy ran for 15.373 secs (15.099u,0.276s) (success)
-Params: n= 4521
-Tactic call lazy ran for 15.335 secs (15.063u,0.272s) (success)
-Params: n= 4523
-Tactic call lazy ran for 15.34 secs (15.115u,0.228s) (success)
-Params: n= 4525
-Tactic call lazy ran for 15.349 secs (15.008u,0.34s) (success)
-Params: n= 4527
-Tactic call lazy ran for 15.348 secs (15.028u,0.323s) (success)
-Params: n= 4529
-Tactic call lazy ran for 15.381 secs (15.112u,0.268s) (success)
-Params: n= 4531
-Tactic call lazy ran for 15.322 secs (15.039u,0.28s) (success)
-Params: n= 4533
-Tactic call lazy ran for 15.304 secs (14.971u,0.331s) (success)
-Params: n= 4535
-Tactic call lazy ran for 15.404 secs (15.063u,0.339s) (success)
-Params: n= 4537
-Tactic call lazy ran for 15.365 secs (15.02u,0.344s) (success)
-Params: n= 4539
-Tactic call lazy ran for 15.441 secs (15.171u,0.271s) (success)
-Params: n= 4541
-Tactic call lazy ran for 15.445 secs (15.159u,0.283s) (success)
-Params: n= 4543
-Tactic call lazy ran for 15.36 secs (15.096u,0.268s) (success)
-Params: n= 4545
-Tactic call lazy ran for 15.438 secs (15.224u,0.215s) (success)
-Params: n= 4547
-Tactic call lazy ran for 15.36 secs (15.115u,0.243s) (success)
-Params: n= 4549
-Tactic call lazy ran for 15.382 secs (15.184u,0.2s) (success)
-Params: n= 4551
-Tactic call lazy ran for 15.328 secs (15.144u,0.183s) (success)
-Params: n= 4553
-Tactic call lazy ran for 15.344 secs (15.175u,0.171s) (success)
-Params: n= 4555
-Tactic call lazy ran for 15.308 secs (15.107u,0.2s) (success)
-Params: n= 4557
-Tactic call lazy ran for 15.406 secs (15.231u,0.171s) (success)
-Params: n= 4559
-Tactic call lazy ran for 15.383 secs (15.144u,0.239s) (success)
-Params: n= 4561
-Tactic call lazy ran for 15.373 secs (15.176u,0.2s) (success)
-Params: n= 4563
-Tactic call lazy ran for 15.427 secs (15.22u,0.207s) (success)
-Params: n= 4565
-Tactic call lazy ran for 15.455 secs (15.216u,0.239s) (success)
-Params: n= 4567
-Tactic call lazy ran for 15.43 secs (15.279u,0.152s) (success)
-Params: n= 4569
-Tactic call lazy ran for 15.507 secs (15.271u,0.235s) (success)
-Params: n= 4571
-Tactic call lazy ran for 15.445 secs (15.303u,0.144s) (success)
-Params: n= 4573
-Tactic call lazy ran for 15.49 secs (15.299u,0.192s) (success)
-Params: n= 4575
-Tactic call lazy ran for 15.46 secs (15.212u,0.248s) (success)
-Params: n= 4577
-Tactic call lazy ran for 15.539 secs (15.331u,0.207s) (success)
-Params: n= 4579
-Tactic call lazy ran for 15.501 secs (15.295u,0.204s) (success)
-Params: n= 4581
-Tactic call lazy ran for 15.524 secs (15.336u,0.188s) (success)
-Params: n= 4583
-Tactic call lazy ran for 15.53 secs (15.323u,0.203s) (success)
-Params: n= 4585
-Tactic call lazy ran for 15.573 secs (15.351u,0.219s) (success)
-Params: n= 4587
-Tactic call lazy ran for 15.567 secs (15.376u,0.192s) (success)
-Params: n= 4589
-Tactic call lazy ran for 15.579 secs (15.327u,0.251s) (success)
-Params: n= 4591
-Tactic call lazy ran for 15.55 secs (15.347u,0.203s) (success)
-Params: n= 4593
-Tactic call lazy ran for 15.593 secs (15.391u,0.2s) (success)
-Params: n= 4595
-Tactic call lazy ran for 15.695 secs (15.456u,0.239s) (success)
-Params: n= 4597
-Tactic call lazy ran for 15.769 secs (15.536u,0.236s) (success)
-Params: n= 4599
-Tactic call lazy ran for 15.715 secs (15.475u,0.239s) (success)
-Params: n= 4601
-Tactic call lazy ran for 15.724 secs (15.471u,0.251s) (success)
-Params: n= 4603
-Tactic call lazy ran for 15.673 secs (15.42u,0.256s) (success)
-Params: n= 4605
-Tactic call lazy ran for 15.711 secs (15.431u,0.28s) (success)
-Params: n= 4607
-Tactic call lazy ran for 15.715 secs (15.488u,0.227s) (success)
-Params: n= 4609
-Tactic call lazy ran for 15.731 secs (15.5u,0.232s) (success)
-Params: n= 4611
-Tactic call lazy ran for 15.678 secs (15.504u,0.171s) (success)
-Params: n= 4613
-Tactic call lazy ran for 15.639 secs (15.38u,0.259s) (success)
-Params: n= 4615
-Tactic call lazy ran for 15.73 secs (15.48u,0.248s) (success)
-Params: n= 4617
-Tactic call lazy ran for 15.782 secs (15.572u,0.207s) (success)
-Params: n= 4619
-Tactic call lazy ran for 15.766 secs (15.536u,0.228s) (success)
-Params: n= 4621
-Tactic call lazy ran for 15.771 secs (15.532u,0.24s) (success)
-Params: n= 4623
-Tactic call lazy ran for 15.754 secs (15.56u,0.196s) (success)
-Params: n= 4625
-Tactic call lazy ran for 15.81 secs (15.572u,0.239s) (success)
-Params: n= 4627
-Tactic call lazy ran for 15.881 secs (15.611u,0.272s) (success)
-Params: n= 4629
-Tactic call lazy ran for 15.866 secs (15.699u,0.167s) (success)
-Params: n= 4631
-Tactic call lazy ran for 15.806 secs (15.567u,0.239s) (success)
-Params: n= 4633
-Tactic call lazy ran for 15.814 secs (15.635u,0.176s) (success)
-Params: n= 4635
-Tactic call lazy ran for 15.88 secs (15.628u,0.251s) (success)
-Params: n= 4637
-Tactic call lazy ran for 15.919 secs (15.711u,0.207s) (success)
-Params: n= 4639
-Tactic call lazy ran for 15.948 secs (15.748u,0.2s) (success)
-Params: n= 4641
-Tactic call lazy ran for 15.933 secs (15.723u,0.211s) (success)
-Params: n= 4643
-Tactic call lazy ran for 15.946 secs (15.695u,0.247s) (success)
-Params: n= 4645
-Tactic call lazy ran for 15.981 secs (15.728u,0.256s) (success)
-Params: n= 4647
-Tactic call lazy ran for 15.972 secs (15.795u,0.176s) (success)
-Params: n= 4649
-Tactic call lazy ran for 15.987 secs (15.728u,0.259s) (success)
-Params: n= 4651
-Tactic call lazy ran for 15.96 secs (15.707u,0.252s) (success)
-Params: n= 4653
-Tactic call lazy ran for 15.96 secs (15.756u,0.203s) (success)
-Params: n= 4655
-Tactic call lazy ran for 16.007 secs (15.811u,0.195s) (success)
-Params: n= 4657
-Tactic call lazy ran for 16.017 secs (15.779u,0.236s) (success)
-Params: n= 4659
-Tactic call lazy ran for 16.065 secs (15.851u,0.211s) (success)
-Params: n= 4661
-Tactic call lazy ran for 16.094 secs (15.892u,0.203s) (success)
-Params: n= 4663
-Tactic call lazy ran for 16.062 secs (15.847u,0.215s) (success)
-Params: n= 4665
-Tactic call lazy ran for 16.154 secs (15.928u,0.224s) (success)
-Params: n= 4667
-Tactic call lazy ran for 16.11 secs (15.832u,0.275s) (success)
-Params: n= 4669
-Tactic call lazy ran for 16.1 secs (15.904u,0.195s) (success)
-Params: n= 4671
-Tactic call lazy ran for 16.167 secs (15.979u,0.187s) (success)
-Params: n= 4673
-Tactic call lazy ran for 16.146 secs (15.923u,0.223s) (success)
-Params: n= 4675
-Tactic call lazy ran for 16.198 secs (16.044u,0.156s) (success)
-Params: n= 4677
-Tactic call lazy ran for 16.234 secs (15.927u,0.308s) (success)
-Params: n= 4679
-Tactic call lazy ran for 16.217 secs (16.011u,0.208s) (success)
-Params: n= 4681
-Tactic call lazy ran for 16.224 secs (15.971u,0.256s) (success)
+Tactic call cbv-regression-quadratic ran for 5.125 secs (5.125u,0.s) (success)
+Params: n= 4488
+Tactic call cbv-regression-quadratic ran for 5.518 secs (5.518u,0.s) (success)
 Params: n= 4683
-Tactic call lazy ran for 16.252 secs (15.98u,0.272s) (success)
-Params: n= 4685
-Tactic call lazy ran for 16.258 secs (16.028u,0.231s) (success)
-Params: n= 4687
-Tactic call lazy ran for 16.289 secs (16.023u,0.263s) (success)
-Params: n= 4689
-Tactic call lazy ran for 16.251 secs (16.043u,0.207s) (success)
-Params: n= 4691
-Tactic call lazy ran for 16.255 secs (16.088u,0.168s) (success)
-Params: n= 4693
-Tactic call lazy ran for 16.259 secs (16.051u,0.207s) (success)
-Params: n= 4695
-Tactic call lazy ran for 16.294 secs (16.099u,0.195s) (success)
-Params: n= 4697
-Tactic call lazy ran for 16.353 secs (16.119u,0.231s) (success)
-Params: n= 4699
-Tactic call lazy ran for 16.346 secs (16.115u,0.227s) (success)
-Params: n= 4701
-Tactic call lazy ran for 16.324 secs (16.055u,0.271s) (success)
-Params: n= 4703
-Tactic call lazy ran for 16.35 secs (16.079u,0.268s) (success)
-Params: n= 4705
-Tactic call lazy ran for 16.382 secs (16.127u,0.256s) (success)
-Params: n= 4707
-Tactic call lazy ran for 16.328 secs (16.1u,0.227s) (success)
-Params: n= 4709
-Tactic call lazy ran for 16.338 secs (16.092u,0.243s) (success)
-Params: n= 4711
-Tactic call lazy ran for 16.432 secs (16.192u,0.239s) (success)
-Params: n= 4713
-Tactic call lazy ran for 16.458 secs (16.167u,0.288s) (success)
-Params: n= 4715
-Tactic call lazy ran for 16.507 secs (16.251u,0.256s) (success)
-Params: n= 4717
-Tactic call lazy ran for 16.561 secs (16.307u,0.252s) (success)
-Params: n= 4719
-Tactic call lazy ran for 16.542 secs (16.279u,0.263s) (success)
-Params: n= 4721
-Tactic call lazy ran for 16.546 secs (16.28u,0.268s) (success)
-Params: n= 4723
-Tactic call lazy ran for 16.636 secs (16.408u,0.227s) (success)
-Params: n= 4725
-Tactic call lazy ran for 16.562 secs (16.36u,0.204s) (success)
-Params: n= 4727
-Tactic call lazy ran for 16.492 secs (16.192u,0.3s) (success)
-Params: n= 4729
-Tactic call lazy ran for 16.544 secs (16.3u,0.243s) (success)
-Params: n= 4731
-Tactic call lazy ran for 16.568 secs (16.371u,0.195s) (success)
-Params: n= 4733
-Tactic call lazy ran for 16.575 secs (16.283u,0.292s) (success)
-Params: n= 4735
-Tactic call lazy ran for 16.643 secs (16.368u,0.275s) (success)
-Params: n= 4737
-Tactic call lazy ran for 16.662 secs (16.387u,0.272s) (success)
-Params: n= 4739
-Tactic call lazy ran for 16.652 secs (16.42u,0.236s) (success)
-Params: n= 4741
-Tactic call lazy ran for 16.653 secs (16.399u,0.256s) (success)
-Params: n= 4743
-Tactic call lazy ran for 16.689 secs (16.496u,0.192s) (success)
-Params: n= 4745
-Tactic call lazy ran for 16.709 secs (16.496u,0.216s) (success)
-Params: n= 4747
-Tactic call lazy ran for 16.612 secs (16.347u,0.263s) (success)
-Params: n= 4749
-Tactic call lazy ran for 16.686 secs (16.48u,0.207s) (success)
-Params: n= 4751
-Tactic call lazy ran for 16.677 secs (16.387u,0.292s) (success)
-Params: n= 4753
-Tactic call lazy ran for 16.644 secs (16.38u,0.263s) (success)
-Params: n= 4755
-Tactic call lazy ran for 16.728 secs (16.532u,0.195s) (success)
-Params: n= 4757
-Tactic call lazy ran for 16.699 secs (16.435u,0.264s) (success)
-Params: n= 4759
-Tactic call lazy ran for 16.794 secs (16.579u,0.212s) (success)
-Params: n= 4761
-Tactic call lazy ran for 16.832 secs (16.608u,0.224s) (success)
-Params: n= 4763
-Tactic call lazy ran for 16.867 secs (16.604u,0.264s) (success)
-Params: n= 4765
-Tactic call lazy ran for 16.81 secs (16.607u,0.204s) (success)
-Params: n= 4767
-Tactic call lazy ran for 16.857 secs (16.611u,0.248s) (success)
-Params: n= 4769
-Tactic call lazy ran for 16.847 secs (16.615u,0.231s) (success)
-Params: n= 4771
-Tactic call lazy ran for 16.854 secs (16.579u,0.275s) (success)
-Params: n= 4773
-Tactic call lazy ran for 16.866 secs (16.627u,0.239s) (success)
-Params: n= 4775
-Tactic call lazy ran for 16.827 secs (16.563u,0.263s) (success)
-Params: n= 4777
-Tactic call lazy ran for 17.156 secs (16.836u,0.311s) (success)
-Params: n= 4779
-Tactic call lazy ran for 16.929 secs (16.708u,0.223s) (success)
-Params: n= 4781
-Tactic call lazy ran for 16.935 secs (16.647u,0.287s) (success)
-Params: n= 4783
-Tactic call lazy ran for 16.91 secs (16.64u,0.268s) (success)
-Params: n= 4785
-Tactic call lazy ran for 16.929 secs (16.695u,0.231s) (success)
-Params: n= 4787
-Tactic call lazy ran for 16.966 secs (16.707u,0.259s) (success)
-Params: n= 4789
-Tactic call lazy ran for 16.96 secs (16.68u,0.28s) (success)
-Params: n= 4791
-Tactic call lazy ran for 16.995 secs (16.775u,0.219s) (success)
-Params: n= 4793
-Tactic call lazy ran for 16.939 secs (16.707u,0.227s) (success)
-Params: n= 4795
-Tactic call lazy ran for 16.675 secs (16.427u,0.247s) (success)
-Params: n= 4797
-Tactic call lazy ran for 16.727 secs (16.447u,0.28s) (success)
-Params: n= 4799
-Tactic call lazy ran for 16.757 secs (16.492u,0.268s) (success)
-Params: n= 4801
-Tactic call lazy ran for 16.781 secs (16.555u,0.227s) (success)
-Params: n= 4803
-Tactic call lazy ran for 16.77 secs (16.52u,0.248s) (success)
-Params: n= 4805
-Tactic call lazy ran for 16.822 secs (16.539u,0.28s) (success)
-Params: n= 4807
-Tactic call lazy ran for 16.881 secs (16.695u,0.183s) (success)
-Params: n= 4809
-Tactic call lazy ran for 16.879 secs (16.615u,0.263s) (success)
-Params: n= 4811
-Tactic call lazy ran for 16.918 secs (16.672u,0.248s) (success)
-Params: n= 4813
-Tactic call lazy ran for 16.935 secs (16.692u,0.243s) (success)
-Params: n= 4815
-Tactic call lazy ran for 16.994 secs (16.76u,0.236s) (success)
-Params: n= 4817
-Tactic call lazy ran for 16.931 secs (16.699u,0.231s) (success)
-Params: n= 4819
-Tactic call lazy ran for 16.942 secs (16.728u,0.215s) (success)
-Params: n= 4821
-Tactic call lazy ran for 16.91 secs (16.655u,0.251s) (success)
-Params: n= 4823
-Tactic call lazy ran for 16.935 secs (16.695u,0.239s) (success)
-Params: n= 4825
-Tactic call lazy ran for 16.982 secs (16.699u,0.284s) (success)
-Params: n= 4827
-Tactic call lazy ran for 16.996 secs (16.771u,0.223s) (success)
-Params: n= 4829
-Tactic call lazy ran for 16.997 secs (16.739u,0.259s) (success)
-Params: n= 4831
-Tactic call lazy ran for 17.011 secs (16.764u,0.248s) (success)
-Params: n= 4833
-Tactic call lazy ran for 17.071 secs (16.812u,0.26s) (success)
-Params: n= 4835
-Tactic call lazy ran for 17.085 secs (16.852u,0.231s) (success)
-Params: n= 4837
-Tactic call lazy ran for 17.115 secs (16.836u,0.28s) (success)
-Params: n= 4839
-Tactic call lazy ran for 17.122 secs (16.84u,0.284s) (success)
-Params: n= 4841
-Tactic call lazy ran for 17.089 secs (16.859u,0.231s) (success)
-Params: n= 4843
-Tactic call lazy ran for 17.147 secs (16.895u,0.252s) (success)
-Params: n= 4845
-Tactic call lazy ran for 17.179 secs (16.891u,0.283s) (success)
-Params: n= 4847
-Tactic call lazy ran for 17.191 secs (16.927u,0.26s) (success)
-Params: n= 4849
-Tactic call lazy ran for 17.193 secs (16.967u,0.228s) (success)
-Params: n= 4851
-Tactic call lazy ran for 17.132 secs (16.891u,0.24s) (success)
-Params: n= 4853
-Tactic call lazy ran for 17.155 secs (16.88u,0.276s) (success)
-Params: n= 4855
-Tactic call lazy ran for 17.178 secs (16.987u,0.192s) (success)
-Params: n= 4857
-Tactic call lazy ran for 17.175 secs (16.88u,0.295s) (success)
-Params: n= 4859
-Tactic call lazy ran for 17.127 secs (16.92u,0.207s) (success)
-Params: n= 4861
-Tactic call lazy ran for 17.169 secs (16.904u,0.268s) (success)
-Params: n= 4863
-Tactic call lazy ran for 17.22 secs (16.916u,0.304s) (success)
-Params: n= 4865
-Tactic call lazy ran for 17.332 secs (16.983u,0.34s) (success)
-Params: n= 4867
-Tactic call lazy ran for 17.342 secs (17.108u,0.235s) (success)
-Params: n= 4869
-Tactic call lazy ran for 17.263 secs (16.988u,0.276s) (success)
-Params: n= 4871
-Tactic call lazy ran for 17.304 secs (16.963u,0.34s) (success)
-Params: n= 4873
-Tactic call lazy ran for 17.333 secs (17.088u,0.247s) (success)
-Params: n= 4875
-Tactic call lazy ran for 17.365 secs (17.108u,0.256s) (success)
-Params: n= 4877
-Tactic call lazy ran for 17.367 secs (17.115u,0.252s) (success)
-Params: n= 4879
-Tactic call lazy ran for 17.497 secs (17.228u,0.263s) (success)
-Params: n= 4881
-Tactic call lazy ran for 17.489 secs (17.188u,0.283s) (success)
-Params: n= 4883
-Tactic call lazy ran for 17.509 secs (17.26u,0.231s) (success)
-Params: n= 4885
-Tactic call lazy ran for 17.449 secs (17.175u,0.26s) (success)
-Params: n= 4887
-Tactic call lazy ran for 17.458 secs (17.199u,0.243s) (success)
-Params: n= 4889
-Tactic call lazy ran for 17.467 secs (17.172u,0.28s) (success)
-Params: n= 4891
-Tactic call lazy ran for 17.519 secs (17.251u,0.248s) (success)
-Params: n= 4893
-Tactic call lazy ran for 17.513 secs (17.2u,0.295s) (success)
-Params: n= 4895
-Tactic call lazy ran for 17.465 secs (17.192u,0.256s) (success)
-Params: n= 4897
-Tactic call lazy ran for 17.496 secs (17.215u,0.263s) (success)
-Params: n= 4899
-Tactic call lazy ran for 17.546 secs (17.279u,0.251s) (success)
-Params: n= 4901
-Tactic call lazy ran for 17.57 secs (17.284u,0.268s) (success)
-Params: n= 4903
-Tactic call lazy ran for 17.612 secs (17.34u,0.256s) (success)
-Params: n= 4905
-Tactic call lazy ran for 17.663 secs (17.384u,0.264s) (success)
-Params: n= 4907
-Tactic call lazy ran for 17.671 secs (17.399u,0.256s) (success)
-Params: n= 4909
-Tactic call lazy ran for 17.778 secs (17.476u,0.3s) (success)
-Params: n= 4911
-Tactic call lazy ran for 17.687 secs (17.416u,0.271s) (success)
-Params: n= 4913
-Tactic call lazy ran for 17.697 secs (17.412u,0.284s) (success)
-Params: n= 4915
-Tactic call lazy ran for 17.695 secs (17.304u,0.391s) (success)
-Params: n= 4917
-Tactic call lazy ran for 17.743 secs (17.427u,0.316s) (success)
-Params: n= 4919
-Tactic call lazy ran for 17.585 secs (17.304u,0.28s) (success)
-Params: n= 4921
-Tactic call lazy ran for 17.66 secs (17.404u,0.256s) (success)
-Params: n= 4923
-Tactic call lazy ran for 17.706 secs (17.431u,0.276s) (success)
-Params: n= 4925
-Tactic call lazy ran for 17.761 secs (17.508u,0.251s) (success)
-Params: n= 4927
-Tactic call lazy ran for 17.767 secs (17.516u,0.252s) (success)
-Params: n= 4929
-Tactic call lazy ran for 17.8 secs (17.568u,0.231s) (success)
-Params: n= 4931
-Tactic call lazy ran for 17.818 secs (17.519u,0.3s) (success)
-Params: n= 4933
-Tactic call lazy ran for 17.727 secs (17.467u,0.259s) (success)
-Params: n= 4935
-Tactic call lazy ran for 17.754 secs (17.431u,0.32s) (success)
-Params: n= 4937
-Tactic call lazy ran for 17.723 secs (17.452u,0.271s) (success)
-Params: n= 4939
-Tactic call lazy ran for 17.753 secs (17.476u,0.276s) (success)
-Params: n= 4941
-Tactic call lazy ran for 17.752 secs (17.48u,0.271s) (success)
-Params: n= 4943
-Tactic call lazy ran for 17.883 secs (17.587u,0.296s) (success)
-Params: n= 4945
-Tactic call lazy ran for 17.841 secs (17.568u,0.271s) (success)
-Params: n= 4947
-Tactic call lazy ran for 17.874 secs (17.608u,0.268s) (success)
-Params: n= 4949
-Tactic call lazy ran for 17.944 secs (17.695u,0.247s) (success)
-Params: n= 4951
-Tactic call lazy ran for 17.826 secs (17.576u,0.252s) (success)
-Params: n= 4953
-Tactic call lazy ran for 17.877 secs (17.576u,0.3s) (success)
-Params: n= 4955
-Tactic call lazy ran for 17.926 secs (17.623u,0.304s) (success)
-Params: n= 4957
-Tactic call lazy ran for 17.888 secs (17.572u,0.316s) (success)
-Params: n= 4959
-Tactic call lazy ran for 17.913 secs (17.623u,0.287s) (success)
-Params: n= 4961
-Tactic call lazy ran for 17.949 secs (17.656u,0.295s) (success)
-Params: n= 4963
-Tactic call lazy ran for 17.893 secs (17.576u,0.316s) (success)
-Params: n= 4965
-Tactic call lazy ran for 17.901 secs (17.628u,0.271s) (success)
-Params: n= 4967
-Tactic call lazy ran for 17.929 secs (17.608u,0.32s) (success)
-Params: n= 4969
-Tactic call lazy ran for 17.935 secs (17.643u,0.292s) (success)
-Params: n= 4971
-Tactic call lazy ran for 17.996 secs (17.707u,0.287s) (success)
-Params: n= 4973
-Tactic call lazy ran for 18.04 secs (17.76u,0.28s) (success)
-Params: n= 4975
-Tactic call lazy ran for 17.998 secs (17.743u,0.256s) (success)
-Params: n= 4977
-Tactic call lazy ran for 18.042 secs (17.779u,0.264s) (success)
-Params: n= 4979
-Tactic call lazy ran for 18.171 secs (17.872u,0.292s) (success)
-Params: n= 4981
-Tactic call lazy ran for 18.18 secs (17.888u,0.292s) (success)
-Params: n= 4983
-Tactic call lazy ran for 18.112 secs (17.895u,0.216s) (success)
-Params: n= 4985
-Tactic call lazy ran for 18.263 secs (17.979u,0.284s) (success)
-Params: n= 4987
-Tactic call lazy ran for 18.175 secs (17.872u,0.304s) (success)
-Params: n= 4989
-Tactic call lazy ran for 18.151 secs (17.88u,0.271s) (success)
-Params: n= 4991
-Tactic call lazy ran for 18.126 secs (17.728u,0.399s) (success)
-Params: n= 4993
-Tactic call lazy ran for 18.157 secs (17.92u,0.236s) (success)
-Params: n= 4995
-Tactic call lazy ran for 18.187 secs (17.884u,0.304s) (success)
-Params: n= 4997
-Tactic call lazy ran for 18.235 secs (17.956u,0.28s) (success)
-Params: n= 4999
-Tactic call lazy ran for 18.245 secs (17.963u,0.284s) (success)
+Tactic call cbv-regression-quadratic ran for 5.976 secs (5.976u,0.s) (success)
+Params: n= 4878
+Tactic call cbv-regression-quadratic ran for 6.482 secs (6.482u,0.s) (success)
+Params: n= 5073
+Tactic call cbv-regression-quadratic ran for 7.014 secs (7.014u,0.s) (success)
+Params: n= 5268
+Tactic call cbv-regression-quadratic ran for 7.546 secs (7.546u,0.s) (success)
+Params: n= 7024
+Tactic call cbv-regression-quadratic ran for 13.149 secs (13.149u,0.s) (success)
+Params: n= 8780
+Tactic call cbv-regression-quadratic ran for 20.6 secs (20.6u,0.s) (success)
+Params: n= 10535
+Tactic call cbv-regression-quadratic ran for 29.671 secs (29.671u,0.s) (success)
+Params: n= 12291
+Tactic call cbv-regression-quadratic ran for 40.538 secs (40.538u,0.s) (success)
+Params: n= 14047
+Tactic call cbv-regression-quadratic ran for 52.68 secs (52.681u,0.s) (success)

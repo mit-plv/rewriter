@@ -1,0 +1,430 @@
+Params: 0-nm= 15 , 1-n= 0 , 2-m= 15 , 3-input-size= 33 , 4-output-size= 3 , 5-num-rewrites= 15
+Tactic call rewrite!-regression-cubic ran for 0.002 secs (0.002u,0.s) (success)
+Params: 0-nm= 29 , 1-n= 0 , 2-m= 29 , 3-input-size= 61 , 4-output-size= 3 , 5-num-rewrites= 29
+Tactic call rewrite!-regression-cubic ran for 0.006 secs (0.006u,0.s) (success)
+Params: 0-nm= 57 , 1-n= 0 , 2-m= 57 , 3-input-size= 117 , 4-output-size= 3 , 5-num-rewrites= 57
+Tactic call rewrite!-regression-cubic ran for 0.105 secs (0.105u,0.s) (success)
+Params: 0-nm= 71 , 1-n= 0 , 2-m= 71 , 3-input-size= 145 , 4-output-size= 3 , 5-num-rewrites= 71
+Tactic call rewrite!-regression-cubic ran for 0.037 secs (0.037u,0.s) (success)
+Params: 0-nm= 99 , 1-n= 0 , 2-m= 99 , 3-input-size= 201 , 4-output-size= 3 , 5-num-rewrites= 99
+Tactic call rewrite!-regression-cubic ran for 0.047 secs (0.047u,0.s) (success)
+Params: 0-nm= 113 , 1-n= 0 , 2-m= 113 , 3-input-size= 229 , 4-output-size= 3 , 5-num-rewrites= 113
+Tactic call rewrite!-regression-cubic ran for 0.062 secs (0.062u,0.s) (success)
+Params: 0-nm= 141 , 1-n= 0 , 2-m= 141 , 3-input-size= 285 , 4-output-size= 3 , 5-num-rewrites= 141
+Tactic call rewrite!-regression-cubic ran for 0.095 secs (0.095u,0.s) (success)
+Params: 0-nm= 155 , 1-n= 0 , 2-m= 155 , 3-input-size= 313 , 4-output-size= 3 , 5-num-rewrites= 155
+Tactic call rewrite!-regression-cubic ran for 0.113 secs (0.113u,0.s) (success)
+Params: 0-nm= 197 , 1-n= 0 , 2-m= 197 , 3-input-size= 397 , 4-output-size= 3 , 5-num-rewrites= 197
+Tactic call rewrite!-regression-cubic ran for 0.18 secs (0.177u,0.003s) (success)
+Params: 0-nm= 211 , 1-n= 0 , 2-m= 211 , 3-input-size= 425 , 4-output-size= 3 , 5-num-rewrites= 211
+Tactic call rewrite!-regression-cubic ran for 0.209 secs (0.209u,0.s) (success)
+Params: 0-nm= 225 , 1-n= 0 , 2-m= 225 , 3-input-size= 453 , 4-output-size= 3 , 5-num-rewrites= 225
+Tactic call rewrite!-regression-cubic ran for 0.238 secs (0.234u,0.004s) (success)
+Params: 0-nm= 239 , 1-n= 0 , 2-m= 239 , 3-input-size= 481 , 4-output-size= 3 , 5-num-rewrites= 239
+Tactic call rewrite!-regression-cubic ran for 0.264 secs (0.264u,0.s) (success)
+Params: 0-nm= 253 , 1-n= 0 , 2-m= 253 , 3-input-size= 509 , 4-output-size= 3 , 5-num-rewrites= 253
+Tactic call rewrite!-regression-cubic ran for 0.295 secs (0.291u,0.003s) (success)
+Params: 0-nm= 267 , 1-n= 0 , 2-m= 267 , 3-input-size= 537 , 4-output-size= 3 , 5-num-rewrites= 267
+Tactic call rewrite!-regression-cubic ran for 0.33 secs (0.326u,0.003s) (success)
+Params: 0-nm= 281 , 1-n= 0 , 2-m= 281 , 3-input-size= 565 , 4-output-size= 3 , 5-num-rewrites= 281
+Tactic call rewrite!-regression-cubic ran for 0.381 secs (0.377u,0.003s) (success)
+Params: 0-nm= 295 , 1-n= 0 , 2-m= 295 , 3-input-size= 593 , 4-output-size= 3 , 5-num-rewrites= 295
+Tactic call rewrite!-regression-cubic ran for 0.406 secs (0.406u,0.s) (success)
+Params: 0-nm= 309 , 1-n= 0 , 2-m= 309 , 3-input-size= 621 , 4-output-size= 3 , 5-num-rewrites= 309
+Tactic call rewrite!-regression-cubic ran for 0.479 secs (0.479u,0.s) (success)
+Params: 0-nm= 323 , 1-n= 0 , 2-m= 323 , 3-input-size= 649 , 4-output-size= 3 , 5-num-rewrites= 323
+Tactic call rewrite!-regression-cubic ran for 0.506 secs (0.506u,0.s) (success)
+Params: 0-nm= 337 , 1-n= 0 , 2-m= 337 , 3-input-size= 677 , 4-output-size= 3 , 5-num-rewrites= 337
+Tactic call rewrite!-regression-cubic ran for 0.551 secs (0.543u,0.007s) (success)
+Params: 0-nm= 351 , 1-n= 0 , 2-m= 351 , 3-input-size= 705 , 4-output-size= 3 , 5-num-rewrites= 351
+Tactic call rewrite!-regression-cubic ran for 0.592 secs (0.588u,0.004s) (success)
+Params: 0-nm= 189 , 1-n= 2 , 2-m= 27 , 3-input-size= 393 , 4-output-size= 15 , 5-num-rewrites= 189
+Tactic call rewrite!-regression-cubic ran for 0.077 secs (0.077u,0.s) (success)
+Params: 0-nm= 203 , 1-n= 2 , 2-m= 29 , 3-input-size= 421 , 4-output-size= 15 , 5-num-rewrites= 203
+Tactic call rewrite!-regression-cubic ran for 0.084 secs (0.084u,0.s) (success)
+Params: 0-nm= 245 , 1-n= 2 , 2-m= 35 , 3-input-size= 505 , 4-output-size= 15 , 5-num-rewrites= 245
+Tactic call rewrite!-regression-cubic ran for 0.128 secs (0.128u,0.s) (success)
+Params: 0-nm= 273 , 1-n= 2 , 2-m= 39 , 3-input-size= 561 , 4-output-size= 15 , 5-num-rewrites= 273
+Tactic call rewrite!-regression-cubic ran for 0.144 secs (0.144u,0.s) (success)
+Params: 0-nm= 315 , 1-n= 2 , 2-m= 45 , 3-input-size= 645 , 4-output-size= 15 , 5-num-rewrites= 315
+Tactic call rewrite!-regression-cubic ran for 0.195 secs (0.195u,0.s) (success)
+Params: 0-nm= 329 , 1-n= 2 , 2-m= 47 , 3-input-size= 673 , 4-output-size= 15 , 5-num-rewrites= 329
+Tactic call rewrite!-regression-cubic ran for 0.203 secs (0.203u,0.s) (success)
+Params: 0-nm= 357 , 1-n= 2 , 2-m= 51 , 3-input-size= 729 , 4-output-size= 15 , 5-num-rewrites= 357
+Tactic call rewrite!-regression-cubic ran for 0.241 secs (0.241u,0.s) (success)
+Params: 0-nm= 371 , 1-n= 2 , 2-m= 53 , 3-input-size= 757 , 4-output-size= 15 , 5-num-rewrites= 371
+Tactic call rewrite!-regression-cubic ran for 0.261 secs (0.261u,0.s) (success)
+Params: 0-nm= 386 , 1-n= 0 , 2-m= 386 , 3-input-size= 775 , 4-output-size= 3 , 5-num-rewrites= 386
+Tactic call rewrite!-regression-cubic ran for 0.686 secs (0.686u,0.s) (success)
+Params: 0-nm= 398 , 1-n= 0 , 2-m= 398 , 3-input-size= 799 , 4-output-size= 3 , 5-num-rewrites= 398
+Tactic call rewrite!-regression-cubic ran for 0.717 secs (0.717u,0.s) (success)
+Params: 0-nm= 410 , 1-n= 0 , 2-m= 410 , 3-input-size= 823 , 4-output-size= 3 , 5-num-rewrites= 410
+Tactic call rewrite!-regression-cubic ran for 0.764 secs (0.764u,0.s) (success)
+Params: 0-nm= 422 , 1-n= 0 , 2-m= 422 , 3-input-size= 847 , 4-output-size= 3 , 5-num-rewrites= 422
+Tactic call rewrite!-regression-cubic ran for 0.835 secs (0.835u,0.s) (success)
+Params: 0-nm= 434 , 1-n= 0 , 2-m= 434 , 3-input-size= 871 , 4-output-size= 3 , 5-num-rewrites= 434
+Tactic call rewrite!-regression-cubic ran for 0.895 secs (0.895u,0.s) (success)
+Params: 0-nm= 446 , 1-n= 0 , 2-m= 446 , 3-input-size= 895 , 4-output-size= 3 , 5-num-rewrites= 446
+Tactic call rewrite!-regression-cubic ran for 0.942 secs (0.938u,0.003s) (success)
+Params: 0-nm= 458 , 1-n= 0 , 2-m= 458 , 3-input-size= 919 , 4-output-size= 3 , 5-num-rewrites= 458
+Tactic call rewrite!-regression-cubic ran for 0.971 secs (0.967u,0.003s) (success)
+Params: 0-nm= 470 , 1-n= 0 , 2-m= 470 , 3-input-size= 943 , 4-output-size= 3 , 5-num-rewrites= 470
+Tactic call rewrite!-regression-cubic ran for 1.008 secs (1.u,0.008s) (success)
+Params: 0-nm= 482 , 1-n= 0 , 2-m= 482 , 3-input-size= 967 , 4-output-size= 3 , 5-num-rewrites= 482
+Tactic call rewrite!-regression-cubic ran for 1.042 secs (1.034u,0.007s) (success)
+Params: 0-nm= 494 , 1-n= 0 , 2-m= 494 , 3-input-size= 991 , 4-output-size= 3 , 5-num-rewrites= 494
+Tactic call rewrite!-regression-cubic ran for 1.098 secs (1.094u,0.003s) (success)
+Params: 0-nm= 506 , 1-n= 0 , 2-m= 506 , 3-input-size= 1015 , 4-output-size= 3 , 5-num-rewrites= 506
+Tactic call rewrite!-regression-cubic ran for 1.214 secs (1.21u,0.003s) (success)
+Params: 0-nm= 518 , 1-n= 0 , 2-m= 518 , 3-input-size= 1039 , 4-output-size= 3 , 5-num-rewrites= 518
+Tactic call rewrite!-regression-cubic ran for 1.259 secs (1.259u,0.s) (success)
+Params: 0-nm= 530 , 1-n= 0 , 2-m= 530 , 3-input-size= 1063 , 4-output-size= 3 , 5-num-rewrites= 530
+Tactic call rewrite!-regression-cubic ran for 1.278 secs (1.278u,0.s) (success)
+Params: 0-nm= 542 , 1-n= 0 , 2-m= 542 , 3-input-size= 1087 , 4-output-size= 3 , 5-num-rewrites= 542
+Tactic call rewrite!-regression-cubic ran for 1.318 secs (1.318u,0.s) (success)
+Params: 0-nm= 554 , 1-n= 0 , 2-m= 554 , 3-input-size= 1111 , 4-output-size= 3 , 5-num-rewrites= 554
+Tactic call rewrite!-regression-cubic ran for 1.373 secs (1.373u,0.s) (success)
+Params: 0-nm= 566 , 1-n= 0 , 2-m= 566 , 3-input-size= 1135 , 4-output-size= 3 , 5-num-rewrites= 566
+Tactic call rewrite!-regression-cubic ran for 1.458 secs (1.458u,0.s) (success)
+Params: 0-nm= 578 , 1-n= 0 , 2-m= 578 , 3-input-size= 1159 , 4-output-size= 3 , 5-num-rewrites= 578
+Tactic call rewrite!-regression-cubic ran for 1.576 secs (1.576u,0.s) (success)
+Params: 0-nm= 590 , 1-n= 0 , 2-m= 590 , 3-input-size= 1183 , 4-output-size= 3 , 5-num-rewrites= 590
+Tactic call rewrite!-regression-cubic ran for 1.585 secs (1.577u,0.007s) (success)
+Params: 0-nm= 602 , 1-n= 0 , 2-m= 602 , 3-input-size= 1207 , 4-output-size= 3 , 5-num-rewrites= 602
+Tactic call rewrite!-regression-cubic ran for 1.614 secs (1.61u,0.003s) (success)
+Params: 0-nm= 614 , 1-n= 0 , 2-m= 614 , 3-input-size= 1231 , 4-output-size= 3 , 5-num-rewrites= 614
+Tactic call rewrite!-regression-cubic ran for 1.657 secs (1.657u,0.s) (success)
+Params: 0-nm= 626 , 1-n= 0 , 2-m= 626 , 3-input-size= 1255 , 4-output-size= 3 , 5-num-rewrites= 626
+Tactic call rewrite!-regression-cubic ran for 1.796 secs (1.796u,0.s) (success)
+Params: 0-nm= 638 , 1-n= 0 , 2-m= 638 , 3-input-size= 1279 , 4-output-size= 3 , 5-num-rewrites= 638
+Tactic call rewrite!-regression-cubic ran for 1.891 secs (1.886u,0.003s) (success)
+Params: 0-nm= 650 , 1-n= 0 , 2-m= 650 , 3-input-size= 1303 , 4-output-size= 3 , 5-num-rewrites= 650
+Tactic call rewrite!-regression-cubic ran for 1.899 secs (1.899u,0.s) (success)
+Params: 0-nm= 662 , 1-n= 0 , 2-m= 662 , 3-input-size= 1327 , 4-output-size= 3 , 5-num-rewrites= 662
+Tactic call rewrite!-regression-cubic ran for 1.958 secs (1.954u,0.003s) (success)
+Params: 0-nm= 686 , 1-n= 0 , 2-m= 686 , 3-input-size= 1375 , 4-output-size= 3 , 5-num-rewrites= 686
+Tactic call rewrite!-regression-cubic ran for 2.19 secs (2.186u,0.003s) (success)
+Params: 0-nm= 698 , 1-n= 0 , 2-m= 698 , 3-input-size= 1399 , 4-output-size= 3 , 5-num-rewrites= 698
+Tactic call rewrite!-regression-cubic ran for 2.234 secs (2.23u,0.003s) (success)
+Params: 0-nm= 710 , 1-n= 0 , 2-m= 710 , 3-input-size= 1423 , 4-output-size= 3 , 5-num-rewrites= 710
+Tactic call rewrite!-regression-cubic ran for 2.266 secs (2.262u,0.003s) (success)
+Params: 0-nm= 722 , 1-n= 0 , 2-m= 722 , 3-input-size= 1447 , 4-output-size= 3 , 5-num-rewrites= 722
+Tactic call rewrite!-regression-cubic ran for 2.369 secs (2.369u,0.s) (success)
+Params: 0-nm= 734 , 1-n= 0 , 2-m= 734 , 3-input-size= 1471 , 4-output-size= 3 , 5-num-rewrites= 734
+Tactic call rewrite!-regression-cubic ran for 2.489 secs (2.489u,0.s) (success)
+Params: 0-nm= 746 , 1-n= 0 , 2-m= 746 , 3-input-size= 1495 , 4-output-size= 3 , 5-num-rewrites= 746
+Tactic call rewrite!-regression-cubic ran for 2.492 secs (2.492u,0.s) (success)
+Params: 0-nm= 390 , 1-n= 1 , 2-m= 130 , 3-input-size= 787 , 4-output-size= 7 , 5-num-rewrites= 390
+Tactic call rewrite!-regression-cubic ran for 0.465 secs (0.465u,0.s) (success)
+Params: 0-nm= 405 , 1-n= 1 , 2-m= 135 , 3-input-size= 817 , 4-output-size= 7 , 5-num-rewrites= 405
+Tactic call rewrite!-regression-cubic ran for 0.5 secs (0.5u,0.s) (success)
+Params: 0-nm= 420 , 1-n= 1 , 2-m= 140 , 3-input-size= 847 , 4-output-size= 7 , 5-num-rewrites= 420
+Tactic call rewrite!-regression-cubic ran for 0.486 secs (0.486u,0.s) (success)
+Params: 0-nm= 435 , 1-n= 1 , 2-m= 145 , 3-input-size= 877 , 4-output-size= 7 , 5-num-rewrites= 435
+Tactic call rewrite!-regression-cubic ran for 0.545 secs (0.545u,0.s) (success)
+Params: 0-nm= 450 , 1-n= 1 , 2-m= 150 , 3-input-size= 907 , 4-output-size= 7 , 5-num-rewrites= 450
+Tactic call rewrite!-regression-cubic ran for 0.578 secs (0.578u,0.s) (success)
+Params: 0-nm= 465 , 1-n= 1 , 2-m= 155 , 3-input-size= 937 , 4-output-size= 7 , 5-num-rewrites= 465
+Tactic call rewrite!-regression-cubic ran for 0.63 secs (0.63u,0.s) (success)
+Params: 0-nm= 480 , 1-n= 1 , 2-m= 160 , 3-input-size= 967 , 4-output-size= 7 , 5-num-rewrites= 480
+Tactic call rewrite!-regression-cubic ran for 0.651 secs (0.651u,0.s) (success)
+Params: 0-nm= 495 , 1-n= 1 , 2-m= 165 , 3-input-size= 997 , 4-output-size= 7 , 5-num-rewrites= 495
+Tactic call rewrite!-regression-cubic ran for 0.664 secs (0.664u,0.s) (success)
+Params: 0-nm= 510 , 1-n= 1 , 2-m= 170 , 3-input-size= 1027 , 4-output-size= 7 , 5-num-rewrites= 510
+Tactic call rewrite!-regression-cubic ran for 0.711 secs (0.711u,0.s) (success)
+Params: 0-nm= 525 , 1-n= 1 , 2-m= 175 , 3-input-size= 1057 , 4-output-size= 7 , 5-num-rewrites= 525
+Tactic call rewrite!-regression-cubic ran for 0.751 secs (0.751u,0.s) (success)
+Params: 0-nm= 540 , 1-n= 1 , 2-m= 180 , 3-input-size= 1087 , 4-output-size= 7 , 5-num-rewrites= 540
+Tactic call rewrite!-regression-cubic ran for 0.789 secs (0.789u,0.s) (success)
+Params: 0-nm= 555 , 1-n= 1 , 2-m= 185 , 3-input-size= 1117 , 4-output-size= 7 , 5-num-rewrites= 555
+Tactic call rewrite!-regression-cubic ran for 0.837 secs (0.837u,0.s) (success)
+Params: 0-nm= 570 , 1-n= 1 , 2-m= 190 , 3-input-size= 1147 , 4-output-size= 7 , 5-num-rewrites= 570
+Tactic call rewrite!-regression-cubic ran for 0.912 secs (0.912u,0.s) (success)
+Params: 0-nm= 585 , 1-n= 1 , 2-m= 195 , 3-input-size= 1177 , 4-output-size= 7 , 5-num-rewrites= 585
+Tactic call rewrite!-regression-cubic ran for 0.988 secs (0.984u,0.003s) (success)
+Params: 0-nm= 600 , 1-n= 1 , 2-m= 200 , 3-input-size= 1207 , 4-output-size= 7 , 5-num-rewrites= 600
+Tactic call rewrite!-regression-cubic ran for 1.006 secs (1.006u,0.s) (success)
+Params: 0-nm= 615 , 1-n= 1 , 2-m= 205 , 3-input-size= 1237 , 4-output-size= 7 , 5-num-rewrites= 615
+Tactic call rewrite!-regression-cubic ran for 1.022 secs (1.022u,0.s) (success)
+Params: 0-nm= 630 , 1-n= 1 , 2-m= 210 , 3-input-size= 1267 , 4-output-size= 7 , 5-num-rewrites= 630
+Tactic call rewrite!-regression-cubic ran for 1.063 secs (1.063u,0.s) (success)
+Params: 0-nm= 645 , 1-n= 1 , 2-m= 215 , 3-input-size= 1297 , 4-output-size= 7 , 5-num-rewrites= 645
+Tactic call rewrite!-regression-cubic ran for 1.116 secs (1.116u,0.s) (success)
+Params: 0-nm= 660 , 1-n= 1 , 2-m= 220 , 3-input-size= 1327 , 4-output-size= 7 , 5-num-rewrites= 660
+Tactic call rewrite!-regression-cubic ran for 1.18 secs (1.176u,0.003s) (success)
+Params: 0-nm= 675 , 1-n= 1 , 2-m= 225 , 3-input-size= 1357 , 4-output-size= 7 , 5-num-rewrites= 675
+Tactic call rewrite!-regression-cubic ran for 1.282 secs (1.282u,0.s) (success)
+Params: 0-nm= 690 , 1-n= 1 , 2-m= 230 , 3-input-size= 1387 , 4-output-size= 7 , 5-num-rewrites= 690
+Tactic call rewrite!-regression-cubic ran for 1.495 secs (1.495u,0.s) (success)
+Params: 0-nm= 705 , 1-n= 1 , 2-m= 235 , 3-input-size= 1417 , 4-output-size= 7 , 5-num-rewrites= 705
+Tactic call rewrite!-regression-cubic ran for 1.504 secs (1.504u,0.s) (success)
+Params: 0-nm= 720 , 1-n= 1 , 2-m= 240 , 3-input-size= 1447 , 4-output-size= 7 , 5-num-rewrites= 720
+Tactic call rewrite!-regression-cubic ran for 1.566 secs (1.566u,0.s) (success)
+Params: 0-nm= 735 , 1-n= 1 , 2-m= 245 , 3-input-size= 1477 , 4-output-size= 7 , 5-num-rewrites= 735
+Tactic call rewrite!-regression-cubic ran for 1.658 secs (1.658u,0.s) (success)
+Params: 0-nm= 399 , 1-n= 2 , 2-m= 57 , 3-input-size= 813 , 4-output-size= 15 , 5-num-rewrites= 399
+Tactic call rewrite!-regression-cubic ran for 0.314 secs (0.314u,0.s) (success)
+Params: 0-nm= 420 , 1-n= 2 , 2-m= 60 , 3-input-size= 855 , 4-output-size= 15 , 5-num-rewrites= 420
+Tactic call rewrite!-regression-cubic ran for 0.353 secs (0.353u,0.s) (success)
+Params: 0-nm= 441 , 1-n= 2 , 2-m= 63 , 3-input-size= 897 , 4-output-size= 15 , 5-num-rewrites= 441
+Tactic call rewrite!-regression-cubic ran for 0.374 secs (0.374u,0.s) (success)
+Params: 0-nm= 462 , 1-n= 2 , 2-m= 66 , 3-input-size= 939 , 4-output-size= 15 , 5-num-rewrites= 462
+Tactic call rewrite!-regression-cubic ran for 0.406 secs (0.406u,0.s) (success)
+Params: 0-nm= 483 , 1-n= 2 , 2-m= 69 , 3-input-size= 981 , 4-output-size= 15 , 5-num-rewrites= 483
+Tactic call rewrite!-regression-cubic ran for 0.455 secs (0.455u,0.s) (success)
+Params: 0-nm= 525 , 1-n= 2 , 2-m= 75 , 3-input-size= 1065 , 4-output-size= 15 , 5-num-rewrites= 525
+Tactic call rewrite!-regression-cubic ran for 0.528 secs (0.528u,0.s) (success)
+Params: 0-nm= 546 , 1-n= 2 , 2-m= 78 , 3-input-size= 1107 , 4-output-size= 15 , 5-num-rewrites= 546
+Tactic call rewrite!-regression-cubic ran for 0.547 secs (0.547u,0.s) (success)
+Params: 0-nm= 567 , 1-n= 2 , 2-m= 81 , 3-input-size= 1149 , 4-output-size= 15 , 5-num-rewrites= 567
+Tactic call rewrite!-regression-cubic ran for 0.596 secs (0.596u,0.s) (success)
+Params: 0-nm= 588 , 1-n= 2 , 2-m= 84 , 3-input-size= 1191 , 4-output-size= 15 , 5-num-rewrites= 588
+Tactic call rewrite!-regression-cubic ran for 0.638 secs (0.638u,0.s) (success)
+Params: 0-nm= 609 , 1-n= 2 , 2-m= 87 , 3-input-size= 1233 , 4-output-size= 15 , 5-num-rewrites= 609
+Tactic call rewrite!-regression-cubic ran for 0.611 secs (0.611u,0.s) (success)
+Params: 0-nm= 651 , 1-n= 2 , 2-m= 93 , 3-input-size= 1317 , 4-output-size= 15 , 5-num-rewrites= 651
+Tactic call rewrite!-regression-cubic ran for 0.696 secs (0.696u,0.s) (success)
+Params: 0-nm= 672 , 1-n= 2 , 2-m= 96 , 3-input-size= 1359 , 4-output-size= 15 , 5-num-rewrites= 672
+Tactic call rewrite!-regression-cubic ran for 0.735 secs (0.735u,0.s) (success)
+Params: 0-nm= 693 , 1-n= 2 , 2-m= 99 , 3-input-size= 1401 , 4-output-size= 15 , 5-num-rewrites= 693
+Tactic call rewrite!-regression-cubic ran for 0.797 secs (0.793u,0.003s) (success)
+Params: 0-nm= 714 , 1-n= 2 , 2-m= 102 , 3-input-size= 1443 , 4-output-size= 15 , 5-num-rewrites= 714
+Tactic call rewrite!-regression-cubic ran for 0.895 secs (0.895u,0.s) (success)
+Params: 0-nm= 735 , 1-n= 2 , 2-m= 105 , 3-input-size= 1485 , 4-output-size= 15 , 5-num-rewrites= 735
+Tactic call rewrite!-regression-cubic ran for 0.928 secs (0.928u,0.s) (success)
+Params: 0-nm= 585 , 1-n= 3 , 2-m= 39 , 3-input-size= 1201 , 4-output-size= 31 , 5-num-rewrites= 585
+Tactic call rewrite!-regression-cubic ran for 0.337 secs (0.337u,0.s) (success)
+Params: 0-nm= 600 , 1-n= 3 , 2-m= 40 , 3-input-size= 1231 , 4-output-size= 31 , 5-num-rewrites= 600
+Tactic call rewrite!-regression-cubic ran for 0.349 secs (0.349u,0.s) (success)
+Params: 0-nm= 630 , 1-n= 3 , 2-m= 42 , 3-input-size= 1291 , 4-output-size= 31 , 5-num-rewrites= 630
+Tactic call rewrite!-regression-cubic ran for 0.38 secs (0.38u,0.s) (success)
+Params: 0-nm= 645 , 1-n= 3 , 2-m= 43 , 3-input-size= 1321 , 4-output-size= 31 , 5-num-rewrites= 645
+Tactic call rewrite!-regression-cubic ran for 0.402 secs (0.398u,0.003s) (success)
+Params: 0-nm= 660 , 1-n= 3 , 2-m= 44 , 3-input-size= 1351 , 4-output-size= 31 , 5-num-rewrites= 660
+Tactic call rewrite!-regression-cubic ran for 0.422 secs (0.422u,0.s) (success)
+Params: 0-nm= 675 , 1-n= 3 , 2-m= 45 , 3-input-size= 1381 , 4-output-size= 31 , 5-num-rewrites= 675
+Tactic call rewrite!-regression-cubic ran for 0.437 secs (0.437u,0.s) (success)
+Params: 0-nm= 690 , 1-n= 3 , 2-m= 46 , 3-input-size= 1411 , 4-output-size= 31 , 5-num-rewrites= 690
+Tactic call rewrite!-regression-cubic ran for 0.46 secs (0.46u,0.s) (success)
+Params: 0-nm= 705 , 1-n= 3 , 2-m= 47 , 3-input-size= 1441 , 4-output-size= 31 , 5-num-rewrites= 705
+Tactic call rewrite!-regression-cubic ran for 0.472 secs (0.472u,0.s) (success)
+Params: 0-nm= 720 , 1-n= 3 , 2-m= 48 , 3-input-size= 1471 , 4-output-size= 31 , 5-num-rewrites= 720
+Tactic call rewrite!-regression-cubic ran for 0.493 secs (0.493u,0.s) (success)
+Params: 0-nm= 465 , 1-n= 4 , 2-m= 15 , 3-input-size= 993 , 4-output-size= 63 , 5-num-rewrites= 465
+Tactic call rewrite!-regression-cubic ran for 0.125 secs (0.125u,0.s) (success)
+Params: 0-nm= 713 , 1-n= 4 , 2-m= 23 , 3-input-size= 1489 , 4-output-size= 63 , 5-num-rewrites= 713
+Tactic call rewrite!-regression-cubic ran for 0.284 secs (0.28u,0.003s) (success)
+Params: 0-nm= 744 , 1-n= 4 , 2-m= 24 , 3-input-size= 1551 , 4-output-size= 63 , 5-num-rewrites= 744
+Tactic call rewrite!-regression-cubic ran for 0.307 secs (0.307u,0.s) (success)
+Params: 0-nm= 441 , 1-n= 5 , 2-m= 7 , 3-input-size= 1009 , 4-output-size= 127 , 5-num-rewrites= 441
+Tactic call rewrite!-regression-cubic ran for 0.076 secs (0.076u,0.s) (success)
+Params: 0-nm= 504 , 1-n= 5 , 2-m= 8 , 3-input-size= 1135 , 4-output-size= 127 , 5-num-rewrites= 504
+Tactic call rewrite!-regression-cubic ran for 0.092 secs (0.092u,0.s) (success)
+Params: 0-nm= 630 , 1-n= 5 , 2-m= 10 , 3-input-size= 1387 , 4-output-size= 127 , 5-num-rewrites= 630
+Tactic call rewrite!-regression-cubic ran for 0.144 secs (0.144u,0.s) (success)
+Params: 0-nm= 748 , 1-n= 0 , 2-m= 748 , 3-input-size= 1499 , 4-output-size= 3 , 5-num-rewrites= 748
+Tactic call rewrite!-regression-cubic ran for 2.304 secs (2.3u,0.003s) (success)
+Params: 0-nm= 773 , 1-n= 0 , 2-m= 773 , 3-input-size= 1549 , 4-output-size= 3 , 5-num-rewrites= 773
+Tactic call rewrite!-regression-cubic ran for 2.363 secs (2.363u,0.s) (success)
+Params: 0-nm= 798 , 1-n= 0 , 2-m= 798 , 3-input-size= 1599 , 4-output-size= 3 , 5-num-rewrites= 798
+Tactic call rewrite!-regression-cubic ran for 2.535 secs (2.531u,0.003s) (success)
+Params: 0-nm= 823 , 1-n= 0 , 2-m= 823 , 3-input-size= 1649 , 4-output-size= 3 , 5-num-rewrites= 823
+Tactic call rewrite!-regression-cubic ran for 2.748 secs (2.748u,0.s) (success)
+Params: 0-nm= 848 , 1-n= 0 , 2-m= 848 , 3-input-size= 1699 , 4-output-size= 3 , 5-num-rewrites= 848
+Tactic call rewrite!-regression-cubic ran for 2.808 secs (2.808u,0.s) (success)
+Params: 0-nm= 873 , 1-n= 0 , 2-m= 873 , 3-input-size= 1749 , 4-output-size= 3 , 5-num-rewrites= 873
+Tactic call rewrite!-regression-cubic ran for 3.093 secs (3.081u,0.011s) (success)
+Params: 0-nm= 898 , 1-n= 0 , 2-m= 898 , 3-input-size= 1799 , 4-output-size= 3 , 5-num-rewrites= 898
+Tactic call rewrite!-regression-cubic ran for 3.156 secs (3.144u,0.011s) (success)
+Params: 0-nm= 923 , 1-n= 0 , 2-m= 923 , 3-input-size= 1849 , 4-output-size= 3 , 5-num-rewrites= 923
+Tactic call rewrite!-regression-cubic ran for 3.455 secs (3.451u,0.003s) (success)
+Params: 0-nm= 948 , 1-n= 0 , 2-m= 948 , 3-input-size= 1899 , 4-output-size= 3 , 5-num-rewrites= 948
+Tactic call rewrite!-regression-cubic ran for 3.502 secs (3.502u,0.s) (success)
+Params: 0-nm= 973 , 1-n= 0 , 2-m= 973 , 3-input-size= 1949 , 4-output-size= 3 , 5-num-rewrites= 973
+Tactic call rewrite!-regression-cubic ran for 3.807 secs (3.807u,0.s) (success)
+Params: 0-nm= 998 , 1-n= 0 , 2-m= 998 , 3-input-size= 1999 , 4-output-size= 3 , 5-num-rewrites= 998
+Tactic call rewrite!-regression-cubic ran for 3.937 secs (3.937u,0.s) (success)
+Params: 0-nm= 1023 , 1-n= 0 , 2-m= 1023 , 3-input-size= 2049 , 4-output-size= 3 , 5-num-rewrites= 1023
+Tactic call rewrite!-regression-cubic ran for 4.191 secs (4.191u,0.s) (success)
+Params: 0-nm= 1048 , 1-n= 0 , 2-m= 1048 , 3-input-size= 2099 , 4-output-size= 3 , 5-num-rewrites= 1048
+Tactic call rewrite!-regression-cubic ran for 4.44 secs (4.432u,0.007s) (success)
+Params: 0-nm= 1073 , 1-n= 0 , 2-m= 1073 , 3-input-size= 2149 , 4-output-size= 3 , 5-num-rewrites= 1073
+Tactic call rewrite!-regression-cubic ran for 4.528 secs (4.512u,0.016s) (success)
+Params: 0-nm= 1098 , 1-n= 0 , 2-m= 1098 , 3-input-size= 2199 , 4-output-size= 3 , 5-num-rewrites= 1098
+Tactic call rewrite!-regression-cubic ran for 4.867 secs (4.863u,0.003s) (success)
+Params: 0-nm= 750 , 1-n= 1 , 2-m= 250 , 3-input-size= 1507 , 4-output-size= 7 , 5-num-rewrites= 750
+Tactic call rewrite!-regression-cubic ran for 1.508 secs (1.508u,0.s) (success)
+Params: 0-nm= 780 , 1-n= 1 , 2-m= 260 , 3-input-size= 1567 , 4-output-size= 7 , 5-num-rewrites= 780
+Tactic call rewrite!-regression-cubic ran for 1.625 secs (1.625u,0.s) (success)
+Params: 0-nm= 810 , 1-n= 1 , 2-m= 270 , 3-input-size= 1627 , 4-output-size= 7 , 5-num-rewrites= 810
+Tactic call rewrite!-regression-cubic ran for 1.848 secs (1.848u,0.s) (success)
+Params: 0-nm= 840 , 1-n= 1 , 2-m= 280 , 3-input-size= 1687 , 4-output-size= 7 , 5-num-rewrites= 840
+Tactic call rewrite!-regression-cubic ran for 1.933 secs (1.917u,0.015s) (success)
+Params: 0-nm= 870 , 1-n= 1 , 2-m= 290 , 3-input-size= 1747 , 4-output-size= 7 , 5-num-rewrites= 870
+Tactic call rewrite!-regression-cubic ran for 2.038 secs (2.026u,0.011s) (success)
+Params: 0-nm= 900 , 1-n= 1 , 2-m= 300 , 3-input-size= 1807 , 4-output-size= 7 , 5-num-rewrites= 900
+Tactic call rewrite!-regression-cubic ran for 2.48 secs (2.476u,0.004s) (success)
+Params: 0-nm= 930 , 1-n= 1 , 2-m= 310 , 3-input-size= 1867 , 4-output-size= 7 , 5-num-rewrites= 930
+Tactic call rewrite!-regression-cubic ran for 2.358 secs (2.358u,0.s) (success)
+Params: 0-nm= 960 , 1-n= 1 , 2-m= 320 , 3-input-size= 1927 , 4-output-size= 7 , 5-num-rewrites= 960
+Tactic call rewrite!-regression-cubic ran for 2.395 secs (2.391u,0.003s) (success)
+Params: 0-nm= 990 , 1-n= 1 , 2-m= 330 , 3-input-size= 1987 , 4-output-size= 7 , 5-num-rewrites= 990
+Tactic call rewrite!-regression-cubic ran for 2.67 secs (2.666u,0.004s) (success)
+Params: 0-nm= 1020 , 1-n= 1 , 2-m= 340 , 3-input-size= 2047 , 4-output-size= 7 , 5-num-rewrites= 1020
+Tactic call rewrite!-regression-cubic ran for 2.782 secs (2.782u,0.s) (success)
+Params: 0-nm= 1050 , 1-n= 1 , 2-m= 350 , 3-input-size= 2107 , 4-output-size= 7 , 5-num-rewrites= 1050
+Tactic call rewrite!-regression-cubic ran for 2.91 secs (2.91u,0.s) (success)
+Params: 0-nm= 1080 , 1-n= 1 , 2-m= 360 , 3-input-size= 2167 , 4-output-size= 7 , 5-num-rewrites= 1080
+Tactic call rewrite!-regression-cubic ran for 3.194 secs (3.186u,0.007s) (success)
+Params: 0-nm= 1110 , 1-n= 1 , 2-m= 370 , 3-input-size= 2227 , 4-output-size= 7 , 5-num-rewrites= 1110
+Tactic call rewrite!-regression-cubic ran for 3.229 secs (3.229u,0.s) (success)
+Params: 0-nm= 784 , 1-n= 2 , 2-m= 112 , 3-input-size= 1583 , 4-output-size= 15 , 5-num-rewrites= 784
+Tactic call rewrite!-regression-cubic ran for 0.995 secs (0.995u,0.s) (success)
+Params: 0-nm= 819 , 1-n= 2 , 2-m= 117 , 3-input-size= 1653 , 4-output-size= 15 , 5-num-rewrites= 819
+Tactic call rewrite!-regression-cubic ran for 1.139 secs (1.139u,0.s) (success)
+Params: 0-nm= 854 , 1-n= 2 , 2-m= 122 , 3-input-size= 1723 , 4-output-size= 15 , 5-num-rewrites= 854
+Tactic call rewrite!-regression-cubic ran for 1.223 secs (1.223u,0.s) (success)
+Params: 0-nm= 889 , 1-n= 2 , 2-m= 127 , 3-input-size= 1793 , 4-output-size= 15 , 5-num-rewrites= 889
+Tactic call rewrite!-regression-cubic ran for 1.272 secs (1.268u,0.004s) (success)
+Params: 0-nm= 924 , 1-n= 2 , 2-m= 132 , 3-input-size= 1863 , 4-output-size= 15 , 5-num-rewrites= 924
+Tactic call rewrite!-regression-cubic ran for 1.37 secs (1.37u,0.s) (success)
+Params: 0-nm= 959 , 1-n= 2 , 2-m= 137 , 3-input-size= 1933 , 4-output-size= 15 , 5-num-rewrites= 959
+Tactic call rewrite!-regression-cubic ran for 1.471 secs (1.471u,0.s) (success)
+Params: 0-nm= 994 , 1-n= 2 , 2-m= 142 , 3-input-size= 2003 , 4-output-size= 15 , 5-num-rewrites= 994
+Tactic call rewrite!-regression-cubic ran for 1.882 secs (1.878u,0.003s) (success)
+Params: 0-nm= 1029 , 1-n= 2 , 2-m= 147 , 3-input-size= 2073 , 4-output-size= 15 , 5-num-rewrites= 1029
+Tactic call rewrite!-regression-cubic ran for 1.792 secs (1.792u,0.s) (success)
+Params: 0-nm= 1064 , 1-n= 2 , 2-m= 152 , 3-input-size= 2143 , 4-output-size= 15 , 5-num-rewrites= 1064
+Tactic call rewrite!-regression-cubic ran for 1.799 secs (1.799u,0.s) (success)
+Params: 0-nm= 1099 , 1-n= 2 , 2-m= 157 , 3-input-size= 2213 , 4-output-size= 15 , 5-num-rewrites= 1099
+Tactic call rewrite!-regression-cubic ran for 1.895 secs (1.895u,0.s) (success)
+Params: 0-nm= 775 , 1-n= 4 , 2-m= 25 , 3-input-size= 1613 , 4-output-size= 63 , 5-num-rewrites= 775
+Tactic call rewrite!-regression-cubic ran for 0.332 secs (0.332u,0.s) (success)
+Params: 0-nm= 837 , 1-n= 4 , 2-m= 27 , 3-input-size= 1737 , 4-output-size= 63 , 5-num-rewrites= 837
+Tactic call rewrite!-regression-cubic ran for 0.381 secs (0.381u,0.s) (success)
+Params: 0-nm= 899 , 1-n= 4 , 2-m= 29 , 3-input-size= 1861 , 4-output-size= 63 , 5-num-rewrites= 899
+Tactic call rewrite!-regression-cubic ran for 0.467 secs (0.467u,0.s) (success)
+Params: 0-nm= 961 , 1-n= 4 , 2-m= 31 , 3-input-size= 1985 , 4-output-size= 63 , 5-num-rewrites= 961
+Tactic call rewrite!-regression-cubic ran for 0.537 secs (0.537u,0.s) (success)
+Params: 0-nm= 1023 , 1-n= 4 , 2-m= 33 , 3-input-size= 2109 , 4-output-size= 63 , 5-num-rewrites= 1023
+Tactic call rewrite!-regression-cubic ran for 0.603 secs (0.603u,0.s) (success)
+Params: 0-nm= 1085 , 1-n= 4 , 2-m= 35 , 3-input-size= 2233 , 4-output-size= 63 , 5-num-rewrites= 1085
+Tactic call rewrite!-regression-cubic ran for 0.66 secs (0.66u,0.s) (success)
+Params: 0-nm= 819 , 1-n= 5 , 2-m= 13 , 3-input-size= 1765 , 4-output-size= 127 , 5-num-rewrites= 819
+Tactic call rewrite!-regression-cubic ran for 0.212 secs (0.212u,0.s) (success)
+Params: 0-nm= 882 , 1-n= 5 , 2-m= 14 , 3-input-size= 1891 , 4-output-size= 127 , 5-num-rewrites= 882
+Tactic call rewrite!-regression-cubic ran for 0.245 secs (0.245u,0.s) (success)
+Params: 0-nm= 1071 , 1-n= 5 , 2-m= 17 , 3-input-size= 2269 , 4-output-size= 127 , 5-num-rewrites= 1071
+Tactic call rewrite!-regression-cubic ran for 0.35 secs (0.35u,0.s) (success)
+Params: 0-nm= 1022 , 1-n= 8 , 2-m= 2 , 3-input-size= 3067 , 4-output-size= 1023 , 5-num-rewrites= 1022
+Tactic call rewrite!-regression-cubic ran for 0.078 secs (0.078u,0.s) (success)
+Params: 0-nm= 1122 , 1-n= 0 , 2-m= 1122 , 3-input-size= 2247 , 4-output-size= 3 , 5-num-rewrites= 1122
+Tactic call rewrite!-regression-cubic ran for 4.901 secs (4.901u,0.s) (success)
+Params: 0-nm= 1169 , 1-n= 0 , 2-m= 1169 , 3-input-size= 2341 , 4-output-size= 3 , 5-num-rewrites= 1169
+Tactic call rewrite!-regression-cubic ran for 5.404 secs (5.401u,0.003s) (success)
+Params: 0-nm= 1216 , 1-n= 0 , 2-m= 1216 , 3-input-size= 2435 , 4-output-size= 3 , 5-num-rewrites= 1216
+Tactic call rewrite!-regression-cubic ran for 5.857 secs (5.857u,0.s) (success)
+Params: 0-nm= 1263 , 1-n= 0 , 2-m= 1263 , 3-input-size= 2529 , 4-output-size= 3 , 5-num-rewrites= 1263
+Tactic call rewrite!-regression-cubic ran for 6.251 secs (6.251u,0.s) (success)
+Params: 0-nm= 1310 , 1-n= 0 , 2-m= 1310 , 3-input-size= 2623 , 4-output-size= 3 , 5-num-rewrites= 1310
+Tactic call rewrite!-regression-cubic ran for 6.839 secs (6.835u,0.003s) (success)
+Params: 0-nm= 1357 , 1-n= 0 , 2-m= 1357 , 3-input-size= 2717 , 4-output-size= 3 , 5-num-rewrites= 1357
+Tactic call rewrite!-regression-cubic ran for 7.322 secs (7.314u,0.008s) (success)
+Params: 0-nm= 1404 , 1-n= 0 , 2-m= 1404 , 3-input-size= 2811 , 4-output-size= 3 , 5-num-rewrites= 1404
+Tactic call rewrite!-regression-cubic ran for 8.088 secs (8.084u,0.003s) (success)
+Params: 0-nm= 1451 , 1-n= 0 , 2-m= 1451 , 3-input-size= 2905 , 4-output-size= 3 , 5-num-rewrites= 1451
+Tactic call rewrite!-regression-cubic ran for 8.348 secs (8.34u,0.008s) (success)
+Params: 0-nm= 1122 , 1-n= 1 , 2-m= 374 , 3-input-size= 2251 , 4-output-size= 7 , 5-num-rewrites= 1122
+Tactic call rewrite!-regression-cubic ran for 3.466 secs (3.466u,0.s) (success)
+Params: 0-nm= 1176 , 1-n= 1 , 2-m= 392 , 3-input-size= 2359 , 4-output-size= 7 , 5-num-rewrites= 1176
+Tactic call rewrite!-regression-cubic ran for 4.187 secs (4.187u,0.s) (success)
+Params: 0-nm= 1230 , 1-n= 1 , 2-m= 410 , 3-input-size= 2467 , 4-output-size= 7 , 5-num-rewrites= 1230
+Tactic call rewrite!-regression-cubic ran for 4.756 secs (4.756u,0.s) (success)
+Params: 0-nm= 1284 , 1-n= 1 , 2-m= 428 , 3-input-size= 2575 , 4-output-size= 7 , 5-num-rewrites= 1284
+Tactic call rewrite!-regression-cubic ran for 5.066 secs (5.062u,0.003s) (success)
+Params: 0-nm= 1338 , 1-n= 1 , 2-m= 446 , 3-input-size= 2683 , 4-output-size= 7 , 5-num-rewrites= 1338
+Tactic call rewrite!-regression-cubic ran for 5.546 secs (5.546u,0.s) (success)
+Params: 0-nm= 1392 , 1-n= 1 , 2-m= 464 , 3-input-size= 2791 , 4-output-size= 7 , 5-num-rewrites= 1392
+Tactic call rewrite!-regression-cubic ran for 6.037 secs (6.033u,0.004s) (success)
+Params: 0-nm= 1446 , 1-n= 1 , 2-m= 482 , 3-input-size= 2899 , 4-output-size= 7 , 5-num-rewrites= 1446
+Tactic call rewrite!-regression-cubic ran for 6.416 secs (6.416u,0.s) (success)
+Params: 0-nm= 1127 , 1-n= 2 , 2-m= 161 , 3-input-size= 2269 , 4-output-size= 15 , 5-num-rewrites= 1127
+Tactic call rewrite!-regression-cubic ran for 2.443 secs (2.443u,0.s) (success)
+Params: 0-nm= 1190 , 1-n= 2 , 2-m= 170 , 3-input-size= 2395 , 4-output-size= 15 , 5-num-rewrites= 1190
+Tactic call rewrite!-regression-cubic ran for 2.693 secs (2.689u,0.003s) (success)
+Params: 0-nm= 1253 , 1-n= 2 , 2-m= 179 , 3-input-size= 2521 , 4-output-size= 15 , 5-num-rewrites= 1253
+Tactic call rewrite!-regression-cubic ran for 2.961 secs (2.961u,0.s) (success)
+Params: 0-nm= 1316 , 1-n= 2 , 2-m= 188 , 3-input-size= 2647 , 4-output-size= 15 , 5-num-rewrites= 1316
+Tactic call rewrite!-regression-cubic ran for 3.322 secs (3.318u,0.004s) (success)
+Params: 0-nm= 1379 , 1-n= 2 , 2-m= 197 , 3-input-size= 2773 , 4-output-size= 15 , 5-num-rewrites= 1379
+Tactic call rewrite!-regression-cubic ran for 3.623 secs (3.615u,0.008s) (success)
+Params: 0-nm= 1442 , 1-n= 2 , 2-m= 206 , 3-input-size= 2899 , 4-output-size= 15 , 5-num-rewrites= 1442
+Tactic call rewrite!-regression-cubic ran for 4.277 secs (4.269u,0.007s) (success)
+Params: 0-nm= 1147 , 1-n= 4 , 2-m= 37 , 3-input-size= 2357 , 4-output-size= 63 , 5-num-rewrites= 1147
+Tactic call rewrite!-regression-cubic ran for 0.836 secs (0.836u,0.s) (success)
+Params: 0-nm= 1240 , 1-n= 4 , 2-m= 40 , 3-input-size= 2543 , 4-output-size= 63 , 5-num-rewrites= 1240
+Tactic call rewrite!-regression-cubic ran for 1.016 secs (1.016u,0.s) (success)
+Params: 0-nm= 1333 , 1-n= 4 , 2-m= 43 , 3-input-size= 2729 , 4-output-size= 63 , 5-num-rewrites= 1333
+Tactic call rewrite!-regression-cubic ran for 1.124 secs (1.124u,0.s) (success)
+Params: 0-nm= 1426 , 1-n= 4 , 2-m= 46 , 3-input-size= 2915 , 4-output-size= 63 , 5-num-rewrites= 1426
+Tactic call rewrite!-regression-cubic ran for 1.256 secs (1.256u,0.s) (success)
+Params: 0-nm= 1260 , 1-n= 5 , 2-m= 20 , 3-input-size= 2647 , 4-output-size= 127 , 5-num-rewrites= 1260
+Tactic call rewrite!-regression-cubic ran for 0.552 secs (0.552u,0.s) (success)
+Params: 0-nm= 1386 , 1-n= 5 , 2-m= 22 , 3-input-size= 2899 , 4-output-size= 127 , 5-num-rewrites= 1386
+Tactic call rewrite!-regression-cubic ran for 0.641 secs (0.642u,0.s) (success)
+Params: 0-nm= 1143 , 1-n= 6 , 2-m= 9 , 3-input-size= 2541 , 4-output-size= 255 , 5-num-rewrites= 1143
+Tactic call rewrite!-regression-cubic ran for 0.259 secs (0.259u,0.s) (success)
+Params: 0-nm= 1270 , 1-n= 6 , 2-m= 10 , 3-input-size= 2795 , 4-output-size= 255 , 5-num-rewrites= 1270
+Tactic call rewrite!-regression-cubic ran for 0.32 secs (0.32u,0.s) (success)
+Params: 0-nm= 1397 , 1-n= 6 , 2-m= 11 , 3-input-size= 3049 , 4-output-size= 255 , 5-num-rewrites= 1397
+Tactic call rewrite!-regression-cubic ran for 0.378 secs (0.378u,0.s) (success)
+Params: 0-nm= 1275 , 1-n= 7 , 2-m= 5 , 3-input-size= 3061 , 4-output-size= 511 , 5-num-rewrites= 1275
+Tactic call rewrite!-regression-cubic ran for 0.194 secs (0.194u,0.s) (success)
+Params: 0-nm= 1533 , 1-n= 8 , 2-m= 3 , 3-input-size= 4089 , 4-output-size= 1023 , 5-num-rewrites= 1533
+Tactic call rewrite!-regression-cubic ran for 0.181 secs (0.181u,0.s) (success)
+Params: 0-nm= 2040 , 1-n= 7 , 2-m= 8 , 3-input-size= 4591 , 4-output-size= 511 , 5-num-rewrites= 2040
+Tactic call rewrite!-regression-cubic ran for 0.475 secs (0.475u,0.s) (success)
+Params: 0-nm= 1905 , 1-n= 6 , 2-m= 15 , 3-input-size= 4065 , 4-output-size= 255 , 5-num-rewrites= 1905
+Tactic call rewrite!-regression-cubic ran for 0.712 secs (0.712u,0.s) (success)
+Params: 0-nm= 2032 , 1-n= 6 , 2-m= 16 , 3-input-size= 4319 , 4-output-size= 255 , 5-num-rewrites= 2032
+Tactic call rewrite!-regression-cubic ran for 0.824 secs (0.824u,0.s) (success)
+Params: 0-nm= 2159 , 1-n= 6 , 2-m= 17 , 3-input-size= 4573 , 4-output-size= 255 , 5-num-rewrites= 2159
+Tactic call rewrite!-regression-cubic ran for 0.995 secs (0.995u,0.s) (success)
+Params: 0-nm= 1890 , 1-n= 5 , 2-m= 30 , 3-input-size= 3907 , 4-output-size= 127 , 5-num-rewrites= 1890
+Tactic call rewrite!-regression-cubic ran for 1.305 secs (1.301u,0.003s) (success)
+Params: 0-nm= 2205 , 1-n= 5 , 2-m= 35 , 3-input-size= 4537 , 4-output-size= 127 , 5-num-rewrites= 2205
+Tactic call rewrite!-regression-cubic ran for 1.709 secs (1.697u,0.011s) (success)
+Params: 0-nm= 1891 , 1-n= 4 , 2-m= 61 , 3-input-size= 3845 , 4-output-size= 63 , 5-num-rewrites= 1891
+Tactic call rewrite!-regression-cubic ran for 2.221 secs (2.221u,0.s) (success)
+Params: 0-nm= 2077 , 1-n= 4 , 2-m= 67 , 3-input-size= 4217 , 4-output-size= 63 , 5-num-rewrites= 2077
+Tactic call rewrite!-regression-cubic ran for 3.078 secs (3.078u,0.s) (success)
+Params: 0-nm= 2044 , 1-n= 8 , 2-m= 4 , 3-input-size= 5111 , 4-output-size= 1023 , 5-num-rewrites= 2044
+Tactic call rewrite!-regression-cubic ran for 0.32 secs (0.32u,0.s) (success)
+Params: 0-nm= 2268 , 1-n= 5 , 2-m= 36 , 3-input-size= 4663 , 4-output-size= 127 , 5-num-rewrites= 2268
+Tactic call rewrite!-regression-cubic ran for 1.896 secs (1.896u,0.s) (success)
+Params: 0-nm= 2331 , 1-n= 5 , 2-m= 37 , 3-input-size= 4789 , 4-output-size= 127 , 5-num-rewrites= 2331
+Tactic call rewrite!-regression-cubic ran for 1.886 secs (1.886u,0.s) (success)
+Params: 0-nm= 2394 , 1-n= 5 , 2-m= 38 , 3-input-size= 4915 , 4-output-size= 127 , 5-num-rewrites= 2394
+Tactic call rewrite!-regression-cubic ran for 1.95 secs (1.95u,0.s) (success)
+Params: 0-nm= 2457 , 1-n= 5 , 2-m= 39 , 3-input-size= 5041 , 4-output-size= 127 , 5-num-rewrites= 2457
+Tactic call rewrite!-regression-cubic ran for 2.127 secs (2.127u,0.s) (success)
+Params: 0-nm= 2520 , 1-n= 5 , 2-m= 40 , 3-input-size= 5167 , 4-output-size= 127 , 5-num-rewrites= 2520
+Tactic call rewrite!-regression-cubic ran for 2.391 secs (2.391u,0.s) (success)
+Params: 0-nm= 2583 , 1-n= 5 , 2-m= 41 , 3-input-size= 5293 , 4-output-size= 127 , 5-num-rewrites= 2583
+Tactic call rewrite!-regression-cubic ran for 2.384 secs (2.38u,0.003s) (success)
+Params: 0-nm= 2295 , 1-n= 7 , 2-m= 9 , 3-input-size= 5101 , 4-output-size= 511 , 5-num-rewrites= 2295
+Tactic call rewrite!-regression-cubic ran for 0.608 secs (0.608u,0.s) (success)
+Params: 0-nm= 2550 , 1-n= 7 , 2-m= 10 , 3-input-size= 5611 , 4-output-size= 511 , 5-num-rewrites= 2550
+Tactic call rewrite!-regression-cubic ran for 0.734 secs (0.734u,0.s) (success)
+Params: 0-nm= 2646 , 1-n= 5 , 2-m= 42 , 3-input-size= 5419 , 4-output-size= 127 , 5-num-rewrites= 2646
+Tactic call rewrite!-regression-cubic ran for 2.493 secs (2.493u,0.s) (success)
+Params: 0-nm= 2709 , 1-n= 5 , 2-m= 43 , 3-input-size= 5545 , 4-output-size= 127 , 5-num-rewrites= 2709
+Tactic call rewrite!-regression-cubic ran for 2.776 secs (2.776u,0.s) (success)
+Params: 0-nm= 2772 , 1-n= 5 , 2-m= 44 , 3-input-size= 5671 , 4-output-size= 127 , 5-num-rewrites= 2772
+Tactic call rewrite!-regression-cubic ran for 2.744 secs (2.744u,0.s) (success)
+Params: 0-nm= 2835 , 1-n= 5 , 2-m= 45 , 3-input-size= 5797 , 4-output-size= 127 , 5-num-rewrites= 2835
+Tactic call rewrite!-regression-cubic ran for 2.917 secs (2.917u,0.s) (success)
+Params: 0-nm= 2898 , 1-n= 5 , 2-m= 46 , 3-input-size= 5923 , 4-output-size= 127 , 5-num-rewrites= 2898
+Tactic call rewrite!-regression-cubic ran for 3.184 secs (3.184u,0.s) (success)
+Params: 0-nm= 2961 , 1-n= 5 , 2-m= 47 , 3-input-size= 6049 , 4-output-size= 127 , 5-num-rewrites= 2961
+Tactic call rewrite!-regression-cubic ran for 3.173 secs (3.169u,0.003s) (success)

@@ -1,24 +1,10 @@
-Params: n= 1 ,m= 6
-Tactic call rewrite_strat(topdown,bottomup) ran for 0.252 secs (0.248u,0.003s) (success)
-Params: n= 1 ,m= 7
-Tactic call rewrite_strat(topdown,bottomup) ran for 0.246 secs (0.248u,0.s) (success)
-Params: n= 2 ,m= 6
-Tactic call rewrite_strat(topdown,bottomup) ran for 0.766 secs (0.763u,0.s) (success)
-Params: n= 2 ,m= 7
-Tactic call rewrite_strat(topdown,bottomup) ran for 1.36 secs (1.36u,0.s) (success)
-Params: n= 3 ,m= 6
-Tactic call rewrite_strat(topdown,bottomup) ran for 2.305 secs (2.3u,0.004s) (success)
-Params: n= 3 ,m= 7
-Tactic call rewrite_strat(topdown,bottomup) ran for 4.346 secs (4.343u,0.004s) (success)
-Params: n= 4 ,m= 6
-Tactic call rewrite_strat(topdown,bottomup) ran for 5.711 secs (5.708u,0.004s) (success)
-Params: n= 4 ,m= 7
-Tactic call rewrite_strat(topdown,bottomup) ran for 11.385 secs (11.379u,0.008s) (success)
-Params: n= 5 ,m= 6
-Tactic call rewrite_strat(topdown,bottomup) ran for 12.273 secs (12.268u,0.004s) (success)
-Params: n= 5 ,m= 7
-Tactic call rewrite_strat(topdown,bottomup) ran for 25.628 secs (25.603u,0.023s) (success)
-Params: n= 6 ,m= 6
-Tactic call rewrite_strat(topdown,bottomup) ran for 24.377 secs (24.376u,0.s) (success)
-Params: n= 6 ,m= 7
-Tactic call rewrite_strat(topdown,bottomup) ran for 51.185 secs (51.187u,0.s) (success)
+Params: 0-nm= 14 , 1-n= 1 , 2-m= 14
+Tactic call rewrite_strat(bottomup,bottomup)-regression-exponential ran for 4.637 secs (4.632u,0.s) (success)
+Params: 0-nm= 14 , 1-n= 14 , 2-m= 1
+Tactic call rewrite_strat(bottomup,bottomup)-regression-exponential ran for 1.165 secs (1.159u,0.003s) (success)
+Params: 0-nm= 20 , 1-n= 1 , 2-m= 20
+Tactic call rewrite_strat(bottomup,bottomup)-regression-exponential ran for 58.78 secs (58.545u,0.156s) (success)
+Params: 0-nm= 20 , 1-n= 4 , 2-m= 5
+Tactic call rewrite_strat(bottomup,bottomup)-regression-exponential ran for 2.033 secs (2.03u,0.s) (success)
+Params: 0-nm= 20 , 1-n= 20 , 2-m= 1
+Tactic call rewrite_strat(bottomup,bottomup)-regression-exponential ran for 4.937 secs (4.835u,0.096s) (success)
