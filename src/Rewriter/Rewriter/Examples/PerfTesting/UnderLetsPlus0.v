@@ -117,7 +117,7 @@ Definition max_input_of_kind (k : kind_of_rewrite) : option Z
        => None
      end%Z.
 
-Definition args_of_size' (k : kind_of_rewrite) (s : size) : list Z
+Definition args_of_size_by_sample' (k : kind_of_rewrite) (s : size) : list Z
   := Eval cbv beta iota in
       eta_size
         (s'
@@ -138,8 +138,53 @@ Definition args_of_size' (k : kind_of_rewrite) (s : size) : list Z
 Local Set NativeCompute Profiling.
 Local Set NativeCompute Timing.
 (* Takes about 20 seconds *)
+Time Definition args_of_size_by_sample (k : kind_of_rewrite) (s : size)
+  := Eval native_compute in eta_size (s' => eta_kind (k' => args_of_size_by_sample' k' s') k) s.
+
+Definition compat_args_of_size' (test_tac_n : nat) (s : size)
+  := let ls
+         := match test_tac_n, s with
+            | 0, SuperFast => [(1, 70, 1)]
+            | 1, SuperFast => [(1, 70, 1)]
+            | 2, SuperFast => [(1, 30, 1)]
+            | 3, SuperFast => [(1, 30, 1)]
+            | 0, Fast => [(71, 5000, 1)]
+            | 1, Fast => [(71, 200, 1)]
+            | 2, Fast => [(31, 60, 1)]
+            | 3, Fast => [(31, 60, 1)]
+            | 1, Medium => [(201, 371, 1)]
+            | 2, Medium => [(61, 90, 1)]
+            | 3, Medium => [(61, 90, 1)]
+            | 1, Slow => [(372, 1000, 1)] (* ??? *)
+            | 2, Slow => [(91, 600, 1)] (* ??? *)
+            | 3, Slow => [(91, 600, 1)] (* ??? *)
+            | 1, VerySlow => [(1001, 5000, 1)]
+            | 2, VerySlow => [(601, 5000, 1)]
+            | 3, VerySlow => [(601, 5000, 1)]
+            | 0, _ => []
+            | _, _ => []
+            end%nat in
+     List.flat_map (fun '(start, stop, step) => Sample.Zrange (Z.of_nat start) (inject_Z (Z.of_nat step)) (Z.of_nat stop)) ls.
+
+Definition kind_to_compat (k : kind_of_rewrite) : option nat
+  := Some
+       match k with
+       | kind_rewrite_lhs_for => 0
+       | kind_setoid_rewrite => 1
+       | kind_rewrite_strat topdown => 2
+       | kind_rewrite_strat bottomup => 2
+       end%nat.
+
+Definition compat_args_of_size (k : kind_of_rewrite) (s : size)
+  := match kind_to_compat k, s with
+     | _, (Sanity | Slow | VerySlow)
+     | None, _
+       => args_of_size_by_sample k s
+     | Some n, _ => compat_args_of_size' n s
+     end.
+
 Time Definition args_of_size (k : kind_of_rewrite) (s : size)
-  := Eval native_compute in eta_size (s' => eta_kind (k' => args_of_size' k' s') k) s.
+  := Eval native_compute in eta_size (s' => eta_kind (k' => compat_args_of_size k' s') k) s.
 
 Ltac mkgoal kind n :=
   let Z_to_nat := (eval vm_compute in Z.to_nat) in

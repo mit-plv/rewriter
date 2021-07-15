@@ -176,7 +176,7 @@ Definition max_input_of_kind (k : red_kind) : option Z
        end%Z.
 *)
 
-Definition args_of_size' (k : red_kind) (s : size) : list Z
+Definition args_of_size_by_sample' (k : red_kind) (s : size) : list Z
   := Eval cbv beta iota in
       eta_size
         (s'
@@ -197,8 +197,60 @@ Definition args_of_size' (k : red_kind) (s : size) : list Z
 Local Set NativeCompute Profiling.
 Local Set NativeCompute Timing.
 (* Takes about 0.6 seconds *)
+Time Definition args_of_size_by_sample (k : red_kind) (s : size)
+  := Eval native_compute in eta_size (s' => eta_kind (k' => args_of_size_by_sample' k' s') k) s.
+
+Definition compat_args_of_size' (test_tac_n : nat) (s : size)
+  := let ls
+         := match test_tac_n, s with
+            | 0%nat, SuperFast => [(2, 3, 1); (5, 49, 2)]
+            | 1%nat, SuperFast => [(2, 3, 1); (5, 1199, 2)]
+            | 2%nat, SuperFast => [(2, 3, 1); (5, 449, 2)]
+            | 3%nat, SuperFast => [(2, 3, 1); (5, 499, 2)]
+            | 4%nat, SuperFast => [(2, 3, 1); (5, 39, 2)]
+            | 5%nat, SuperFast => [(2, 3, 1); (5, 39, 2)]
+            | 6%nat, SuperFast => [(2, 3, 1); (5, 39, 2)]
+            | 0%nat, Fast => [(51, 4999, 2)]
+            | 1%nat, Fast => [(1201, 4999, 2)]
+            | 2%nat, Fast => [(451, 3999, 2)]
+            | 3%nat, Fast => [(501, 4999, 2)]
+            | 4%nat, Fast => [(41, 4999, 2)]
+            | 5%nat, Fast => [(41, 79, 2)]
+            | 6%nat, Fast => [(41, 79, 2)]
+            | 2%nat, Medium => [(4001, 4999, 2)]
+            | 5%nat, Medium => [(81, 149, 2)]
+            | 6%nat, Medium => [(81, 149, 2)]
+            | 5%nat, Slow => [(151, 189, 2)]
+            | 6%nat, Slow => [(151, 189, 2)]
+            | 5%nat, VerySlow => [(191, 4999, 2)]
+            | 6%nat, VerySlow => [(191, 4999, 2)]
+            | 0%nat, _ | 1%nat, _ | 2%nat, _ | 3%nat, _ | 4%nat, _ => []
+            | _, _ => []
+            end%Z in
+     List.flat_map (fun '(start, stop, step) => Sample.Zrange start (inject_Z step) stop) ls.
+
+Definition kind_to_compat (k : red_kind) : option nat
+  := Some
+       match k with
+       | rewrite_lhs_for => 0
+       | vm              => 1
+       | lazy            => 2
+       | cbv             => 3
+       | native          => 4
+       | cbn             => 5
+       | simpl           => 6
+       end%nat.
+
+Definition compat_args_of_size (k : red_kind) (s : size)
+  := match kind_to_compat k, s with
+     | _, (Sanity | Slow | VerySlow)
+     | None, _
+       => args_of_size_by_sample k s
+     | Some n, _ => compat_args_of_size' n s
+     end.
+
 Time Definition args_of_size (k : red_kind) (s : size)
-  := Eval native_compute in eta_size (s' => eta_kind (k' => args_of_size' k' s') k) s.
+  := Eval native_compute in eta_size (s' => eta_kind (k' => compat_args_of_size k' s') k) s.
 
 Ltac mkgoal kind n := constr:(goal n).
 Ltac redgoal _ := start ().

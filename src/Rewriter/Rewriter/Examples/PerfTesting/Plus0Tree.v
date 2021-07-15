@@ -320,7 +320,7 @@ Definition max_input_of_kind (k : kind_of_rewrite) : option (Z * Z)
        => None
      end%Z.
 
-Definition args_of_size' (k : kind_of_rewrite) (s : size) : list (Z * Z)
+Definition args_of_size_by_sample' (k : kind_of_rewrite) (s : size) : list (Z * Z)
   := Eval cbv beta iota in
       eta_size
         (s'
@@ -341,9 +341,62 @@ Definition args_of_size' (k : kind_of_rewrite) (s : size) : list (Z * Z)
 Local Set NativeCompute Profiling.
 Local Set NativeCompute Timing.
 (* Takes about 2 seconds *)
-Time Definition args_of_size (k : kind_of_rewrite) (s : size)
-  := Eval native_compute in eta_size (s' => eta_kind (k' => args_of_size' k' s') k) s.
+Time Definition args_of_size_by_sample (k : kind_of_rewrite) (s : size)
+  := Eval native_compute in eta_size (s' => eta_kind (k' => args_of_size_by_sample' k' s') k) s.
 
+Definition compat_args_of_size' (test_tac_n : nat) (s : size)
+  := let ls
+         := match test_tac_n, s with
+            | 0, SuperFast => [(11, 2); (7, 4)]
+            | 1, SuperFast => [(12, 3)]
+            | 2, SuperFast => [(8, 3)]
+            | 3, SuperFast => [(9, 3)]
+            | 4, SuperFast => [(7, 3)]
+            | 0, Fast => [(14, 5); (13, 20); (9, 1000)]
+            | 1, Fast => [(14, 2); (13, 3); (9, 18); (5, 50); (4, 130); (3, 200); (2, 340); (1, 600)]
+            | 2, Fast => [(10, 2); (9, 3); (8, 5); (7, 9); (6, 15); (5, 30); (4, 40); (3, 95); (2, 180); (1, 380)]
+            | 3, Fast => [(10, 1); (9, 3); (8, 7); (7, 15); (6, 25); (5, 50); (4, 80); (3, 150); (2, 270); (1, 550)]
+            | 4, Fast => [(9, 1); (8, 2); (7, 3); (6, 5); (5, 11); (4, 30); (3, 60); (2, 110); (1, 260)]
+            | 0, Medium => [(16, 3); (12, 100)]
+            | 1, Medium => [(15, 3); (9, 40)]
+            | 2, Medium => [(11, 2); (10, 3); (9, 10)]
+            | 3, Medium => [(11, 2); (10, 3); (9, 12)]
+            | 4, Medium => [(9, 2); (8, 3); (10, 1)]
+            | 0, Slow => [(16, 4)] (* ??? *)
+            | 1, Slow => [(16, 4)] (* ??? *)
+            | 2, Slow => [(12, 4)] (* ? (11, 3) is 122.176s *)
+            | 3, Slow => [(12, 4)] (* ? (11, 3) is 165.575s *)
+            | 4, Slow => [(9, 3); (10, 2); (11, 1)] (* ? should we have more for smaller fst of the pair? *)
+            | _, VerySlow => [(1000, 1000)] (* ??? *)
+            | _, _ => []
+            end%nat in
+     Zsort_by_fst
+       (flat_map
+          (fun '(n_count, m_count)
+           => flat_map (fun n => let n := Z.of_nat n in map (fun m => (n, Z.of_nat m)) (seq 1 m_count)) (seq 1 n_count))
+          ls).
+
+Definition kind_to_compat (k : kind_of_rewrite) : option nat
+  := match k with
+     | kind_rewrite_lhs_for => Some 0
+     | kind_rewrite => Some 1
+     | kind_setoid_rewrite => Some 2
+     | kind_rewrite_strat topdown => Some 3
+     | kind_rewrite_strat bottomup => Some 4
+     | kind_autorewrite => None
+     | kind_ssr_rewrite => None
+     end%nat.
+
+Definition compat_args_of_size (k : kind_of_rewrite) (s : size)
+  := match kind_to_compat k, s with
+     | _, (Sanity | Slow | VerySlow)
+     | None, _
+       => args_of_size_by_sample k s
+     | Some n, _ => compat_args_of_size' n s
+     end.
+
+Time Definition args_of_size (k : kind_of_rewrite) (s : size)
+  := Eval native_compute in eta_size (s' => eta_kind (k' => compat_args_of_size k' s') k) s.
 
 Ltac mkgoal kind nm
   := let Z_to_nat := (eval vm_compute in Z.to_nat) in

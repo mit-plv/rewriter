@@ -212,7 +212,7 @@ Definition max_input_of_kind (k : kind_of_rewrite) : option (Z * Z)
 Local Hint Unfold size_of_kind size_of_arg : solve_factors_through_prod.
 Local Existing Instance Sample.Z_prod_has_alloc.
 
-Definition args_of_size' (k : kind_of_rewrite) (s : size) : list (Z * Z)
+Definition args_of_size_by_sample' (k : kind_of_rewrite) (s : size) : list (Z * Z)
   := Eval cbv beta iota in
       eta_size
         (s'
@@ -233,9 +233,52 @@ Definition args_of_size' (k : kind_of_rewrite) (s : size) : list (Z * Z)
 Local Set NativeCompute Profiling.
 Local Set NativeCompute Timing.
 (* Takes about 20 seconds *)
-Time Definition args_of_size (k : kind_of_rewrite) (s : size)
-  := Eval native_compute in eta_size (s' => eta_kind (k' => args_of_size' k' s') k) s.
+Time Definition args_of_size_by_sample (k : kind_of_rewrite) (s : size)
+  := Eval native_compute in eta_size (s' => eta_kind (k' => args_of_size_by_sample' k' s') k) s.
 
+Definition compat_args_of_size' (test_tac_n : nat) (s : size)
+  := let '(n_count, m_count)
+         := match test_tac_n, s with
+            | 0, SuperFast => (10, 10)
+            | 3, SuperFast => (50, 50)
+            | 4, SuperFast => (50, 50)
+            | _, SuperFast => (5, 4)
+            | 0, Fast => (90, 90)
+            | 3, Fast => (150, 150) (* N.B. test 3 stack overflows on larger than ~160, 160 *)
+            | 4, Fast => (150, 150)
+            | _, Fast => (6, 5)
+            | 0, Medium => (115, 115) (* maybe should be (150, 150), but (115, 115) already takes over 11 h, I think *)
+            | 5, Medium => (7, 8)
+            | _, Medium => (6, 7)
+            | 0, Slow => (200, 200) (* ??? *)
+            | _, Slow => (10, 10) (* ??? *)
+            | 0, VerySlow => (400, 400) (* ??? *)
+            | _, VerySlow => (100, 100) (* ??? *)
+            | _, Sanity => (1, 1)
+            end%nat in
+     Zsort_by_prod (flat_map (fun n => let n := Z.of_nat n in map (fun m => (n, Z.of_nat m)) (seq 1 m_count)) (seq 1 n_count)).
+
+Definition kind_to_compat (k : kind_of_rewrite) : option nat
+  := match k with
+     | kind_rewrite_lhs_for => Some 0
+     | kind_rewrite_strat topdown_bottomup => Some 1
+     | kind_rewrite_strat bottomup_bottomup => Some 2
+     | kind_red vm => Some 3
+     | kind_rewrite_lhs_for_skip_cbv => Some 4
+     | kind_setoid_rewrite => Some 5
+     | _ => None
+     end%nat.
+
+Definition compat_args_of_size (k : kind_of_rewrite) (s : size)
+  := match kind_to_compat k, s with
+     | _, (Sanity | Slow | VerySlow)
+     | None, _
+       => args_of_size_by_sample k s
+     | Some n, _ => compat_args_of_size' n s
+     end.
+
+Time Definition args_of_size (k : kind_of_rewrite) (s : size)
+  := Eval native_compute in eta_size (s' => eta_kind (k' => compat_args_of_size k' s') k) s.
 
 Ltac mkgoal kind nm
   := let Z_to_nat := (eval cbv in Z.to_nat) in
