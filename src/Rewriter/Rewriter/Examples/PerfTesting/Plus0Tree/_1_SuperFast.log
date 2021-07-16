@@ -1,18 +1,38 @@
+Params: 0-nm= 9 , 1-n= 1 , 2-m= 3 , 3-input-size= 25 , 4-output-size= 7 , 5-num-rewrites= 9
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.004 secs (0.004u,0.s) (success)
+Params: 0-nm= 7 , 1-n= 2 , 2-m= 1 , 3-input-size= 29 , 4-output-size= 15 , 5-num-rewrites= 7
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.002 secs (0.002u,0.s) (success)
+Params: 0-nm= 14 , 1-n= 2 , 2-m= 2 , 3-input-size= 43 , 4-output-size= 15 , 5-num-rewrites= 14
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.007 secs (0.007u,0.s) (success)
+Params: 0-nm= 21 , 1-n= 2 , 2-m= 3 , 3-input-size= 57 , 4-output-size= 15 , 5-num-rewrites= 21
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.091 secs (0.091u,0.s) (success)
 Params: 0-nm= 15 , 1-n= 3 , 2-m= 1 , 3-input-size= 61 , 4-output-size= 31 , 5-num-rewrites= 15
 Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.006 secs (0.006u,0.s) (success)
 Params: 0-nm= 30 , 1-n= 3 , 2-m= 2 , 3-input-size= 91 , 4-output-size= 31 , 5-num-rewrites= 30
-Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.101 secs (0.101u,0.s) (success)
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.018 secs (0.018u,0.s) (success)
 Params: 0-nm= 45 , 1-n= 3 , 2-m= 3 , 3-input-size= 121 , 4-output-size= 31 , 5-num-rewrites= 45
-Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.034 secs (0.034u,0.s) (success)
-Params: 0-nm= 60 , 1-n= 3 , 2-m= 4 , 3-input-size= 151 , 4-output-size= 31 , 5-num-rewrites= 60
-Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.063 secs (0.063u,0.s) (success)
-Params: 0-nm= 75 , 1-n= 3 , 2-m= 5 , 3-input-size= 181 , 4-output-size= 31 , 5-num-rewrites= 75
-Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.083 secs (0.083u,0.s) (success)
-Params: 0-nm= 90 , 1-n= 3 , 2-m= 6 , 3-input-size= 211 , 4-output-size= 31 , 5-num-rewrites= 90
-Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.106 secs (0.106u,0.s) (success)
-Params: 0-nm= 105 , 1-n= 3 , 2-m= 7 , 3-input-size= 241 , 4-output-size= 31 , 5-num-rewrites= 105
-Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.146 secs (0.146u,0.s) (success)
-Params: 0-nm= 120 , 1-n= 3 , 2-m= 8 , 3-input-size= 271 , 4-output-size= 31 , 5-num-rewrites= 120
-Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.181 secs (0.181u,0.s) (success)
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.041 secs (0.041u,0.s) (success)
+Params: 0-nm= 31 , 1-n= 4 , 2-m= 1 , 3-input-size= 125 , 4-output-size= 63 , 5-num-rewrites= 31
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.016 secs (0.016u,0.s) (success)
+Params: 0-nm= 62 , 1-n= 4 , 2-m= 2 , 3-input-size= 187 , 4-output-size= 63 , 5-num-rewrites= 62
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.053 secs (0.053u,0.s) (success)
+Params: 0-nm= 93 , 1-n= 4 , 2-m= 3 , 3-input-size= 249 , 4-output-size= 63 , 5-num-rewrites= 93
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.111 secs (0.111u,0.s) (success)
 Params: 0-nm= 63 , 1-n= 5 , 2-m= 1 , 3-input-size= 253 , 4-output-size= 127 , 5-num-rewrites= 63
 Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.047 secs (0.047u,0.s) (success)
+Params: 0-nm= 126 , 1-n= 5 , 2-m= 2 , 3-input-size= 379 , 4-output-size= 127 , 5-num-rewrites= 126
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.154 secs (0.154u,0.s) (success)
+Params: 0-nm= 189 , 1-n= 5 , 2-m= 3 , 3-input-size= 505 , 4-output-size= 127 , 5-num-rewrites= 189
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.355 secs (0.351u,0.003s) (success)
+Params: 0-nm= 127 , 1-n= 6 , 2-m= 1 , 3-input-size= 509 , 4-output-size= 255 , 5-num-rewrites= 127
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.139 secs (0.139u,0.s) (success)
+Params: 0-nm= 254 , 1-n= 6 , 2-m= 2 , 3-input-size= 763 , 4-output-size= 255 , 5-num-rewrites= 254
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.579 secs (0.575u,0.003s) (success)
+Params: 0-nm= 381 , 1-n= 6 , 2-m= 3 , 3-input-size= 1017 , 4-output-size= 255 , 5-num-rewrites= 381
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 1.28 secs (1.28u,0.s) (success)
+Params: 0-nm= 255 , 1-n= 7 , 2-m= 1 , 3-input-size= 1021 , 4-output-size= 511 , 5-num-rewrites= 255
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 0.483 secs (0.479u,0.003s) (success)
+Params: 0-nm= 510 , 1-n= 7 , 2-m= 2 , 3-input-size= 1531 , 4-output-size= 511 , 5-num-rewrites= 510
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 2.06 secs (2.052u,0.007s) (success)
+Params: 0-nm= 765 , 1-n= 7 , 2-m= 3 , 3-input-size= 2041 , 4-output-size= 511 , 5-num-rewrites= 765
+Tactic call rewrite_strat(bottomup)-regression-cubic ran for 5.165 secs (5.157u,0.007s) (success)

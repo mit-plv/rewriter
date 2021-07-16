@@ -1,692 +1,408 @@
-Params: n= 11
-Tactic call lazy-regression-quadratic ran for 0. secs (0.u,0.s) (success)
 Params: n= 20
 Tactic call lazy-regression-quadratic ran for 0. secs (0.u,0.s) (success)
-Params: n= 29
-Tactic call lazy-regression-quadratic ran for 0.001 secs (0.001u,0.s) (success)
 Params: n= 38
-Tactic call lazy-regression-quadratic ran for 0.002 secs (0.002u,0.s) (success)
-Params: n= 47
-Tactic call lazy-regression-quadratic ran for 0.002 secs (0.002u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.001 secs (0.001u,0.s) (success)
 Params: n= 56
 Tactic call lazy-regression-quadratic ran for 0.003 secs (0.003u,0.s) (success)
 Params: n= 64
 Tactic call lazy-regression-quadratic ran for 0.004 secs (0.004u,0.s) (success)
-Params: n= 73
-Tactic call lazy-regression-quadratic ran for 0.005 secs (0.005u,0.s) (success)
 Params: n= 82
 Tactic call lazy-regression-quadratic ran for 0.006 secs (0.006u,0.s) (success)
-Params: n= 109
-Tactic call lazy-regression-quadratic ran for 0.033 secs (0.029u,0.003s) (success)
+Params: n= 100
+Tactic call lazy-regression-quadratic ran for 0.008 secs (0.008u,0.s) (success)
 Params: n= 118
-Tactic call lazy-regression-quadratic ran for 0.012 secs (0.012u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.032 secs (0.032u,0.s) (success)
 Params: n= 136
-Tactic call lazy-regression-quadratic ran for 0.015 secs (0.015u,0.s) (success)
-Params: n= 145
-Tactic call lazy-regression-quadratic ran for 0.018 secs (0.018u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.014 secs (0.014u,0.s) (success)
 Params: n= 154
-Tactic call lazy-regression-quadratic ran for 0.019 secs (0.019u,0.s) (success)
-Params: n= 163
-Tactic call lazy-regression-quadratic ran for 0.023 secs (0.022u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.018 secs (0.018u,0.s) (success)
 Params: n= 172
 Tactic call lazy-regression-quadratic ran for 0.022 secs (0.022u,0.s) (success)
-Params: n= 181
-Tactic call lazy-regression-quadratic ran for 0.025 secs (0.025u,0.s) (success)
-Params: n= 189
-Tactic call lazy-regression-quadratic ran for 0.027 secs (0.027u,0.s) (success)
-Params: n= 207
-Tactic call lazy-regression-quadratic ran for 0.035 secs (0.035u,0.s) (success)
-Params: n= 225
-Tactic call lazy-regression-quadratic ran for 0.036 secs (0.036u,0.s) (success)
+Params: n= 198
+Tactic call lazy-regression-quadratic ran for 0.031 secs (0.031u,0.s) (success)
+Params: n= 216
+Tactic call lazy-regression-quadratic ran for 0.033 secs (0.033u,0.s) (success)
 Params: n= 234
-Tactic call lazy-regression-quadratic ran for 0.042 secs (0.042u,0.s) (success)
-Params: n= 243
-Tactic call lazy-regression-quadratic ran for 0.043 secs (0.043u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.037 secs (0.037u,0.s) (success)
 Params: n= 252
-Tactic call lazy-regression-quadratic ran for 0.048 secs (0.044u,0.003s) (success)
-Params: n= 261
-Tactic call lazy-regression-quadratic ran for 0.049 secs (0.049u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.046 secs (0.046u,0.s) (success)
 Params: n= 270
-Tactic call lazy-regression-quadratic ran for 0.055 secs (0.055u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.056 secs (0.056u,0.s) (success)
 Params: n= 288
-Tactic call lazy-regression-quadratic ran for 0.059 secs (0.059u,0.s) (success)
-Params: n= 297
-Tactic call lazy-regression-quadratic ran for 0.068 secs (0.063u,0.004s) (success)
+Tactic call lazy-regression-quadratic ran for 0.056 secs (0.056u,0.s) (success)
 Params: n= 306
-Tactic call lazy-regression-quadratic ran for 0.071 secs (0.059u,0.011s) (success)
+Tactic call lazy-regression-quadratic ran for 0.066 secs (0.066u,0.s) (success)
 Params: n= 314
-Tactic call lazy-regression-quadratic ran for 0.077 secs (0.077u,0.s) (success)
-Params: n= 323
-Tactic call lazy-regression-quadratic ran for 0.072 secs (0.068u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 0.076 secs (0.076u,0.s) (success)
 Params: n= 332
-Tactic call lazy-regression-quadratic ran for 0.082 secs (0.078u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 0.074 secs (0.074u,0.s) (success)
 Params: n= 350
-Tactic call lazy-regression-quadratic ran for 0.1 secs (0.1u,0.s) (success)
-Params: n= 359
-Tactic call lazy-regression-quadratic ran for 0.109 secs (0.105u,0.004s) (success)
+Tactic call lazy-regression-quadratic ran for 0.082 secs (0.082u,0.s) (success)
 Params: n= 368
-Tactic call lazy-regression-quadratic ran for 0.114 secs (0.114u,0.s) (success)
-Params: n= 377
-Tactic call lazy-regression-quadratic ran for 0.117 secs (0.117u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.092 secs (0.092u,0.s) (success)
 Params: n= 386
-Tactic call lazy-regression-quadratic ran for 0.123 secs (0.123u,0.s) (success)
-Params: n= 395
-Tactic call lazy-regression-quadratic ran for 0.134 secs (0.13u,0.003s) (success)
-Params: n= 413
-Tactic call lazy-regression-quadratic ran for 0.13 secs (0.13u,0.s) (success)
-Params: n= 431
-Tactic call lazy-regression-quadratic ran for 0.187 secs (0.187u,0.s) (success)
-Params: n= 439
-Tactic call lazy-regression-quadratic ran for 0.174 secs (0.17u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 0.103 secs (0.103u,0.s) (success)
+Params: n= 404
+Tactic call lazy-regression-quadratic ran for 0.117 secs (0.117u,0.s) (success)
+Params: n= 422
+Tactic call lazy-regression-quadratic ran for 0.117 secs (0.117u,0.s) (success)
 Params: n= 448
-Tactic call lazy-regression-quadratic ran for 0.161 secs (0.161u,0.s) (success)
-Params: n= 457
-Tactic call lazy-regression-quadratic ran for 0.192 secs (0.188u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 0.151 secs (0.147u,0.003s) (success)
 Params: n= 466
-Tactic call lazy-regression-quadratic ran for 0.163 secs (0.159u,0.003s) (success)
-Params: n= 475
-Tactic call lazy-regression-quadratic ran for 0.201 secs (0.196u,0.004s) (success)
+Tactic call lazy-regression-quadratic ran for 0.168 secs (0.168u,0.s) (success)
 Params: n= 484
-Tactic call lazy-regression-quadratic ran for 0.178 secs (0.178u,0.s) (success)
-Params: n= 493
-Tactic call lazy-regression-quadratic ran for 0.2 secs (0.199u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.176 secs (0.176u,0.s) (success)
 Params: n= 502
-Tactic call lazy-regression-quadratic ran for 0.196 secs (0.195u,0.s) (success)
-Params: n= 511
-Tactic call lazy-regression-quadratic ran for 0.19 secs (0.19u,0.s) (success)
-Params: n= 529
-Tactic call lazy-regression-quadratic ran for 0.219 secs (0.211u,0.007s) (success)
+Tactic call lazy-regression-quadratic ran for 0.226 secs (0.226u,0.s) (success)
+Params: n= 520
+Tactic call lazy-regression-quadratic ran for 0.263 secs (0.259u,0.003s) (success)
 Params: n= 538
-Tactic call lazy-regression-quadratic ran for 0.215 secs (0.211u,0.003s) (success)
-Params: n= 547
-Tactic call lazy-regression-quadratic ran for 0.22 secs (0.208u,0.012s) (success)
+Tactic call lazy-regression-quadratic ran for 0.235 secs (0.235u,0.s) (success)
 Params: n= 556
-Tactic call lazy-regression-quadratic ran for 0.232 secs (0.231u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.289 secs (0.277u,0.011s) (success)
 Params: n= 564
-Tactic call lazy-regression-quadratic ran for 0.269 secs (0.265u,0.003s) (success)
-Params: n= 573
-Tactic call lazy-regression-quadratic ran for 0.269 secs (0.269u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.283 secs (0.283u,0.s) (success)
 Params: n= 582
-Tactic call lazy-regression-quadratic ran for 0.315 secs (0.314u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.257 secs (0.257u,0.s) (success)
 Params: n= 600
-Tactic call lazy-regression-quadratic ran for 0.323 secs (0.323u,0.s) (success)
-Params: n= 609
-Tactic call lazy-regression-quadratic ran for 0.319 secs (0.319u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.268 secs (0.264u,0.004s) (success)
 Params: n= 618
-Tactic call lazy-regression-quadratic ran for 0.3 secs (0.296u,0.003s) (success)
-Params: n= 627
-Tactic call lazy-regression-quadratic ran for 0.302 secs (0.294u,0.007s) (success)
+Tactic call lazy-regression-quadratic ran for 0.318 secs (0.314u,0.003s) (success)
 Params: n= 636
-Tactic call lazy-regression-quadratic ran for 0.312 secs (0.307u,0.003s) (success)
-Params: n= 645
-Tactic call lazy-regression-quadratic ran for 0.329 secs (0.328u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.309 secs (0.305u,0.004s) (success)
 Params: n= 654
-Tactic call lazy-regression-quadratic ran for 0.341 secs (0.341u,0.s) (success)
-Params: n= 663
-Tactic call lazy-regression-quadratic ran for 0.355 secs (0.355u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.333 secs (0.333u,0.s) (success)
 Params: n= 672
-Tactic call lazy-regression-quadratic ran for 0.409 secs (0.409u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.406 secs (0.406u,0.s) (success)
 Params: n= 680
-Tactic call lazy-regression-quadratic ran for 0.401 secs (0.4u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.398 secs (0.398u,0.s) (success)
 Params: n= 698
-Tactic call lazy-regression-quadratic ran for 0.387 secs (0.387u,0.s) (success)
-Params: n= 707
-Tactic call lazy-regression-quadratic ran for 0.388 secs (0.38u,0.007s) (success)
+Tactic call lazy-regression-quadratic ran for 0.351 secs (0.347u,0.003s) (success)
 Params: n= 716
-Tactic call lazy-regression-quadratic ran for 0.423 secs (0.406u,0.015s) (success)
-Params: n= 725
-Tactic call lazy-regression-quadratic ran for 0.419 secs (0.419u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.379 secs (0.371u,0.008s) (success)
 Params: n= 734
-Tactic call lazy-regression-quadratic ran for 0.446 secs (0.445u,0.s) (success)
-Params: n= 743
-Tactic call lazy-regression-quadratic ran for 0.495 secs (0.495u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.376 secs (0.376u,0.s) (success)
 Params: n= 752
-Tactic call lazy-regression-quadratic ran for 0.462 secs (0.462u,0.s) (success)
-Params: n= 761
-Tactic call lazy-regression-quadratic ran for 0.452 secs (0.451u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.394 secs (0.394u,0.s) (success)
 Params: n= 770
-Tactic call lazy-regression-quadratic ran for 0.477 secs (0.477u,0.s) (success)
-Params: n= 779
-Tactic call lazy-regression-quadratic ran for 0.472 secs (0.471u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.464 secs (0.464u,0.s) (success)
 Params: n= 788
-Tactic call lazy-regression-quadratic ran for 0.524 secs (0.523u,0.s) (success)
-Params: n= 797
-Tactic call lazy-regression-quadratic ran for 0.544 secs (0.544u,0.s) (success)
-Params: n= 805
-Tactic call lazy-regression-quadratic ran for 0.483 secs (0.482u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.498 secs (0.498u,0.s) (success)
 Params: n= 814
-Tactic call lazy-regression-quadratic ran for 0.53 secs (0.53u,0.s) (success)
-Params: n= 823
-Tactic call lazy-regression-quadratic ran for 0.523 secs (0.522u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.458 secs (0.458u,0.s) (success)
 Params: n= 832
-Tactic call lazy-regression-quadratic ran for 0.552 secs (0.552u,0.s) (success)
-Params: n= 841
-Tactic call lazy-regression-quadratic ran for 0.645 secs (0.644u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.524 secs (0.504u,0.019s) (success)
 Params: n= 850
-Tactic call lazy-regression-quadratic ran for 0.584 secs (0.582u,0.s) (success)
-Params: n= 859
-Tactic call lazy-regression-quadratic ran for 0.583 secs (0.581u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.515 secs (0.511u,0.003s) (success)
 Params: n= 868
-Tactic call lazy-regression-quadratic ran for 0.6 secs (0.597u,0.s) (success)
-Params: n= 877
-Tactic call lazy-regression-quadratic ran for 0.689 secs (0.686u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.603 secs (0.603u,0.s) (success)
 Params: n= 886
-Tactic call lazy-regression-quadratic ran for 0.621 secs (0.619u,0.s) (success)
-Params: n= 895
-Tactic call lazy-regression-quadratic ran for 0.631 secs (0.628u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.577 secs (0.577u,0.s) (success)
 Params: n= 904
-Tactic call lazy-regression-quadratic ran for 0.679 secs (0.677u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.579 secs (0.579u,0.s) (success)
 Params: n= 922
-Tactic call lazy-regression-quadratic ran for 0.775 secs (0.773u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.588 secs (0.588u,0.s) (success)
 Params: n= 930
-Tactic call lazy-regression-quadratic ran for 0.669 secs (0.668u,0.s) (success)
-Params: n= 939
-Tactic call lazy-regression-quadratic ran for 0.686 secs (0.685u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.73 secs (0.73u,0.s) (success)
 Params: n= 948
-Tactic call lazy-regression-quadratic ran for 0.782 secs (0.781u,0.s) (success)
-Params: n= 957
-Tactic call lazy-regression-quadratic ran for 0.738 secs (0.737u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.631 secs (0.631u,0.s) (success)
 Params: n= 966
-Tactic call lazy-regression-quadratic ran for 0.735 secs (0.735u,0.s) (success)
-Params: n= 975
-Tactic call lazy-regression-quadratic ran for 0.809 secs (0.808u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.655 secs (0.655u,0.s) (success)
 Params: n= 984
-Tactic call lazy-regression-quadratic ran for 0.802 secs (0.801u,0.s) (success)
-Params: n= 993
-Tactic call lazy-regression-quadratic ran for 0.781 secs (0.78u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.788 secs (0.787u,0.s) (success)
 Params: n= 1002
-Tactic call lazy-regression-quadratic ran for 0.835 secs (0.834u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.728 secs (0.728u,0.s) (success)
 Params: n= 1020
-Tactic call lazy-regression-quadratic ran for 0.872 secs (0.867u,0.003s) (success)
-Params: n= 1029
-Tactic call lazy-regression-quadratic ran for 0.876 secs (0.843u,0.031s) (success)
+Tactic call lazy-regression-quadratic ran for 0.743 secs (0.743u,0.s) (success)
 Params: n= 1038
-Tactic call lazy-regression-quadratic ran for 1.179 secs (1.178u,0.s) (success)
-Params: n= 1047
-Tactic call lazy-regression-quadratic ran for 0.921 secs (0.92u,0.s) (success)
-Params: n= 1055
-Tactic call lazy-regression-quadratic ran for 0.824 secs (0.823u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.904 secs (0.904u,0.s) (success)
 Params: n= 1064
-Tactic call lazy-regression-quadratic ran for 0.952 secs (0.951u,0.s) (success)
-Params: n= 1073
-Tactic call lazy-regression-quadratic ran for 0.879 secs (0.878u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.809 secs (0.805u,0.004s) (success)
 Params: n= 1082
-Tactic call lazy-regression-quadratic ran for 0.851 secs (0.85u,0.s) (success)
-Params: n= 1091
-Tactic call lazy-regression-quadratic ran for 0.979 secs (0.978u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.899 secs (0.899u,0.s) (success)
 Params: n= 1100
-Tactic call lazy-regression-quadratic ran for 0.877 secs (0.876u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.885 secs (0.885u,0.s) (success)
 Params: n= 1118
-Tactic call lazy-regression-quadratic ran for 0.944 secs (0.943u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.89 secs (0.89u,0.s) (success)
 Params: n= 1128
-Tactic call lazy-regression-quadratic ran for 0.987 secs (0.986u,0.s) (success)
-Params: n= 1137
-Tactic call lazy-regression-quadratic ran for 0.942 secs (0.941u,0.s) (success)
-Params: n= 1147
-Tactic call lazy-regression-quadratic ran for 1.056 secs (1.055u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 0.979 secs (0.979u,0.s) (success)
 Params: n= 1156
-Tactic call lazy-regression-quadratic ran for 0.986 secs (0.985u,0.s) (success)
-Params: n= 1165
-Tactic call lazy-regression-quadratic ran for 1.074 secs (1.073u,0.s) (success)
-Params: n= 1175
-Tactic call lazy-regression-quadratic ran for 1.059 secs (1.054u,0.004s) (success)
+Tactic call lazy-regression-quadratic ran for 0.947 secs (0.947u,0.s) (success)
 Params: n= 1184
-Tactic call lazy-regression-quadratic ran for 1.084 secs (1.083u,0.s) (success)
-Params: n= 1193
-Tactic call lazy-regression-quadratic ran for 1.089 secs (1.088u,0.s) (success)
-Params: n= 1203
-Tactic call lazy-regression-quadratic ran for 1.027 secs (1.026u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.097 secs (1.097u,0.s) (success)
 Params: n= 1212
-Tactic call lazy-regression-quadratic ran for 1.18 secs (1.179u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.016 secs (1.012u,0.003s) (success)
 Params: n= 1222
-Tactic call lazy-regression-quadratic ran for 1.101 secs (1.1u,0.s) (success)
-Params: n= 1231
-Tactic call lazy-regression-quadratic ran for 1.196 secs (1.195u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.171 secs (1.167u,0.003s) (success)
 Params: n= 1240
-Tactic call lazy-regression-quadratic ran for 1.106 secs (1.105u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.067 secs (1.067u,0.s) (success)
 Params: n= 1250
-Tactic call lazy-regression-quadratic ran for 1.232 secs (1.231u,0.s) (success)
-Params: n= 1259
-Tactic call lazy-regression-quadratic ran for 1.16 secs (1.159u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.192 secs (1.192u,0.s) (success)
 Params: n= 1268
-Tactic call lazy-regression-quadratic ran for 1.236 secs (1.235u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.154 secs (1.154u,0.s) (success)
 Params: n= 1278
-Tactic call lazy-regression-quadratic ran for 1.201 secs (1.2u,0.s) (success)
-Params: n= 1287
-Tactic call lazy-regression-quadratic ran for 1.281 secs (1.279u,0.s) (success)
-Params: n= 1297
-Tactic call lazy-regression-quadratic ran for 1.254 secs (1.253u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.25 secs (1.246u,0.003s) (success)
 Params: n= 1306
-Tactic call lazy-regression-quadratic ran for 1.295 secs (1.293u,0.s) (success)
-Params: n= 1315
-Tactic call lazy-regression-quadratic ran for 1.319 secs (1.318u,0.s) (success)
-Params: n= 1325
-Tactic call lazy-regression-quadratic ran for 1.291 secs (1.29u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.305 secs (1.281u,0.024s) (success)
 Params: n= 1334
-Tactic call lazy-regression-quadratic ran for 1.401 secs (1.399u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.295 secs (1.295u,0.s) (success)
 Params: n= 1344
-Tactic call lazy-regression-quadratic ran for 1.348 secs (1.347u,0.s) (success)
-Params: n= 1353
-Tactic call lazy-regression-quadratic ran for 1.389 secs (1.387u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.327 secs (1.327u,0.s) (success)
 Params: n= 1362
-Tactic call lazy-regression-quadratic ran for 1.503 secs (1.502u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.339 secs (1.339u,0.s) (success)
 Params: n= 1372
-Tactic call lazy-regression-quadratic ran for 1.354 secs (1.352u,0.s) (success)
-Params: n= 1381
-Tactic call lazy-regression-quadratic ran for 1.492 secs (1.491u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.408 secs (1.408u,0.s) (success)
 Params: n= 1390
-Tactic call lazy-regression-quadratic ran for 1.474 secs (1.472u,0.s) (success)
-Params: n= 1409
-Tactic call lazy-regression-quadratic ran for 1.472 secs (1.467u,0.004s) (success)
-Params: n= 1419
-Tactic call lazy-regression-quadratic ran for 1.572 secs (1.569u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.463 secs (1.463u,0.s) (success)
+Params: n= 1400
+Tactic call lazy-regression-quadratic ran for 1.553 secs (1.554u,0.s) (success)
 Params: n= 1428
-Tactic call lazy-regression-quadratic ran for 1.565 secs (1.559u,0.s) (success)
-Params: n= 1437
-Tactic call lazy-regression-quadratic ran for 1.571 secs (1.566u,0.s) (success)
-Params: n= 1447
-Tactic call lazy-regression-quadratic ran for 1.64 secs (1.635u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.663 secs (1.663u,0.s) (success)
 Params: n= 1456
-Tactic call lazy-regression-quadratic ran for 1.595 secs (1.593u,0.s) (success)
-Params: n= 1465
-Tactic call lazy-regression-quadratic ran for 1.572 secs (1.571u,0.s) (success)
-Params: n= 1475
-Tactic call lazy-regression-quadratic ran for 1.674 secs (1.672u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.66 secs (1.656u,0.003s) (success)
 Params: n= 1484
-Tactic call lazy-regression-quadratic ran for 1.731 secs (1.729u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.73 secs (1.726u,0.003s) (success)
 Params: n= 1494
-Tactic call lazy-regression-quadratic ran for 1.681 secs (1.675u,0.003s) (success)
-Params: n= 1503
-Tactic call lazy-regression-quadratic ran for 1.685 secs (1.683u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.765 secs (1.765u,0.s) (success)
 Params: n= 1512
-Tactic call lazy-regression-quadratic ran for 1.767 secs (1.766u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.809 secs (1.809u,0.s) (success)
 Params: n= 1522
-Tactic call lazy-regression-quadratic ran for 1.802 secs (1.8u,0.s) (success)
-Params: n= 1541
-Tactic call lazy-regression-quadratic ran for 1.822 secs (1.82u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.79 secs (1.79u,0.s) (success)
 Params: n= 1550
-Tactic call lazy-regression-quadratic ran for 1.796 secs (1.794u,0.s) (success)
-Params: n= 1559
-Tactic call lazy-regression-quadratic ran for 1.822 secs (1.82u,0.s) (success)
-Params: n= 1569
-Tactic call lazy-regression-quadratic ran for 1.904 secs (1.902u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.836 secs (1.836u,0.s) (success)
 Params: n= 1578
-Tactic call lazy-regression-quadratic ran for 1.91 secs (1.9u,0.007s) (success)
-Params: n= 1587
-Tactic call lazy-regression-quadratic ran for 1.927 secs (1.925u,0.s) (success)
-Params: n= 1597
-Tactic call lazy-regression-quadratic ran for 2.002 secs (2.u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.954 secs (1.954u,0.s) (success)
 Params: n= 1606
-Tactic call lazy-regression-quadratic ran for 2.01 secs (2.008u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.919 secs (1.919u,0.s) (success)
 Params: n= 1616
-Tactic call lazy-regression-quadratic ran for 2.027 secs (2.025u,0.s) (success)
-Params: n= 1625
-Tactic call lazy-regression-quadratic ran for 2.041 secs (2.039u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.974 secs (1.974u,0.s) (success)
 Params: n= 1634
-Tactic call lazy-regression-quadratic ran for 2.024 secs (2.022u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.979 secs (1.979u,0.s) (success)
 Params: n= 1644
-Tactic call lazy-regression-quadratic ran for 2.061 secs (2.059u,0.s) (success)
-Params: n= 1653
-Tactic call lazy-regression-quadratic ran for 2.077 secs (2.075u,0.s) (success)
-Params: n= 1663
-Tactic call lazy-regression-quadratic ran for 2.116 secs (2.113u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.268 secs (2.252u,0.015s) (success)
 Params: n= 1672
-Tactic call lazy-regression-quadratic ran for 2.229 secs (2.227u,0.s) (success)
-Params: n= 1681
-Tactic call lazy-regression-quadratic ran for 2.349 secs (2.347u,0.s) (success)
-Params: n= 1691
-Tactic call lazy-regression-quadratic ran for 2.343 secs (2.341u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 1.977 secs (1.973u,0.003s) (success)
 Params: n= 1700
-Tactic call lazy-regression-quadratic ran for 2.373 secs (2.371u,0.s) (success)
-Params: n= 1709
-Tactic call lazy-regression-quadratic ran for 2.403 secs (2.4u,0.s) (success)
-Params: n= 1719
-Tactic call lazy-regression-quadratic ran for 2.408 secs (2.405u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.097 secs (2.097u,0.s) (success)
 Params: n= 1728
-Tactic call lazy-regression-quadratic ran for 2.475 secs (2.467u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.173 secs (2.173u,0.s) (success)
 Params: n= 1738
-Tactic call lazy-regression-quadratic ran for 2.473 secs (2.466u,0.s) (success)
-Params: n= 1747
-Tactic call lazy-regression-quadratic ran for 2.532 secs (2.529u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.233 secs (2.229u,0.004s) (success)
 Params: n= 1756
-Tactic call lazy-regression-quadratic ran for 2.516 secs (2.513u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.202 secs (2.202u,0.s) (success)
 Params: n= 1766
-Tactic call lazy-regression-quadratic ran for 2.55 secs (2.543u,0.004s) (success)
-Params: n= 1775
-Tactic call lazy-regression-quadratic ran for 2.551 secs (2.548u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.258 secs (2.258u,0.s) (success)
 Params: n= 1784
-Tactic call lazy-regression-quadratic ran for 2.607 secs (2.568u,0.036s) (success)
+Tactic call lazy-regression-quadratic ran for 2.342 secs (2.342u,0.s) (success)
 Params: n= 1794
-Tactic call lazy-regression-quadratic ran for 2.601 secs (2.554u,0.044s) (success)
-Params: n= 1803
-Tactic call lazy-regression-quadratic ran for 2.619 secs (2.616u,0.s) (success)
-Params: n= 1813
-Tactic call lazy-regression-quadratic ran for 2.669 secs (2.663u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 2.319 secs (2.319u,0.s) (success)
 Params: n= 1822
-Tactic call lazy-regression-quadratic ran for 2.718 secs (2.715u,0.s) (success)
-Params: n= 1831
-Tactic call lazy-regression-quadratic ran for 2.741 secs (2.738u,0.s) (success)
-Params: n= 1841
-Tactic call lazy-regression-quadratic ran for 2.749 secs (2.747u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.414 secs (2.414u,0.s) (success)
 Params: n= 1850
-Tactic call lazy-regression-quadratic ran for 2.582 secs (2.579u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.518 secs (2.514u,0.003s) (success)
 Params: n= 1860
-Tactic call lazy-regression-quadratic ran for 2.632 secs (2.629u,0.s) (success)
-Params: n= 1869
-Tactic call lazy-regression-quadratic ran for 2.676 secs (2.669u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 2.507 secs (2.503u,0.003s) (success)
 Params: n= 1878
-Tactic call lazy-regression-quadratic ran for 2.673 secs (2.67u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.741 secs (2.741u,0.s) (success)
 Params: n= 1888
-Tactic call lazy-regression-quadratic ran for 2.695 secs (2.692u,0.s) (success)
-Params: n= 1897
-Tactic call lazy-regression-quadratic ran for 2.696 secs (2.69u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 2.773 secs (2.773u,0.s) (success)
 Params: n= 1906
-Tactic call lazy-regression-quadratic ran for 2.828 secs (2.825u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.919 secs (2.903u,0.016s) (success)
 Params: n= 1916
-Tactic call lazy-regression-quadratic ran for 2.815 secs (2.812u,0.s) (success)
-Params: n= 1935
-Tactic call lazy-regression-quadratic ran for 2.814 secs (2.811u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.955 secs (2.951u,0.003s) (success)
 Params: n= 1944
-Tactic call lazy-regression-quadratic ran for 2.866 secs (2.839u,0.019s) (success)
-Params: n= 1953
-Tactic call lazy-regression-quadratic ran for 2.891 secs (2.881u,0.s) (success)
-Params: n= 1963
-Tactic call lazy-regression-quadratic ran for 2.897 secs (2.893u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.952 secs (2.952u,0.s) (success)
 Params: n= 1972
-Tactic call lazy-regression-quadratic ran for 2.882 secs (2.879u,0.s) (success)
-Params: n= 1981
-Tactic call lazy-regression-quadratic ran for 3.007 secs (3.u,0.003s) (success)
-Params: n= 1991
-Tactic call lazy-regression-quadratic ran for 3.002 secs (2.999u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 2.999 secs (2.999u,0.s) (success)
 Params: n= 2000
-Tactic call lazy-regression-quadratic ran for 2.984 secs (2.981u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 3.11 secs (3.11u,0.s) (success)
 Params: n= 2010
-Tactic call lazy-regression-quadratic ran for 3.04 secs (3.037u,0.s) (success)
-Params: n= 2019
-Tactic call lazy-regression-quadratic ran for 3.126 secs (3.115u,0.007s) (success)
+Tactic call lazy-regression-quadratic ran for 3.128 secs (3.128u,0.s) (success)
 Params: n= 2028
-Tactic call lazy-regression-quadratic ran for 3.32 secs (3.3u,0.016s) (success)
+Tactic call lazy-regression-quadratic ran for 3.231 secs (3.227u,0.004s) (success)
 Params: n= 2038
-Tactic call lazy-regression-quadratic ran for 3.068 secs (3.065u,0.s) (success)
-Params: n= 2047
-Tactic call lazy-regression-quadratic ran for 3.22 secs (3.217u,0.s) (success)
-Params: n= 2057
-Tactic call lazy-regression-quadratic ran for 3.196 secs (3.193u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 3.292 secs (3.292u,0.s) (success)
 Params: n= 2066
-Tactic call lazy-regression-quadratic ran for 3.141 secs (3.134u,0.003s) (success)
-Params: n= 2075
-Tactic call lazy-regression-quadratic ran for 3.22 secs (3.217u,0.s) (success)
-Params: n= 2085
-Tactic call lazy-regression-quadratic ran for 3.271 secs (3.267u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 3.307 secs (3.307u,0.s) (success)
 Params: n= 2094
-Tactic call lazy-regression-quadratic ran for 3.33 secs (3.327u,0.s) (success)
-Params: n= 2103
-Tactic call lazy-regression-quadratic ran for 3.274 secs (3.271u,0.s) (success)
-Params: n= 2113
-Tactic call lazy-regression-quadratic ran for 3.329 secs (3.322u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 3.467 secs (3.443u,0.024s) (success)
 Params: n= 2122
-Tactic call lazy-regression-quadratic ran for 3.319 secs (3.309u,0.004s) (success)
+Tactic call lazy-regression-quadratic ran for 3.821 secs (3.809u,0.011s) (success)
 Params: n= 2132
-Tactic call lazy-regression-quadratic ran for 3.46 secs (3.408u,0.04s) (success)
-Params: n= 2141
-Tactic call lazy-regression-quadratic ran for 3.448 secs (3.427u,0.015s) (success)
+Tactic call lazy-regression-quadratic ran for 3.463 secs (3.463u,0.s) (success)
 Params: n= 2150
-Tactic call lazy-regression-quadratic ran for 3.431 secs (3.427u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 3.54 secs (3.532u,0.008s) (success)
 Params: n= 2160
-Tactic call lazy-regression-quadratic ran for 3.462 secs (3.459u,0.s) (success)
-Params: n= 2169
-Tactic call lazy-regression-quadratic ran for 3.895 secs (3.887u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 3.683 secs (3.683u,0.s) (success)
 Params: n= 2178
-Tactic call lazy-regression-quadratic ran for 3.466 secs (3.462u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 4.016 secs (4.012u,0.003s) (success)
 Params: n= 2188
-Tactic call lazy-regression-quadratic ran for 3.563 secs (3.559u,0.s) (success)
-Params: n= 2197
-Tactic call lazy-regression-quadratic ran for 4.073 secs (4.068u,0.s) (success)
-Params: n= 2207
-Tactic call lazy-regression-quadratic ran for 3.558 secs (3.554u,0.s) (success)
-Params: n= 2237
-Tactic call lazy-regression-quadratic ran for 3.773 secs (3.769u,0.s) (success)
-Params: n= 2259
-Tactic call lazy-regression-quadratic ran for 4.216 secs (4.208u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 3.585 secs (3.585u,0.s) (success)
+Params: n= 2216
+Tactic call lazy-regression-quadratic ran for 3.766 secs (3.766u,0.s) (success)
 Params: n= 2280
-Tactic call lazy-regression-quadratic ran for 3.808 secs (3.804u,0.s) (success)
-Params: n= 2301
-Tactic call lazy-regression-quadratic ran for 4.39 secs (4.385u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 4.461 secs (4.461u,0.s) (success)
 Params: n= 2322
-Tactic call lazy-regression-quadratic ran for 3.951 secs (3.947u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 4.035 secs (4.027u,0.007s) (success)
 Params: n= 2344
-Tactic call lazy-regression-quadratic ran for 4.516 secs (4.512u,0.s) (success)
-Params: n= 2365
-Tactic call lazy-regression-quadratic ran for 4.149 secs (4.14u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 4.768 secs (4.764u,0.004s) (success)
 Params: n= 2386
-Tactic call lazy-regression-quadratic ran for 4.709 secs (4.698u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 4.219 secs (4.219u,0.s) (success)
 Params: n= 2408
-Tactic call lazy-regression-quadratic ran for 4.238 secs (4.233u,0.s) (success)
-Params: n= 2429
-Tactic call lazy-regression-quadratic ran for 4.802 secs (4.797u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 4.858 secs (4.858u,0.s) (success)
 Params: n= 2450
-Tactic call lazy-regression-quadratic ran for 4.524 secs (4.52u,0.s) (success)
-Params: n= 2471
-Tactic call lazy-regression-quadratic ran for 4.82 secs (4.815u,0.s) (success)
-Params: n= 2493
-Tactic call lazy-regression-quadratic ran for 5.049 secs (5.044u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 4.607 secs (4.607u,0.s) (success)
 Params: n= 2514
-Tactic call lazy-regression-quadratic ran for 4.68 secs (4.675u,0.s) (success)
-Params: n= 2535
-Tactic call lazy-regression-quadratic ran for 5.121 secs (5.115u,0.s) (success)
-Params: n= 2557
-Tactic call lazy-regression-quadratic ran for 5.244 secs (5.234u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 4.85 secs (4.846u,0.004s) (success)
 Params: n= 2578
-Tactic call lazy-regression-quadratic ran for 4.962 secs (4.956u,0.s) (success)
-Params: n= 2599
-Tactic call lazy-regression-quadratic ran for 5.033 secs (5.027u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 4.761 secs (4.757u,0.003s) (success)
 Params: n= 2620
-Tactic call lazy-regression-quadratic ran for 5.377 secs (5.365u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 4.929 secs (4.929u,0.s) (success)
 Params: n= 2642
-Tactic call lazy-regression-quadratic ran for 5.665 secs (5.649u,0.s) (success)
-Params: n= 2663
-Tactic call lazy-regression-quadratic ran for 5.67 secs (5.664u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 5.239 secs (5.239u,0.s) (success)
 Params: n= 2684
-Tactic call lazy-regression-quadratic ran for 5.697 secs (5.687u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 5.575 secs (5.571u,0.004s) (success)
 Params: n= 2706
-Tactic call lazy-regression-quadratic ran for 5.396 secs (5.391u,0.s) (success)
-Params: n= 2727
-Tactic call lazy-regression-quadratic ran for 5.625 secs (5.615u,0.004s) (success)
+Tactic call lazy-regression-quadratic ran for 5.589 secs (5.589u,0.s) (success)
 Params: n= 2748
-Tactic call lazy-regression-quadratic ran for 5.67 secs (5.664u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 6.25 secs (6.246u,0.003s) (success)
 Params: n= 2770
-Tactic call lazy-regression-quadratic ran for 5.705 secs (5.699u,0.s) (success)
-Params: n= 2791
-Tactic call lazy-regression-quadratic ran for 5.805 secs (5.795u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 6.295 secs (6.291u,0.004s) (success)
 Params: n= 2812
-Tactic call lazy-regression-quadratic ran for 6.252 secs (6.246u,0.s) (success)
-Params: n= 2833
-Tactic call lazy-regression-quadratic ran for 6.325 secs (6.318u,0.s) (success)
-Params: n= 2855
-Tactic call lazy-regression-quadratic ran for 6.56 secs (6.541u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 6.652 secs (6.644u,0.008s) (success)
 Params: n= 2876
-Tactic call lazy-regression-quadratic ran for 6.592 secs (6.585u,0.s) (success)
-Params: n= 2897
-Tactic call lazy-regression-quadratic ran for 6.53 secs (6.491u,0.032s) (success)
-Params: n= 2919
-Tactic call lazy-regression-quadratic ran for 6.673 secs (6.581u,0.084s) (success)
+Tactic call lazy-regression-quadratic ran for 6.978 secs (6.974u,0.003s) (success)
 Params: n= 2940
-Tactic call lazy-regression-quadratic ran for 6.716 secs (6.705u,0.004s) (success)
-Params: n= 2961
-Tactic call lazy-regression-quadratic ran for 6.816 secs (6.809u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 7.288 secs (7.232u,0.055s) (success)
 Params: n= 2982
-Tactic call lazy-regression-quadratic ran for 6.91 secs (6.903u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 7.272 secs (7.268u,0.003s) (success)
 Params: n= 3004
-Tactic call lazy-regression-quadratic ran for 6.96 secs (6.953u,0.s) (success)
-Params: n= 3025
-Tactic call lazy-regression-quadratic ran for 7.086 secs (7.075u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 7.355 secs (7.355u,0.s) (success)
 Params: n= 3046
-Tactic call lazy-regression-quadratic ran for 6.885 secs (6.866u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 7.547 secs (7.543u,0.003s) (success)
 Params: n= 3068
-Tactic call lazy-regression-quadratic ran for 7.321 secs (7.31u,0.003s) (success)
-Params: n= 3089
-Tactic call lazy-regression-quadratic ran for 7.276 secs (7.268u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 7.708 secs (7.708u,0.s) (success)
 Params: n= 3110
-Tactic call lazy-regression-quadratic ran for 7.367 secs (7.359u,0.s) (success)
-Params: n= 3131
-Tactic call lazy-regression-quadratic ran for 7.68 secs (7.672u,0.s) (success)
-Params: n= 3153
-Tactic call lazy-regression-quadratic ran for 7.643 secs (7.627u,0.007s) (success)
+Tactic call lazy-regression-quadratic ran for 7.732 secs (7.724u,0.008s) (success)
 Params: n= 3174
-Tactic call lazy-regression-quadratic ran for 7.693 secs (7.685u,0.s) (success)
-Params: n= 3195
-Tactic call lazy-regression-quadratic ran for 7.919 secs (7.91u,0.s) (success)
-Params: n= 3217
-Tactic call lazy-regression-quadratic ran for 7.981 secs (7.953u,0.007s) (success)
+Tactic call lazy-regression-quadratic ran for 8.248 secs (8.248u,0.s) (success)
 Params: n= 3238
-Tactic call lazy-regression-quadratic ran for 8.658 secs (8.649u,0.s) (success)
-Params: n= 3259
-Tactic call lazy-regression-quadratic ran for 8.78 secs (8.77u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 8.562 secs (8.558u,0.004s) (success)
 Params: n= 3280
-Tactic call lazy-regression-quadratic ran for 8.864 secs (8.851u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 8.522 secs (8.518u,0.003s) (success)
 Params: n= 3302
-Tactic call lazy-regression-quadratic ran for 9.002 secs (8.992u,0.s) (success)
-Params: n= 3361
-Tactic call lazy-regression-quadratic ran for 9.274 secs (9.26u,0.003s) (success)
-Params: n= 3399
-Tactic call lazy-regression-quadratic ran for 9.639 secs (9.549u,0.075s) (success)
+Tactic call lazy-regression-quadratic ran for 8.971 secs (8.963u,0.007s) (success)
 Params: n= 3438
-Tactic call lazy-regression-quadratic ran for 9.755 secs (9.601u,0.135s) (success)
+Tactic call lazy-regression-quadratic ran for 9.479 secs (9.455u,0.023s) (success)
 Params: n= 3476
-Tactic call lazy-regression-quadratic ran for 9.784 secs (9.769u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 9.691 secs (9.687u,0.003s) (success)
 Params: n= 3514
-Tactic call lazy-regression-quadratic ran for 10.219 secs (10.209u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 9.85 secs (9.85u,0.s) (success)
 Params: n= 3552
-Tactic call lazy-regression-quadratic ran for 10.155 secs (10.144u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 9.971 secs (9.971u,0.s) (success)
 Params: n= 3590
-Tactic call lazy-regression-quadratic ran for 10.649 secs (10.638u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 10.373 secs (10.369u,0.004s) (success)
 Params: n= 3628
-Tactic call lazy-regression-quadratic ran for 10.726 secs (10.635u,0.071s) (success)
-Params: n= 3667
-Tactic call lazy-regression-quadratic ran for 11.057 secs (11.032u,0.007s) (success)
-Params: n= 3705
-Tactic call lazy-regression-quadratic ran for 11.278 secs (11.263u,0.003s) (success)
-Params: n= 3743
-Tactic call lazy-regression-quadratic ran for 11.443 secs (11.427u,0.003s) (success)
-Params: n= 3781
-Tactic call lazy-regression-quadratic ran for 11.591 secs (11.575u,0.003s) (success)
-Params: n= 3819
-Tactic call lazy-regression-quadratic ran for 11.956 secs (11.943u,0.s) (success)
-Params: n= 3857
-Tactic call lazy-regression-quadratic ran for 12.259 secs (12.235u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 10.36 secs (10.355u,0.004s) (success)
 Params: n= 3896
-Tactic call lazy-regression-quadratic ran for 12.314 secs (12.296u,0.004s) (success)
+Tactic call lazy-regression-quadratic ran for 12.056 secs (12.052u,0.004s) (success)
 Params: n= 3934
-Tactic call lazy-regression-quadratic ran for 12.599 secs (12.502u,0.084s) (success)
+Tactic call lazy-regression-quadratic ran for 12.271 secs (12.247u,0.023s) (success)
 Params: n= 3972
-Tactic call lazy-regression-quadratic ran for 12.769 secs (12.756u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 12.413 secs (12.409u,0.003s) (success)
 Params: n= 4010
-Tactic call lazy-regression-quadratic ran for 13.087 secs (13.066u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 12.745 secs (12.737u,0.008s) (success)
 Params: n= 4048
-Tactic call lazy-regression-quadratic ran for 13.259 secs (13.241u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 12.968 secs (12.96u,0.007s) (success)
 Params: n= 4086
-Tactic call lazy-regression-quadratic ran for 13.524 secs (13.506u,0.003s) (success)
-Params: n= 4125
-Tactic call lazy-regression-quadratic ran for 15.129 secs (15.005u,0.107s) (success)
-Params: n= 4163
-Tactic call lazy-regression-quadratic ran for 14.275 secs (14.044u,0.215s) (success)
-Params: n= 4201
-Tactic call lazy-regression-quadratic ran for 15.979 secs (15.762u,0.187s) (success)
-Params: n= 4239
-Tactic call lazy-regression-quadratic ran for 15.505 secs (15.296u,0.191s) (success)
-Params: n= 4277
-Tactic call lazy-regression-quadratic ran for 14.402 secs (14.323u,0.063s) (success)
-Params: n= 4315
-Tactic call lazy-regression-quadratic ran for 16.832 secs (16.484u,0.324s) (success)
+Tactic call lazy-regression-quadratic ran for 13.176 secs (13.176u,0.s) (success)
 Params: n= 4354
-Tactic call lazy-regression-quadratic ran for 15.174 secs (15.099u,0.052s) (success)
+Tactic call lazy-regression-quadratic ran for 16.142 secs (16.026u,0.116s) (success)
 Params: n= 4392
-Tactic call lazy-regression-quadratic ran for 15.426 secs (15.409u,0.s) (success)
+Tactic call lazy-regression-quadratic ran for 15.44 secs (15.196u,0.243s) (success)
+Params: n= 4430
+Tactic call lazy-regression-quadratic ran for 17.032 secs (16.935u,0.087s) (success)
 Params: n= 4488
-Tactic call lazy-regression-quadratic ran for 16.037 secs (16.016u,0.003s) (success)
-Params: n= 4547
-Tactic call lazy-regression-quadratic ran for 18.056 secs (17.884u,0.139s) (success)
-Params: n= 4605
-Tactic call lazy-regression-quadratic ran for 17.489 secs (17.194u,0.275s) (success)
-Params: n= 4663
-Tactic call lazy-regression-quadratic ran for 19.581 secs (19.277u,0.283s) (success)
-Params: n= 4721
-Tactic call lazy-regression-quadratic ran for 19.058 secs (18.898u,0.131s) (success)
+Tactic call lazy-regression-quadratic ran for 16.047 secs (15.843u,0.203s) (success)
 Params: n= 4780
-Tactic call lazy-regression-quadratic ran for 20.126 secs (19.7u,0.399s) (success)
+Tactic call lazy-regression-quadratic ran for 19.555 secs (19.255u,0.299s) (success)
 Params: n= 4838
-Tactic call lazy-regression-quadratic ran for 18.736 secs (18.315u,0.4s) (success)
+Tactic call lazy-regression-quadratic ran for 18.397 secs (18.393u,0.003s) (success)
 Params: n= 4896
-Tactic call lazy-regression-quadratic ran for 19.037 secs (18.666u,0.347s) (success)
+Tactic call lazy-regression-quadratic ran for 18.78 secs (18.776u,0.004s) (success)
 Params: n= 4954
-Tactic call lazy-regression-quadratic ran for 19.797 secs (19.339u,0.427s) (success)
+Tactic call lazy-regression-quadratic ran for 19.293 secs (19.277u,0.016s) (success)
 Params: n= 5013
-Tactic call lazy-regression-quadratic ran for 20.248 secs (19.807u,0.419s) (success)
+Tactic call lazy-regression-quadratic ran for 23.232 secs (22.776u,0.455s) (success)
 Params: n= 5071
-Tactic call lazy-regression-quadratic ran for 20.695 secs (20.238u,0.431s) (success)
+Tactic call lazy-regression-quadratic ran for 20.96 secs (20.752u,0.208s) (success)
 Params: n= 5129
-Tactic call lazy-regression-quadratic ran for 19.901 secs (19.593u,0.279s) (success)
+Tactic call lazy-regression-quadratic ran for 20.397 secs (20.389u,0.008s) (success)
 Params: n= 5187
-Tactic call lazy-regression-quadratic ran for 19.748 secs (19.723u,0.003s) (success)
+Tactic call lazy-regression-quadratic ran for 24.188 secs (23.672u,0.515s) (success)
 Params: n= 5246
-Tactic call lazy-regression-quadratic ran for 21.725 secs (21.323u,0.371s) (success)
+Tactic call lazy-regression-quadratic ran for 22.711 secs (22.319u,0.391s) (success)
 Params: n= 5304
-Tactic call lazy-regression-quadratic ran for 23.618 secs (23.196u,0.391s) (success)
+Tactic call lazy-regression-quadratic ran for 21.51 secs (21.506u,0.004s) (success)
 Params: n= 5362
-Tactic call lazy-regression-quadratic ran for 21.435 secs (20.981u,0.431s) (success)
+Tactic call lazy-regression-quadratic ran for 24.407 secs (24.015u,0.391s) (success)
 Params: n= 5420
-Tactic call lazy-regression-quadratic ran for 23.604 secs (23.126u,0.44s) (success)
+Tactic call lazy-regression-quadratic ran for 24.836 secs (24.484u,0.352s) (success)
 Params: n= 5479
-Tactic call lazy-regression-quadratic ran for 23.628 secs (23.548u,0.055s) (success)
+Tactic call lazy-regression-quadratic ran for 25.432 secs (25.068u,0.363s) (success)
+Params: n= 5537
+Tactic call lazy-regression-quadratic ran for 27.153 secs (26.677u,0.476s) (success)
 Params: n= 5629
-Tactic call lazy-regression-quadratic ran for 25.444 secs (25.024u,0.367s) (success)
+Tactic call lazy-regression-quadratic ran for 26.529 secs (25.988u,0.539s) (success)
 Params: n= 5722
-Tactic call lazy-regression-quadratic ran for 25.753 secs (25.313u,0.396s) (success)
+Tactic call lazy-regression-quadratic ran for 26.243 secs (25.775u,0.467s) (success)
 Params: n= 5814
-Tactic call lazy-regression-quadratic ran for 26.746 secs (26.187u,0.519s) (success)
+Tactic call lazy-regression-quadratic ran for 30.272 secs (29.756u,0.515s) (success)
 Params: n= 5906
-Tactic call lazy-regression-quadratic ran for 27.651 secs (26.956u,0.654s) (success)
+Tactic call lazy-regression-quadratic ran for 29.933 secs (29.448u,0.484s) (success)
 Params: n= 5998
-Tactic call lazy-regression-quadratic ran for 29.083 secs (28.505u,0.548s) (success)
+Tactic call lazy-regression-quadratic ran for 30.523 secs (29.951u,0.571s) (success)
 Params: n= 6091
-Tactic call lazy-regression-quadratic ran for 30.01 secs (29.298u,0.668s) (success)
+Tactic call lazy-regression-quadratic ran for 32.033 secs (31.432u,0.599s) (success)
 Params: n= 6183
-Tactic call lazy-regression-quadratic ran for 29.296 secs (28.781u,0.483s) (success)
+Tactic call lazy-regression-quadratic ran for 33.037 secs (32.525u,0.512s) (success)
 Params: n= 6275
-Tactic call lazy-regression-quadratic ran for 29.428 secs (29.242u,0.144s) (success)
+Tactic call lazy-regression-quadratic ran for 31.36 secs (30.94u,0.419s) (success)
 Params: n= 6367
-Tactic call lazy-regression-quadratic ran for 30.079 secs (30.04u,0.007s) (success)
+Tactic call lazy-regression-quadratic ran for 36.425 secs (35.697u,0.728s) (success)
 Params: n= 6460
-Tactic call lazy-regression-quadratic ran for 30.645 secs (30.401u,0.199s) (success)
+Tactic call lazy-regression-quadratic ran for 34.786 secs (34.29u,0.495s) (success)
 Params: n= 6552
-Tactic call lazy-regression-quadratic ran for 34.582 secs (33.809u,0.735s) (success)
+Tactic call lazy-regression-quadratic ran for 34.838 secs (34.346u,0.491s) (success)
 Params: n= 6644
-Tactic call lazy-regression-quadratic ran for 35.682 secs (34.64u,0.991s) (success)
+Tactic call lazy-regression-quadratic ran for 35.462 secs (35.338u,0.124s) (success)
 Params: n= 6767
-Tactic call lazy-regression-quadratic ran for 37.423 secs (36.722u,0.647s) (success)
+Tactic call lazy-regression-quadratic ran for 39.028 secs (38.232u,0.795s) (success)
 Params: n= 6890
-Tactic call lazy-regression-quadratic ran for 38.269 secs (37.61u,0.617s) (success)
+Tactic call lazy-regression-quadratic ran for 40.772 secs (39.943u,0.827s) (success)
 Params: n= 7013
-Tactic call lazy-regression-quadratic ran for 40.357 secs (39.635u,0.667s) (success)
+Tactic call lazy-regression-quadratic ran for 42.392 secs (41.824u,0.567s) (success)
 Params: n= 7136
-Tactic call lazy-regression-quadratic ran for 41.967 secs (41.158u,0.751s) (success)
+Tactic call lazy-regression-quadratic ran for 43.823 secs (43.19u,0.631s) (success)
 Params: n= 7259
-Tactic call lazy-regression-quadratic ran for 43.003 secs (42.35u,0.607s) (success)
+Tactic call lazy-regression-quadratic ran for 45.838 secs (45.122u,0.715s) (success)
 Params: n= 7382
-Tactic call lazy-regression-quadratic ran for 44.595 secs (43.904u,0.631s) (success)
+Tactic call lazy-regression-quadratic ran for 47.361 secs (46.697u,0.663s) (success)
 Params: n= 7505
-Tactic call lazy-regression-quadratic ran for 44.503 secs (43.852u,0.591s) (success)
+Tactic call lazy-regression-quadratic ran for 49.959 secs (49.151u,0.807s) (success)
 Params: n= 7628
-Tactic call lazy-regression-quadratic ran for 47.087 secs (46.74u,0.283s) (success)
+Tactic call lazy-regression-quadratic ran for 52.002 secs (51.061u,0.94s) (success)
 Params: n= 7751
-Tactic call lazy-regression-quadratic ran for 48.966 secs (48.369u,0.543s) (success)
+Tactic call lazy-regression-quadratic ran for 50.308 secs (49.667u,0.639s) (success)
 Params: n= 7936
-Tactic call lazy-regression-quadratic ran for 50.475 secs (49.592u,0.817s) (success)
+Tactic call lazy-regression-quadratic ran for 51.343 secs (50.539u,0.803s) (success)
 Params: n= 8120
-Tactic call lazy-regression-quadratic ran for 52.391 secs (51.445u,0.879s) (success)
+Tactic call lazy-regression-quadratic ran for 51.124 secs (50.187u,0.935s) (success)
 Params: n= 8305
-Tactic call lazy-regression-quadratic ran for 57.197 secs (56.202u,0.92s) (success)
+Tactic call lazy-regression-quadratic ran for 55.136 secs (54.388u,0.748s) (success)
 Params: n= 8490
-Tactic call lazy-regression-quadratic ran for 58.06 secs (56.754u,1.231s) (success)
+Tactic call lazy-regression-quadratic ran for 59.674 secs (58.488u,1.183s) (success)
 Params: n= 8674
-Tactic call lazy-regression-quadratic ran for 60.309 secs (59.163u,1.071s) (success)
+Tactic call lazy-regression-quadratic ran for 59.97 secs (58.837u,1.132s) (success)
+Params: n= 8859
+Tactic call lazy-regression-quadratic ran for 62.382 secs (61.358u,1.023s) (success)

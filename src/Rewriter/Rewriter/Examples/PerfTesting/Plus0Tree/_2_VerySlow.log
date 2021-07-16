@@ -1,1010 +1,832 @@
-Params: 0-nm= 339 , 1-n= 1 , 2-m= 113 , 3-input-size= 685 , 4-output-size= 7 , 5-num-rewrites= 339
-Tactic call setoid_rewrite-regression-cubic ran for 0.88 secs (0.872u,0.008s) (success)
-Params: 0-nm= 351 , 1-n= 1 , 2-m= 117 , 3-input-size= 709 , 4-output-size= 7 , 5-num-rewrites= 351
-Tactic call setoid_rewrite-regression-cubic ran for 0.931 secs (0.923u,0.007s) (success)
-Params: 0-nm= 363 , 1-n= 1 , 2-m= 121 , 3-input-size= 733 , 4-output-size= 7 , 5-num-rewrites= 363
-Tactic call setoid_rewrite-regression-cubic ran for 0.994 secs (0.99u,0.003s) (success)
-Params: 0-nm= 375 , 1-n= 1 , 2-m= 125 , 3-input-size= 757 , 4-output-size= 7 , 5-num-rewrites= 375
-Tactic call setoid_rewrite-regression-cubic ran for 1.101 secs (1.101u,0.s) (success)
-Params: 0-nm= 399 , 1-n= 1 , 2-m= 133 , 3-input-size= 805 , 4-output-size= 7 , 5-num-rewrites= 399
-Tactic call setoid_rewrite-regression-cubic ran for 1.244 secs (1.24u,0.003s) (success)
-Params: 0-nm= 411 , 1-n= 1 , 2-m= 137 , 3-input-size= 829 , 4-output-size= 7 , 5-num-rewrites= 411
-Tactic call setoid_rewrite-regression-cubic ran for 1.333 secs (1.325u,0.008s) (success)
-Params: 0-nm= 423 , 1-n= 1 , 2-m= 141 , 3-input-size= 853 , 4-output-size= 7 , 5-num-rewrites= 423
-Tactic call setoid_rewrite-regression-cubic ran for 1.355 secs (1.355u,0.s) (success)
-Params: 0-nm= 435 , 1-n= 1 , 2-m= 145 , 3-input-size= 877 , 4-output-size= 7 , 5-num-rewrites= 435
-Tactic call setoid_rewrite-regression-cubic ran for 1.417 secs (1.417u,0.s) (success)
-Params: 0-nm= 459 , 1-n= 1 , 2-m= 153 , 3-input-size= 925 , 4-output-size= 7 , 5-num-rewrites= 459
-Tactic call setoid_rewrite-regression-cubic ran for 1.576 secs (1.575u,0.s) (success)
-Params: 0-nm= 471 , 1-n= 1 , 2-m= 157 , 3-input-size= 949 , 4-output-size= 7 , 5-num-rewrites= 471
-Tactic call setoid_rewrite-regression-cubic ran for 1.685 secs (1.685u,0.s) (success)
-Params: 0-nm= 483 , 1-n= 1 , 2-m= 161 , 3-input-size= 973 , 4-output-size= 7 , 5-num-rewrites= 483
-Tactic call setoid_rewrite-regression-cubic ran for 1.767 secs (1.763u,0.003s) (success)
-Params: 0-nm= 495 , 1-n= 1 , 2-m= 165 , 3-input-size= 997 , 4-output-size= 7 , 5-num-rewrites= 495
-Tactic call setoid_rewrite-regression-cubic ran for 1.815 secs (1.815u,0.s) (success)
-Params: 0-nm= 519 , 1-n= 1 , 2-m= 173 , 3-input-size= 1045 , 4-output-size= 7 , 5-num-rewrites= 519
-Tactic call setoid_rewrite-regression-cubic ran for 1.973 secs (1.973u,0.s) (success)
-Params: 0-nm= 531 , 1-n= 1 , 2-m= 177 , 3-input-size= 1069 , 4-output-size= 7 , 5-num-rewrites= 531
-Tactic call setoid_rewrite-regression-cubic ran for 2.118 secs (2.118u,0.s) (success)
-Params: 0-nm= 543 , 1-n= 1 , 2-m= 181 , 3-input-size= 1093 , 4-output-size= 7 , 5-num-rewrites= 543
-Tactic call setoid_rewrite-regression-cubic ran for 2.25 secs (2.25u,0.s) (success)
-Params: 0-nm= 555 , 1-n= 1 , 2-m= 185 , 3-input-size= 1117 , 4-output-size= 7 , 5-num-rewrites= 555
-Tactic call setoid_rewrite-regression-cubic ran for 2.217 secs (2.201u,0.015s) (success)
-Params: 0-nm= 579 , 1-n= 1 , 2-m= 193 , 3-input-size= 1165 , 4-output-size= 7 , 5-num-rewrites= 579
-Tactic call setoid_rewrite-regression-cubic ran for 2.462 secs (2.458u,0.003s) (success)
-Params: 0-nm= 591 , 1-n= 1 , 2-m= 197 , 3-input-size= 1189 , 4-output-size= 7 , 5-num-rewrites= 591
-Tactic call setoid_rewrite-regression-cubic ran for 2.63 secs (2.63u,0.s) (success)
-Params: 0-nm= 603 , 1-n= 1 , 2-m= 201 , 3-input-size= 1213 , 4-output-size= 7 , 5-num-rewrites= 603
-Tactic call setoid_rewrite-regression-cubic ran for 2.738 secs (2.738u,0.s) (success)
-Params: 0-nm= 615 , 1-n= 1 , 2-m= 205 , 3-input-size= 1237 , 4-output-size= 7 , 5-num-rewrites= 615
-Tactic call setoid_rewrite-regression-cubic ran for 2.769 secs (2.769u,0.s) (success)
-Params: 0-nm= 639 , 1-n= 1 , 2-m= 213 , 3-input-size= 1285 , 4-output-size= 7 , 5-num-rewrites= 639
-Tactic call setoid_rewrite-regression-cubic ran for 3.005 secs (3.005u,0.s) (success)
-Params: 0-nm= 405 , 1-n= 3 , 2-m= 27 , 3-input-size= 841 , 4-output-size= 31 , 5-num-rewrites= 405
-Tactic call setoid_rewrite-regression-cubic ran for 0.809 secs (0.809u,0.s) (success)
-Params: 0-nm= 435 , 1-n= 3 , 2-m= 29 , 3-input-size= 901 , 4-output-size= 31 , 5-num-rewrites= 435
-Tactic call setoid_rewrite-regression-cubic ran for 0.953 secs (0.953u,0.s) (success)
-Params: 0-nm= 465 , 1-n= 3 , 2-m= 31 , 3-input-size= 961 , 4-output-size= 31 , 5-num-rewrites= 465
-Tactic call setoid_rewrite-regression-cubic ran for 1.066 secs (1.063u,0.003s) (success)
-Params: 0-nm= 495 , 1-n= 3 , 2-m= 33 , 3-input-size= 1021 , 4-output-size= 31 , 5-num-rewrites= 495
-Tactic call setoid_rewrite-regression-cubic ran for 1.105 secs (1.105u,0.s) (success)
-Params: 0-nm= 525 , 1-n= 3 , 2-m= 35 , 3-input-size= 1081 , 4-output-size= 31 , 5-num-rewrites= 525
-Tactic call setoid_rewrite-regression-cubic ran for 1.221 secs (1.221u,0.s) (success)
-Params: 0-nm= 555 , 1-n= 3 , 2-m= 37 , 3-input-size= 1141 , 4-output-size= 31 , 5-num-rewrites= 555
-Tactic call setoid_rewrite-regression-cubic ran for 1.347 secs (1.347u,0.s) (success)
-Params: 0-nm= 585 , 1-n= 3 , 2-m= 39 , 3-input-size= 1201 , 4-output-size= 31 , 5-num-rewrites= 585
-Tactic call setoid_rewrite-regression-cubic ran for 1.494 secs (1.494u,0.s) (success)
-Params: 0-nm= 615 , 1-n= 3 , 2-m= 41 , 3-input-size= 1261 , 4-output-size= 31 , 5-num-rewrites= 615
-Tactic call setoid_rewrite-regression-cubic ran for 1.724 secs (1.724u,0.s) (success)
-Params: 0-nm= 645 , 1-n= 3 , 2-m= 43 , 3-input-size= 1321 , 4-output-size= 31 , 5-num-rewrites= 645
-Tactic call setoid_rewrite-regression-cubic ran for 1.82 secs (1.82u,0.s) (success)
 Params: 0-nm= 659 , 1-n= 0 , 2-m= 659 , 3-input-size= 1321 , 4-output-size= 3 , 5-num-rewrites= 659
-Tactic call setoid_rewrite-regression-cubic ran for 3.519 secs (3.519u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 3.704 secs (3.684u,0.019s) (success)
 Params: 0-nm= 669 , 1-n= 0 , 2-m= 669 , 3-input-size= 1341 , 4-output-size= 3 , 5-num-rewrites= 669
-Tactic call setoid_rewrite-regression-cubic ran for 3.662 secs (3.661u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 3.935 secs (3.927u,0.007s) (success)
 Params: 0-nm= 689 , 1-n= 0 , 2-m= 689 , 3-input-size= 1381 , 4-output-size= 3 , 5-num-rewrites= 689
-Tactic call setoid_rewrite-regression-cubic ran for 3.923 secs (3.923u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 4.117 secs (4.101u,0.015s) (success)
 Params: 0-nm= 699 , 1-n= 0 , 2-m= 699 , 3-input-size= 1401 , 4-output-size= 3 , 5-num-rewrites= 699
-Tactic call setoid_rewrite-regression-cubic ran for 3.96 secs (3.96u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 4.298 secs (4.278u,0.02s) (success)
 Params: 0-nm= 719 , 1-n= 0 , 2-m= 719 , 3-input-size= 1441 , 4-output-size= 3 , 5-num-rewrites= 719
-Tactic call setoid_rewrite-regression-cubic ran for 4.266 secs (4.266u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 4.409 secs (4.393u,0.015s) (success)
 Params: 0-nm= 729 , 1-n= 0 , 2-m= 729 , 3-input-size= 1461 , 4-output-size= 3 , 5-num-rewrites= 729
-Tactic call setoid_rewrite-regression-cubic ran for 4.31 secs (4.31u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 4.604 secs (4.604u,0.s) (success)
 Params: 0-nm= 749 , 1-n= 0 , 2-m= 749 , 3-input-size= 1501 , 4-output-size= 3 , 5-num-rewrites= 749
-Tactic call setoid_rewrite-regression-cubic ran for 4.686 secs (4.686u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 4.827 secs (4.827u,0.s) (success)
 Params: 0-nm= 759 , 1-n= 0 , 2-m= 759 , 3-input-size= 1521 , 4-output-size= 3 , 5-num-rewrites= 759
-Tactic call setoid_rewrite-regression-cubic ran for 4.712 secs (4.703u,0.007s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 4.977 secs (4.977u,0.s) (success)
 Params: 0-nm= 779 , 1-n= 0 , 2-m= 779 , 3-input-size= 1561 , 4-output-size= 3 , 5-num-rewrites= 779
-Tactic call setoid_rewrite-regression-cubic ran for 5.302 secs (5.302u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 5.129 secs (5.129u,0.s) (success)
 Params: 0-nm= 789 , 1-n= 0 , 2-m= 789 , 3-input-size= 1581 , 4-output-size= 3 , 5-num-rewrites= 789
-Tactic call setoid_rewrite-regression-cubic ran for 4.979 secs (4.979u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 5.14 secs (5.14u,0.s) (success)
 Params: 0-nm= 809 , 1-n= 0 , 2-m= 809 , 3-input-size= 1621 , 4-output-size= 3 , 5-num-rewrites= 809
-Tactic call setoid_rewrite-regression-cubic ran for 5.316 secs (5.316u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 5.182 secs (5.182u,0.s) (success)
 Params: 0-nm= 819 , 1-n= 0 , 2-m= 819 , 3-input-size= 1641 , 4-output-size= 3 , 5-num-rewrites= 819
-Tactic call setoid_rewrite-regression-cubic ran for 5.489 secs (5.489u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 5.876 secs (5.876u,0.s) (success)
 Params: 0-nm= 839 , 1-n= 0 , 2-m= 839 , 3-input-size= 1681 , 4-output-size= 3 , 5-num-rewrites= 839
-Tactic call setoid_rewrite-regression-cubic ran for 5.666 secs (5.666u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 5.93 secs (5.927u,0.003s) (success)
 Params: 0-nm= 849 , 1-n= 0 , 2-m= 849 , 3-input-size= 1701 , 4-output-size= 3 , 5-num-rewrites= 849
-Tactic call setoid_rewrite-regression-cubic ran for 5.877 secs (5.877u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 6.234 secs (6.234u,0.s) (success)
 Params: 0-nm= 869 , 1-n= 0 , 2-m= 869 , 3-input-size= 1741 , 4-output-size= 3 , 5-num-rewrites= 869
-Tactic call setoid_rewrite-regression-cubic ran for 6.132 secs (6.132u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 6.478 secs (6.474u,0.003s) (success)
 Params: 0-nm= 879 , 1-n= 0 , 2-m= 879 , 3-input-size= 1761 , 4-output-size= 3 , 5-num-rewrites= 879
-Tactic call setoid_rewrite-regression-cubic ran for 6.313 secs (6.313u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 6.63 secs (6.61u,0.019s) (success)
 Params: 0-nm= 899 , 1-n= 0 , 2-m= 899 , 3-input-size= 1801 , 4-output-size= 3 , 5-num-rewrites= 899
-Tactic call setoid_rewrite-regression-cubic ran for 6.614 secs (6.614u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 6.991 secs (6.991u,0.s) (success)
 Params: 0-nm= 909 , 1-n= 0 , 2-m= 909 , 3-input-size= 1821 , 4-output-size= 3 , 5-num-rewrites= 909
-Tactic call setoid_rewrite-regression-cubic ran for 6.598 secs (6.597u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 6.962 secs (6.962u,0.s) (success)
 Params: 0-nm= 929 , 1-n= 0 , 2-m= 929 , 3-input-size= 1861 , 4-output-size= 3 , 5-num-rewrites= 929
-Tactic call setoid_rewrite-regression-cubic ran for 7.012 secs (7.012u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 7.435 secs (7.436u,0.s) (success)
 Params: 0-nm= 939 , 1-n= 0 , 2-m= 939 , 3-input-size= 1881 , 4-output-size= 3 , 5-num-rewrites= 939
-Tactic call setoid_rewrite-regression-cubic ran for 7.198 secs (7.174u,0.023s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 7.502 secs (7.502u,0.s) (success)
 Params: 0-nm= 959 , 1-n= 0 , 2-m= 959 , 3-input-size= 1921 , 4-output-size= 3 , 5-num-rewrites= 959
-Tactic call setoid_rewrite-regression-cubic ran for 7.423 secs (7.423u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 7.851 secs (7.851u,0.s) (success)
 Params: 0-nm= 969 , 1-n= 0 , 2-m= 969 , 3-input-size= 1941 , 4-output-size= 3 , 5-num-rewrites= 969
-Tactic call setoid_rewrite-regression-cubic ran for 7.717 secs (7.717u,0.s) (success)
-Params: 0-nm= 663 , 1-n= 1 , 2-m= 221 , 3-input-size= 1333 , 4-output-size= 7 , 5-num-rewrites= 663
-Tactic call setoid_rewrite-regression-cubic ran for 3.342 secs (3.342u,0.s) (success)
-Params: 0-nm= 675 , 1-n= 1 , 2-m= 225 , 3-input-size= 1357 , 4-output-size= 7 , 5-num-rewrites= 675
-Tactic call setoid_rewrite-regression-cubic ran for 3.227 secs (3.227u,0.s) (success)
-Params: 0-nm= 687 , 1-n= 1 , 2-m= 229 , 3-input-size= 1381 , 4-output-size= 7 , 5-num-rewrites= 687
-Tactic call setoid_rewrite-regression-cubic ran for 3.207 secs (3.207u,0.s) (success)
-Params: 0-nm= 699 , 1-n= 1 , 2-m= 233 , 3-input-size= 1405 , 4-output-size= 7 , 5-num-rewrites= 699
-Tactic call setoid_rewrite-regression-cubic ran for 3.372 secs (3.372u,0.s) (success)
-Params: 0-nm= 711 , 1-n= 1 , 2-m= 237 , 3-input-size= 1429 , 4-output-size= 7 , 5-num-rewrites= 711
-Tactic call setoid_rewrite-regression-cubic ran for 3.555 secs (3.555u,0.s) (success)
-Params: 0-nm= 723 , 1-n= 1 , 2-m= 241 , 3-input-size= 1453 , 4-output-size= 7 , 5-num-rewrites= 723
-Tactic call setoid_rewrite-regression-cubic ran for 3.563 secs (3.563u,0.s) (success)
-Params: 0-nm= 735 , 1-n= 1 , 2-m= 245 , 3-input-size= 1477 , 4-output-size= 7 , 5-num-rewrites= 735
-Tactic call setoid_rewrite-regression-cubic ran for 3.712 secs (3.712u,0.s) (success)
-Params: 0-nm= 747 , 1-n= 1 , 2-m= 249 , 3-input-size= 1501 , 4-output-size= 7 , 5-num-rewrites= 747
-Tactic call setoid_rewrite-regression-cubic ran for 3.892 secs (3.892u,0.s) (success)
-Params: 0-nm= 759 , 1-n= 1 , 2-m= 253 , 3-input-size= 1525 , 4-output-size= 7 , 5-num-rewrites= 759
-Tactic call setoid_rewrite-regression-cubic ran for 3.967 secs (3.967u,0.s) (success)
-Params: 0-nm= 771 , 1-n= 1 , 2-m= 257 , 3-input-size= 1549 , 4-output-size= 7 , 5-num-rewrites= 771
-Tactic call setoid_rewrite-regression-cubic ran for 4.207 secs (4.207u,0.s) (success)
-Params: 0-nm= 795 , 1-n= 1 , 2-m= 265 , 3-input-size= 1597 , 4-output-size= 7 , 5-num-rewrites= 795
-Tactic call setoid_rewrite-regression-cubic ran for 4.348 secs (4.348u,0.s) (success)
-Params: 0-nm= 807 , 1-n= 1 , 2-m= 269 , 3-input-size= 1621 , 4-output-size= 7 , 5-num-rewrites= 807
-Tactic call setoid_rewrite-regression-cubic ran for 4.523 secs (4.523u,0.s) (success)
-Params: 0-nm= 819 , 1-n= 1 , 2-m= 273 , 3-input-size= 1645 , 4-output-size= 7 , 5-num-rewrites= 819
-Tactic call setoid_rewrite-regression-cubic ran for 4.625 secs (4.625u,0.s) (success)
-Params: 0-nm= 831 , 1-n= 1 , 2-m= 277 , 3-input-size= 1669 , 4-output-size= 7 , 5-num-rewrites= 831
-Tactic call setoid_rewrite-regression-cubic ran for 4.783 secs (4.783u,0.s) (success)
-Params: 0-nm= 843 , 1-n= 1 , 2-m= 281 , 3-input-size= 1693 , 4-output-size= 7 , 5-num-rewrites= 843
-Tactic call setoid_rewrite-regression-cubic ran for 4.914 secs (4.914u,0.s) (success)
-Params: 0-nm= 855 , 1-n= 1 , 2-m= 285 , 3-input-size= 1717 , 4-output-size= 7 , 5-num-rewrites= 855
-Tactic call setoid_rewrite-regression-cubic ran for 4.987 secs (4.987u,0.s) (success)
-Params: 0-nm= 867 , 1-n= 1 , 2-m= 289 , 3-input-size= 1741 , 4-output-size= 7 , 5-num-rewrites= 867
-Tactic call setoid_rewrite-regression-cubic ran for 5.221 secs (5.221u,0.s) (success)
-Params: 0-nm= 879 , 1-n= 1 , 2-m= 293 , 3-input-size= 1765 , 4-output-size= 7 , 5-num-rewrites= 879
-Tactic call setoid_rewrite-regression-cubic ran for 5.613 secs (5.613u,0.s) (success)
-Params: 0-nm= 891 , 1-n= 1 , 2-m= 297 , 3-input-size= 1789 , 4-output-size= 7 , 5-num-rewrites= 891
-Tactic call setoid_rewrite-regression-cubic ran for 5.811 secs (5.811u,0.s) (success)
-Params: 0-nm= 903 , 1-n= 1 , 2-m= 301 , 3-input-size= 1813 , 4-output-size= 7 , 5-num-rewrites= 903
-Tactic call setoid_rewrite-regression-cubic ran for 6.01 secs (6.01u,0.s) (success)
-Params: 0-nm= 927 , 1-n= 1 , 2-m= 309 , 3-input-size= 1861 , 4-output-size= 7 , 5-num-rewrites= 927
-Tactic call setoid_rewrite-regression-cubic ran for 6.296 secs (6.296u,0.s) (success)
-Params: 0-nm= 939 , 1-n= 1 , 2-m= 313 , 3-input-size= 1885 , 4-output-size= 7 , 5-num-rewrites= 939
-Tactic call setoid_rewrite-regression-cubic ran for 6.485 secs (6.485u,0.s) (success)
-Params: 0-nm= 951 , 1-n= 1 , 2-m= 317 , 3-input-size= 1909 , 4-output-size= 7 , 5-num-rewrites= 951
-Tactic call setoid_rewrite-regression-cubic ran for 6.556 secs (6.556u,0.s) (success)
-Params: 0-nm= 963 , 1-n= 1 , 2-m= 321 , 3-input-size= 1933 , 4-output-size= 7 , 5-num-rewrites= 963
-Tactic call setoid_rewrite-regression-cubic ran for 6.81 secs (6.81u,0.s) (success)
-Params: 0-nm= 665 , 1-n= 2 , 2-m= 95 , 3-input-size= 1345 , 4-output-size= 15 , 5-num-rewrites= 665
-Tactic call setoid_rewrite-regression-cubic ran for 2.577 secs (2.577u,0.s) (success)
-Params: 0-nm= 679 , 1-n= 2 , 2-m= 97 , 3-input-size= 1373 , 4-output-size= 15 , 5-num-rewrites= 679
-Tactic call setoid_rewrite-regression-cubic ran for 2.685 secs (2.685u,0.s) (success)
-Params: 0-nm= 707 , 1-n= 2 , 2-m= 101 , 3-input-size= 1429 , 4-output-size= 15 , 5-num-rewrites= 707
-Tactic call setoid_rewrite-regression-cubic ran for 3.055 secs (3.055u,0.s) (success)
-Params: 0-nm= 721 , 1-n= 2 , 2-m= 103 , 3-input-size= 1457 , 4-output-size= 15 , 5-num-rewrites= 721
-Tactic call setoid_rewrite-regression-cubic ran for 3.079 secs (3.079u,0.s) (success)
-Params: 0-nm= 749 , 1-n= 2 , 2-m= 107 , 3-input-size= 1513 , 4-output-size= 15 , 5-num-rewrites= 749
-Tactic call setoid_rewrite-regression-cubic ran for 3.314 secs (3.314u,0.s) (success)
-Params: 0-nm= 763 , 1-n= 2 , 2-m= 109 , 3-input-size= 1541 , 4-output-size= 15 , 5-num-rewrites= 763
-Tactic call setoid_rewrite-regression-cubic ran for 3.565 secs (3.565u,0.s) (success)
-Params: 0-nm= 791 , 1-n= 2 , 2-m= 113 , 3-input-size= 1597 , 4-output-size= 15 , 5-num-rewrites= 791
-Tactic call setoid_rewrite-regression-cubic ran for 3.647 secs (3.647u,0.s) (success)
-Params: 0-nm= 805 , 1-n= 2 , 2-m= 115 , 3-input-size= 1625 , 4-output-size= 15 , 5-num-rewrites= 805
-Tactic call setoid_rewrite-regression-cubic ran for 3.833 secs (3.833u,0.s) (success)
-Params: 0-nm= 833 , 1-n= 2 , 2-m= 119 , 3-input-size= 1681 , 4-output-size= 15 , 5-num-rewrites= 833
-Tactic call setoid_rewrite-regression-cubic ran for 4.228 secs (4.228u,0.s) (success)
-Params: 0-nm= 847 , 1-n= 2 , 2-m= 121 , 3-input-size= 1709 , 4-output-size= 15 , 5-num-rewrites= 847
-Tactic call setoid_rewrite-regression-cubic ran for 4.23 secs (4.23u,0.s) (success)
-Params: 0-nm= 875 , 1-n= 2 , 2-m= 125 , 3-input-size= 1765 , 4-output-size= 15 , 5-num-rewrites= 875
-Tactic call setoid_rewrite-regression-cubic ran for 4.536 secs (4.536u,0.s) (success)
-Params: 0-nm= 889 , 1-n= 2 , 2-m= 127 , 3-input-size= 1793 , 4-output-size= 15 , 5-num-rewrites= 889
-Tactic call setoid_rewrite-regression-cubic ran for 4.684 secs (4.684u,0.s) (success)
-Params: 0-nm= 917 , 1-n= 2 , 2-m= 131 , 3-input-size= 1849 , 4-output-size= 15 , 5-num-rewrites= 917
-Tactic call setoid_rewrite-regression-cubic ran for 4.921 secs (4.921u,0.s) (success)
-Params: 0-nm= 931 , 1-n= 2 , 2-m= 133 , 3-input-size= 1877 , 4-output-size= 15 , 5-num-rewrites= 931
-Tactic call setoid_rewrite-regression-cubic ran for 5.233 secs (5.233u,0.s) (success)
-Params: 0-nm= 959 , 1-n= 2 , 2-m= 137 , 3-input-size= 1933 , 4-output-size= 15 , 5-num-rewrites= 959
-Tactic call setoid_rewrite-regression-cubic ran for 5.364 secs (5.364u,0.s) (success)
-Params: 0-nm= 675 , 1-n= 3 , 2-m= 45 , 3-input-size= 1381 , 4-output-size= 31 , 5-num-rewrites= 675
-Tactic call setoid_rewrite-regression-cubic ran for 2.116 secs (2.116u,0.s) (success)
-Params: 0-nm= 690 , 1-n= 3 , 2-m= 46 , 3-input-size= 1411 , 4-output-size= 31 , 5-num-rewrites= 690
-Tactic call setoid_rewrite-regression-cubic ran for 2.232 secs (2.232u,0.s) (success)
-Params: 0-nm= 720 , 1-n= 3 , 2-m= 48 , 3-input-size= 1471 , 4-output-size= 31 , 5-num-rewrites= 720
-Tactic call setoid_rewrite-regression-cubic ran for 2.376 secs (2.376u,0.s) (success)
-Params: 0-nm= 735 , 1-n= 3 , 2-m= 49 , 3-input-size= 1501 , 4-output-size= 31 , 5-num-rewrites= 735
-Tactic call setoid_rewrite-regression-cubic ran for 2.509 secs (2.509u,0.s) (success)
-Params: 0-nm= 765 , 1-n= 3 , 2-m= 51 , 3-input-size= 1561 , 4-output-size= 31 , 5-num-rewrites= 765
-Tactic call setoid_rewrite-regression-cubic ran for 3.087 secs (3.087u,0.s) (success)
-Params: 0-nm= 780 , 1-n= 3 , 2-m= 52 , 3-input-size= 1591 , 4-output-size= 31 , 5-num-rewrites= 780
-Tactic call setoid_rewrite-regression-cubic ran for 2.87 secs (2.87u,0.s) (success)
-Params: 0-nm= 825 , 1-n= 3 , 2-m= 55 , 3-input-size= 1681 , 4-output-size= 31 , 5-num-rewrites= 825
-Tactic call setoid_rewrite-regression-cubic ran for 3.079 secs (3.079u,0.s) (success)
-Params: 0-nm= 855 , 1-n= 3 , 2-m= 57 , 3-input-size= 1741 , 4-output-size= 31 , 5-num-rewrites= 855
-Tactic call setoid_rewrite-regression-cubic ran for 3.293 secs (3.293u,0.s) (success)
-Params: 0-nm= 870 , 1-n= 3 , 2-m= 58 , 3-input-size= 1771 , 4-output-size= 31 , 5-num-rewrites= 870
-Tactic call setoid_rewrite-regression-cubic ran for 3.519 secs (3.519u,0.s) (success)
-Params: 0-nm= 900 , 1-n= 3 , 2-m= 60 , 3-input-size= 1831 , 4-output-size= 31 , 5-num-rewrites= 900
-Tactic call setoid_rewrite-regression-cubic ran for 3.614 secs (3.614u,0.s) (success)
-Params: 0-nm= 915 , 1-n= 3 , 2-m= 61 , 3-input-size= 1861 , 4-output-size= 31 , 5-num-rewrites= 915
-Tactic call setoid_rewrite-regression-cubic ran for 3.809 secs (3.809u,0.s) (success)
-Params: 0-nm= 945 , 1-n= 3 , 2-m= 63 , 3-input-size= 1921 , 4-output-size= 31 , 5-num-rewrites= 945
-Tactic call setoid_rewrite-regression-cubic ran for 4.144 secs (4.144u,0.s) (success)
-Params: 0-nm= 682 , 1-n= 4 , 2-m= 22 , 3-input-size= 1427 , 4-output-size= 63 , 5-num-rewrites= 682
-Tactic call setoid_rewrite-regression-cubic ran for 1.611 secs (1.611u,0.s) (success)
-Params: 0-nm= 744 , 1-n= 4 , 2-m= 24 , 3-input-size= 1551 , 4-output-size= 63 , 5-num-rewrites= 744
-Tactic call setoid_rewrite-regression-cubic ran for 1.893 secs (1.893u,0.s) (success)
-Params: 0-nm= 806 , 1-n= 4 , 2-m= 26 , 3-input-size= 1675 , 4-output-size= 63 , 5-num-rewrites= 806
-Tactic call setoid_rewrite-regression-cubic ran for 2.221 secs (2.221u,0.s) (success)
-Params: 0-nm= 868 , 1-n= 4 , 2-m= 28 , 3-input-size= 1799 , 4-output-size= 63 , 5-num-rewrites= 868
-Tactic call setoid_rewrite-regression-cubic ran for 2.617 secs (2.617u,0.s) (success)
-Params: 0-nm= 930 , 1-n= 4 , 2-m= 30 , 3-input-size= 1923 , 4-output-size= 63 , 5-num-rewrites= 930
-Tactic call setoid_rewrite-regression-cubic ran for 2.83 secs (2.83u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.035 secs (8.035u,0.s) (success)
 Params: 0-nm= 985 , 1-n= 0 , 2-m= 985 , 3-input-size= 1973 , 4-output-size= 3 , 5-num-rewrites= 985
-Tactic call setoid_rewrite-regression-cubic ran for 8.617 secs (8.616u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.399 secs (8.399u,0.s) (success)
 Params: 0-nm= 997 , 1-n= 0 , 2-m= 997 , 3-input-size= 1997 , 4-output-size= 3 , 5-num-rewrites= 997
-Tactic call setoid_rewrite-regression-cubic ran for 8.631 secs (8.631u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.479 secs (8.463u,0.015s) (success)
 Params: 0-nm= 1009 , 1-n= 0 , 2-m= 1009 , 3-input-size= 2021 , 4-output-size= 3 , 5-num-rewrites= 1009
-Tactic call setoid_rewrite-regression-cubic ran for 8.921 secs (8.921u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.723 secs (8.723u,0.s) (success)
 Params: 0-nm= 1021 , 1-n= 0 , 2-m= 1021 , 3-input-size= 2045 , 4-output-size= 3 , 5-num-rewrites= 1021
-Tactic call setoid_rewrite-regression-cubic ran for 9.172 secs (9.172u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.049 secs (9.049u,0.s) (success)
 Params: 0-nm= 1033 , 1-n= 0 , 2-m= 1033 , 3-input-size= 2069 , 4-output-size= 3 , 5-num-rewrites= 1033
-Tactic call setoid_rewrite-regression-cubic ran for 9.547 secs (9.547u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.027 secs (9.027u,0.s) (success)
 Params: 0-nm= 1045 , 1-n= 0 , 2-m= 1045 , 3-input-size= 2093 , 4-output-size= 3 , 5-num-rewrites= 1045
-Tactic call setoid_rewrite-regression-cubic ran for 9.561 secs (9.561u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.378 secs (9.378u,0.s) (success)
 Params: 0-nm= 1057 , 1-n= 0 , 2-m= 1057 , 3-input-size= 2117 , 4-output-size= 3 , 5-num-rewrites= 1057
-Tactic call setoid_rewrite-regression-cubic ran for 9.841 secs (9.841u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.615 secs (9.615u,0.s) (success)
 Params: 0-nm= 1069 , 1-n= 0 , 2-m= 1069 , 3-input-size= 2141 , 4-output-size= 3 , 5-num-rewrites= 1069
-Tactic call setoid_rewrite-regression-cubic ran for 10.085 secs (10.065u,0.019s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.101 secs (10.101u,0.s) (success)
 Params: 0-nm= 1081 , 1-n= 0 , 2-m= 1081 , 3-input-size= 2165 , 4-output-size= 3 , 5-num-rewrites= 1081
-Tactic call setoid_rewrite-regression-cubic ran for 10.606 secs (10.598u,0.007s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.907 secs (9.907u,0.s) (success)
 Params: 0-nm= 1093 , 1-n= 0 , 2-m= 1093 , 3-input-size= 2189 , 4-output-size= 3 , 5-num-rewrites= 1093
-Tactic call setoid_rewrite-regression-cubic ran for 10.34 secs (10.34u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.233 secs (10.233u,0.s) (success)
 Params: 0-nm= 1105 , 1-n= 0 , 2-m= 1105 , 3-input-size= 2213 , 4-output-size= 3 , 5-num-rewrites= 1105
-Tactic call setoid_rewrite-regression-cubic ran for 10.705 secs (10.705u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.42 secs (10.42u,0.s) (success)
 Params: 0-nm= 1117 , 1-n= 0 , 2-m= 1117 , 3-input-size= 2237 , 4-output-size= 3 , 5-num-rewrites= 1117
-Tactic call setoid_rewrite-regression-cubic ran for 10.906 secs (10.906u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.025 secs (11.025u,0.s) (success)
 Params: 0-nm= 1129 , 1-n= 0 , 2-m= 1129 , 3-input-size= 2261 , 4-output-size= 3 , 5-num-rewrites= 1129
-Tactic call setoid_rewrite-regression-cubic ran for 11.188 secs (11.187u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.876 secs (10.876u,0.s) (success)
 Params: 0-nm= 1141 , 1-n= 0 , 2-m= 1141 , 3-input-size= 2285 , 4-output-size= 3 , 5-num-rewrites= 1141
-Tactic call setoid_rewrite-regression-cubic ran for 11.601 secs (11.601u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.221 secs (11.221u,0.s) (success)
 Params: 0-nm= 1153 , 1-n= 0 , 2-m= 1153 , 3-input-size= 2309 , 4-output-size= 3 , 5-num-rewrites= 1153
-Tactic call setoid_rewrite-regression-cubic ran for 11.719 secs (11.719u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.29 secs (11.29u,0.s) (success)
 Params: 0-nm= 1165 , 1-n= 0 , 2-m= 1165 , 3-input-size= 2333 , 4-output-size= 3 , 5-num-rewrites= 1165
-Tactic call setoid_rewrite-regression-cubic ran for 11.871 secs (11.871u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.595 secs (11.595u,0.s) (success)
 Params: 0-nm= 1177 , 1-n= 0 , 2-m= 1177 , 3-input-size= 2357 , 4-output-size= 3 , 5-num-rewrites= 1177
-Tactic call setoid_rewrite-regression-cubic ran for 12.163 secs (12.163u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.928 secs (11.928u,0.s) (success)
 Params: 0-nm= 1189 , 1-n= 0 , 2-m= 1189 , 3-input-size= 2381 , 4-output-size= 3 , 5-num-rewrites= 1189
-Tactic call setoid_rewrite-regression-cubic ran for 12.283 secs (12.283u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.925 secs (11.925u,0.s) (success)
 Params: 0-nm= 1201 , 1-n= 0 , 2-m= 1201 , 3-input-size= 2405 , 4-output-size= 3 , 5-num-rewrites= 1201
-Tactic call setoid_rewrite-regression-cubic ran for 12.711 secs (12.711u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.472 secs (12.452u,0.019s) (success)
 Params: 0-nm= 1213 , 1-n= 0 , 2-m= 1213 , 3-input-size= 2429 , 4-output-size= 3 , 5-num-rewrites= 1213
-Tactic call setoid_rewrite-regression-cubic ran for 12.889 secs (12.889u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.614 secs (12.614u,0.s) (success)
 Params: 0-nm= 1225 , 1-n= 0 , 2-m= 1225 , 3-input-size= 2453 , 4-output-size= 3 , 5-num-rewrites= 1225
-Tactic call setoid_rewrite-regression-cubic ran for 12.993 secs (12.993u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.739 secs (12.739u,0.s) (success)
 Params: 0-nm= 1237 , 1-n= 0 , 2-m= 1237 , 3-input-size= 2477 , 4-output-size= 3 , 5-num-rewrites= 1237
-Tactic call setoid_rewrite-regression-cubic ran for 13.378 secs (13.378u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.445 secs (13.445u,0.s) (success)
 Params: 0-nm= 1249 , 1-n= 0 , 2-m= 1249 , 3-input-size= 2501 , 4-output-size= 3 , 5-num-rewrites= 1249
-Tactic call setoid_rewrite-regression-cubic ran for 13.672 secs (13.671u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.337 secs (13.337u,0.s) (success)
 Params: 0-nm= 1261 , 1-n= 0 , 2-m= 1261 , 3-input-size= 2525 , 4-output-size= 3 , 5-num-rewrites= 1261
-Tactic call setoid_rewrite-regression-cubic ran for 13.993 secs (13.937u,0.055s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.544 secs (13.544u,0.s) (success)
 Params: 0-nm= 1273 , 1-n= 0 , 2-m= 1273 , 3-input-size= 2549 , 4-output-size= 3 , 5-num-rewrites= 1273
-Tactic call setoid_rewrite-regression-cubic ran for 14.09 secs (14.09u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.959 secs (13.911u,0.047s) (success)
 Params: 0-nm= 1285 , 1-n= 0 , 2-m= 1285 , 3-input-size= 2573 , 4-output-size= 3 , 5-num-rewrites= 1285
-Tactic call setoid_rewrite-regression-cubic ran for 14.622 secs (14.621u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.068 secs (14.068u,0.s) (success)
 Params: 0-nm= 1297 , 1-n= 0 , 2-m= 1297 , 3-input-size= 2597 , 4-output-size= 3 , 5-num-rewrites= 1297
-Tactic call setoid_rewrite-regression-cubic ran for 15.03 secs (15.03u,0.s) (success)
-Params: 0-nm= 987 , 1-n= 1 , 2-m= 329 , 3-input-size= 1981 , 4-output-size= 7 , 5-num-rewrites= 987
-Tactic call setoid_rewrite-regression-cubic ran for 7.235 secs (7.235u,0.s) (success)
-Params: 0-nm= 999 , 1-n= 1 , 2-m= 333 , 3-input-size= 2005 , 4-output-size= 7 , 5-num-rewrites= 999
-Tactic call setoid_rewrite-regression-cubic ran for 7.209 secs (7.203u,0.s) (success)
-Params: 0-nm= 1011 , 1-n= 1 , 2-m= 337 , 3-input-size= 2029 , 4-output-size= 7 , 5-num-rewrites= 1011
-Tactic call setoid_rewrite-regression-cubic ran for 7.666 secs (7.666u,0.s) (success)
-Params: 0-nm= 1023 , 1-n= 1 , 2-m= 341 , 3-input-size= 2053 , 4-output-size= 7 , 5-num-rewrites= 1023
-Tactic call setoid_rewrite-regression-cubic ran for 8.218 secs (8.218u,0.s) (success)
-Params: 0-nm= 1035 , 1-n= 1 , 2-m= 345 , 3-input-size= 2077 , 4-output-size= 7 , 5-num-rewrites= 1035
-Tactic call setoid_rewrite-regression-cubic ran for 7.905 secs (7.905u,0.s) (success)
-Params: 0-nm= 1047 , 1-n= 1 , 2-m= 349 , 3-input-size= 2101 , 4-output-size= 7 , 5-num-rewrites= 1047
-Tactic call setoid_rewrite-regression-cubic ran for 8.167 secs (8.167u,0.s) (success)
-Params: 0-nm= 1059 , 1-n= 1 , 2-m= 353 , 3-input-size= 2125 , 4-output-size= 7 , 5-num-rewrites= 1059
-Tactic call setoid_rewrite-regression-cubic ran for 8.177 secs (8.177u,0.s) (success)
-Params: 0-nm= 1071 , 1-n= 1 , 2-m= 357 , 3-input-size= 2149 , 4-output-size= 7 , 5-num-rewrites= 1071
-Tactic call setoid_rewrite-regression-cubic ran for 8.4 secs (8.4u,0.s) (success)
-Params: 0-nm= 1083 , 1-n= 1 , 2-m= 361 , 3-input-size= 2173 , 4-output-size= 7 , 5-num-rewrites= 1083
-Tactic call setoid_rewrite-regression-cubic ran for 8.714 secs (8.714u,0.s) (success)
-Params: 0-nm= 1095 , 1-n= 1 , 2-m= 365 , 3-input-size= 2197 , 4-output-size= 7 , 5-num-rewrites= 1095
-Tactic call setoid_rewrite-regression-cubic ran for 8.85 secs (8.85u,0.s) (success)
-Params: 0-nm= 1107 , 1-n= 1 , 2-m= 369 , 3-input-size= 2221 , 4-output-size= 7 , 5-num-rewrites= 1107
-Tactic call setoid_rewrite-regression-cubic ran for 8.546 secs (8.546u,0.s) (success)
-Params: 0-nm= 1119 , 1-n= 1 , 2-m= 373 , 3-input-size= 2245 , 4-output-size= 7 , 5-num-rewrites= 1119
-Tactic call setoid_rewrite-regression-cubic ran for 9.034 secs (9.034u,0.s) (success)
-Params: 0-nm= 1131 , 1-n= 1 , 2-m= 377 , 3-input-size= 2269 , 4-output-size= 7 , 5-num-rewrites= 1131
-Tactic call setoid_rewrite-regression-cubic ran for 8.794 secs (8.794u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.788 secs (14.788u,0.s) (success)
 Params: 0-nm= 1143 , 1-n= 1 , 2-m= 381 , 3-input-size= 2293 , 4-output-size= 7 , 5-num-rewrites= 1143
-Tactic call setoid_rewrite-regression-cubic ran for 8.974 secs (8.974u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.233 secs (9.233u,0.s) (success)
 Params: 0-nm= 1155 , 1-n= 1 , 2-m= 385 , 3-input-size= 2317 , 4-output-size= 7 , 5-num-rewrites= 1155
-Tactic call setoid_rewrite-regression-cubic ran for 9.386 secs (9.386u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.71 secs (9.71u,0.s) (success)
 Params: 0-nm= 1167 , 1-n= 1 , 2-m= 389 , 3-input-size= 2341 , 4-output-size= 7 , 5-num-rewrites= 1167
-Tactic call setoid_rewrite-regression-cubic ran for 9.581 secs (9.581u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.821 secs (9.821u,0.s) (success)
 Params: 0-nm= 1179 , 1-n= 1 , 2-m= 393 , 3-input-size= 2365 , 4-output-size= 7 , 5-num-rewrites= 1179
-Tactic call setoid_rewrite-regression-cubic ran for 9.991 secs (9.991u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.04 secs (10.04u,0.s) (success)
 Params: 0-nm= 1191 , 1-n= 1 , 2-m= 397 , 3-input-size= 2389 , 4-output-size= 7 , 5-num-rewrites= 1191
-Tactic call setoid_rewrite-regression-cubic ran for 9.858 secs (9.857u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.092 secs (10.092u,0.s) (success)
 Params: 0-nm= 1203 , 1-n= 1 , 2-m= 401 , 3-input-size= 2413 , 4-output-size= 7 , 5-num-rewrites= 1203
-Tactic call setoid_rewrite-regression-cubic ran for 10.009 secs (10.009u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.542 secs (10.542u,0.s) (success)
 Params: 0-nm= 1215 , 1-n= 1 , 2-m= 405 , 3-input-size= 2437 , 4-output-size= 7 , 5-num-rewrites= 1215
-Tactic call setoid_rewrite-regression-cubic ran for 10.196 secs (10.196u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.074 secs (11.074u,0.s) (success)
 Params: 0-nm= 1227 , 1-n= 1 , 2-m= 409 , 3-input-size= 2461 , 4-output-size= 7 , 5-num-rewrites= 1227
-Tactic call setoid_rewrite-regression-cubic ran for 10.504 secs (10.504u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.816 secs (10.816u,0.s) (success)
 Params: 0-nm= 1239 , 1-n= 1 , 2-m= 413 , 3-input-size= 2485 , 4-output-size= 7 , 5-num-rewrites= 1239
-Tactic call setoid_rewrite-regression-cubic ran for 10.85 secs (10.85u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.949 secs (10.949u,0.s) (success)
 Params: 0-nm= 1251 , 1-n= 1 , 2-m= 417 , 3-input-size= 2509 , 4-output-size= 7 , 5-num-rewrites= 1251
-Tactic call setoid_rewrite-regression-cubic ran for 10.885 secs (10.885u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.36 secs (11.361u,0.s) (success)
 Params: 0-nm= 1263 , 1-n= 1 , 2-m= 421 , 3-input-size= 2533 , 4-output-size= 7 , 5-num-rewrites= 1263
-Tactic call setoid_rewrite-regression-cubic ran for 11.126 secs (11.125u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.965 secs (11.965u,0.s) (success)
 Params: 0-nm= 1275 , 1-n= 1 , 2-m= 425 , 3-input-size= 2557 , 4-output-size= 7 , 5-num-rewrites= 1275
-Tactic call setoid_rewrite-regression-cubic ran for 11.277 secs (11.277u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.574 secs (11.574u,0.s) (success)
 Params: 0-nm= 1287 , 1-n= 1 , 2-m= 429 , 3-input-size= 2581 , 4-output-size= 7 , 5-num-rewrites= 1287
-Tactic call setoid_rewrite-regression-cubic ran for 11.583 secs (11.583u,0.s) (success)
-Params: 0-nm= 987 , 1-n= 2 , 2-m= 141 , 3-input-size= 1989 , 4-output-size= 15 , 5-num-rewrites= 987
-Tactic call setoid_rewrite-regression-cubic ran for 5.408 secs (5.408u,0.s) (success)
-Params: 0-nm= 1001 , 1-n= 2 , 2-m= 143 , 3-input-size= 2017 , 4-output-size= 15 , 5-num-rewrites= 1001
-Tactic call setoid_rewrite-regression-cubic ran for 5.631 secs (5.631u,0.s) (success)
-Params: 0-nm= 1015 , 1-n= 2 , 2-m= 145 , 3-input-size= 2045 , 4-output-size= 15 , 5-num-rewrites= 1015
-Tactic call setoid_rewrite-regression-cubic ran for 5.679 secs (5.679u,0.s) (success)
-Params: 0-nm= 1029 , 1-n= 2 , 2-m= 147 , 3-input-size= 2073 , 4-output-size= 15 , 5-num-rewrites= 1029
-Tactic call setoid_rewrite-regression-cubic ran for 6.029 secs (6.029u,0.s) (success)
-Params: 0-nm= 1043 , 1-n= 2 , 2-m= 149 , 3-input-size= 2101 , 4-output-size= 15 , 5-num-rewrites= 1043
-Tactic call setoid_rewrite-regression-cubic ran for 6.101 secs (6.101u,0.s) (success)
-Params: 0-nm= 1057 , 1-n= 2 , 2-m= 151 , 3-input-size= 2129 , 4-output-size= 15 , 5-num-rewrites= 1057
-Tactic call setoid_rewrite-regression-cubic ran for 6.298 secs (6.298u,0.s) (success)
-Params: 0-nm= 1071 , 1-n= 2 , 2-m= 153 , 3-input-size= 2157 , 4-output-size= 15 , 5-num-rewrites= 1071
-Tactic call setoid_rewrite-regression-cubic ran for 6.397 secs (6.397u,0.s) (success)
-Params: 0-nm= 1099 , 1-n= 2 , 2-m= 157 , 3-input-size= 2213 , 4-output-size= 15 , 5-num-rewrites= 1099
-Tactic call setoid_rewrite-regression-cubic ran for 6.852 secs (6.851u,0.s) (success)
-Params: 0-nm= 1113 , 1-n= 2 , 2-m= 159 , 3-input-size= 2241 , 4-output-size= 15 , 5-num-rewrites= 1113
-Tactic call setoid_rewrite-regression-cubic ran for 6.86 secs (6.859u,0.s) (success)
-Params: 0-nm= 1127 , 1-n= 2 , 2-m= 161 , 3-input-size= 2269 , 4-output-size= 15 , 5-num-rewrites= 1127
-Tactic call setoid_rewrite-regression-cubic ran for 7.158 secs (7.158u,0.s) (success)
-Params: 0-nm= 1141 , 1-n= 2 , 2-m= 163 , 3-input-size= 2297 , 4-output-size= 15 , 5-num-rewrites= 1141
-Tactic call setoid_rewrite-regression-cubic ran for 7.192 secs (7.192u,0.s) (success)
-Params: 0-nm= 1155 , 1-n= 2 , 2-m= 165 , 3-input-size= 2325 , 4-output-size= 15 , 5-num-rewrites= 1155
-Tactic call setoid_rewrite-regression-cubic ran for 7.545 secs (7.545u,0.s) (success)
-Params: 0-nm= 1169 , 1-n= 2 , 2-m= 167 , 3-input-size= 2353 , 4-output-size= 15 , 5-num-rewrites= 1169
-Tactic call setoid_rewrite-regression-cubic ran for 7.752 secs (7.752u,0.s) (success)
-Params: 0-nm= 1183 , 1-n= 2 , 2-m= 169 , 3-input-size= 2381 , 4-output-size= 15 , 5-num-rewrites= 1183
-Tactic call setoid_rewrite-regression-cubic ran for 7.735 secs (7.735u,0.s) (success)
-Params: 0-nm= 1211 , 1-n= 2 , 2-m= 173 , 3-input-size= 2437 , 4-output-size= 15 , 5-num-rewrites= 1211
-Tactic call setoid_rewrite-regression-cubic ran for 8.286 secs (8.284u,0.s) (success)
-Params: 0-nm= 1225 , 1-n= 2 , 2-m= 175 , 3-input-size= 2465 , 4-output-size= 15 , 5-num-rewrites= 1225
-Tactic call setoid_rewrite-regression-cubic ran for 8.496 secs (8.494u,0.s) (success)
-Params: 0-nm= 1239 , 1-n= 2 , 2-m= 177 , 3-input-size= 2493 , 4-output-size= 15 , 5-num-rewrites= 1239
-Tactic call setoid_rewrite-regression-cubic ran for 8.437 secs (8.437u,0.s) (success)
-Params: 0-nm= 1253 , 1-n= 2 , 2-m= 179 , 3-input-size= 2521 , 4-output-size= 15 , 5-num-rewrites= 1253
-Tactic call setoid_rewrite-regression-cubic ran for 8.826 secs (8.826u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.785 secs (11.785u,0.s) (success)
 Params: 0-nm= 1267 , 1-n= 2 , 2-m= 181 , 3-input-size= 2549 , 4-output-size= 15 , 5-num-rewrites= 1267
-Tactic call setoid_rewrite-regression-cubic ran for 9.056 secs (9.056u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.359 secs (9.359u,0.s) (success)
 Params: 0-nm= 1281 , 1-n= 2 , 2-m= 183 , 3-input-size= 2577 , 4-output-size= 15 , 5-num-rewrites= 1281
-Tactic call setoid_rewrite-regression-cubic ran for 9.506 secs (9.506u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.491 secs (9.491u,0.s) (success)
 Params: 0-nm= 1295 , 1-n= 2 , 2-m= 185 , 3-input-size= 2605 , 4-output-size= 15 , 5-num-rewrites= 1295
-Tactic call setoid_rewrite-regression-cubic ran for 9.303 secs (9.303u,0.s) (success)
-Params: 0-nm= 1023 , 1-n= 4 , 2-m= 33 , 3-input-size= 2109 , 4-output-size= 63 , 5-num-rewrites= 1023
-Tactic call setoid_rewrite-regression-cubic ran for 3.419 secs (3.419u,0.s) (success)
-Params: 0-nm= 1054 , 1-n= 4 , 2-m= 34 , 3-input-size= 2171 , 4-output-size= 63 , 5-num-rewrites= 1054
-Tactic call setoid_rewrite-regression-cubic ran for 3.632 secs (3.632u,0.s) (success)
-Params: 0-nm= 1085 , 1-n= 4 , 2-m= 35 , 3-input-size= 2233 , 4-output-size= 63 , 5-num-rewrites= 1085
-Tactic call setoid_rewrite-regression-cubic ran for 3.716 secs (3.716u,0.s) (success)
-Params: 0-nm= 1116 , 1-n= 4 , 2-m= 36 , 3-input-size= 2295 , 4-output-size= 63 , 5-num-rewrites= 1116
-Tactic call setoid_rewrite-regression-cubic ran for 3.974 secs (3.974u,0.s) (success)
-Params: 0-nm= 1178 , 1-n= 4 , 2-m= 38 , 3-input-size= 2419 , 4-output-size= 63 , 5-num-rewrites= 1178
-Tactic call setoid_rewrite-regression-cubic ran for 4.44 secs (4.44u,0.s) (success)
-Params: 0-nm= 1209 , 1-n= 4 , 2-m= 39 , 3-input-size= 2481 , 4-output-size= 63 , 5-num-rewrites= 1209
-Tactic call setoid_rewrite-regression-cubic ran for 4.6 secs (4.6u,0.s) (success)
-Params: 0-nm= 1240 , 1-n= 4 , 2-m= 40 , 3-input-size= 2543 , 4-output-size= 63 , 5-num-rewrites= 1240
-Tactic call setoid_rewrite-regression-cubic ran for 5.272 secs (5.272u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.014 secs (10.014u,0.s) (success)
 Params: 0-nm= 1271 , 1-n= 4 , 2-m= 41 , 3-input-size= 2605 , 4-output-size= 63 , 5-num-rewrites= 1271
-Tactic call setoid_rewrite-regression-cubic ran for 5.021 secs (5.021u,0.s) (success)
-Params: 0-nm= 1071 , 1-n= 5 , 2-m= 17 , 3-input-size= 2269 , 4-output-size= 127 , 5-num-rewrites= 1071
-Tactic call setoid_rewrite-regression-cubic ran for 2.728 secs (2.728u,0.s) (success)
-Params: 0-nm= 1197 , 1-n= 5 , 2-m= 19 , 3-input-size= 2521 , 4-output-size= 127 , 5-num-rewrites= 1197
-Tactic call setoid_rewrite-regression-cubic ran for 3.232 secs (3.232u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 5.257 secs (5.257u,0.s) (success)
 Params: 0-nm= 1308 , 1-n= 0 , 2-m= 1308 , 3-input-size= 2619 , 4-output-size= 3 , 5-num-rewrites= 1308
-Tactic call setoid_rewrite-regression-cubic ran for 14.192 secs (14.192u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.671 secs (14.671u,0.s) (success)
 Params: 0-nm= 1319 , 1-n= 0 , 2-m= 1319 , 3-input-size= 2641 , 4-output-size= 3 , 5-num-rewrites= 1319
-Tactic call setoid_rewrite-regression-cubic ran for 14.437 secs (14.437u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.832 secs (14.832u,0.s) (success)
 Params: 0-nm= 1330 , 1-n= 0 , 2-m= 1330 , 3-input-size= 2663 , 4-output-size= 3 , 5-num-rewrites= 1330
-Tactic call setoid_rewrite-regression-cubic ran for 14.646 secs (14.646u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 15.055 secs (15.055u,0.s) (success)
 Params: 0-nm= 1341 , 1-n= 0 , 2-m= 1341 , 3-input-size= 2685 , 4-output-size= 3 , 5-num-rewrites= 1341
-Tactic call setoid_rewrite-regression-cubic ran for 14.871 secs (14.871u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 15.352 secs (15.352u,0.s) (success)
 Params: 0-nm= 1352 , 1-n= 0 , 2-m= 1352 , 3-input-size= 2707 , 4-output-size= 3 , 5-num-rewrites= 1352
-Tactic call setoid_rewrite-regression-cubic ran for 15.198 secs (15.198u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 15.616 secs (15.616u,0.s) (success)
 Params: 0-nm= 1363 , 1-n= 0 , 2-m= 1363 , 3-input-size= 2729 , 4-output-size= 3 , 5-num-rewrites= 1363
-Tactic call setoid_rewrite-regression-cubic ran for 15.418 secs (15.418u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 15.833 secs (15.833u,0.s) (success)
 Params: 0-nm= 1374 , 1-n= 0 , 2-m= 1374 , 3-input-size= 2751 , 4-output-size= 3 , 5-num-rewrites= 1374
-Tactic call setoid_rewrite-regression-cubic ran for 15.651 secs (15.651u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 16.15 secs (16.15u,0.s) (success)
 Params: 0-nm= 1385 , 1-n= 0 , 2-m= 1385 , 3-input-size= 2773 , 4-output-size= 3 , 5-num-rewrites= 1385
-Tactic call setoid_rewrite-regression-cubic ran for 16.066 secs (16.03u,0.035s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.055 secs (17.055u,0.s) (success)
 Params: 0-nm= 1396 , 1-n= 0 , 2-m= 1396 , 3-input-size= 2795 , 4-output-size= 3 , 5-num-rewrites= 1396
-Tactic call setoid_rewrite-regression-cubic ran for 16.326 secs (16.326u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 16.516 secs (16.516u,0.s) (success)
 Params: 0-nm= 1407 , 1-n= 0 , 2-m= 1407 , 3-input-size= 2817 , 4-output-size= 3 , 5-num-rewrites= 1407
-Tactic call setoid_rewrite-regression-cubic ran for 16.406 secs (16.406u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 16.937 secs (16.937u,0.s) (success)
 Params: 0-nm= 1418 , 1-n= 0 , 2-m= 1418 , 3-input-size= 2839 , 4-output-size= 3 , 5-num-rewrites= 1418
-Tactic call setoid_rewrite-regression-cubic ran for 17.093 secs (17.093u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.264 secs (17.264u,0.s) (success)
 Params: 0-nm= 1429 , 1-n= 0 , 2-m= 1429 , 3-input-size= 2861 , 4-output-size= 3 , 5-num-rewrites= 1429
-Tactic call setoid_rewrite-regression-cubic ran for 16.983 secs (16.979u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.495 secs (17.447u,0.047s) (success)
 Params: 0-nm= 1440 , 1-n= 0 , 2-m= 1440 , 3-input-size= 2883 , 4-output-size= 3 , 5-num-rewrites= 1440
-Tactic call setoid_rewrite-regression-cubic ran for 17.182 secs (17.182u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.809 secs (17.809u,0.s) (success)
 Params: 0-nm= 1451 , 1-n= 0 , 2-m= 1451 , 3-input-size= 2905 , 4-output-size= 3 , 5-num-rewrites= 1451
-Tactic call setoid_rewrite-regression-cubic ran for 17.428 secs (17.428u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.878 secs (17.878u,0.s) (success)
 Params: 0-nm= 1462 , 1-n= 0 , 2-m= 1462 , 3-input-size= 2927 , 4-output-size= 3 , 5-num-rewrites= 1462
-Tactic call setoid_rewrite-regression-cubic ran for 17.753 secs (17.725u,0.027s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 18.994 secs (18.994u,0.s) (success)
 Params: 0-nm= 1473 , 1-n= 0 , 2-m= 1473 , 3-input-size= 2949 , 4-output-size= 3 , 5-num-rewrites= 1473
-Tactic call setoid_rewrite-regression-cubic ran for 18.349 secs (18.349u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 18.401 secs (18.401u,0.s) (success)
 Params: 0-nm= 1484 , 1-n= 0 , 2-m= 1484 , 3-input-size= 2971 , 4-output-size= 3 , 5-num-rewrites= 1484
-Tactic call setoid_rewrite-regression-cubic ran for 18.142 secs (18.141u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.688 secs (17.689u,0.s) (success)
 Params: 0-nm= 1495 , 1-n= 0 , 2-m= 1495 , 3-input-size= 2993 , 4-output-size= 3 , 5-num-rewrites= 1495
-Tactic call setoid_rewrite-regression-cubic ran for 18.567 secs (18.567u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.965 secs (17.965u,0.s) (success)
 Params: 0-nm= 1506 , 1-n= 0 , 2-m= 1506 , 3-input-size= 3015 , 4-output-size= 3 , 5-num-rewrites= 1506
-Tactic call setoid_rewrite-regression-cubic ran for 19.174 secs (19.173u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 18.667 secs (18.667u,0.s) (success)
 Params: 0-nm= 1517 , 1-n= 0 , 2-m= 1517 , 3-input-size= 3037 , 4-output-size= 3 , 5-num-rewrites= 1517
-Tactic call setoid_rewrite-regression-cubic ran for 18.806 secs (18.806u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 18.418 secs (18.419u,0.s) (success)
 Params: 0-nm= 1528 , 1-n= 0 , 2-m= 1528 , 3-input-size= 3059 , 4-output-size= 3 , 5-num-rewrites= 1528
-Tactic call setoid_rewrite-regression-cubic ran for 19.38 secs (19.38u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 18.808 secs (18.808u,0.s) (success)
 Params: 0-nm= 1539 , 1-n= 0 , 2-m= 1539 , 3-input-size= 3081 , 4-output-size= 3 , 5-num-rewrites= 1539
-Tactic call setoid_rewrite-regression-cubic ran for 19.45 secs (19.45u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.045 secs (19.045u,0.s) (success)
 Params: 0-nm= 1550 , 1-n= 0 , 2-m= 1550 , 3-input-size= 3103 , 4-output-size= 3 , 5-num-rewrites= 1550
-Tactic call setoid_rewrite-regression-cubic ran for 19.74 secs (19.74u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.31 secs (19.31u,0.s) (success)
 Params: 0-nm= 1561 , 1-n= 0 , 2-m= 1561 , 3-input-size= 3125 , 4-output-size= 3 , 5-num-rewrites= 1561
-Tactic call setoid_rewrite-regression-cubic ran for 20.328 secs (20.328u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.553 secs (19.553u,0.s) (success)
 Params: 0-nm= 1572 , 1-n= 0 , 2-m= 1572 , 3-input-size= 3147 , 4-output-size= 3 , 5-num-rewrites= 1572
-Tactic call setoid_rewrite-regression-cubic ran for 20.389 secs (20.386u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.36 secs (20.36u,0.s) (success)
 Params: 0-nm= 1583 , 1-n= 0 , 2-m= 1583 , 3-input-size= 3169 , 4-output-size= 3 , 5-num-rewrites= 1583
-Tactic call setoid_rewrite-regression-cubic ran for 20.801 secs (20.801u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.01 secs (20.01u,0.s) (success)
 Params: 0-nm= 1594 , 1-n= 0 , 2-m= 1594 , 3-input-size= 3191 , 4-output-size= 3 , 5-num-rewrites= 1594
-Tactic call setoid_rewrite-regression-cubic ran for 20.991 secs (20.991u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.299 secs (20.299u,0.s) (success)
 Params: 0-nm= 1605 , 1-n= 0 , 2-m= 1605 , 3-input-size= 3213 , 4-output-size= 3 , 5-num-rewrites= 1605
-Tactic call setoid_rewrite-regression-cubic ran for 21.171 secs (21.171u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 21.231 secs (21.231u,0.s) (success)
 Params: 0-nm= 1616 , 1-n= 0 , 2-m= 1616 , 3-input-size= 3235 , 4-output-size= 3 , 5-num-rewrites= 1616
-Tactic call setoid_rewrite-regression-cubic ran for 22.192 secs (22.191u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.76 secs (20.76u,0.s) (success)
 Params: 0-nm= 1299 , 1-n= 1 , 2-m= 433 , 3-input-size= 2605 , 4-output-size= 7 , 5-num-rewrites= 1299
-Tactic call setoid_rewrite-regression-cubic ran for 11.618 secs (11.618u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.569 secs (11.57u,0.s) (success)
 Params: 0-nm= 1311 , 1-n= 1 , 2-m= 437 , 3-input-size= 2629 , 4-output-size= 7 , 5-num-rewrites= 1311
-Tactic call setoid_rewrite-regression-cubic ran for 11.934 secs (11.934u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.552 secs (11.552u,0.s) (success)
 Params: 0-nm= 1323 , 1-n= 1 , 2-m= 441 , 3-input-size= 2653 , 4-output-size= 7 , 5-num-rewrites= 1323
-Tactic call setoid_rewrite-regression-cubic ran for 12.579 secs (12.579u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.688 secs (11.688u,0.s) (success)
 Params: 0-nm= 1335 , 1-n= 1 , 2-m= 445 , 3-input-size= 2677 , 4-output-size= 7 , 5-num-rewrites= 1335
-Tactic call setoid_rewrite-regression-cubic ran for 12.447 secs (12.447u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.051 secs (12.051u,0.s) (success)
 Params: 0-nm= 1347 , 1-n= 1 , 2-m= 449 , 3-input-size= 2701 , 4-output-size= 7 , 5-num-rewrites= 1347
-Tactic call setoid_rewrite-regression-cubic ran for 12.526 secs (12.526u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.65 secs (12.65u,0.s) (success)
 Params: 0-nm= 1359 , 1-n= 1 , 2-m= 453 , 3-input-size= 2725 , 4-output-size= 7 , 5-num-rewrites= 1359
-Tactic call setoid_rewrite-regression-cubic ran for 12.766 secs (12.766u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.405 secs (12.405u,0.s) (success)
 Params: 0-nm= 1371 , 1-n= 1 , 2-m= 457 , 3-input-size= 2749 , 4-output-size= 7 , 5-num-rewrites= 1371
-Tactic call setoid_rewrite-regression-cubic ran for 13.138 secs (13.138u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.534 secs (12.534u,0.s) (success)
 Params: 0-nm= 1383 , 1-n= 1 , 2-m= 461 , 3-input-size= 2773 , 4-output-size= 7 , 5-num-rewrites= 1383
-Tactic call setoid_rewrite-regression-cubic ran for 13.408 secs (13.408u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.967 secs (12.967u,0.s) (success)
 Params: 0-nm= 1395 , 1-n= 1 , 2-m= 465 , 3-input-size= 2797 , 4-output-size= 7 , 5-num-rewrites= 1395
-Tactic call setoid_rewrite-regression-cubic ran for 13.793 secs (13.793u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.432 secs (13.432u,0.s) (success)
 Params: 0-nm= 1407 , 1-n= 1 , 2-m= 469 , 3-input-size= 2821 , 4-output-size= 7 , 5-num-rewrites= 1407
-Tactic call setoid_rewrite-regression-cubic ran for 13.627 secs (13.627u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.3 secs (13.3u,0.s) (success)
 Params: 0-nm= 1419 , 1-n= 1 , 2-m= 473 , 3-input-size= 2845 , 4-output-size= 7 , 5-num-rewrites= 1419
-Tactic call setoid_rewrite-regression-cubic ran for 13.968 secs (13.967u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.556 secs (13.557u,0.s) (success)
 Params: 0-nm= 1431 , 1-n= 1 , 2-m= 477 , 3-input-size= 2869 , 4-output-size= 7 , 5-num-rewrites= 1431
-Tactic call setoid_rewrite-regression-cubic ran for 14.259 secs (14.259u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.375 secs (14.375u,0.s) (success)
 Params: 0-nm= 1443 , 1-n= 1 , 2-m= 481 , 3-input-size= 2893 , 4-output-size= 7 , 5-num-rewrites= 1443
-Tactic call setoid_rewrite-regression-cubic ran for 14.551 secs (14.55u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.938 secs (13.938u,0.s) (success)
 Params: 0-nm= 1455 , 1-n= 1 , 2-m= 485 , 3-input-size= 2917 , 4-output-size= 7 , 5-num-rewrites= 1455
-Tactic call setoid_rewrite-regression-cubic ran for 14.727 secs (14.727u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.236 secs (14.236u,0.s) (success)
 Params: 0-nm= 1467 , 1-n= 1 , 2-m= 489 , 3-input-size= 2941 , 4-output-size= 7 , 5-num-rewrites= 1467
-Tactic call setoid_rewrite-regression-cubic ran for 14.956 secs (14.956u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.901 secs (14.901u,0.s) (success)
 Params: 0-nm= 1479 , 1-n= 1 , 2-m= 493 , 3-input-size= 2965 , 4-output-size= 7 , 5-num-rewrites= 1479
-Tactic call setoid_rewrite-regression-cubic ran for 15.209 secs (15.209u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.691 secs (14.691u,0.s) (success)
 Params: 0-nm= 1491 , 1-n= 1 , 2-m= 497 , 3-input-size= 2989 , 4-output-size= 7 , 5-num-rewrites= 1491
-Tactic call setoid_rewrite-regression-cubic ran for 15.476 secs (15.475u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 15.907 secs (15.907u,0.s) (success)
 Params: 0-nm= 1503 , 1-n= 1 , 2-m= 501 , 3-input-size= 3013 , 4-output-size= 7 , 5-num-rewrites= 1503
-Tactic call setoid_rewrite-regression-cubic ran for 15.595 secs (15.595u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 16.4 secs (16.4u,0.s) (success)
 Params: 0-nm= 1515 , 1-n= 1 , 2-m= 505 , 3-input-size= 3037 , 4-output-size= 7 , 5-num-rewrites= 1515
-Tactic call setoid_rewrite-regression-cubic ran for 16.092 secs (16.092u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 16.429 secs (16.429u,0.s) (success)
 Params: 0-nm= 1527 , 1-n= 1 , 2-m= 509 , 3-input-size= 3061 , 4-output-size= 7 , 5-num-rewrites= 1527
-Tactic call setoid_rewrite-regression-cubic ran for 16.213 secs (16.213u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.026 secs (17.026u,0.s) (success)
 Params: 0-nm= 1539 , 1-n= 1 , 2-m= 513 , 3-input-size= 3085 , 4-output-size= 7 , 5-num-rewrites= 1539
-Tactic call setoid_rewrite-regression-cubic ran for 16.472 secs (16.472u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.292 secs (17.292u,0.s) (success)
 Params: 0-nm= 1551 , 1-n= 1 , 2-m= 517 , 3-input-size= 3109 , 4-output-size= 7 , 5-num-rewrites= 1551
-Tactic call setoid_rewrite-regression-cubic ran for 16.846 secs (16.846u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.154 secs (17.154u,0.s) (success)
 Params: 0-nm= 1563 , 1-n= 1 , 2-m= 521 , 3-input-size= 3133 , 4-output-size= 7 , 5-num-rewrites= 1563
-Tactic call setoid_rewrite-regression-cubic ran for 17.046 secs (17.046u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.465 secs (17.465u,0.s) (success)
 Params: 0-nm= 1575 , 1-n= 1 , 2-m= 525 , 3-input-size= 3157 , 4-output-size= 7 , 5-num-rewrites= 1575
-Tactic call setoid_rewrite-regression-cubic ran for 18.723 secs (18.723u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.801 secs (17.801u,0.s) (success)
 Params: 0-nm= 1587 , 1-n= 1 , 2-m= 529 , 3-input-size= 3181 , 4-output-size= 7 , 5-num-rewrites= 1587
-Tactic call setoid_rewrite-regression-cubic ran for 19.151 secs (19.151u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 16.846 secs (16.846u,0.s) (success)
 Params: 0-nm= 1599 , 1-n= 1 , 2-m= 533 , 3-input-size= 3205 , 4-output-size= 7 , 5-num-rewrites= 1599
-Tactic call setoid_rewrite-regression-cubic ran for 18.891 secs (18.891u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.234 secs (17.234u,0.s) (success)
 Params: 0-nm= 1611 , 1-n= 1 , 2-m= 537 , 3-input-size= 3229 , 4-output-size= 7 , 5-num-rewrites= 1611
-Tactic call setoid_rewrite-regression-cubic ran for 19.267 secs (19.266u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.549 secs (17.505u,0.043s) (success)
 Params: 0-nm= 1302 , 1-n= 2 , 2-m= 186 , 3-input-size= 2619 , 4-output-size= 15 , 5-num-rewrites= 1302
-Tactic call setoid_rewrite-regression-cubic ran for 10.358 secs (10.358u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.197 secs (9.198u,0.s) (success)
 Params: 0-nm= 1316 , 1-n= 2 , 2-m= 188 , 3-input-size= 2647 , 4-output-size= 15 , 5-num-rewrites= 1316
-Tactic call setoid_rewrite-regression-cubic ran for 10.088 secs (10.088u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.214 secs (9.214u,0.s) (success)
 Params: 0-nm= 1330 , 1-n= 2 , 2-m= 190 , 3-input-size= 2675 , 4-output-size= 15 , 5-num-rewrites= 1330
-Tactic call setoid_rewrite-regression-cubic ran for 10.595 secs (10.595u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.691 secs (9.691u,0.s) (success)
 Params: 0-nm= 1344 , 1-n= 2 , 2-m= 192 , 3-input-size= 2703 , 4-output-size= 15 , 5-num-rewrites= 1344
-Tactic call setoid_rewrite-regression-cubic ran for 11.259 secs (11.259u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.19 secs (10.19u,0.s) (success)
 Params: 0-nm= 1358 , 1-n= 2 , 2-m= 194 , 3-input-size= 2731 , 4-output-size= 15 , 5-num-rewrites= 1358
-Tactic call setoid_rewrite-regression-cubic ran for 10.649 secs (10.649u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.866 secs (9.866u,0.s) (success)
 Params: 0-nm= 1372 , 1-n= 2 , 2-m= 196 , 3-input-size= 2759 , 4-output-size= 15 , 5-num-rewrites= 1372
-Tactic call setoid_rewrite-regression-cubic ran for 11.372 secs (11.372u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.088 secs (10.088u,0.s) (success)
 Params: 0-nm= 1386 , 1-n= 2 , 2-m= 198 , 3-input-size= 2787 , 4-output-size= 15 , 5-num-rewrites= 1386
-Tactic call setoid_rewrite-regression-cubic ran for 11.822 secs (11.822u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.616 secs (10.616u,0.s) (success)
 Params: 0-nm= 1400 , 1-n= 2 , 2-m= 200 , 3-input-size= 2815 , 4-output-size= 15 , 5-num-rewrites= 1400
-Tactic call setoid_rewrite-regression-cubic ran for 11.447 secs (11.447u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.537 secs (10.537u,0.s) (success)
 Params: 0-nm= 1414 , 1-n= 2 , 2-m= 202 , 3-input-size= 2843 , 4-output-size= 15 , 5-num-rewrites= 1414
-Tactic call setoid_rewrite-regression-cubic ran for 11.773 secs (11.773u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.859 secs (10.859u,0.s) (success)
 Params: 0-nm= 1428 , 1-n= 2 , 2-m= 204 , 3-input-size= 2871 , 4-output-size= 15 , 5-num-rewrites= 1428
-Tactic call setoid_rewrite-regression-cubic ran for 12.191 secs (12.19u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.001 secs (11.001u,0.s) (success)
 Params: 0-nm= 1442 , 1-n= 2 , 2-m= 206 , 3-input-size= 2899 , 4-output-size= 15 , 5-num-rewrites= 1442
-Tactic call setoid_rewrite-regression-cubic ran for 12.551 secs (12.551u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.486 secs (11.486u,0.s) (success)
 Params: 0-nm= 1456 , 1-n= 2 , 2-m= 208 , 3-input-size= 2927 , 4-output-size= 15 , 5-num-rewrites= 1456
-Tactic call setoid_rewrite-regression-cubic ran for 13.214 secs (13.214u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.3 secs (11.3u,0.s) (success)
 Params: 0-nm= 1470 , 1-n= 2 , 2-m= 210 , 3-input-size= 2955 , 4-output-size= 15 , 5-num-rewrites= 1470
-Tactic call setoid_rewrite-regression-cubic ran for 12.539 secs (12.539u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.406 secs (12.406u,0.s) (success)
 Params: 0-nm= 1484 , 1-n= 2 , 2-m= 212 , 3-input-size= 2983 , 4-output-size= 15 , 5-num-rewrites= 1484
-Tactic call setoid_rewrite-regression-cubic ran for 13.118 secs (13.118u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.591 secs (12.591u,0.s) (success)
 Params: 0-nm= 1498 , 1-n= 2 , 2-m= 214 , 3-input-size= 3011 , 4-output-size= 15 , 5-num-rewrites= 1498
-Tactic call setoid_rewrite-regression-cubic ran for 14.074 secs (14.074u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.081 secs (13.081u,0.s) (success)
 Params: 0-nm= 1512 , 1-n= 2 , 2-m= 216 , 3-input-size= 3039 , 4-output-size= 15 , 5-num-rewrites= 1512
-Tactic call setoid_rewrite-regression-cubic ran for 13.812 secs (13.811u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.987 secs (12.987u,0.s) (success)
 Params: 0-nm= 1526 , 1-n= 2 , 2-m= 218 , 3-input-size= 3067 , 4-output-size= 15 , 5-num-rewrites= 1526
-Tactic call setoid_rewrite-regression-cubic ran for 13.795 secs (13.795u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.308 secs (13.308u,0.s) (success)
 Params: 0-nm= 1540 , 1-n= 2 , 2-m= 220 , 3-input-size= 3095 , 4-output-size= 15 , 5-num-rewrites= 1540
-Tactic call setoid_rewrite-regression-cubic ran for 14.539 secs (14.539u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.562 secs (13.562u,0.s) (success)
 Params: 0-nm= 1554 , 1-n= 2 , 2-m= 222 , 3-input-size= 3123 , 4-output-size= 15 , 5-num-rewrites= 1554
-Tactic call setoid_rewrite-regression-cubic ran for 14.45 secs (14.45u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 13.525 secs (13.525u,0.s) (success)
 Params: 0-nm= 1568 , 1-n= 2 , 2-m= 224 , 3-input-size= 3151 , 4-output-size= 15 , 5-num-rewrites= 1568
-Tactic call setoid_rewrite-regression-cubic ran for 14.751 secs (14.751u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.059 secs (14.059u,0.s) (success)
 Params: 0-nm= 1582 , 1-n= 2 , 2-m= 226 , 3-input-size= 3179 , 4-output-size= 15 , 5-num-rewrites= 1582
-Tactic call setoid_rewrite-regression-cubic ran for 14.879 secs (14.879u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.449 secs (14.449u,0.s) (success)
 Params: 0-nm= 1596 , 1-n= 2 , 2-m= 228 , 3-input-size= 3207 , 4-output-size= 15 , 5-num-rewrites= 1596
-Tactic call setoid_rewrite-regression-cubic ran for 15.192 secs (15.192u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.504 secs (14.504u,0.s) (success)
 Params: 0-nm= 1610 , 1-n= 2 , 2-m= 230 , 3-input-size= 3235 , 4-output-size= 15 , 5-num-rewrites= 1610
-Tactic call setoid_rewrite-regression-cubic ran for 15.386 secs (15.386u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.741 secs (14.742u,0.s) (success)
+Params: 0-nm= 1440 , 1-n= 3 , 2-m= 96 , 3-input-size= 2911 , 4-output-size= 31 , 5-num-rewrites= 1440
+Tactic call setoid_rewrite-regression-cubic ran for 9.084 secs (9.084u,0.s) (success)
+Params: 0-nm= 1455 , 1-n= 3 , 2-m= 97 , 3-input-size= 2941 , 4-output-size= 31 , 5-num-rewrites= 1455
+Tactic call setoid_rewrite-regression-cubic ran for 9.249 secs (9.249u,0.s) (success)
+Params: 0-nm= 1470 , 1-n= 3 , 2-m= 98 , 3-input-size= 2971 , 4-output-size= 31 , 5-num-rewrites= 1470
+Tactic call setoid_rewrite-regression-cubic ran for 9.568 secs (9.569u,0.s) (success)
+Params: 0-nm= 1485 , 1-n= 3 , 2-m= 99 , 3-input-size= 3001 , 4-output-size= 31 , 5-num-rewrites= 1485
+Tactic call setoid_rewrite-regression-cubic ran for 9.579 secs (9.579u,0.s) (success)
+Params: 0-nm= 1500 , 1-n= 3 , 2-m= 100 , 3-input-size= 3031 , 4-output-size= 31 , 5-num-rewrites= 1500
+Tactic call setoid_rewrite-regression-cubic ran for 9.67 secs (9.67u,0.s) (success)
+Params: 0-nm= 1515 , 1-n= 3 , 2-m= 101 , 3-input-size= 3061 , 4-output-size= 31 , 5-num-rewrites= 1515
+Tactic call setoid_rewrite-regression-cubic ran for 10.226 secs (10.226u,0.s) (success)
+Params: 0-nm= 1530 , 1-n= 3 , 2-m= 102 , 3-input-size= 3091 , 4-output-size= 31 , 5-num-rewrites= 1530
+Tactic call setoid_rewrite-regression-cubic ran for 10.065 secs (10.065u,0.s) (success)
+Params: 0-nm= 1545 , 1-n= 3 , 2-m= 103 , 3-input-size= 3121 , 4-output-size= 31 , 5-num-rewrites= 1545
+Tactic call setoid_rewrite-regression-cubic ran for 10.563 secs (10.563u,0.s) (success)
+Params: 0-nm= 1560 , 1-n= 3 , 2-m= 104 , 3-input-size= 3151 , 4-output-size= 31 , 5-num-rewrites= 1560
+Tactic call setoid_rewrite-regression-cubic ran for 11.085 secs (11.085u,0.s) (success)
+Params: 0-nm= 1575 , 1-n= 3 , 2-m= 105 , 3-input-size= 3181 , 4-output-size= 31 , 5-num-rewrites= 1575
+Tactic call setoid_rewrite-regression-cubic ran for 10.602 secs (10.603u,0.s) (success)
+Params: 0-nm= 1590 , 1-n= 3 , 2-m= 106 , 3-input-size= 3211 , 4-output-size= 31 , 5-num-rewrites= 1590
+Tactic call setoid_rewrite-regression-cubic ran for 11.022 secs (11.022u,0.s) (success)
+Params: 0-nm= 1605 , 1-n= 3 , 2-m= 107 , 3-input-size= 3241 , 4-output-size= 31 , 5-num-rewrites= 1605
+Tactic call setoid_rewrite-regression-cubic ran for 11.324 secs (11.324u,0.s) (success)
+Params: 0-nm= 1620 , 1-n= 3 , 2-m= 108 , 3-input-size= 3271 , 4-output-size= 31 , 5-num-rewrites= 1620
+Tactic call setoid_rewrite-regression-cubic ran for 11.415 secs (11.415u,0.s) (success)
 Params: 0-nm= 1302 , 1-n= 4 , 2-m= 42 , 3-input-size= 2667 , 4-output-size= 63 , 5-num-rewrites= 1302
-Tactic call setoid_rewrite-regression-cubic ran for 5.786 secs (5.786u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 5.995 secs (5.995u,0.s) (success)
 Params: 0-nm= 1333 , 1-n= 4 , 2-m= 43 , 3-input-size= 2729 , 4-output-size= 63 , 5-num-rewrites= 1333
-Tactic call setoid_rewrite-regression-cubic ran for 5.973 secs (5.973u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 5.763 secs (5.763u,0.s) (success)
 Params: 0-nm= 1364 , 1-n= 4 , 2-m= 44 , 3-input-size= 2791 , 4-output-size= 63 , 5-num-rewrites= 1364
-Tactic call setoid_rewrite-regression-cubic ran for 6.346 secs (6.346u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 5.72 secs (5.72u,0.s) (success)
 Params: 0-nm= 1395 , 1-n= 4 , 2-m= 45 , 3-input-size= 2853 , 4-output-size= 63 , 5-num-rewrites= 1395
-Tactic call setoid_rewrite-regression-cubic ran for 6.462 secs (6.462u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 6.382 secs (6.382u,0.s) (success)
 Params: 0-nm= 1426 , 1-n= 4 , 2-m= 46 , 3-input-size= 2915 , 4-output-size= 63 , 5-num-rewrites= 1426
-Tactic call setoid_rewrite-regression-cubic ran for 7.063 secs (7.063u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 6.484 secs (6.484u,0.s) (success)
 Params: 0-nm= 1457 , 1-n= 4 , 2-m= 47 , 3-input-size= 2977 , 4-output-size= 63 , 5-num-rewrites= 1457
-Tactic call setoid_rewrite-regression-cubic ran for 6.883 secs (6.883u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 6.97 secs (6.97u,0.s) (success)
 Params: 0-nm= 1488 , 1-n= 4 , 2-m= 48 , 3-input-size= 3039 , 4-output-size= 63 , 5-num-rewrites= 1488
-Tactic call setoid_rewrite-regression-cubic ran for 7.528 secs (7.528u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 7.072 secs (7.067u,0.s) (success)
 Params: 0-nm= 1519 , 1-n= 4 , 2-m= 49 , 3-input-size= 3101 , 4-output-size= 63 , 5-num-rewrites= 1519
-Tactic call setoid_rewrite-regression-cubic ran for 7.606 secs (7.606u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.548 secs (8.508u,0.039s) (success)
 Params: 0-nm= 1550 , 1-n= 4 , 2-m= 50 , 3-input-size= 3163 , 4-output-size= 63 , 5-num-rewrites= 1550
-Tactic call setoid_rewrite-regression-cubic ran for 7.904 secs (7.903u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 7.814 secs (7.814u,0.s) (success)
 Params: 0-nm= 1581 , 1-n= 4 , 2-m= 51 , 3-input-size= 3225 , 4-output-size= 63 , 5-num-rewrites= 1581
-Tactic call setoid_rewrite-regression-cubic ran for 8.465 secs (8.465u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.199 secs (8.151u,0.047s) (success)
 Params: 0-nm= 1612 , 1-n= 4 , 2-m= 52 , 3-input-size= 3287 , 4-output-size= 63 , 5-num-rewrites= 1612
-Tactic call setoid_rewrite-regression-cubic ran for 8.548 secs (8.548u,0.s) (success)
-Params: 0-nm= 1323 , 1-n= 5 , 2-m= 21 , 3-input-size= 2773 , 4-output-size= 127 , 5-num-rewrites= 1323
-Tactic call setoid_rewrite-regression-cubic ran for 4.309 secs (4.309u,0.s) (success)
-Params: 0-nm= 1386 , 1-n= 5 , 2-m= 22 , 3-input-size= 2899 , 4-output-size= 127 , 5-num-rewrites= 1386
-Tactic call setoid_rewrite-regression-cubic ran for 4.634 secs (4.634u,0.s) (success)
-Params: 0-nm= 1449 , 1-n= 5 , 2-m= 23 , 3-input-size= 3025 , 4-output-size= 127 , 5-num-rewrites= 1449
-Tactic call setoid_rewrite-regression-cubic ran for 4.893 secs (4.893u,0.s) (success)
-Params: 0-nm= 1512 , 1-n= 5 , 2-m= 24 , 3-input-size= 3151 , 4-output-size= 127 , 5-num-rewrites= 1512
-Tactic call setoid_rewrite-regression-cubic ran for 5.332 secs (5.332u,0.s) (success)
-Params: 0-nm= 1575 , 1-n= 5 , 2-m= 25 , 3-input-size= 3277 , 4-output-size= 127 , 5-num-rewrites= 1575
-Tactic call setoid_rewrite-regression-cubic ran for 5.815 secs (5.815u,0.s) (success)
-Params: 0-nm= 1397 , 1-n= 6 , 2-m= 11 , 3-input-size= 3049 , 4-output-size= 255 , 5-num-rewrites= 1397
-Tactic call setoid_rewrite-regression-cubic ran for 3.489 secs (3.489u,0.s) (success)
-Params: 0-nm= 1524 , 1-n= 6 , 2-m= 12 , 3-input-size= 3303 , 4-output-size= 255 , 5-num-rewrites= 1524
-Tactic call setoid_rewrite-regression-cubic ran for 3.994 secs (3.994u,0.s) (success)
-Params: 0-nm= 1530 , 1-n= 7 , 2-m= 6 , 3-input-size= 3571 , 4-output-size= 511 , 5-num-rewrites= 1530
-Tactic call setoid_rewrite-regression-cubic ran for 2.879 secs (2.879u,0.s) (success)
-Params: 0-nm= 1533 , 1-n= 8 , 2-m= 3 , 3-input-size= 4089 , 4-output-size= 1023 , 5-num-rewrites= 1533
-Tactic call setoid_rewrite-regression-cubic ran for 2.46 secs (2.46u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.608 secs (8.608u,0.s) (success)
 Params: 0-nm= 1621 , 1-n= 0 , 2-m= 1621 , 3-input-size= 3245 , 4-output-size= 3 , 5-num-rewrites= 1621
-Tactic call setoid_rewrite-regression-cubic ran for 23.275 secs (23.275u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 22.622 secs (22.622u,0.s) (success)
 Params: 0-nm= 1631 , 1-n= 0 , 2-m= 1631 , 3-input-size= 3265 , 4-output-size= 3 , 5-num-rewrites= 1631
-Tactic call setoid_rewrite-regression-cubic ran for 23.32 secs (23.32u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 22.75 secs (22.666u,0.083s) (success)
 Params: 0-nm= 1641 , 1-n= 0 , 2-m= 1641 , 3-input-size= 3285 , 4-output-size= 3 , 5-num-rewrites= 1641
-Tactic call setoid_rewrite-regression-cubic ran for 23.903 secs (23.903u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 22.975 secs (22.951u,0.024s) (success)
 Params: 0-nm= 1651 , 1-n= 0 , 2-m= 1651 , 3-input-size= 3305 , 4-output-size= 3 , 5-num-rewrites= 1651
-Tactic call setoid_rewrite-regression-cubic ran for 25.25 secs (25.249u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.474 secs (23.422u,0.051s) (success)
 Params: 0-nm= 1661 , 1-n= 0 , 2-m= 1661 , 3-input-size= 3325 , 4-output-size= 3 , 5-num-rewrites= 1661
-Tactic call setoid_rewrite-regression-cubic ran for 24.195 secs (24.195u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 22.096 secs (22.096u,0.s) (success)
 Params: 0-nm= 1671 , 1-n= 0 , 2-m= 1671 , 3-input-size= 3345 , 4-output-size= 3 , 5-num-rewrites= 1671
-Tactic call setoid_rewrite-regression-cubic ran for 25.133 secs (25.133u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 22.25 secs (22.25u,0.s) (success)
 Params: 0-nm= 1681 , 1-n= 0 , 2-m= 1681 , 3-input-size= 3365 , 4-output-size= 3 , 5-num-rewrites= 1681
-Tactic call setoid_rewrite-regression-cubic ran for 25.236 secs (25.236u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.195 secs (23.196u,0.s) (success)
 Params: 0-nm= 1691 , 1-n= 0 , 2-m= 1691 , 3-input-size= 3385 , 4-output-size= 3 , 5-num-rewrites= 1691
-Tactic call setoid_rewrite-regression-cubic ran for 25.269 secs (25.269u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 22.755 secs (22.755u,0.s) (success)
 Params: 0-nm= 1701 , 1-n= 0 , 2-m= 1701 , 3-input-size= 3405 , 4-output-size= 3 , 5-num-rewrites= 1701
-Tactic call setoid_rewrite-regression-cubic ran for 26.554 secs (26.553u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.231 secs (23.231u,0.s) (success)
 Params: 0-nm= 1711 , 1-n= 0 , 2-m= 1711 , 3-input-size= 3425 , 4-output-size= 3 , 5-num-rewrites= 1711
-Tactic call setoid_rewrite-regression-cubic ran for 24.37 secs (24.37u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.387 secs (23.387u,0.s) (success)
 Params: 0-nm= 1721 , 1-n= 0 , 2-m= 1721 , 3-input-size= 3445 , 4-output-size= 3 , 5-num-rewrites= 1721
-Tactic call setoid_rewrite-regression-cubic ran for 25.047 secs (25.047u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 24.137 secs (24.137u,0.s) (success)
 Params: 0-nm= 1731 , 1-n= 0 , 2-m= 1731 , 3-input-size= 3465 , 4-output-size= 3 , 5-num-rewrites= 1731
-Tactic call setoid_rewrite-regression-cubic ran for 24.825 secs (24.824u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.861 secs (23.861u,0.s) (success)
 Params: 0-nm= 1741 , 1-n= 0 , 2-m= 1741 , 3-input-size= 3485 , 4-output-size= 3 , 5-num-rewrites= 1741
-Tactic call setoid_rewrite-regression-cubic ran for 25.195 secs (25.151u,0.043s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 24.322 secs (24.322u,0.s) (success)
 Params: 0-nm= 1751 , 1-n= 0 , 2-m= 1751 , 3-input-size= 3505 , 4-output-size= 3 , 5-num-rewrites= 1751
-Tactic call setoid_rewrite-regression-cubic ran for 25.538 secs (25.538u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 24.69 secs (24.69u,0.s) (success)
 Params: 0-nm= 1761 , 1-n= 0 , 2-m= 1761 , 3-input-size= 3525 , 4-output-size= 3 , 5-num-rewrites= 1761
-Tactic call setoid_rewrite-regression-cubic ran for 26.761 secs (26.697u,0.063s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 25.182 secs (25.183u,0.s) (success)
 Params: 0-nm= 1771 , 1-n= 0 , 2-m= 1771 , 3-input-size= 3545 , 4-output-size= 3 , 5-num-rewrites= 1771
-Tactic call setoid_rewrite-regression-cubic ran for 26.254 secs (26.145u,0.107s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 25.137 secs (25.137u,0.s) (success)
 Params: 0-nm= 1781 , 1-n= 0 , 2-m= 1781 , 3-input-size= 3565 , 4-output-size= 3 , 5-num-rewrites= 1781
-Tactic call setoid_rewrite-regression-cubic ran for 26.641 secs (26.64u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 25.314 secs (25.314u,0.s) (success)
 Params: 0-nm= 1791 , 1-n= 0 , 2-m= 1791 , 3-input-size= 3585 , 4-output-size= 3 , 5-num-rewrites= 1791
-Tactic call setoid_rewrite-regression-cubic ran for 26.287 secs (26.287u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 26.143 secs (26.143u,0.s) (success)
 Params: 0-nm= 1801 , 1-n= 0 , 2-m= 1801 , 3-input-size= 3605 , 4-output-size= 3 , 5-num-rewrites= 1801
-Tactic call setoid_rewrite-regression-cubic ran for 27.602 secs (27.601u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 26.423 secs (26.423u,0.s) (success)
 Params: 0-nm= 1811 , 1-n= 0 , 2-m= 1811 , 3-input-size= 3625 , 4-output-size= 3 , 5-num-rewrites= 1811
-Tactic call setoid_rewrite-regression-cubic ran for 26.873 secs (26.873u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 26.299 secs (26.299u,0.s) (success)
 Params: 0-nm= 1821 , 1-n= 0 , 2-m= 1821 , 3-input-size= 3645 , 4-output-size= 3 , 5-num-rewrites= 1821
-Tactic call setoid_rewrite-regression-cubic ran for 27.652 secs (27.651u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 27.035 secs (27.035u,0.s) (success)
 Params: 0-nm= 1831 , 1-n= 0 , 2-m= 1831 , 3-input-size= 3665 , 4-output-size= 3 , 5-num-rewrites= 1831
-Tactic call setoid_rewrite-regression-cubic ran for 28.272 secs (28.271u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 26.78 secs (26.78u,0.s) (success)
 Params: 0-nm= 1841 , 1-n= 0 , 2-m= 1841 , 3-input-size= 3685 , 4-output-size= 3 , 5-num-rewrites= 1841
-Tactic call setoid_rewrite-regression-cubic ran for 27.839 secs (27.819u,0.019s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 27.631 secs (27.631u,0.s) (success)
 Params: 0-nm= 1851 , 1-n= 0 , 2-m= 1851 , 3-input-size= 3705 , 4-output-size= 3 , 5-num-rewrites= 1851
-Tactic call setoid_rewrite-regression-cubic ran for 28.947 secs (28.882u,0.063s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 27.432 secs (27.413u,0.019s) (success)
 Params: 0-nm= 1861 , 1-n= 0 , 2-m= 1861 , 3-input-size= 3725 , 4-output-size= 3 , 5-num-rewrites= 1861
-Tactic call setoid_rewrite-regression-cubic ran for 29.241 secs (29.241u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 27.856 secs (27.812u,0.044s) (success)
 Params: 0-nm= 1871 , 1-n= 0 , 2-m= 1871 , 3-input-size= 3745 , 4-output-size= 3 , 5-num-rewrites= 1871
-Tactic call setoid_rewrite-regression-cubic ran for 29.418 secs (29.418u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 28.519 secs (28.519u,0.s) (success)
 Params: 0-nm= 1881 , 1-n= 0 , 2-m= 1881 , 3-input-size= 3765 , 4-output-size= 3 , 5-num-rewrites= 1881
-Tactic call setoid_rewrite-regression-cubic ran for 29.415 secs (29.414u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 28.455 secs (28.455u,0.s) (success)
 Params: 0-nm= 1891 , 1-n= 0 , 2-m= 1891 , 3-input-size= 3785 , 4-output-size= 3 , 5-num-rewrites= 1891
-Tactic call setoid_rewrite-regression-cubic ran for 30.028 secs (30.028u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 28.784 secs (28.784u,0.s) (success)
 Params: 0-nm= 1901 , 1-n= 0 , 2-m= 1901 , 3-input-size= 3805 , 4-output-size= 3 , 5-num-rewrites= 1901
-Tactic call setoid_rewrite-regression-cubic ran for 29.803 secs (29.803u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 29.44 secs (29.44u,0.s) (success)
 Params: 0-nm= 1911 , 1-n= 0 , 2-m= 1911 , 3-input-size= 3825 , 4-output-size= 3 , 5-num-rewrites= 1911
-Tactic call setoid_rewrite-regression-cubic ran for 30.696 secs (30.696u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 29.306 secs (29.306u,0.s) (success)
 Params: 0-nm= 1921 , 1-n= 0 , 2-m= 1921 , 3-input-size= 3845 , 4-output-size= 3 , 5-num-rewrites= 1921
-Tactic call setoid_rewrite-regression-cubic ran for 30.399 secs (30.398u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 29.594 secs (29.594u,0.s) (success)
 Params: 0-nm= 1931 , 1-n= 0 , 2-m= 1931 , 3-input-size= 3865 , 4-output-size= 3 , 5-num-rewrites= 1931
-Tactic call setoid_rewrite-regression-cubic ran for 31.239 secs (31.238u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 31.267 secs (31.163u,0.103s) (success)
 Params: 0-nm= 1941 , 1-n= 0 , 2-m= 1941 , 3-input-size= 3885 , 4-output-size= 3 , 5-num-rewrites= 1941
-Tactic call setoid_rewrite-regression-cubic ran for 31.104 secs (31.104u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 30.766 secs (30.714u,0.052s) (success)
 Params: 0-nm= 1623 , 1-n= 1 , 2-m= 541 , 3-input-size= 3253 , 4-output-size= 7 , 5-num-rewrites= 1623
-Tactic call setoid_rewrite-regression-cubic ran for 18.166 secs (18.165u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 18.021 secs (17.993u,0.027s) (success)
 Params: 0-nm= 1635 , 1-n= 1 , 2-m= 545 , 3-input-size= 3277 , 4-output-size= 7 , 5-num-rewrites= 1635
-Tactic call setoid_rewrite-regression-cubic ran for 18.773 secs (18.773u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.987 secs (17.907u,0.079s) (success)
 Params: 0-nm= 1647 , 1-n= 1 , 2-m= 549 , 3-input-size= 3301 , 4-output-size= 7 , 5-num-rewrites= 1647
-Tactic call setoid_rewrite-regression-cubic ran for 18.773 secs (18.773u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.342 secs (19.282u,0.059s) (success)
 Params: 0-nm= 1659 , 1-n= 1 , 2-m= 553 , 3-input-size= 3325 , 4-output-size= 7 , 5-num-rewrites= 1659
-Tactic call setoid_rewrite-regression-cubic ran for 19.135 secs (19.135u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.06 secs (18.956u,0.104s) (success)
 Params: 0-nm= 1671 , 1-n= 1 , 2-m= 557 , 3-input-size= 3349 , 4-output-size= 7 , 5-num-rewrites= 1671
-Tactic call setoid_rewrite-regression-cubic ran for 19.324 secs (19.324u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 18.862 secs (18.798u,0.063s) (success)
 Params: 0-nm= 1683 , 1-n= 1 , 2-m= 561 , 3-input-size= 3373 , 4-output-size= 7 , 5-num-rewrites= 1683
-Tactic call setoid_rewrite-regression-cubic ran for 19.508 secs (19.507u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.173 secs (19.173u,0.s) (success)
 Params: 0-nm= 1695 , 1-n= 1 , 2-m= 565 , 3-input-size= 3397 , 4-output-size= 7 , 5-num-rewrites= 1695
-Tactic call setoid_rewrite-regression-cubic ran for 19.801 secs (19.8u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.592 secs (19.592u,0.s) (success)
 Params: 0-nm= 1707 , 1-n= 1 , 2-m= 569 , 3-input-size= 3421 , 4-output-size= 7 , 5-num-rewrites= 1707
-Tactic call setoid_rewrite-regression-cubic ran for 20.149 secs (20.148u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.032 secs (20.032u,0.s) (success)
 Params: 0-nm= 1719 , 1-n= 1 , 2-m= 573 , 3-input-size= 3445 , 4-output-size= 7 , 5-num-rewrites= 1719
-Tactic call setoid_rewrite-regression-cubic ran for 20.911 secs (20.911u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.044 secs (20.044u,0.s) (success)
 Params: 0-nm= 1731 , 1-n= 1 , 2-m= 577 , 3-input-size= 3469 , 4-output-size= 7 , 5-num-rewrites= 1731
-Tactic call setoid_rewrite-regression-cubic ran for 20.704 secs (20.703u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.852 secs (20.852u,0.s) (success)
 Params: 0-nm= 1743 , 1-n= 1 , 2-m= 581 , 3-input-size= 3493 , 4-output-size= 7 , 5-num-rewrites= 1743
-Tactic call setoid_rewrite-regression-cubic ran for 21.184 secs (21.184u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.592 secs (20.592u,0.s) (success)
 Params: 0-nm= 1755 , 1-n= 1 , 2-m= 585 , 3-input-size= 3517 , 4-output-size= 7 , 5-num-rewrites= 1755
-Tactic call setoid_rewrite-regression-cubic ran for 21.644 secs (21.644u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.843 secs (20.843u,0.s) (success)
 Params: 0-nm= 1767 , 1-n= 1 , 2-m= 589 , 3-input-size= 3541 , 4-output-size= 7 , 5-num-rewrites= 1767
-Tactic call setoid_rewrite-regression-cubic ran for 21.823 secs (21.823u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 21.037 secs (21.037u,0.s) (success)
 Params: 0-nm= 1779 , 1-n= 1 , 2-m= 593 , 3-input-size= 3565 , 4-output-size= 7 , 5-num-rewrites= 1779
-Tactic call setoid_rewrite-regression-cubic ran for 22.986 secs (22.914u,0.071s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 21.883 secs (21.884u,0.s) (success)
 Params: 0-nm= 1791 , 1-n= 1 , 2-m= 597 , 3-input-size= 3589 , 4-output-size= 7 , 5-num-rewrites= 1791
-Tactic call setoid_rewrite-regression-cubic ran for 22.585 secs (22.477u,0.107s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 21.599 secs (21.599u,0.s) (success)
 Params: 0-nm= 1803 , 1-n= 1 , 2-m= 601 , 3-input-size= 3613 , 4-output-size= 7 , 5-num-rewrites= 1803
-Tactic call setoid_rewrite-regression-cubic ran for 23.21 secs (23.209u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 22.349 secs (22.349u,0.s) (success)
 Params: 0-nm= 1815 , 1-n= 1 , 2-m= 605 , 3-input-size= 3637 , 4-output-size= 7 , 5-num-rewrites= 1815
-Tactic call setoid_rewrite-regression-cubic ran for 22.84 secs (22.82u,0.02s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 22.443 secs (22.443u,0.s) (success)
 Params: 0-nm= 1827 , 1-n= 1 , 2-m= 609 , 3-input-size= 3661 , 4-output-size= 7 , 5-num-rewrites= 1827
-Tactic call setoid_rewrite-regression-cubic ran for 23.167 secs (23.119u,0.047s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 22.987 secs (22.939u,0.047s) (success)
 Params: 0-nm= 1839 , 1-n= 1 , 2-m= 613 , 3-input-size= 3685 , 4-output-size= 7 , 5-num-rewrites= 1839
-Tactic call setoid_rewrite-regression-cubic ran for 24.256 secs (24.255u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.211 secs (23.211u,0.s) (success)
 Params: 0-nm= 1851 , 1-n= 1 , 2-m= 617 , 3-input-size= 3709 , 4-output-size= 7 , 5-num-rewrites= 1851
-Tactic call setoid_rewrite-regression-cubic ran for 24.157 secs (24.157u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.37 secs (23.37u,0.s) (success)
 Params: 0-nm= 1863 , 1-n= 1 , 2-m= 621 , 3-input-size= 3733 , 4-output-size= 7 , 5-num-rewrites= 1863
-Tactic call setoid_rewrite-regression-cubic ran for 23.789 secs (23.789u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.36 secs (23.36u,0.s) (success)
 Params: 0-nm= 1875 , 1-n= 1 , 2-m= 625 , 3-input-size= 3757 , 4-output-size= 7 , 5-num-rewrites= 1875
-Tactic call setoid_rewrite-regression-cubic ran for 24.721 secs (24.692u,0.027s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 24.352 secs (24.352u,0.s) (success)
 Params: 0-nm= 1887 , 1-n= 1 , 2-m= 629 , 3-input-size= 3781 , 4-output-size= 7 , 5-num-rewrites= 1887
-Tactic call setoid_rewrite-regression-cubic ran for 24.967 secs (24.967u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 24.051 secs (24.052u,0.s) (success)
 Params: 0-nm= 1899 , 1-n= 1 , 2-m= 633 , 3-input-size= 3805 , 4-output-size= 7 , 5-num-rewrites= 1899
-Tactic call setoid_rewrite-regression-cubic ran for 25.088 secs (25.088u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 24.481 secs (24.481u,0.s) (success)
 Params: 0-nm= 1911 , 1-n= 1 , 2-m= 637 , 3-input-size= 3829 , 4-output-size= 7 , 5-num-rewrites= 1911
-Tactic call setoid_rewrite-regression-cubic ran for 26.15 secs (26.149u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 25.217 secs (25.217u,0.s) (success)
 Params: 0-nm= 1923 , 1-n= 1 , 2-m= 641 , 3-input-size= 3853 , 4-output-size= 7 , 5-num-rewrites= 1923
-Tactic call setoid_rewrite-regression-cubic ran for 26.627 secs (26.626u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 25.348 secs (25.348u,0.s) (success)
 Params: 0-nm= 1935 , 1-n= 1 , 2-m= 645 , 3-input-size= 3877 , 4-output-size= 7 , 5-num-rewrites= 1935
-Tactic call setoid_rewrite-regression-cubic ran for 26.023 secs (26.023u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 25.362 secs (25.362u,0.s) (success)
 Params: 0-nm= 1624 , 1-n= 2 , 2-m= 232 , 3-input-size= 3263 , 4-output-size= 15 , 5-num-rewrites= 1624
-Tactic call setoid_rewrite-regression-cubic ran for 14.77 secs (14.763u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.189 secs (14.19u,0.s) (success)
 Params: 0-nm= 1638 , 1-n= 2 , 2-m= 234 , 3-input-size= 3291 , 4-output-size= 15 , 5-num-rewrites= 1638
-Tactic call setoid_rewrite-regression-cubic ran for 16.423 secs (16.372u,0.047s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.919 secs (14.919u,0.s) (success)
 Params: 0-nm= 1652 , 1-n= 2 , 2-m= 236 , 3-input-size= 3319 , 4-output-size= 15 , 5-num-rewrites= 1652
-Tactic call setoid_rewrite-regression-cubic ran for 15.525 secs (15.456u,0.067s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.773 secs (14.773u,0.s) (success)
 Params: 0-nm= 1666 , 1-n= 2 , 2-m= 238 , 3-input-size= 3347 , 4-output-size= 15 , 5-num-rewrites= 1666
-Tactic call setoid_rewrite-regression-cubic ran for 15.491 secs (15.491u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 15.166 secs (15.167u,0.s) (success)
 Params: 0-nm= 1680 , 1-n= 2 , 2-m= 240 , 3-input-size= 3375 , 4-output-size= 15 , 5-num-rewrites= 1680
-Tactic call setoid_rewrite-regression-cubic ran for 15.721 secs (15.709u,0.012s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 15.442 secs (15.442u,0.s) (success)
 Params: 0-nm= 1694 , 1-n= 2 , 2-m= 242 , 3-input-size= 3403 , 4-output-size= 15 , 5-num-rewrites= 1694
-Tactic call setoid_rewrite-regression-cubic ran for 16.096 secs (16.04u,0.055s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 15.5 secs (15.5u,0.s) (success)
 Params: 0-nm= 1708 , 1-n= 2 , 2-m= 244 , 3-input-size= 3431 , 4-output-size= 15 , 5-num-rewrites= 1708
-Tactic call setoid_rewrite-regression-cubic ran for 16.47 secs (16.47u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 15.803 secs (15.803u,0.s) (success)
 Params: 0-nm= 1722 , 1-n= 2 , 2-m= 246 , 3-input-size= 3459 , 4-output-size= 15 , 5-num-rewrites= 1722
-Tactic call setoid_rewrite-regression-cubic ran for 16.765 secs (16.765u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 16.322 secs (16.322u,0.s) (success)
 Params: 0-nm= 1736 , 1-n= 2 , 2-m= 248 , 3-input-size= 3487 , 4-output-size= 15 , 5-num-rewrites= 1736
-Tactic call setoid_rewrite-regression-cubic ran for 16.75 secs (16.75u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 16.541 secs (16.541u,0.s) (success)
 Params: 0-nm= 1750 , 1-n= 2 , 2-m= 250 , 3-input-size= 3515 , 4-output-size= 15 , 5-num-rewrites= 1750
-Tactic call setoid_rewrite-regression-cubic ran for 17.223 secs (17.223u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.676 secs (17.612u,0.063s) (success)
 Params: 0-nm= 1764 , 1-n= 2 , 2-m= 252 , 3-input-size= 3543 , 4-output-size= 15 , 5-num-rewrites= 1764
-Tactic call setoid_rewrite-regression-cubic ran for 17.303 secs (17.25u,0.051s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.353 secs (17.293u,0.059s) (success)
 Params: 0-nm= 1778 , 1-n= 2 , 2-m= 254 , 3-input-size= 3571 , 4-output-size= 15 , 5-num-rewrites= 1778
-Tactic call setoid_rewrite-regression-cubic ran for 17.87 secs (17.87u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.319 secs (17.287u,0.032s) (success)
 Params: 0-nm= 1792 , 1-n= 2 , 2-m= 256 , 3-input-size= 3599 , 4-output-size= 15 , 5-num-rewrites= 1792
-Tactic call setoid_rewrite-regression-cubic ran for 18.507 secs (18.507u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.998 secs (17.998u,0.s) (success)
 Params: 0-nm= 1806 , 1-n= 2 , 2-m= 258 , 3-input-size= 3627 , 4-output-size= 15 , 5-num-rewrites= 1806
-Tactic call setoid_rewrite-regression-cubic ran for 18.041 secs (18.041u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 17.781 secs (17.765u,0.016s) (success)
 Params: 0-nm= 1820 , 1-n= 2 , 2-m= 260 , 3-input-size= 3655 , 4-output-size= 15 , 5-num-rewrites= 1820
-Tactic call setoid_rewrite-regression-cubic ran for 18.601 secs (18.601u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 18.424 secs (18.42u,0.003s) (success)
 Params: 0-nm= 1834 , 1-n= 2 , 2-m= 262 , 3-input-size= 3683 , 4-output-size= 15 , 5-num-rewrites= 1834
-Tactic call setoid_rewrite-regression-cubic ran for 18.695 secs (18.694u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 18.346 secs (18.346u,0.s) (success)
 Params: 0-nm= 1848 , 1-n= 2 , 2-m= 264 , 3-input-size= 3711 , 4-output-size= 15 , 5-num-rewrites= 1848
-Tactic call setoid_rewrite-regression-cubic ran for 19.442 secs (19.442u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.057 secs (19.057u,0.s) (success)
 Params: 0-nm= 1862 , 1-n= 2 , 2-m= 266 , 3-input-size= 3739 , 4-output-size= 15 , 5-num-rewrites= 1862
-Tactic call setoid_rewrite-regression-cubic ran for 19.265 secs (19.265u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 18.986 secs (18.986u,0.s) (success)
 Params: 0-nm= 1876 , 1-n= 2 , 2-m= 268 , 3-input-size= 3767 , 4-output-size= 15 , 5-num-rewrites= 1876
-Tactic call setoid_rewrite-regression-cubic ran for 21.031 secs (21.031u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.036 secs (19.036u,0.s) (success)
 Params: 0-nm= 1890 , 1-n= 2 , 2-m= 270 , 3-input-size= 3795 , 4-output-size= 15 , 5-num-rewrites= 1890
-Tactic call setoid_rewrite-regression-cubic ran for 21.424 secs (21.424u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.82 secs (19.82u,0.s) (success)
 Params: 0-nm= 1904 , 1-n= 2 , 2-m= 272 , 3-input-size= 3823 , 4-output-size= 15 , 5-num-rewrites= 1904
-Tactic call setoid_rewrite-regression-cubic ran for 22.416 secs (22.416u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 19.49 secs (19.49u,0.s) (success)
 Params: 0-nm= 1918 , 1-n= 2 , 2-m= 274 , 3-input-size= 3851 , 4-output-size= 15 , 5-num-rewrites= 1918
-Tactic call setoid_rewrite-regression-cubic ran for 22.068 secs (22.067u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.566 secs (20.567u,0.s) (success)
 Params: 0-nm= 1932 , 1-n= 2 , 2-m= 276 , 3-input-size= 3879 , 4-output-size= 15 , 5-num-rewrites= 1932
-Tactic call setoid_rewrite-regression-cubic ran for 23.126 secs (23.126u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 20.23 secs (20.231u,0.s) (success)
+Params: 0-nm= 1650 , 1-n= 3 , 2-m= 110 , 3-input-size= 3331 , 4-output-size= 31 , 5-num-rewrites= 1650
+Tactic call setoid_rewrite-regression-cubic ran for 11.256 secs (11.256u,0.s) (success)
+Params: 0-nm= 1665 , 1-n= 3 , 2-m= 111 , 3-input-size= 3361 , 4-output-size= 31 , 5-num-rewrites= 1665
+Tactic call setoid_rewrite-regression-cubic ran for 11.499 secs (11.451u,0.047s) (success)
+Params: 0-nm= 1680 , 1-n= 3 , 2-m= 112 , 3-input-size= 3391 , 4-output-size= 31 , 5-num-rewrites= 1680
+Tactic call setoid_rewrite-regression-cubic ran for 12.085 secs (12.085u,0.s) (success)
+Params: 0-nm= 1695 , 1-n= 3 , 2-m= 113 , 3-input-size= 3421 , 4-output-size= 31 , 5-num-rewrites= 1695
+Tactic call setoid_rewrite-regression-cubic ran for 11.875 secs (11.875u,0.s) (success)
+Params: 0-nm= 1710 , 1-n= 3 , 2-m= 114 , 3-input-size= 3451 , 4-output-size= 31 , 5-num-rewrites= 1710
+Tactic call setoid_rewrite-regression-cubic ran for 12.192 secs (12.192u,0.s) (success)
+Params: 0-nm= 1725 , 1-n= 3 , 2-m= 115 , 3-input-size= 3481 , 4-output-size= 31 , 5-num-rewrites= 1725
+Tactic call setoid_rewrite-regression-cubic ran for 12.359 secs (12.359u,0.s) (success)
+Params: 0-nm= 1740 , 1-n= 3 , 2-m= 116 , 3-input-size= 3511 , 4-output-size= 31 , 5-num-rewrites= 1740
+Tactic call setoid_rewrite-regression-cubic ran for 12.862 secs (12.862u,0.s) (success)
+Params: 0-nm= 1755 , 1-n= 3 , 2-m= 117 , 3-input-size= 3541 , 4-output-size= 31 , 5-num-rewrites= 1755
+Tactic call setoid_rewrite-regression-cubic ran for 12.604 secs (12.604u,0.s) (success)
+Params: 0-nm= 1770 , 1-n= 3 , 2-m= 118 , 3-input-size= 3571 , 4-output-size= 31 , 5-num-rewrites= 1770
+Tactic call setoid_rewrite-regression-cubic ran for 12.782 secs (12.782u,0.s) (success)
+Params: 0-nm= 1800 , 1-n= 3 , 2-m= 120 , 3-input-size= 3631 , 4-output-size= 31 , 5-num-rewrites= 1800
+Tactic call setoid_rewrite-regression-cubic ran for 13.456 secs (13.456u,0.s) (success)
+Params: 0-nm= 1815 , 1-n= 3 , 2-m= 121 , 3-input-size= 3661 , 4-output-size= 31 , 5-num-rewrites= 1815
+Tactic call setoid_rewrite-regression-cubic ran for 13.743 secs (13.743u,0.s) (success)
+Params: 0-nm= 1830 , 1-n= 3 , 2-m= 122 , 3-input-size= 3691 , 4-output-size= 31 , 5-num-rewrites= 1830
+Tactic call setoid_rewrite-regression-cubic ran for 13.83 secs (13.83u,0.s) (success)
+Params: 0-nm= 1845 , 1-n= 3 , 2-m= 123 , 3-input-size= 3721 , 4-output-size= 31 , 5-num-rewrites= 1845
+Tactic call setoid_rewrite-regression-cubic ran for 13.955 secs (13.955u,0.s) (success)
+Params: 0-nm= 1860 , 1-n= 3 , 2-m= 124 , 3-input-size= 3751 , 4-output-size= 31 , 5-num-rewrites= 1860
+Tactic call setoid_rewrite-regression-cubic ran for 14.265 secs (14.265u,0.s) (success)
+Params: 0-nm= 1875 , 1-n= 3 , 2-m= 125 , 3-input-size= 3781 , 4-output-size= 31 , 5-num-rewrites= 1875
+Tactic call setoid_rewrite-regression-cubic ran for 14.79 secs (14.79u,0.s) (success)
+Params: 0-nm= 1890 , 1-n= 3 , 2-m= 126 , 3-input-size= 3811 , 4-output-size= 31 , 5-num-rewrites= 1890
+Tactic call setoid_rewrite-regression-cubic ran for 14.856 secs (14.856u,0.s) (success)
+Params: 0-nm= 1905 , 1-n= 3 , 2-m= 127 , 3-input-size= 3841 , 4-output-size= 31 , 5-num-rewrites= 1905
+Tactic call setoid_rewrite-regression-cubic ran for 15.172 secs (15.172u,0.s) (success)
+Params: 0-nm= 1920 , 1-n= 3 , 2-m= 128 , 3-input-size= 3871 , 4-output-size= 31 , 5-num-rewrites= 1920
+Tactic call setoid_rewrite-regression-cubic ran for 15.046 secs (15.047u,0.s) (success)
 Params: 0-nm= 1643 , 1-n= 4 , 2-m= 53 , 3-input-size= 3349 , 4-output-size= 63 , 5-num-rewrites= 1643
-Tactic call setoid_rewrite-regression-cubic ran for 8.953 secs (8.953u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.211 secs (8.211u,0.s) (success)
 Params: 0-nm= 1674 , 1-n= 4 , 2-m= 54 , 3-input-size= 3411 , 4-output-size= 63 , 5-num-rewrites= 1674
-Tactic call setoid_rewrite-regression-cubic ran for 9.617 secs (9.617u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.445 secs (8.445u,0.s) (success)
 Params: 0-nm= 1705 , 1-n= 4 , 2-m= 55 , 3-input-size= 3473 , 4-output-size= 63 , 5-num-rewrites= 1705
-Tactic call setoid_rewrite-regression-cubic ran for 10.297 secs (10.297u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.864 secs (8.864u,0.s) (success)
 Params: 0-nm= 1736 , 1-n= 4 , 2-m= 56 , 3-input-size= 3535 , 4-output-size= 63 , 5-num-rewrites= 1736
-Tactic call setoid_rewrite-regression-cubic ran for 9.986 secs (9.986u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.458 secs (9.458u,0.s) (success)
 Params: 0-nm= 1767 , 1-n= 4 , 2-m= 57 , 3-input-size= 3597 , 4-output-size= 63 , 5-num-rewrites= 1767
-Tactic call setoid_rewrite-regression-cubic ran for 10.253 secs (10.252u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.582 secs (9.582u,0.s) (success)
 Params: 0-nm= 1798 , 1-n= 4 , 2-m= 58 , 3-input-size= 3659 , 4-output-size= 63 , 5-num-rewrites= 1798
-Tactic call setoid_rewrite-regression-cubic ran for 10.788 secs (10.782u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.779 secs (9.779u,0.s) (success)
 Params: 0-nm= 1829 , 1-n= 4 , 2-m= 59 , 3-input-size= 3721 , 4-output-size= 63 , 5-num-rewrites= 1829
-Tactic call setoid_rewrite-regression-cubic ran for 11.335 secs (11.322u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.118 secs (10.118u,0.s) (success)
 Params: 0-nm= 1860 , 1-n= 4 , 2-m= 60 , 3-input-size= 3783 , 4-output-size= 63 , 5-num-rewrites= 1860
-Tactic call setoid_rewrite-regression-cubic ran for 11.984 secs (11.966u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.187 secs (11.187u,0.s) (success)
 Params: 0-nm= 1891 , 1-n= 4 , 2-m= 61 , 3-input-size= 3845 , 4-output-size= 63 , 5-num-rewrites= 1891
-Tactic call setoid_rewrite-regression-cubic ran for 11.976 secs (11.959u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.614 secs (10.614u,0.s) (success)
 Params: 0-nm= 1922 , 1-n= 4 , 2-m= 62 , 3-input-size= 3907 , 4-output-size= 63 , 5-num-rewrites= 1922
-Tactic call setoid_rewrite-regression-cubic ran for 12.462 secs (12.441u,0.s) (success)
-Params: 0-nm= 1701 , 1-n= 5 , 2-m= 27 , 3-input-size= 3529 , 4-output-size= 127 , 5-num-rewrites= 1701
-Tactic call setoid_rewrite-regression-cubic ran for 7.479 secs (7.39u,0.076s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.03 secs (11.03u,0.s) (success)
 Params: 0-nm= 1945 , 1-n= 0 , 2-m= 1945 , 3-input-size= 3893 , 4-output-size= 3 , 5-num-rewrites= 1945
-Tactic call setoid_rewrite-regression-cubic ran for 34.001 secs (33.924u,0.039s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 30.433 secs (30.433u,0.s) (success)
 Params: 0-nm= 1959 , 1-n= 0 , 2-m= 1959 , 3-input-size= 3921 , 4-output-size= 3 , 5-num-rewrites= 1959
-Tactic call setoid_rewrite-regression-cubic ran for 34.825 secs (34.753u,0.02s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 31.166 secs (31.094u,0.071s) (success)
 Params: 0-nm= 1973 , 1-n= 0 , 2-m= 1973 , 3-input-size= 3949 , 4-output-size= 3 , 5-num-rewrites= 1973
-Tactic call setoid_rewrite-regression-cubic ran for 35.581 secs (35.537u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 31.433 secs (31.425u,0.008s) (success)
 Params: 0-nm= 1987 , 1-n= 0 , 2-m= 1987 , 3-input-size= 3977 , 4-output-size= 3 , 5-num-rewrites= 1987
-Tactic call setoid_rewrite-regression-cubic ran for 35.57 secs (35.356u,0.159s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 33.104 secs (32.967u,0.136s) (success)
 Params: 0-nm= 2001 , 1-n= 0 , 2-m= 2001 , 3-input-size= 4005 , 4-output-size= 3 , 5-num-rewrites= 2001
-Tactic call setoid_rewrite-regression-cubic ran for 36.412 secs (36.353u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 33.062 secs (33.018u,0.044s) (success)
 Params: 0-nm= 2015 , 1-n= 0 , 2-m= 2015 , 3-input-size= 4033 , 4-output-size= 3 , 5-num-rewrites= 2015
-Tactic call setoid_rewrite-regression-cubic ran for 36.792 secs (36.746u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 33.192 secs (33.192u,0.s) (success)
 Params: 0-nm= 2029 , 1-n= 0 , 2-m= 2029 , 3-input-size= 4061 , 4-output-size= 3 , 5-num-rewrites= 2029
-Tactic call setoid_rewrite-regression-cubic ran for 37.587 secs (37.527u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 33.884 secs (33.884u,0.s) (success)
 Params: 0-nm= 2043 , 1-n= 0 , 2-m= 2043 , 3-input-size= 4089 , 4-output-size= 3 , 5-num-rewrites= 2043
-Tactic call setoid_rewrite-regression-cubic ran for 37.886 secs (37.835u,0.007s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 34.122 secs (34.066u,0.056s) (success)
 Params: 0-nm= 2057 , 1-n= 0 , 2-m= 2057 , 3-input-size= 4117 , 4-output-size= 3 , 5-num-rewrites= 2057
-Tactic call setoid_rewrite-regression-cubic ran for 38.619 secs (38.459u,0.104s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 34.227 secs (34.167u,0.059s) (success)
 Params: 0-nm= 2071 , 1-n= 0 , 2-m= 2071 , 3-input-size= 4145 , 4-output-size= 3 , 5-num-rewrites= 2071
-Tactic call setoid_rewrite-regression-cubic ran for 38.883 secs (38.821u,0.007s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 35.643 secs (35.523u,0.119s) (success)
 Params: 0-nm= 2085 , 1-n= 0 , 2-m= 2085 , 3-input-size= 4173 , 4-output-size= 3 , 5-num-rewrites= 2085
-Tactic call setoid_rewrite-regression-cubic ran for 39.175 secs (39.127u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 35.439 secs (35.255u,0.184s) (success)
 Params: 0-nm= 2099 , 1-n= 0 , 2-m= 2099 , 3-input-size= 4201 , 4-output-size= 3 , 5-num-rewrites= 2099
-Tactic call setoid_rewrite-regression-cubic ran for 39.712 secs (39.534u,0.12s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 36.057 secs (36.01u,0.047s) (success)
 Params: 0-nm= 2113 , 1-n= 0 , 2-m= 2113 , 3-input-size= 4229 , 4-output-size= 3 , 5-num-rewrites= 2113
-Tactic call setoid_rewrite-regression-cubic ran for 39.635 secs (39.493u,0.083s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 36.534 secs (36.534u,0.s) (success)
 Params: 0-nm= 2127 , 1-n= 0 , 2-m= 2127 , 3-input-size= 4257 , 4-output-size= 3 , 5-num-rewrites= 2127
-Tactic call setoid_rewrite-regression-cubic ran for 41.896 secs (41.708u,0.139s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 37.301 secs (37.301u,0.s) (success)
 Params: 0-nm= 2141 , 1-n= 0 , 2-m= 2141 , 3-input-size= 4285 , 4-output-size= 3 , 5-num-rewrites= 2141
-Tactic call setoid_rewrite-regression-cubic ran for 41.084 secs (40.82u,0.203s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 36.795 secs (36.796u,0.s) (success)
 Params: 0-nm= 2155 , 1-n= 0 , 2-m= 2155 , 3-input-size= 4313 , 4-output-size= 3 , 5-num-rewrites= 2155
-Tactic call setoid_rewrite-regression-cubic ran for 41.949 secs (41.864u,0.023s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 37.511 secs (37.512u,0.s) (success)
 Params: 0-nm= 2169 , 1-n= 0 , 2-m= 2169 , 3-input-size= 4341 , 4-output-size= 3 , 5-num-rewrites= 2169
-Tactic call setoid_rewrite-regression-cubic ran for 41.707 secs (41.543u,0.112s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 39.211 secs (39.083u,0.127s) (success)
 Params: 0-nm= 2183 , 1-n= 0 , 2-m= 2183 , 3-input-size= 4369 , 4-output-size= 3 , 5-num-rewrites= 2183
-Tactic call setoid_rewrite-regression-cubic ran for 43.405 secs (43.338u,0.011s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 39.408 secs (39.336u,0.072s) (success)
 Params: 0-nm= 2197 , 1-n= 0 , 2-m= 2197 , 3-input-size= 4397 , 4-output-size= 3 , 5-num-rewrites= 2197
-Tactic call setoid_rewrite-regression-cubic ran for 43.15 secs (43.086u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 39.538 secs (39.418u,0.12s) (success)
 Params: 0-nm= 2211 , 1-n= 0 , 2-m= 2211 , 3-input-size= 4425 , 4-output-size= 3 , 5-num-rewrites= 2211
-Tactic call setoid_rewrite-regression-cubic ran for 43.979 secs (43.792u,0.124s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 39.918 secs (39.838u,0.08s) (success)
 Params: 0-nm= 2225 , 1-n= 0 , 2-m= 2225 , 3-input-size= 4453 , 4-output-size= 3 , 5-num-rewrites= 2225
-Tactic call setoid_rewrite-regression-cubic ran for 41.36 secs (41.277u,0.035s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 40.153 secs (40.153u,0.s) (success)
 Params: 0-nm= 2239 , 1-n= 0 , 2-m= 2239 , 3-input-size= 4481 , 4-output-size= 3 , 5-num-rewrites= 2239
-Tactic call setoid_rewrite-regression-cubic ran for 41.452 secs (41.336u,0.055s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 40.664 secs (40.664u,0.s) (success)
 Params: 0-nm= 2253 , 1-n= 0 , 2-m= 2253 , 3-input-size= 4509 , 4-output-size= 3 , 5-num-rewrites= 2253
-Tactic call setoid_rewrite-regression-cubic ran for 41.603 secs (41.528u,0.015s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 41.283 secs (41.284u,0.s) (success)
 Params: 0-nm= 2267 , 1-n= 0 , 2-m= 2267 , 3-input-size= 4537 , 4-output-size= 3 , 5-num-rewrites= 2267
-Tactic call setoid_rewrite-regression-cubic ran for 43.932 secs (43.575u,0.304s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 42.154 secs (42.154u,0.s) (success)
 Params: 0-nm= 1947 , 1-n= 1 , 2-m= 649 , 3-input-size= 3901 , 4-output-size= 7 , 5-num-rewrites= 1947
-Tactic call setoid_rewrite-regression-cubic ran for 26.314 secs (26.155u,0.119s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 26.077 secs (26.077u,0.s) (success)
 Params: 0-nm= 1962 , 1-n= 1 , 2-m= 654 , 3-input-size= 3931 , 4-output-size= 7 , 5-num-rewrites= 1962
-Tactic call setoid_rewrite-regression-cubic ran for 27.615 secs (27.525u,0.059s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 26.009 secs (26.009u,0.s) (success)
 Params: 0-nm= 1977 , 1-n= 1 , 2-m= 659 , 3-input-size= 3961 , 4-output-size= 7 , 5-num-rewrites= 1977
-Tactic call setoid_rewrite-regression-cubic ran for 27.936 secs (27.805u,0.087s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 26.336 secs (26.336u,0.s) (success)
 Params: 0-nm= 1992 , 1-n= 1 , 2-m= 664 , 3-input-size= 3991 , 4-output-size= 7 , 5-num-rewrites= 1992
-Tactic call setoid_rewrite-regression-cubic ran for 27.978 secs (27.872u,0.075s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 26.613 secs (26.613u,0.s) (success)
 Params: 0-nm= 2007 , 1-n= 1 , 2-m= 669 , 3-input-size= 4021 , 4-output-size= 7 , 5-num-rewrites= 2007
-Tactic call setoid_rewrite-regression-cubic ran for 27.904 secs (27.833u,0.027s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 28.424 secs (28.283u,0.139s) (success)
 Params: 0-nm= 2022 , 1-n= 1 , 2-m= 674 , 3-input-size= 4051 , 4-output-size= 7 , 5-num-rewrites= 2022
-Tactic call setoid_rewrite-regression-cubic ran for 29.635 secs (29.522u,0.079s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 28.295 secs (28.203u,0.092s) (success)
 Params: 0-nm= 2037 , 1-n= 1 , 2-m= 679 , 3-input-size= 4081 , 4-output-size= 7 , 5-num-rewrites= 2037
-Tactic call setoid_rewrite-regression-cubic ran for 29.509 secs (29.354u,0.108s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 28.526 secs (28.525u,0.s) (success)
 Params: 0-nm= 2052 , 1-n= 1 , 2-m= 684 , 3-input-size= 4111 , 4-output-size= 7 , 5-num-rewrites= 2052
-Tactic call setoid_rewrite-regression-cubic ran for 29.223 secs (29.106u,0.083s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 28.626 secs (28.586u,0.039s) (success)
 Params: 0-nm= 2067 , 1-n= 1 , 2-m= 689 , 3-input-size= 4141 , 4-output-size= 7 , 5-num-rewrites= 2067
-Tactic call setoid_rewrite-regression-cubic ran for 30.246 secs (29.967u,0.231s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 29.729 secs (29.729u,0.s) (success)
 Params: 0-nm= 2082 , 1-n= 1 , 2-m= 694 , 3-input-size= 4171 , 4-output-size= 7 , 5-num-rewrites= 2082
-Tactic call setoid_rewrite-regression-cubic ran for 30.799 secs (30.684u,0.08s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 30.311 secs (30.311u,0.s) (success)
 Params: 0-nm= 2097 , 1-n= 1 , 2-m= 699 , 3-input-size= 4201 , 4-output-size= 7 , 5-num-rewrites= 2097
-Tactic call setoid_rewrite-regression-cubic ran for 31.034 secs (30.964u,0.023s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 30.514 secs (30.454u,0.06s) (success)
 Params: 0-nm= 2112 , 1-n= 1 , 2-m= 704 , 3-input-size= 4231 , 4-output-size= 7 , 5-num-rewrites= 2112
-Tactic call setoid_rewrite-regression-cubic ran for 31.795 secs (31.76u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 31.204 secs (31.204u,0.s) (success)
 Params: 0-nm= 2127 , 1-n= 1 , 2-m= 709 , 3-input-size= 4261 , 4-output-size= 7 , 5-num-rewrites= 2127
-Tactic call setoid_rewrite-regression-cubic ran for 31.865 secs (31.805u,0.011s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 30.704 secs (30.704u,0.s) (success)
 Params: 0-nm= 2142 , 1-n= 1 , 2-m= 714 , 3-input-size= 4291 , 4-output-size= 7 , 5-num-rewrites= 2142
-Tactic call setoid_rewrite-regression-cubic ran for 32.116 secs (31.877u,0.175s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 32.665 secs (32.561u,0.103s) (success)
 Params: 0-nm= 2157 , 1-n= 1 , 2-m= 719 , 3-input-size= 4321 , 4-output-size= 7 , 5-num-rewrites= 2157
-Tactic call setoid_rewrite-regression-cubic ran for 33.927 secs (33.761u,0.115s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 34.658 secs (34.582u,0.076s) (success)
 Params: 0-nm= 2172 , 1-n= 1 , 2-m= 724 , 3-input-size= 4351 , 4-output-size= 7 , 5-num-rewrites= 2172
-Tactic call setoid_rewrite-regression-cubic ran for 33.512 secs (33.432u,0.023s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 35.121 secs (35.006u,0.111s) (success)
 Params: 0-nm= 2187 , 1-n= 1 , 2-m= 729 , 3-input-size= 4381 , 4-output-size= 7 , 5-num-rewrites= 2187
-Tactic call setoid_rewrite-regression-cubic ran for 34.496 secs (34.354u,0.095s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 35.93 secs (35.93u,0.s) (success)
 Params: 0-nm= 2202 , 1-n= 1 , 2-m= 734 , 3-input-size= 4411 , 4-output-size= 7 , 5-num-rewrites= 2202
-Tactic call setoid_rewrite-regression-cubic ran for 34.211 secs (34.08u,0.079s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 35.51 secs (35.51u,0.s) (success)
 Params: 0-nm= 2217 , 1-n= 1 , 2-m= 739 , 3-input-size= 4441 , 4-output-size= 7 , 5-num-rewrites= 2217
-Tactic call setoid_rewrite-regression-cubic ran for 35.148 secs (35.064u,0.043s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 37.792 secs (37.659u,0.131s) (success)
 Params: 0-nm= 2232 , 1-n= 1 , 2-m= 744 , 3-input-size= 4471 , 4-output-size= 7 , 5-num-rewrites= 2232
-Tactic call setoid_rewrite-regression-cubic ran for 35.326 secs (35.001u,0.272s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 37.177 secs (37.013u,0.164s) (success)
 Params: 0-nm= 2247 , 1-n= 1 , 2-m= 749 , 3-input-size= 4501 , 4-output-size= 7 , 5-num-rewrites= 2247
-Tactic call setoid_rewrite-regression-cubic ran for 35.264 secs (35.213u,0.011s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 38.255 secs (38.241u,0.015s) (success)
 Params: 0-nm= 2262 , 1-n= 1 , 2-m= 754 , 3-input-size= 4531 , 4-output-size= 7 , 5-num-rewrites= 2262
-Tactic call setoid_rewrite-regression-cubic ran for 38.623 secs (38.462u,0.107s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 37.365 secs (37.366u,0.s) (success)
 Params: 0-nm= 1946 , 1-n= 2 , 2-m= 278 , 3-input-size= 3907 , 4-output-size= 15 , 5-num-rewrites= 1946
-Tactic call setoid_rewrite-regression-cubic ran for 23.273 secs (23.149u,0.124s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.543 secs (23.495u,0.047s) (success)
 Params: 0-nm= 1967 , 1-n= 2 , 2-m= 281 , 3-input-size= 3949 , 4-output-size= 15 , 5-num-rewrites= 1967
-Tactic call setoid_rewrite-regression-cubic ran for 23.795 secs (23.751u,0.043s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.514 secs (23.502u,0.012s) (success)
 Params: 0-nm= 1988 , 1-n= 2 , 2-m= 284 , 3-input-size= 3991 , 4-output-size= 15 , 5-num-rewrites= 1988
-Tactic call setoid_rewrite-regression-cubic ran for 23.708 secs (23.692u,0.016s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 23.848 secs (23.816u,0.031s) (success)
 Params: 0-nm= 2009 , 1-n= 2 , 2-m= 287 , 3-input-size= 4033 , 4-output-size= 15 , 5-num-rewrites= 2009
-Tactic call setoid_rewrite-regression-cubic ran for 24.234 secs (24.218u,0.015s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 24.123 secs (24.095u,0.028s) (success)
 Params: 0-nm= 2030 , 1-n= 2 , 2-m= 290 , 3-input-size= 4075 , 4-output-size= 15 , 5-num-rewrites= 2030
-Tactic call setoid_rewrite-regression-cubic ran for 24.926 secs (24.914u,0.011s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 24.482 secs (24.462u,0.019s) (success)
 Params: 0-nm= 2051 , 1-n= 2 , 2-m= 293 , 3-input-size= 4117 , 4-output-size= 15 , 5-num-rewrites= 2051
-Tactic call setoid_rewrite-regression-cubic ran for 25.222 secs (25.21u,0.011s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 25.064 secs (25.057u,0.008s) (success)
 Params: 0-nm= 2072 , 1-n= 2 , 2-m= 296 , 3-input-size= 4159 , 4-output-size= 15 , 5-num-rewrites= 2072
-Tactic call setoid_rewrite-regression-cubic ran for 26.378 secs (26.362u,0.015s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 25.629 secs (25.629u,0.s) (success)
 Params: 0-nm= 2093 , 1-n= 2 , 2-m= 299 , 3-input-size= 4201 , 4-output-size= 15 , 5-num-rewrites= 2093
-Tactic call setoid_rewrite-regression-cubic ran for 26.465 secs (26.445u,0.019s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 25.556 secs (25.556u,0.s) (success)
 Params: 0-nm= 2114 , 1-n= 2 , 2-m= 302 , 3-input-size= 4243 , 4-output-size= 15 , 5-num-rewrites= 2114
-Tactic call setoid_rewrite-regression-cubic ran for 27.11 secs (27.106u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 27.12 secs (27.12u,0.s) (success)
 Params: 0-nm= 2135 , 1-n= 2 , 2-m= 305 , 3-input-size= 4285 , 4-output-size= 15 , 5-num-rewrites= 2135
-Tactic call setoid_rewrite-regression-cubic ran for 29.211 secs (29.159u,0.051s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 27.001 secs (26.997u,0.004s) (success)
 Params: 0-nm= 2156 , 1-n= 2 , 2-m= 308 , 3-input-size= 4327 , 4-output-size= 15 , 5-num-rewrites= 2156
-Tactic call setoid_rewrite-regression-cubic ran for 28.237 secs (28.097u,0.14s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 27.649 secs (27.641u,0.007s) (success)
 Params: 0-nm= 2177 , 1-n= 2 , 2-m= 311 , 3-input-size= 4369 , 4-output-size= 15 , 5-num-rewrites= 2177
-Tactic call setoid_rewrite-regression-cubic ran for 29.108 secs (29.088u,0.019s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 27.89 secs (27.891u,0.s) (success)
 Params: 0-nm= 2198 , 1-n= 2 , 2-m= 314 , 3-input-size= 4411 , 4-output-size= 15 , 5-num-rewrites= 2198
-Tactic call setoid_rewrite-regression-cubic ran for 29.57 secs (29.567u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 29.446 secs (29.446u,0.s) (success)
 Params: 0-nm= 2219 , 1-n= 2 , 2-m= 317 , 3-input-size= 4453 , 4-output-size= 15 , 5-num-rewrites= 2219
-Tactic call setoid_rewrite-regression-cubic ran for 29.577 secs (29.557u,0.02s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 28.544 secs (28.544u,0.s) (success)
 Params: 0-nm= 2240 , 1-n= 2 , 2-m= 320 , 3-input-size= 4495 , 4-output-size= 15 , 5-num-rewrites= 2240
-Tactic call setoid_rewrite-regression-cubic ran for 30.942 secs (30.942u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 30.306 secs (30.306u,0.s) (success)
 Params: 0-nm= 2261 , 1-n= 2 , 2-m= 323 , 3-input-size= 4537 , 4-output-size= 15 , 5-num-rewrites= 2261
-Tactic call setoid_rewrite-regression-cubic ran for 32.032 secs (32.02u,0.011s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 30.313 secs (30.313u,0.s) (success)
+Params: 0-nm= 1980 , 1-n= 3 , 2-m= 132 , 3-input-size= 3991 , 4-output-size= 31 , 5-num-rewrites= 1980
+Tactic call setoid_rewrite-regression-cubic ran for 17.724 secs (17.725u,0.s) (success)
+Params: 0-nm= 2010 , 1-n= 3 , 2-m= 134 , 3-input-size= 4051 , 4-output-size= 31 , 5-num-rewrites= 2010
+Tactic call setoid_rewrite-regression-cubic ran for 17.909 secs (17.91u,0.s) (success)
+Params: 0-nm= 2040 , 1-n= 3 , 2-m= 136 , 3-input-size= 4111 , 4-output-size= 31 , 5-num-rewrites= 2040
+Tactic call setoid_rewrite-regression-cubic ran for 19.012 secs (19.012u,0.s) (success)
+Params: 0-nm= 2070 , 1-n= 3 , 2-m= 138 , 3-input-size= 4171 , 4-output-size= 31 , 5-num-rewrites= 2070
+Tactic call setoid_rewrite-regression-cubic ran for 19.391 secs (19.391u,0.s) (success)
+Params: 0-nm= 2100 , 1-n= 3 , 2-m= 140 , 3-input-size= 4231 , 4-output-size= 31 , 5-num-rewrites= 2100
+Tactic call setoid_rewrite-regression-cubic ran for 19.783 secs (19.783u,0.s) (success)
+Params: 0-nm= 2130 , 1-n= 3 , 2-m= 142 , 3-input-size= 4291 , 4-output-size= 31 , 5-num-rewrites= 2130
+Tactic call setoid_rewrite-regression-cubic ran for 19.896 secs (19.896u,0.s) (success)
+Params: 0-nm= 2160 , 1-n= 3 , 2-m= 144 , 3-input-size= 4351 , 4-output-size= 31 , 5-num-rewrites= 2160
+Tactic call setoid_rewrite-regression-cubic ran for 20.798 secs (20.798u,0.s) (success)
+Params: 0-nm= 2190 , 1-n= 3 , 2-m= 146 , 3-input-size= 4411 , 4-output-size= 31 , 5-num-rewrites= 2190
+Tactic call setoid_rewrite-regression-cubic ran for 22.289 secs (22.289u,0.s) (success)
+Params: 0-nm= 2220 , 1-n= 3 , 2-m= 148 , 3-input-size= 4471 , 4-output-size= 31 , 5-num-rewrites= 2220
+Tactic call setoid_rewrite-regression-cubic ran for 22.5 secs (22.5u,0.s) (success)
+Params: 0-nm= 2250 , 1-n= 3 , 2-m= 150 , 3-input-size= 4531 , 4-output-size= 31 , 5-num-rewrites= 2250
+Tactic call setoid_rewrite-regression-cubic ran for 22.453 secs (22.454u,0.s) (success)
 Params: 0-nm= 1953 , 1-n= 5 , 2-m= 31 , 3-input-size= 4033 , 4-output-size= 127 , 5-num-rewrites= 1953
-Tactic call setoid_rewrite-regression-cubic ran for 9.302 secs (9.294u,0.007s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.891 secs (8.891u,0.s) (success)
 Params: 0-nm= 2016 , 1-n= 5 , 2-m= 32 , 3-input-size= 4159 , 4-output-size= 127 , 5-num-rewrites= 2016
-Tactic call setoid_rewrite-regression-cubic ran for 9.766 secs (9.762u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.385 secs (9.385u,0.s) (success)
 Params: 0-nm= 2079 , 1-n= 5 , 2-m= 33 , 3-input-size= 4285 , 4-output-size= 127 , 5-num-rewrites= 2079
-Tactic call setoid_rewrite-regression-cubic ran for 10.351 secs (10.34u,0.011s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 9.852 secs (9.852u,0.s) (success)
 Params: 0-nm= 2142 , 1-n= 5 , 2-m= 34 , 3-input-size= 4411 , 4-output-size= 127 , 5-num-rewrites= 2142
-Tactic call setoid_rewrite-regression-cubic ran for 11.344 secs (11.34u,0.004s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.23 secs (11.231u,0.s) (success)
 Params: 0-nm= 2205 , 1-n= 5 , 2-m= 35 , 3-input-size= 4537 , 4-output-size= 127 , 5-num-rewrites= 2205
-Tactic call setoid_rewrite-regression-cubic ran for 10.816 secs (10.812u,0.004s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.304 secs (11.304u,0.s) (success)
 Params: 0-nm= 2268 , 1-n= 5 , 2-m= 36 , 3-input-size= 4663 , 4-output-size= 127 , 5-num-rewrites= 2268
-Tactic call setoid_rewrite-regression-cubic ran for 11.34 secs (11.336u,0.003s) (success)
-Params: 0-nm= 2044 , 1-n= 8 , 2-m= 4 , 3-input-size= 5111 , 4-output-size= 1023 , 5-num-rewrites= 2044
-Tactic call setoid_rewrite-regression-cubic ran for 3.776 secs (3.776u,0.s) (success)
-Params: 0-nm= 2046 , 1-n= 9 , 2-m= 2 , 3-input-size= 6139 , 4-output-size= 2047 , 5-num-rewrites= 2046
-Tactic call setoid_rewrite-regression-cubic ran for 3.601 secs (3.597u,0.003s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 11.892 secs (11.892u,0.s) (success)
 Params: 0-nm= 2269 , 1-n= 0 , 2-m= 2269 , 3-input-size= 4541 , 4-output-size= 3 , 5-num-rewrites= 2269
-Tactic call setoid_rewrite-regression-cubic ran for 43.664 secs (43.649u,0.016s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 45.089 secs (45.085u,0.003s) (success)
 Params: 0-nm= 2290 , 1-n= 0 , 2-m= 2290 , 3-input-size= 4583 , 4-output-size= 3 , 5-num-rewrites= 2290
-Tactic call setoid_rewrite-regression-cubic ran for 44.479 secs (44.459u,0.019s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 46.791 secs (46.791u,0.s) (success)
 Params: 0-nm= 2311 , 1-n= 0 , 2-m= 2311 , 3-input-size= 4625 , 4-output-size= 3 , 5-num-rewrites= 2311
-Tactic call setoid_rewrite-regression-cubic ran for 45.127 secs (45.107u,0.019s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 47.219 secs (47.219u,0.s) (success)
 Params: 0-nm= 2332 , 1-n= 0 , 2-m= 2332 , 3-input-size= 4667 , 4-output-size= 3 , 5-num-rewrites= 2332
-Tactic call setoid_rewrite-regression-cubic ran for 45.859 secs (45.715u,0.144s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 48.182 secs (48.09u,0.091s) (success)
 Params: 0-nm= 2353 , 1-n= 0 , 2-m= 2353 , 3-input-size= 4709 , 4-output-size= 3 , 5-num-rewrites= 2353
-Tactic call setoid_rewrite-regression-cubic ran for 46.333 secs (46.322u,0.011s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 50.342 secs (50.19u,0.151s) (success)
 Params: 0-nm= 2374 , 1-n= 0 , 2-m= 2374 , 3-input-size= 4751 , 4-output-size= 3 , 5-num-rewrites= 2374
-Tactic call setoid_rewrite-regression-cubic ran for 47.565 secs (47.545u,0.019s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 46.725 secs (46.577u,0.148s) (success)
 Params: 0-nm= 2395 , 1-n= 0 , 2-m= 2395 , 3-input-size= 4793 , 4-output-size= 3 , 5-num-rewrites= 2395
-Tactic call setoid_rewrite-regression-cubic ran for 49.032 secs (48.836u,0.196s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 48.306 secs (48.17u,0.136s) (success)
 Params: 0-nm= 2416 , 1-n= 0 , 2-m= 2416 , 3-input-size= 4835 , 4-output-size= 3 , 5-num-rewrites= 2416
-Tactic call setoid_rewrite-regression-cubic ran for 50.04 secs (49.839u,0.199s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 49.175 secs (48.987u,0.187s) (success)
 Params: 0-nm= 2437 , 1-n= 0 , 2-m= 2437 , 3-input-size= 4877 , 4-output-size= 3 , 5-num-rewrites= 2437
-Tactic call setoid_rewrite-regression-cubic ran for 50.459 secs (50.347u,0.112s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 48.339 secs (48.259u,0.08s) (success)
 Params: 0-nm= 2458 , 1-n= 0 , 2-m= 2458 , 3-input-size= 4919 , 4-output-size= 3 , 5-num-rewrites= 2458
-Tactic call setoid_rewrite-regression-cubic ran for 52.974 secs (52.801u,0.171s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 50.943 secs (50.775u,0.168s) (success)
 Params: 0-nm= 2479 , 1-n= 0 , 2-m= 2479 , 3-input-size= 4961 , 4-output-size= 3 , 5-num-rewrites= 2479
-Tactic call setoid_rewrite-regression-cubic ran for 53.163 secs (52.943u,0.219s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 51.222 secs (50.994u,0.227s) (success)
 Params: 0-nm= 2500 , 1-n= 0 , 2-m= 2500 , 3-input-size= 5003 , 4-output-size= 3 , 5-num-rewrites= 2500
-Tactic call setoid_rewrite-regression-cubic ran for 54.825 secs (54.612u,0.211s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 51.488 secs (51.424u,0.063s) (success)
 Params: 0-nm= 2521 , 1-n= 0 , 2-m= 2521 , 3-input-size= 5045 , 4-output-size= 3 , 5-num-rewrites= 2521
-Tactic call setoid_rewrite-regression-cubic ran for 55.172 secs (55.012u,0.16s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 54.035 secs (53.859u,0.176s) (success)
 Params: 0-nm= 2542 , 1-n= 0 , 2-m= 2542 , 3-input-size= 5087 , 4-output-size= 3 , 5-num-rewrites= 2542
-Tactic call setoid_rewrite-regression-cubic ran for 56.004 secs (55.951u,0.051s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 53.908 secs (53.816u,0.092s) (success)
 Params: 0-nm= 2563 , 1-n= 0 , 2-m= 2563 , 3-input-size= 5129 , 4-output-size= 3 , 5-num-rewrites= 2563
-Tactic call setoid_rewrite-regression-cubic ran for 57.699 secs (57.603u,0.096s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 54.226 secs (54.226u,0.s) (success)
 Params: 0-nm= 2584 , 1-n= 0 , 2-m= 2584 , 3-input-size= 5171 , 4-output-size= 3 , 5-num-rewrites= 2584
-Tactic call setoid_rewrite-regression-cubic ran for 63.528 secs (63.5u,0.027s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 54.987 secs (54.883u,0.103s) (success)
 Params: 0-nm= 2271 , 1-n= 1 , 2-m= 757 , 3-input-size= 4549 , 4-output-size= 7 , 5-num-rewrites= 2271
-Tactic call setoid_rewrite-regression-cubic ran for 40.811 secs (40.79u,0.019s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 36.867 secs (36.667u,0.199s) (success)
 Params: 0-nm= 2295 , 1-n= 1 , 2-m= 765 , 3-input-size= 4597 , 4-output-size= 7 , 5-num-rewrites= 2295
-Tactic call setoid_rewrite-regression-cubic ran for 43.64 secs (43.471u,0.168s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 37.217 secs (37.081u,0.135s) (success)
 Params: 0-nm= 2319 , 1-n= 1 , 2-m= 773 , 3-input-size= 4645 , 4-output-size= 7 , 5-num-rewrites= 2319
-Tactic call setoid_rewrite-regression-cubic ran for 43.105 secs (43.053u,0.051s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 37.797 secs (37.797u,0.s) (success)
 Params: 0-nm= 2343 , 1-n= 1 , 2-m= 781 , 3-input-size= 4693 , 4-output-size= 7 , 5-num-rewrites= 2343
-Tactic call setoid_rewrite-regression-cubic ran for 44.835 secs (44.719u,0.115s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 38.415 secs (38.415u,0.s) (success)
 Params: 0-nm= 2367 , 1-n= 1 , 2-m= 789 , 3-input-size= 4741 , 4-output-size= 7 , 5-num-rewrites= 2367
-Tactic call setoid_rewrite-regression-cubic ran for 45.405 secs (45.39u,0.015s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 39.45 secs (39.398u,0.051s) (success)
 Params: 0-nm= 2391 , 1-n= 1 , 2-m= 797 , 3-input-size= 4789 , 4-output-size= 7 , 5-num-rewrites= 2391
-Tactic call setoid_rewrite-regression-cubic ran for 46.186 secs (46.173u,0.011s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 39.529 secs (39.469u,0.059s) (success)
 Params: 0-nm= 2415 , 1-n= 1 , 2-m= 805 , 3-input-size= 4837 , 4-output-size= 7 , 5-num-rewrites= 2415
-Tactic call setoid_rewrite-regression-cubic ran for 47.708 secs (47.619u,0.088s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 41.7 secs (41.52u,0.179s) (success)
 Params: 0-nm= 2439 , 1-n= 1 , 2-m= 813 , 3-input-size= 4885 , 4-output-size= 7 , 5-num-rewrites= 2439
-Tactic call setoid_rewrite-regression-cubic ran for 48.219 secs (48.191u,0.027s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 41.37 secs (41.166u,0.203s) (success)
 Params: 0-nm= 2463 , 1-n= 1 , 2-m= 821 , 3-input-size= 4933 , 4-output-size= 7 , 5-num-rewrites= 2463
-Tactic call setoid_rewrite-regression-cubic ran for 48.998 secs (48.924u,0.072s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 42.985 secs (42.809u,0.175s) (success)
 Params: 0-nm= 2487 , 1-n= 1 , 2-m= 829 , 3-input-size= 4981 , 4-output-size= 7 , 5-num-rewrites= 2487
-Tactic call setoid_rewrite-regression-cubic ran for 52.132 secs (51.967u,0.163s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 42.962 secs (42.742u,0.219s) (success)
 Params: 0-nm= 2511 , 1-n= 1 , 2-m= 837 , 3-input-size= 5029 , 4-output-size= 7 , 5-num-rewrites= 2511
-Tactic call setoid_rewrite-regression-cubic ran for 50.642 secs (50.433u,0.207s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 44.986 secs (44.802u,0.183s) (success)
 Params: 0-nm= 2535 , 1-n= 1 , 2-m= 845 , 3-input-size= 5077 , 4-output-size= 7 , 5-num-rewrites= 2535
-Tactic call setoid_rewrite-regression-cubic ran for 54.041 secs (53.78u,0.26s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 45.162 secs (45.046u,0.116s) (success)
 Params: 0-nm= 2559 , 1-n= 1 , 2-m= 853 , 3-input-size= 5125 , 4-output-size= 7 , 5-num-rewrites= 2559
-Tactic call setoid_rewrite-regression-cubic ran for 53.505 secs (53.425u,0.079s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 46.206 secs (46.158u,0.047s) (success)
 Params: 0-nm= 2583 , 1-n= 1 , 2-m= 861 , 3-input-size= 5173 , 4-output-size= 7 , 5-num-rewrites= 2583
-Tactic call setoid_rewrite-regression-cubic ran for 54.898 secs (54.718u,0.179s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 46.523 secs (46.427u,0.096s) (success)
 Params: 0-nm= 2275 , 1-n= 2 , 2-m= 325 , 3-input-size= 4565 , 4-output-size= 15 , 5-num-rewrites= 2275
-Tactic call setoid_rewrite-regression-cubic ran for 35.015 secs (34.943u,0.071s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 29.954 secs (29.902u,0.051s) (success)
 Params: 0-nm= 2303 , 1-n= 2 , 2-m= 329 , 3-input-size= 4621 , 4-output-size= 15 , 5-num-rewrites= 2303
-Tactic call setoid_rewrite-regression-cubic ran for 34.085 secs (33.949u,0.135s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 29.833 secs (29.665u,0.167s) (success)
 Params: 0-nm= 2331 , 1-n= 2 , 2-m= 333 , 3-input-size= 4677 , 4-output-size= 15 , 5-num-rewrites= 2331
-Tactic call setoid_rewrite-regression-cubic ran for 32.472 secs (32.472u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 30.488 secs (30.476u,0.012s) (success)
 Params: 0-nm= 2359 , 1-n= 2 , 2-m= 337 , 3-input-size= 4733 , 4-output-size= 15 , 5-num-rewrites= 2359
-Tactic call setoid_rewrite-regression-cubic ran for 33.447 secs (33.446u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 32.53 secs (32.414u,0.115s) (success)
 Params: 0-nm= 2387 , 1-n= 2 , 2-m= 341 , 3-input-size= 4789 , 4-output-size= 15 , 5-num-rewrites= 2387
-Tactic call setoid_rewrite-regression-cubic ran for 34.12 secs (34.119u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 32.325 secs (32.117u,0.207s) (success)
 Params: 0-nm= 2415 , 1-n= 2 , 2-m= 345 , 3-input-size= 4845 , 4-output-size= 15 , 5-num-rewrites= 2415
-Tactic call setoid_rewrite-regression-cubic ran for 34.417 secs (34.417u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 33.282 secs (33.282u,0.s) (success)
 Params: 0-nm= 2443 , 1-n= 2 , 2-m= 349 , 3-input-size= 4901 , 4-output-size= 15 , 5-num-rewrites= 2443
-Tactic call setoid_rewrite-regression-cubic ran for 35.099 secs (35.074u,0.023s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 33.568 secs (33.568u,0.s) (success)
 Params: 0-nm= 2471 , 1-n= 2 , 2-m= 353 , 3-input-size= 4957 , 4-output-size= 15 , 5-num-rewrites= 2471
-Tactic call setoid_rewrite-regression-cubic ran for 37.701 secs (37.54u,0.16s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 34.859 secs (34.859u,0.s) (success)
 Params: 0-nm= 2499 , 1-n= 2 , 2-m= 357 , 3-input-size= 5013 , 4-output-size= 15 , 5-num-rewrites= 2499
-Tactic call setoid_rewrite-regression-cubic ran for 37.512 secs (37.484u,0.027s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 34.931 secs (34.931u,0.s) (success)
 Params: 0-nm= 2527 , 1-n= 2 , 2-m= 361 , 3-input-size= 5069 , 4-output-size= 15 , 5-num-rewrites= 2527
-Tactic call setoid_rewrite-regression-cubic ran for 38.49 secs (38.381u,0.108s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 36.387 secs (36.387u,0.s) (success)
 Params: 0-nm= 2555 , 1-n= 2 , 2-m= 365 , 3-input-size= 5125 , 4-output-size= 15 , 5-num-rewrites= 2555
-Tactic call setoid_rewrite-regression-cubic ran for 39.248 secs (39.208u,0.039s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 36.667 secs (36.667u,0.s) (success)
 Params: 0-nm= 2583 , 1-n= 2 , 2-m= 369 , 3-input-size= 5181 , 4-output-size= 15 , 5-num-rewrites= 2583
-Tactic call setoid_rewrite-regression-cubic ran for 39.556 secs (39.488u,0.067s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 38.705 secs (38.569u,0.136s) (success)
+Params: 0-nm= 2280 , 1-n= 3 , 2-m= 152 , 3-input-size= 4591 , 4-output-size= 31 , 5-num-rewrites= 2280
+Tactic call setoid_rewrite-regression-cubic ran for 22.315 secs (22.167u,0.147s) (success)
+Params: 0-nm= 2310 , 1-n= 3 , 2-m= 154 , 3-input-size= 4651 , 4-output-size= 31 , 5-num-rewrites= 2310
+Tactic call setoid_rewrite-regression-cubic ran for 23.498 secs (23.489u,0.008s) (success)
+Params: 0-nm= 2340 , 1-n= 3 , 2-m= 156 , 3-input-size= 4711 , 4-output-size= 31 , 5-num-rewrites= 2340
+Tactic call setoid_rewrite-regression-cubic ran for 23.14 secs (23.14u,0.s) (success)
+Params: 0-nm= 2370 , 1-n= 3 , 2-m= 158 , 3-input-size= 4771 , 4-output-size= 31 , 5-num-rewrites= 2370
+Tactic call setoid_rewrite-regression-cubic ran for 24.336 secs (24.336u,0.s) (success)
+Params: 0-nm= 2400 , 1-n= 3 , 2-m= 160 , 3-input-size= 4831 , 4-output-size= 31 , 5-num-rewrites= 2400
+Tactic call setoid_rewrite-regression-cubic ran for 24.329 secs (24.329u,0.s) (success)
+Params: 0-nm= 2430 , 1-n= 3 , 2-m= 162 , 3-input-size= 4891 , 4-output-size= 31 , 5-num-rewrites= 2430
+Tactic call setoid_rewrite-regression-cubic ran for 25.67 secs (25.67u,0.s) (success)
+Params: 0-nm= 2460 , 1-n= 3 , 2-m= 164 , 3-input-size= 4951 , 4-output-size= 31 , 5-num-rewrites= 2460
+Tactic call setoid_rewrite-regression-cubic ran for 25.976 secs (25.976u,0.s) (success)
+Params: 0-nm= 2490 , 1-n= 3 , 2-m= 166 , 3-input-size= 5011 , 4-output-size= 31 , 5-num-rewrites= 2490
+Tactic call setoid_rewrite-regression-cubic ran for 26.601 secs (26.601u,0.s) (success)
+Params: 0-nm= 2520 , 1-n= 3 , 2-m= 168 , 3-input-size= 5071 , 4-output-size= 31 , 5-num-rewrites= 2520
+Tactic call setoid_rewrite-regression-cubic ran for 27.679 secs (27.68u,0.s) (success)
+Params: 0-nm= 2550 , 1-n= 3 , 2-m= 170 , 3-input-size= 5131 , 4-output-size= 31 , 5-num-rewrites= 2550
+Tactic call setoid_rewrite-regression-cubic ran for 27.79 secs (27.79u,0.s) (success)
+Params: 0-nm= 2580 , 1-n= 3 , 2-m= 172 , 3-input-size= 5191 , 4-output-size= 31 , 5-num-rewrites= 2580
+Tactic call setoid_rewrite-regression-cubic ran for 28.954 secs (28.954u,0.s) (success)
 Params: 0-nm= 2394 , 1-n= 5 , 2-m= 38 , 3-input-size= 4915 , 4-output-size= 127 , 5-num-rewrites= 2394
-Tactic call setoid_rewrite-regression-cubic ran for 12.999 secs (12.979u,0.019s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 12.59 secs (12.59u,0.s) (success)
 Params: 0-nm= 2520 , 1-n= 5 , 2-m= 40 , 3-input-size= 5167 , 4-output-size= 127 , 5-num-rewrites= 2520
-Tactic call setoid_rewrite-regression-cubic ran for 14.295 secs (14.295u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 14.519 secs (14.519u,0.s) (success)
 Params: 0-nm= 2286 , 1-n= 6 , 2-m= 18 , 3-input-size= 4827 , 4-output-size= 255 , 5-num-rewrites= 2286
-Tactic call setoid_rewrite-regression-cubic ran for 9.686 secs (9.65u,0.035s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.308 secs (8.309u,0.s) (success)
 Params: 0-nm= 2413 , 1-n= 6 , 2-m= 19 , 3-input-size= 5081 , 4-output-size= 255 , 5-num-rewrites= 2413
-Tactic call setoid_rewrite-regression-cubic ran for 9.443 secs (9.443u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 8.963 secs (8.963u,0.s) (success)
 Params: 0-nm= 2540 , 1-n= 6 , 2-m= 20 , 3-input-size= 5335 , 4-output-size= 255 , 5-num-rewrites= 2540
-Tactic call setoid_rewrite-regression-cubic ran for 10.191 secs (10.191u,0.s) (success)
-Params: 0-nm= 2295 , 1-n= 7 , 2-m= 9 , 3-input-size= 5101 , 4-output-size= 511 , 5-num-rewrites= 2295
-Tactic call setoid_rewrite-regression-cubic ran for 6.097 secs (6.097u,0.s) (success)
-Params: 0-nm= 2550 , 1-n= 7 , 2-m= 10 , 3-input-size= 5611 , 4-output-size= 511 , 5-num-rewrites= 2550
-Tactic call setoid_rewrite-regression-cubic ran for 7.443 secs (7.443u,0.s) (success)
-Params: 0-nm= 2555 , 1-n= 8 , 2-m= 5 , 3-input-size= 6133 , 4-output-size= 1023 , 5-num-rewrites= 2555
-Tactic call setoid_rewrite-regression-cubic ran for 5.953 secs (5.953u,0.s) (success)
+Tactic call setoid_rewrite-regression-cubic ran for 10.346 secs (10.346u,0.s) (success)

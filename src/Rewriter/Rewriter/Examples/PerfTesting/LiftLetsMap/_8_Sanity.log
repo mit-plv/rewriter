@@ -13,4 +13,4 @@ Tactic call cps+simpl-regression-quadratic ran for 0. secs (0.u,0.s) (success)
 Params: 0-nm= 4 , 1-n= 4 , 2-m= 1
 Tactic call cps+simpl-regression-quadratic ran for 0. secs (0.u,0.s) (success)
 Params: 0-nm= 4 , 1-n= 1 , 2-m= 4
-Tactic call cps+simpl-regression-quadratic ran for 0. secs (0.u,0.s) (success)
+Tactic call cps+simpl-regression-quadratic ran for 0.001 secs (0.001u,0.s) (success)

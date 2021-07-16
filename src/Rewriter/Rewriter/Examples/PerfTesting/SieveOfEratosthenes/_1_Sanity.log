@@ -1,27 +1,27 @@
 Params: n= 2
-Tactic call native_compute(1)-regression-quadratic ran for 0.109 secs (0.002u,0.008s) (success)
-Tactic call native_compute(2)-regression-quadratic ran for 0.111 secs (0.002u,0.008s) (success)
+Tactic call native_compute(1)-regression-quadratic ran for 0.117 secs (0.002u,0.007s) (success)
+Tactic call native_compute(2)-regression-quadratic ran for 0.116 secs (0.002u,0.008s) (success)
 Params: n= 3
-Tactic call native_compute(1)-regression-quadratic ran for 0.11 secs (0.001u,0.008s) (success)
-Tactic call native_compute(2)-regression-quadratic ran for 0.114 secs (0.u,0.009s) (success)
+Tactic call native_compute(1)-regression-quadratic ran for 0.114 secs (0.002u,0.011s) (success)
+Tactic call native_compute(2)-regression-quadratic ran for 0.115 secs (0.u,0.01s) (success)
 Params: n= 4
-Tactic call native_compute(1)-regression-quadratic ran for 0.121 secs (0.002u,0.008s) (success)
-Tactic call native_compute(2)-regression-quadratic ran for 0.114 secs (0.u,0.01s) (success)
+Tactic call native_compute(1)-regression-quadratic ran for 0.115 secs (0.001u,0.008s) (success)
+Tactic call native_compute(2)-regression-quadratic ran for 0.113 secs (0.u,0.01s) (success)
 Params: n= 5
-Tactic call native_compute(1)-regression-quadratic ran for 0.112 secs (0.u,0.01s) (success)
-Tactic call native_compute(2)-regression-quadratic ran for 0.109 secs (0.u,0.011s) (success)
+Tactic call native_compute(1)-regression-quadratic ran for 0.103 secs (0.002u,0.008s) (success)
+Tactic call native_compute(2)-regression-quadratic ran for 0.109 secs (0.002u,0.007s) (success)
 Params: n= 6
-Tactic call native_compute(1)-regression-quadratic ran for 0.118 secs (0.u,0.011s) (success)
-Tactic call native_compute(2)-regression-quadratic ran for 0.113 secs (0.u,0.012s) (success)
+Tactic call native_compute(1)-regression-quadratic ran for 0.111 secs (0.u,0.01s) (success)
+Tactic call native_compute(2)-regression-quadratic ran for 0.112 secs (0.002u,0.008s) (success)
 Params: n= 7
-Tactic call native_compute(1)-regression-quadratic ran for 0.113 secs (0.002u,0.008s) (success)
-Tactic call native_compute(2)-regression-quadratic ran for 0.114 secs (0.u,0.011s) (success)
+Tactic call native_compute(1)-regression-quadratic ran for 0.11 secs (0.002u,0.008s) (success)
+Tactic call native_compute(2)-regression-quadratic ran for 0.121 secs (0.u,0.011s) (success)
 Params: n= 8
-Tactic call native_compute(1)-regression-quadratic ran for 0.112 secs (0.002u,0.008s) (success)
-Tactic call native_compute(2)-regression-quadratic ran for 0.117 secs (0.u,0.011s) (success)
+Tactic call native_compute(1)-regression-quadratic ran for 0.124 secs (0.002u,0.008s) (success)
+Tactic call native_compute(2)-regression-quadratic ran for 0.105 secs (0.u,0.011s) (success)
 Params: n= 9
-Tactic call native_compute(1)-regression-quadratic ran for 0.113 secs (0.002u,0.008s) (success)
-Tactic call native_compute(2)-regression-quadratic ran for 0.113 secs (0.003u,0.007s) (success)
+Tactic call native_compute(1)-regression-quadratic ran for 0.102 secs (0.u,0.01s) (success)
+Tactic call native_compute(2)-regression-quadratic ran for 0.104 secs (0.u,0.01s) (success)
 Params: n= 10
-Tactic call native_compute(1)-regression-quadratic ran for 0.111 secs (0.003u,0.007s) (success)
-Tactic call native_compute(2)-regression-quadratic ran for 0.109 secs (0.u,0.01s) (success)
+Tactic call native_compute(1)-regression-quadratic ran for 0.115 secs (0.u,0.008s) (success)
+Tactic call native_compute(2)-regression-quadratic ran for 0.103 secs (0.u,0.01s) (success)

@@ -9,7 +9,7 @@ Tactic call rewrite_strat(topdown)-regression-cubic ran for 0. secs (0.u,0.s) (s
 Params: 0-nm= 4 , 1-n= 0 , 2-m= 4 , 3-input-size= 11 , 4-output-size= 3 , 5-num-rewrites= 4
 Tactic call rewrite_strat(topdown)-regression-cubic ran for 0. secs (0.u,0.s) (success)
 Params: 0-nm= 5 , 1-n= 0 , 2-m= 5 , 3-input-size= 13 , 4-output-size= 3 , 5-num-rewrites= 5
-Tactic call rewrite_strat(topdown)-regression-cubic ran for 0.001 secs (0.001u,0.s) (success)
+Tactic call rewrite_strat(topdown)-regression-cubic ran for 0. secs (0.u,0.s) (success)
 Params: 0-nm= 6 , 1-n= 0 , 2-m= 6 , 3-input-size= 15 , 4-output-size= 3 , 5-num-rewrites= 6
 Tactic call rewrite_strat(topdown)-regression-cubic ran for 0.001 secs (0.001u,0.s) (success)
 Params: 0-nm= 6 , 1-n= 1 , 2-m= 2 , 3-input-size= 19 , 4-output-size= 7 , 5-num-rewrites= 6

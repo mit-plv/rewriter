@@ -1,10 +1,10 @@
 Params: 0-nm= 283 , 1-n= 0 , 2-m= 283 , 3-input-size= 569 , 4-output-size= 3 , 5-num-rewrites= 283
-Tactic call autorewrite-regression-cubic ran for 0.447 secs (0.439u,0.007s) (success)
+Tactic call autorewrite-regression-cubic ran for 0.441 secs (0.433u,0.007s) (success)
 Params: 0-nm= 565 , 1-n= 0 , 2-m= 565 , 3-input-size= 1133 , 4-output-size= 3 , 5-num-rewrites= 565
-Tactic call autorewrite-regression-cubic ran for 1.408 secs (1.404u,0.003s) (success)
+Tactic call autorewrite-regression-cubic ran for 1.403 secs (1.383u,0.019s) (success)
 Params: 0-nm= 31 , 1-n= 4 , 2-m= 1 , 3-input-size= 125 , 4-output-size= 63 , 5-num-rewrites= 31
-Tactic call autorewrite-regression-cubic ran for 0.003 secs (0.u,0.003s) (success)
+Tactic call autorewrite-regression-cubic ran for 0.003 secs (0.003u,0.s) (success)
 Params: 0-nm= 310 , 1-n= 4 , 2-m= 10 , 3-input-size= 683 , 4-output-size= 63 , 5-num-rewrites= 310
-Tactic call autorewrite-regression-cubic ran for 0.062 secs (0.062u,0.s) (success)
+Tactic call autorewrite-regression-cubic ran for 0.061 secs (0.061u,0.s) (success)
 Params: 0-nm= 511 , 1-n= 8 , 2-m= 1 , 3-input-size= 2045 , 4-output-size= 1023 , 5-num-rewrites= 511
-Tactic call autorewrite-regression-cubic ran for 0.048 secs (0.048u,0.s) (success)
+Tactic call autorewrite-regression-cubic ran for 0.047 secs (0.047u,0.s) (success)
