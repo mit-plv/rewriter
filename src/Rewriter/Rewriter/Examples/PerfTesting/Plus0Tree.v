@@ -371,9 +371,9 @@ Definition compat_args_of_size' (test_tac_n : nat) (s : size)
             | _, _ => []
             end%nat in
      Zsort_by_fst
-       (flat_map
+       (List.flat_map
           (fun '(n_count, m_count)
-           => flat_map (fun n => let n := Z.of_nat n in map (fun m => (n, Z.of_nat m)) (seq 1 m_count)) (seq 1 n_count))
+           => List.flat_map (fun n => let n := Z.of_nat n in List.map (fun m => (n, Z.of_nat m)) (seq 1 m_count)) (seq 1 n_count))
           ls).
 
 Definition kind_to_compat (k : kind_of_rewrite) : option nat
