@@ -42,7 +42,7 @@ let make_inductive_from_elim sigma (name : Names.Id.t option) (elim_ty : EConstr
     let ctor_type_to_constr cty =
       EConstr.to_constr sigma (EConstr.Vars.subst_var name cty)
     in
-    let uctx = Evd.check_univ_decl ~poly:false sigma UState.default_univ_decl in
+    let uctx, binders = Evd.check_univ_decl ~poly:false sigma UState.default_univ_decl in
     let mie = {
       mind_entry_record = None;
       mind_entry_finite = Declarations.Finite;
@@ -65,7 +65,7 @@ let make_inductive_from_elim sigma (name : Names.Id.t option) (elim_ty : EConstr
     in
     (sigma,
      (DeclareInd.declare_mutual_inductive_with_eliminations
-        mie UnivNames.empty_binders [([], List.map (fun _ -> []) ctor_types)],
+        mie binders [([], List.map (fun _ -> []) ctor_types)],
       0))
   | _ ->
     CErrors.user_err Pp.(str "Invalid non-arrow eliminator type:" ++ Printer.pr_econstr_env env sigma elim_ty)
