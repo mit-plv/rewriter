@@ -15,9 +15,9 @@ jobs:
         submodules: recursive
     - name: all
       uses: coq-community/docker-coq-action@v1
-      custom_script: |
-        echo "::remove-matcher owner=coq-problem-matcher::"
-        etc/ci/github-actions-make.sh --warnings -j2 all
       with:
         coq_version: dev
         ocaml_version: 4.05
+        custom_script: |
+          echo "::remove-matcher owner=coq-problem-matcher::"
+          etc/ci/github-actions-make.sh --warnings -j2 all
