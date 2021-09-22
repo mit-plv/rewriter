@@ -19,5 +19,17 @@ jobs:
         coq_version: dev
         ocaml_version: 4.05
         custom_script: |
-          echo "::remove-matcher owner=coq-problem-matcher::"
+          if ! command -v sudo &> /dev/null; then
+            echo '::group::install sudo'
+            su -c 'apt-get update -y'
+            su -c 'apt-get install -y sudo'
+            echo '::endgroup::'
+          fi
+          sudo chmod a+rw .
+          echo '::group::install general dependencies'
+          sudo apt-get update -y
+          sudo apt-get install -y wget curl python python3
+          eval $(opam env)
+          echo '::endgroup::'
+          echo '::remove-matcher owner=coq-problem-matcher::'
           etc/ci/github-actions-make.sh --warnings -j2 all
