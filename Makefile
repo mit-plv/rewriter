@@ -68,7 +68,7 @@ endif
 # We must work around COQBUG(https://github.com/coq/coq/issues/10907) and fix the conf target
 Makefile.coq Makefile-old.conf: Makefile _CoqProject $(COQ_VERSION_FILE)
 	$(SHOW)'COQ_MAKEFILE -f _CoqProject > Makefile.coq'
-	$(HIDE)(($(COQBIN)coq_makefile -f _CoqProject -o Makefile-old && cat Makefile-old | sed s'/Makefile-old.conf:/Makefile-old-old.conf:/g' | sed s'/Makefile-old.local/Makefile.local/g' $(EXTRA_SED_FOR_DEPS)); echo; echo 'include Makefile.local-late') > Makefile.coq && rm Makefile-old
+	$(HIDE)(($(COQBIN)coq_makefile -f _CoqProject -o Makefile-old && cat Makefile-old | sed s'/Makefile-old.conf:/Makefile-old-old.conf:/g' | sed 's/Makefile-old.local/Makefile.local/g; s/^-\?include Makefile.local-late$$//g' $(EXTRA_SED_FOR_DEPS)); echo; echo 'include Makefile.local-late') > Makefile.coq && rm Makefile-old
 
 Makefile.coq: | Makefile-old.conf
 
