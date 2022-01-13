@@ -3,6 +3,7 @@ Require Import Coq.Classes.CMorphisms.
 Require Import Coq.Strings.String.
 Require Import Coq.Strings.Ascii.
 Require Import Coq.Bool.Bool.
+Require Import Coq.Classes.RelationClasses.
 Require Import Coq.Arith.Arith.
 Require Import Coq.ZArith.BinInt Coq.ZArith.ZArith_dec.
 Require Import Coq.NArith.BinNat.
@@ -12,6 +13,7 @@ Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.Sigma.
 Require Import Rewriter.Util.ListUtil.
+Require Import Rewriter.Util.ListUtil.SetoidList.
 Require Import Rewriter.Util.Sum.
 Require Import Rewriter.Util.Comparison.
 Require Import Rewriter.Util.Tactics.DestructHead.
@@ -63,6 +65,11 @@ Lemma reflect_rect_dep {P b} (Q : reflect P b -> Type)
   : forall x, Q x.
 Proof. intro x; destruct x; apply H. Defined.
 
+Definition reflect_of_BoolSpec {P b} (H : BoolSpec P (~P) b) : reflect P b.
+Proof. destruct b; constructor; inversion H; assumption. Defined.
+Definition BoolSpec_of_reflect {P b} (H : reflect P b) : BoolSpec P (~P) b.
+Proof. destruct b; constructor; inversion H; assumption. Defined.
+
 Definition mark {T} (v : T) := v.
 
 Ltac induction_reflect x :=
@@ -110,6 +117,11 @@ Existing Class reflect.
 Definition decb (P : Prop) {b : bool} {H : reflect P b} := b.
 Notation reflect_rel P b := (forall x y, reflect (P x y) (b x y)).
 Definition decb_rel {A B} (P : A -> B -> Prop) {b : A -> B -> bool} {H : reflect_rel P b} := b.
+
+Definition reflect_rel_of_BoolSpec {A R Rb} (H : forall a b : A, BoolSpec (R a b) (~R a b) (Rb a b)) : reflect_rel R Rb.
+Proof. intros; now apply reflect_of_BoolSpec. Defined.
+Definition BoolSpec_of_reflect_rel {A R Rb} (H : reflect_rel R Rb) : forall a b : A, BoolSpec (R a b) (~R a b) (Rb a b).
+Proof. intros; now apply BoolSpec_of_reflect. Defined.
 
 Lemma decb_true_iff P {b} {H : reflect P b} : @decb P b H = true <-> P.
 Proof. symmetry; apply reflect_iff, H. Qed.
@@ -251,7 +263,13 @@ Ltac solve_reflect_step :=
                 | firstorder (auto; try discriminate) ] *) ].
 
 
-Ltac solve_reflect := repeat solve_reflect_step.
+Ltac skip_solve_reflect := constr:(false).
+Ltac solve_reflect :=
+  let b := skip_solve_reflect in
+  lazymatch b with
+  | true => fail
+  | false => repeat solve_reflect_step
+  end.
 
 Hint Constructors reflect : typeclass_instances.
 
@@ -270,6 +288,7 @@ Local Hint Resolve internal_prod_dec_bl internal_prod_dec_lb
       prod_bl_hetero prod_lb_hetero prod_bl_hetero_eq prod_lb_hetero_eq
       option_bl_hetero option_lb_hetero option_bl_hetero_eq option_lb_hetero_eq
       list_bl_hetero list_lb_hetero list_bl_hetero_eq list_lb_hetero_eq
+      eqlistA_lb eqlistA_bl
   : core.
 
 Local Hint Extern 0 => solve [ solve_reflect ] : typeclass_instances.
@@ -313,6 +332,7 @@ Global Instance reflect_eq_list_nil_r_hetero {A1 A2 eqA} {ls} : reflect (ls = ni
 Proof. destruct ls; [ left; reflexivity | right; abstract congruence ]. Qed.
 Global Instance reflect_eq_list_nil_l_hetero {A1 A2 eqA} {ls} : reflect (nil = ls) (@list_beq_hetero A1 A2 eqA nil ls) | 10.
 Proof. destruct ls; [ left; reflexivity | right; abstract congruence ]. Qed.
+Global Instance reflect_eqlistA {A R eqA} `{reflect_rel R eqA} : reflect_rel (@SetoidList.eqlistA A R) (list_beq A eqA) | 100. exact _. Qed.
 Global Instance reflect_eq_sum {A B eqA eqB} `{reflect_rel (@eq A) eqA, reflect_rel (@eq B) eqB} : reflect_rel (@eq (A + B)) (sum_beq A B eqA eqB) | 10. exact _. Qed.
 Global Instance reflect_sumwise {A B RA RB eqA eqB} `{reflect_rel RA eqA, reflect_rel RB eqB} : reflect_rel (@sumwise A B RA RB) (@sum_beq A B eqA eqB) | 100.
 Proof. intros [?|?] [?|?]; cbn; exact _. Qed.
@@ -390,6 +410,30 @@ Proof.
     clear HD;
     try abstract (inversion Hn; subst; tauto).
 Qed.
+
+Ltac skip_solve_reflect ::= constr:(true).
+Global Instance reflect_NoDupA {A R eqA} {HR : Equivalence R}
+       {HR' : Morphisms.Proper (Morphisms.respectful R (Morphisms.respectful R Basics.impl)) R}
+       {H : reflect_rel R eqA} {ls : list A}
+  : reflect (SetoidList.NoDupA R ls) (list_beq _ eqA (remove_duplicates eqA ls) ls) | 100.
+Proof.
+  destruct (reflect_eqlistA (remove_duplicates eqA ls) ls) as [H'|H']; constructor.
+  { rewrite <- H'.
+    apply NoDupA_remove_duplicates; try assumption; intros x y; specialize (H x y); destruct H.
+    all: intros; subst; congruence. }
+  { intro H''; eapply remove_duplicates_eq_NoDupA in H''; try assumption.
+    { rewrite H'' in H'; specialize (H' (reflexivity _)); assumption. }
+    { intros x y; specialize (H x y); destruct H.
+      all: intros; subst; congruence. } }
+Qed.
+
+Global Instance reflect_NoDup {A eqA} {H : reflect_rel (@eq A) eqA} {ls : list A}
+  : reflect (List.NoDup ls) (list_beq _ eqA (remove_duplicates eqA ls) ls) | 10.
+Proof.
+  destruct (@reflect_NoDupA A _ eqA _ _ H ls); constructor.
+  all: rewrite @NoDupA_eq_NoDup in *; assumption.
+Qed.
+Ltac skip_solve_reflect ::= constr:(false).
 
 Global Instance reflect_match_pair {A B} {P : A -> B -> Prop} {Pb : A -> B -> bool} {x : A * B}
        {HD : reflect (P (fst x) (snd x)) (Pb (fst x) (snd x))}

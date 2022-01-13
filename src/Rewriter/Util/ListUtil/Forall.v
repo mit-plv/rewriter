@@ -16,12 +16,12 @@ Lemma unfold_Forallb {A P} ls
       | nil => true
       | cons x xs => andb (P x) (Forallb P xs)
       end.
-Proof. destruct ls; reflexivity. Qed.
+Proof using Type. destruct ls; reflexivity. Qed.
 
 Lemma Forall_Forallb_iff {A} (P : A -> bool) (Q : A -> Prop) (ls : list A)
       (H : forall x, In x ls -> P x = true <-> Q x)
   : Forallb P ls = true <-> Forall Q ls.
-Proof.
+Proof using Type.
   induction ls as [|x xs IHxs]; simpl; rewrite unfold_Forallb.
   { intuition. }
   { simpl in *.
@@ -222,7 +222,7 @@ Qed.
 Global Instance Forall2_Proper_impl {A B}
   : Proper (pointwise_relation _ (pointwise_relation _ Basics.impl) ==> eq ==> eq ==> Basics.impl)
            (@List.Forall2 A B) | 10.
-Proof.
+Proof using Type.
   cbv [Basics.impl respectful pointwise_relation].
   repeat intro; subst; rewrite Forall2_forall_In_combine_iff in *.
   destruct_head'_and; split; eauto.
@@ -231,7 +231,7 @@ Qed.
 Global Instance Forall2_Proper_iff {A B}
   : Proper (pointwise_relation _ (pointwise_relation _ iff) ==> eq ==> eq ==> iff)
            (@List.Forall2 A B) | 10.
-Proof.
+Proof using Type.
   cbv [respectful pointwise_relation].
   repeat intro; subst; rewrite !Forall2_forall_In_combine_iff in *.
   split_iff.
@@ -240,14 +240,110 @@ Qed.
 
 Lemma Forall2_Forall_iff_ignore_r {A B P ls1 ls2}
   : @Forall2 A B (fun _ => P) ls1 ls2 <-> (length ls1 = length ls2 /\ Forall P ls2).
-Proof.
+Proof using Type.
   revert ls1 ls2; induction ls1, ls2; t_Forall2; exfalso; lia.
 Qed.
 
 Lemma Forall2_flip_iff {A B P xs ys}
   : @Forall2 A B P xs ys <-> Forall2 (Basics.flip P) ys xs.
-Proof. split; induction 1; constructor; assumption. Qed.
+Proof using Type. split; induction 1; constructor; assumption. Qed.
 
 Lemma Forall2_Forall_ignore_l {A B P ls1 ls2}
   : @Forall2 A B (fun x _ => P x) ls1 ls2 <-> (length ls1 = length ls2 /\ Forall P ls1).
-Proof. now rewrite Forall2_flip_iff; cbv [Basics.flip]; rewrite Forall2_Forall_iff_ignore_r. Qed.
+Proof using Type. now rewrite Forall2_flip_iff; cbv [Basics.flip]; rewrite Forall2_Forall_iff_ignore_r. Qed.
+
+Lemma Forall2_flip {A B} {R : A -> B -> Prop} xs ys :
+  Forall2 R xs ys -> Forall2 (fun y x => R x y) ys xs.
+Proof using Type. induction 1; eauto. Qed.
+
+Lemma length_Forall2 {A B : Type} {xs ys} {P:A->B->Prop} : Forall2 P xs ys -> length xs = length ys.
+Proof using Type. induction 1; cbn; eauto. Qed.
+
+Section weaken.
+  Context {A B} {P Q:A->B->Prop} (H : forall (a : A) (b : B), P a b -> Q a b).
+  Fixpoint Forall2_weaken args args' (pf : Forall2 P args args') : Forall2 Q args args' :=
+    match pf with
+    | Forall2_nil => Forall2_nil _
+    | Forall2_cons _ _ _ _ Rxy k => Forall2_cons _ _ (H _ _ Rxy) (Forall2_weaken _ _ k)
+    end.
+End weaken.
+Lemma Forall2_map_l {A' A B} (f : A' -> A) {R : A -> B -> Prop} (xs : list A') (ys : list B) :
+  Forall2 R (List.map f xs) ys <-> Forall2 (fun x y => R (f x) y) xs ys.
+Proof using Type.
+  remember (List.map f xs) as fxs eqn:Heqn.
+  split; intros H; (revert fxs Heqn + revert xs Heqn); induction H; intros ? Heqn;
+    try destruct xs; cbn in *; inversion Heqn; clear Heqn; subst;
+      try congruence; eauto.
+Qed.
+Import RelationClasses.
+Lemma Reflexive_forall2 {A} {R} : @Reflexive A R -> Reflexive (Forall2 R).
+Proof using Type. intros ? l; induction l; eauto. Qed.
+Global Hint Extern 1 (Reflexive (Forall2 _)) => simple apply @Reflexive_forall2 : typeclass_instances.
+Lemma Forall2_eq {A} (xs ys : list A) : Forall2 eq xs ys <-> xs = ys.
+Proof using Type. split; induction 1; subst; eauto; reflexivity. Qed.
+Lemma Forall2_trans {A B C} {AB BC} {xs : list A} {ys : list B} :
+  Forall2 AB xs ys -> forall {zs : list C}, Forall2 BC ys zs ->
+                                            Forall2 (fun x z => exists y, AB x y /\ BC y z) xs zs.
+Proof using Type. induction 1; inversion 1; subst; econstructor; eauto. Qed.
+
+Lemma Forall2_nil_nil_iff A B P
+  : @Forall2 A B P nil nil <-> True.
+Proof using Type. split; eauto. Qed.
+Lemma Forall2_nil_cons_iff A B P x y
+  : @Forall2 A B P nil (cons x y) <-> False.
+Proof using Type. split; firstorder inversion_one_head Forall2. Qed.
+Lemma Forall2_nil_l_iff A B P ls
+  : @Forall2 A B P nil ls <-> ls = nil.
+Proof using Type. split; firstorder (try inversion_one_head Forall2; subst; auto). Qed.
+Lemma Forall2_nil_r_iff A B P ls
+  : @Forall2 A B P ls nil <-> ls = nil.
+Proof using Type. split; firstorder (try inversion_one_head Forall2; subst; auto). Qed.
+Lemma Forall2_cons_nil_iff A B P x y
+  : @Forall2 A B P (cons x y) nil <-> False.
+Proof using Type. split; firstorder inversion_one_head Forall2. Qed.
+Lemma Forall2_cons_cons_iff A B P x xs y ys
+  : @Forall2 A B P (cons x xs) (cons y ys) <-> (P x y /\ Forall2 P xs ys).
+Proof using Type. split; firstorder (inversion_one_head Forall2; auto). Qed.
+Lemma Forall2_cons_l_ex_iff A B P x xs ls
+  : @Forall2 A B P (cons x xs) ls <-> (exists y ys, ls = cons y ys /\ P x y /\ Forall2 P xs ys).
+Proof using Type. split; firstorder (inversion_one_head Forall2; eauto). Qed.
+Lemma Forall2_cons_r_ex_iff A B P x xs ls
+  : @Forall2 A B P ls (cons x xs) <-> (exists y ys, ls = cons y ys /\ P y x /\ Forall2 P ys xs).
+Proof using Type. split; firstorder (inversion_one_head Forall2; eauto). Qed.
+
+Lemma pull_ex_Forall_iff {A B} {R : A -> B -> Prop} {ls}
+  : Forall (fun a => ex (R a)) ls <-> exists ls', Forall2 R ls ls'.
+Proof using Type.
+  induction ls as [|x xs IH];
+    rewrite ?Forall_nil_iff, ?Forall_cons_iff, ?IH;
+    try setoid_rewrite Forall2_nil_l_iff;
+    try setoid_rewrite Forall2_cons_l_ex_iff;
+    repeat firstorder (try inversion_one_head Forall; eauto 7).
+Qed.
+
+Lemma pull_ex_Forall2_l_iff {A B C} {R : A -> B -> C -> Prop} {ls1 ls2}
+  : Forall2 (fun a b => ex (R a b)) ls1 ls2 <-> exists ls3, List.length ls1 = List.length ls3 /\ Forall2 (fun ac b => R (fst ac) b (snd ac)) (List.combine ls1 ls3) ls2.
+Proof using Type.
+  revert ls2; induction ls1 as [|x xs IH], ls2 as [|y ys]; try specialize (IH ys).
+  all: rewrite ?Forall2_nil_nil_iff, ?Forall2_nil_cons_iff, ?Forall2_cons_nil_iff, ?Forall2_cons_cons_iff, ?IH.
+  all: try setoid_rewrite Forall2_nil_r_iff.
+  all: try setoid_rewrite Forall2_nil_l_iff.
+  all: try setoid_rewrite Forall2_cons_r_ex_iff.
+  all: repeat first [ progress cbn [List.length List.combine] in *
+                    | break_innermost_match_hyps_step
+                    | progress subst
+                    | solve [ exists nil; eauto ]
+                    | match goal with
+                      | [ H : S _ = S _ |- _ ] => inversion H; clear H
+                      | [ H : _ :: _ = _ :: _ |- _ ] => inversion H; clear H
+                      end
+                    | progress firstorder first [ congruence | eauto 7 ]
+                    | eexists (_ :: _) ].
+Qed.
+
+Lemma pull_ex_Forall2_r_iff {A B C} {R : A -> B -> C -> Prop} {ls1 ls2}
+  : Forall2 (fun a b => ex (R a b)) ls1 ls2 <-> exists ls3, List.length ls2 = List.length ls3 /\ Forall2 (fun a bc => R a (fst bc) (snd bc)) ls1 (List.combine ls2 ls3).
+Proof using Type.
+  setoid_rewrite Forall2_flip_iff; cbv [Basics.flip].
+  rewrite pull_ex_Forall2_l_iff; reflexivity.
+Qed.
