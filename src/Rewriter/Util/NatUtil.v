@@ -50,23 +50,22 @@ Global Strategy expand [nat_rect_arrow_nodep nat_rect_nodep Thunked.nat_rect].
 
 Create HintDb natsimplify discriminated.
 
-Hint Resolve mod_bound_pos plus_le_compat : arith.
-
-Lemma mod_bound_nonneg x y : 0 <= x mod y.
-Proof.
-  apply Nat.le_0_l.
-Qed.
-
-Lemma mod_bound_lt x y : 0 < y -> x mod y < y.
-Proof. apply Nat.mod_bound_pos; lia. Qed.
-
-Hint Resolve mod_bound_nonneg mod_bound_lt : arith.
-
+Global Hint Resolve mod_bound_pos plus_le_compat : arith.
 Hint Rewrite @mod_small @mod_mod @mod_1_l @mod_1_r succ_pred using lia : natsimplify.
 
 Hint Rewrite sub_diag add_0_l add_0_r sub_0_r sub_succ : natsimplify.
 
 Local Open Scope nat_scope.
+
+Lemma mod_bound_nonneg x y : 0 <= x mod y.
+Proof.
+  now apply Nat.le_0_l.
+Qed.
+
+Lemma mod_bound_lt x y : 0 < y -> x mod y < y.
+Proof. apply Nat.mod_bound_pos; lia. Qed.
+
+Global Hint Resolve mod_bound_nonneg mod_bound_lt : arith.
 
 Lemma min_def {x y} : min x y = x - (x - y).
 Proof. apply Min.min_case_strong; lia. Qed.
@@ -276,7 +275,7 @@ Proof.
   intro; induction k; simpl; nia.
 Qed.
 
-Hint Resolve pow_nonzero : arith.
+Global Hint Resolve pow_nonzero : arith.
 
 Lemma S_pred_nonzero : forall a, (a > 0 -> S (pred a) = a)%nat.
 Proof.
@@ -289,7 +288,7 @@ Lemma mod_same_eq a b : a <> 0 -> a = b -> b mod a = 0.
 Proof. intros; subst; apply mod_same; assumption. Qed.
 
 Hint Rewrite @mod_same_eq using lia : natsimplify.
-Hint Resolve mod_same_eq : arith.
+Global Hint Resolve mod_same_eq : arith.
 
 Lemma mod_mod_eq a b c : a <> 0 -> b = c mod a -> b mod a = b.
 Proof. intros; subst; autorewrite with natsimplify; reflexivity. Qed.
@@ -491,3 +490,64 @@ Proof.
   revert v; induction n as [|n IHn]; cbn [nat_rect]; [ reflexivity | ]; intro.
   rewrite HS; apply PS'_Proper; eauto.
 Qed.
+
+Lemma min_x_xy x y : Nat.min x (Nat.min x y) = Nat.min x y.
+Proof. now rewrite Nat.min_assoc; autorewrite with natsimplify. Qed.
+Hint Rewrite min_x_xy : natsimplify.
+
+Lemma min_x_yx x y : Nat.min x (Nat.min y x) = Nat.min x y.
+Proof. now rewrite Nat.min_comm, <- Nat.min_assoc, Nat.min_comm; autorewrite with natsimplify. Qed.
+Hint Rewrite min_x_yx : natsimplify.
+
+Lemma min_xy_x x y : Nat.min (Nat.min x y) x = Nat.min x y.
+Proof. now rewrite Nat.min_comm, Nat.min_assoc; autorewrite with natsimplify. Qed.
+Hint Rewrite min_xy_x : natsimplify.
+
+Lemma min_yx_x x y : Nat.min (Nat.min y x) x = Nat.min y x.
+Proof. now rewrite <- Nat.min_assoc; autorewrite with natsimplify. Qed.
+Hint Rewrite min_yx_x : natsimplify.
+
+Lemma max_x_xy x y : Nat.max x (Nat.max x y) = Nat.max x y.
+Proof. now rewrite Nat.max_assoc; autorewrite with natsimplify. Qed.
+Hint Rewrite max_x_xy : natsimplify.
+
+Lemma max_x_yx x y : Nat.max x (Nat.max y x) = Nat.max x y.
+Proof. now rewrite Nat.max_comm, <- Nat.max_assoc, Nat.max_comm; autorewrite with natsimplify. Qed.
+Hint Rewrite max_x_yx : natsimplify.
+
+Lemma max_xy_x x y : Nat.max (Nat.max x y) x = Nat.max x y.
+Proof. now rewrite Nat.max_comm, Nat.max_assoc; autorewrite with natsimplify. Qed.
+Hint Rewrite max_xy_x : natsimplify.
+
+Lemma max_yx_x x y : Nat.max (Nat.max y x) x = Nat.max y x.
+Proof. now rewrite <- Nat.max_assoc; autorewrite with natsimplify. Qed.
+Hint Rewrite max_yx_x : natsimplify.
+
+Ltac inversion_nat_eq_step :=
+  match goal with
+  | [ H : O = S _ |- _ ] => solve [ inversion H ]
+  | [ H : S _ = O |- _ ] => solve [ inversion H ]
+  | [ H : O = O |- _ ] => clear H
+  | [ H : O = O |- _ ] => pose proof (@UIP_nat _ _ eq_refl H); subst H
+  | [ H : S _ = S _ |- _ ]
+    => apply (f_equal pred) in H; cbn [pred] in H
+  end.
+Ltac inversion_nat_eq := repeat inversion_nat_eq_step.
+
+Ltac inversion_nat_rel_step :=
+  first [ inversion_nat_eq_step
+        | match goal with
+          | [ H : S _ <= O |- _ ] => exfalso; clear -H; lia
+          | [ H : _ < O |- _ ] => exfalso; clear -H; lia
+          | [ H : O >= S _ |- _ ] => exfalso; clear -H; lia
+          | [ H : O > _ |- _ ] => exfalso; clear -H; lia
+          | [ H : O <= _ |- _ ] => clear H
+          | [ H : O < S _ |- _ ] => clear H
+          | [ H : _ >= O |- _ ] => clear H
+          | [ H : S _ > O |- _ ] => clear H
+          | [ H : S _ <= S _ |- _ ] => apply le_S_n in H
+          | [ H : S _ < S _ |- _ ] => rewrite <- succ_lt_mono in H
+          | [ H : S _ >= S _ |- _ ] => progress cbv [ge] in H
+          | [ H : S _ > S _ |- _ ] => progress cbv [gt] in H
+          end ].
+Ltac inversion_nat_rel := repeat inversion_nat_rel_step.
