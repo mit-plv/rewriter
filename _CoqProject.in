@@ -85,6 +85,7 @@ src/Rewriter/Util/Tactics/DestructHead.v
 src/Rewriter/Util/Tactics/DestructHyps.v
 src/Rewriter/Util/Tactics/DoWithHyp.v
 src/Rewriter/Util/Tactics/EvarNormalize.v
+src/Rewriter/Util/Tactics/FindHyp.v
 src/Rewriter/Util/Tactics/GetGoal.v
 src/Rewriter/Util/Tactics/Head.v
 src/Rewriter/Util/Tactics/HeadUnderBinders.v
