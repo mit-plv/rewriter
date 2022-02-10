@@ -97,6 +97,7 @@ src/Rewriter/Util/plugins/strategy_tactic_plugin.ml
 
 src/Rewriter/Util/plugins/RewriterBuildRegistry.v
 src/Rewriter/Util/plugins/RewriterBuild.v
+src/Rewriter/Util/plugins/StrategyTactic.v
 src/Rewriter/Util/plugins/definition_by_tactic.ml
 src/Rewriter/Util/plugins/definition_by_tactic.mli
 src/Rewriter/Util/plugins/definition_by_tactic_plugin.mlg
