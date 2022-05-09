@@ -46,7 +46,7 @@ Ltac verify _ :=
     => is_var acc; verify_form acc lhs
   end.
 
-Hint Rewrite Z.add_0_r : mydb.
+#[global] Hint Rewrite Z.add_0_r : mydb.
 
 Inductive rewrite_strat_kind := topdown | bottomup.
 Inductive kind_of_rewrite := kind_rewrite_strat (_ : rewrite_strat_kind) | kind_setoid_rewrite | kind_rewrite_lhs_for.
@@ -250,7 +250,7 @@ Ltac run3 sz := Harness.runtests_verify_sanity (args_of_size (kind_rewrite_lhs_f
 
 
 Local Transparent Let_In.
-Hint Opaque Let_In Z.add : rewrite typeclass_instances.
+#[global] Hint Opaque Let_In Z.add : rewrite typeclass_instances.
 Global Opaque Let_In Z.add.
 
 Global Instance : forall {A}, Proper (eq ==> eq ==> Basics.flip Basics.impl) (@eq A) := _.

@@ -1,0 +1,32 @@
+package "strategy_tactic" (
+  description = "Coq Strategy Tactic"
+  requires = "coq-core.plugins.ltac"
+  archive(byte) = "strategy_tactic_plugin.cma"
+  archive(native) = "strategy_tactic_plugin.cmxa"
+  plugin(byte) = "strategy_tactic_plugin.cma"
+  plugin(native) = "strategy_tactic_plugin.cmxs"
+)
+package "definition_by_tactic" (
+  description = "Coq Definition By Tactic"
+  requires = "coq-core.plugins.ltac"
+  archive(byte) = "definition_by_tactic_plugin.cma"
+  archive(native) = "definition_by_tactic_plugin.cmxa"
+  plugin(byte) = "definition_by_tactic_plugin.cma"
+  plugin(native) = "definition_by_tactic_plugin.cmxs"
+)
+package "inductive_from_elim" (
+  description = "Coq Inductive From Elim"
+  requires = "coq-core.plugins.ltac"
+  archive(byte) = "inductive_from_elim_plugin.cma"
+  archive(native) = "inductive_from_elim_plugin.cmxa"
+  plugin(byte) = "inductive_from_elim_plugin.cma"
+  plugin(native) = "inductive_from_elim_plugin.cmxs"
+)
+package "rewriter_build" (
+  description = "Coq Rewriter Build"
+  requires = "coq-core.plugins.ltac"
+  archive(byte) = "rewriter_build_plugin.cma"
+  archive(native) = "rewriter_build_plugin.cmxa"
+  plugin(byte) = "rewriter_build_plugin.cma"
+  plugin(native) = "rewriter_build_plugin.cmxs"
+)

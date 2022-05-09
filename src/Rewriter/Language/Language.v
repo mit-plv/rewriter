@@ -307,7 +307,7 @@ Module Compilers.
 
     Class try_make_transport_cpsT {base : Type}
       := try_make_transport_cpsv : forall (P : base -> Type) t1 t2, ~> option (P t1 -> P t2).
-    Hint Mode try_make_transport_cpsT ! : typeclass_instances.
+    #[global] Hint Mode try_make_transport_cpsT ! : typeclass_instances.
     Global Arguments try_make_transport_cpsT : clear implicits.
 
     Class try_make_transport_cps_correctT {base : Type}
@@ -323,7 +323,7 @@ Module Compilers.
                  | right _ => None
                  end.
 
-    Hint Mode try_make_transport_cps_correctT ! - - - : typeclass_instances.
+    #[global] Hint Mode try_make_transport_cps_correctT ! - - - : typeclass_instances.
     Global Arguments try_make_transport_cps_correctT base {_ _ _}.
 
     Section transport_cps.

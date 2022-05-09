@@ -32,7 +32,7 @@ Global Instance Proper_Let_In_nd_changevalue_forall {A B} {RB:relation B}
 Proof. cbv; intuition (subst; eauto). Qed.
 
 (* Strangely needed in some cases where we have [(fun _ => foo) ...] messing up dependency calculation *)
-Hint Extern 1 (Proper _ (@Let_In _ _)) => progress cbv beta : typeclass_instances.
+#[global] Hint Extern 1 (Proper _ (@Let_In _ _)) => progress cbv beta : typeclass_instances.
 
 Definition app_Let_In_nd {A B T} (f:B->T) (e:A) (C:A->B)
   : f (Let_In e C) = Let_In e (fun v => f (C v)) := eq_refl.
@@ -61,7 +61,7 @@ Ltac let_in_to_Let_In e :=
     with fun x => @?C x => C end (* match drops the type cast *)
   | ?x => x
   end.
-Hint Extern 0 (_call_let_in_to_Let_In ?e) => (
+#[global] Hint Extern 0 (_call_let_in_to_Let_In ?e) => (
   let e := let_in_to_Let_In e in eexact e
 ) : typeclass_instances.
 Ltac change_let_in_with_Let_In :=

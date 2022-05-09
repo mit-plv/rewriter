@@ -63,10 +63,10 @@ Definition make_cps {T} (n : nat) (m : nat) (v : Z) (k : list Z -> T)
 Lemma lift_let_list_rect T A P N C (v : A) fls
   : @list_rect T P N C (Let_In v fls) = Let_In v (fun v => @list_rect T P N C (fls v)).
 Proof. reflexivity. Qed.
-Hint Rewrite lift_let_list_rect : mydb2.
+#[global] Hint Rewrite lift_let_list_rect : mydb2.
 Lemma lift_let_cons T A x (v : A) f : @cons T x (Let_In v f) = Let_In v (fun v => @cons T x (f v)).
 Proof. reflexivity. Qed.
-Hint Rewrite lift_let_cons : mydb1.
+#[global] Hint Rewrite lift_let_cons : mydb1.
 
 Lemma eval_repeat
   : forall A x n,

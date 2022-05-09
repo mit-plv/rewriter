@@ -144,9 +144,9 @@ Module Compilers.
     End with_ident.
   End SubstVarLike.
 
-  Hint Resolve SubstVarLike.Wf_SubstVar SubstVarLike.Wf_SubstVarLike SubstVarLike.Wf_SubstVarOrIdent : wf.
-  Hint Opaque SubstVarLike.SubstVar SubstVarLike.SubstVarLike SubstVarLike.SubstVarOrIdent : wf interp rewrite.
-  Hint Rewrite @SubstVarLike.Interp_SubstVar @SubstVarLike.Interp_SubstVarLike @SubstVarLike.Interp_SubstVarOrIdent : interp.
+  #[global] Hint Resolve SubstVarLike.Wf_SubstVar SubstVarLike.Wf_SubstVarLike SubstVarLike.Wf_SubstVarOrIdent : wf.
+  #[global] Hint Opaque SubstVarLike.SubstVar SubstVarLike.SubstVarLike SubstVarLike.SubstVarOrIdent : wf interp rewrite.
+  #[global] Hint Rewrite @SubstVarLike.Interp_SubstVar @SubstVarLike.Interp_SubstVarLike @SubstVarLike.Interp_SubstVarOrIdent : interp.
 
   Module UnderLets.
     Import UnderLets.Compilers.UnderLets.
@@ -2009,7 +2009,7 @@ Module Compilers.
     End reify.
   End UnderLets.
 
-  Hint Resolve UnderLets.Wf_LetBindReturn : wf.
-  Hint Opaque UnderLets.LetBindReturn : wf interp rewrite.
-  Hint Rewrite @UnderLets.Interp_LetBindReturn : interp.
+  #[global] Hint Resolve UnderLets.Wf_LetBindReturn : wf.
+  #[global] Hint Opaque UnderLets.LetBindReturn : wf interp rewrite.
+  #[global] Hint Rewrite @UnderLets.Interp_LetBindReturn : interp.
 End Compilers.

@@ -37,10 +37,10 @@ Module Compilers.
 
   Create HintDb wf discriminated.
   Create HintDb interp discriminated.
-  Hint Constants Opaque : wf interp.
+  #[global] Hint Constants Opaque : wf interp.
 
-  Hint Opaque expr.interp expr.Interp : interp rewrite.
-  Hint Extern 2 => typeclasses eauto : wf.
+  #[global] Hint Opaque expr.interp expr.Interp : interp rewrite.
+  #[global] Hint Extern 2 => typeclasses eauto : wf.
 
   Module type.
     Section eqv.
@@ -216,9 +216,9 @@ Module Compilers.
         Proof using R_sym R_trans. t. Qed.
       End proper.
     End eqv.
-    Hint Extern 100 (Symmetric (@type.related ?base_type ?interp_base_type ?R ?t))
+    #[global] Hint Extern 100 (Symmetric (@type.related ?base_type ?interp_base_type ?R ?t))
     => (tryif has_evar R then fail else simple apply (@related_Symmetric base_type interp_base_type t R)) : typeclass_instances.
-    Hint Extern 100 (Transitive (@type.related ?base_type ?interp_base_type ?R ?t))
+    #[global] Hint Extern 100 (Transitive (@type.related ?base_type ?interp_base_type ?R ?t))
     => (tryif has_evar R then fail else simple apply (@related_Transitive base_type interp_base_type t R)) : typeclass_instances.
 
     Section app_curried_instances.
@@ -230,8 +230,8 @@ Lemma PER_valid_l {A} {R : relation A} {HS : Symmetric R} {HT : Transitive R} x 
 Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
 Lemma PER_valid_r {A} {R : relation A} {HS : Symmetric R} {HT : Transitive R} x y (H : R x y) : Proper R y.
 Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
-Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_l _ R); [ | | solve [ eauto with nocore ] ] : typeclass_instances.
-Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [ eauto with nocore ] ] : typeclass_instances.
+#[global] Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_l _ R); [ | | solve [ eauto with nocore ] ] : typeclass_instances.
+#[global] Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [ eauto with nocore ] ] : typeclass_instances.
 >>
 *)
       Global Instance app_curried_Proper_gen {R t}
@@ -772,7 +772,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
     Global Hint Constructors wf : wf.
     Global Hint Resolve Wf_APP : wf.
     Global Hint Opaque expr.APP : wf interp rewrite.
-    Hint Rewrite @expr.Interp_APP : interp.
+    #[global] Hint Rewrite @expr.Interp_APP : interp.
 
     Ltac is_expr_constructor arg :=
       lazymatch arg with
@@ -1453,16 +1453,16 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
     Notation Interp_Reify := Interp_Reify_as.
   End expr.
 
-  Hint Constructors expr.wf : wf.
-  Hint Resolve expr.Wf_APP expr.Wf_Reify expr.Wf_reify expr.Wf_base_Reify expr.Wf_base_reify : wf.
+  #[global] Hint Constructors expr.wf : wf.
+  #[global] Hint Resolve expr.Wf_APP expr.Wf_Reify expr.Wf_reify expr.Wf_base_Reify expr.Wf_base_reify : wf.
   (** Work around COQBUG(https://github.com/coq/coq/issues/11536) *)
-  Hint Extern 1 (expr.Wf (GallinaReify.base.Reify_as _ _)) => simple apply (@expr.Wf_base_Reify) : wf.
-  Hint Extern 1 (expr.Wf (GallinaReify.Reify_as _ _)) => simple apply (@expr.Wf_Reify) : wf.
+  #[global] Hint Extern 1 (expr.Wf (GallinaReify.base.Reify_as _ _)) => simple apply (@expr.Wf_base_Reify) : wf.
+  #[global] Hint Extern 1 (expr.Wf (GallinaReify.Reify_as _ _)) => simple apply (@expr.Wf_Reify) : wf.
   (** Work around COQBUG(https://github.com/coq/coq/issues/11536) *)
-  Hint Extern 1 (expr.Wf (fun var => GallinaReify.base.reify _)) => simple apply (@expr.Wf_base_reify) : wf.
-  Hint Extern 1 (expr.Wf (fun var => GallinaReify.reify _)) => simple apply (@expr.Wf_reify) : wf.
-  Hint Opaque expr.APP GallinaReify.Reify_as GallinaReify.base.reify : wf interp rewrite.
-  Hint Rewrite @expr.Interp_Reify @expr.interp_reify @expr.interp_reify_list @expr.interp_reify_option @expr.Interp_reify @expr.Interp_APP : interp.
+  #[global] Hint Extern 1 (expr.Wf (fun var => GallinaReify.base.reify _)) => simple apply (@expr.Wf_base_reify) : wf.
+  #[global] Hint Extern 1 (expr.Wf (fun var => GallinaReify.reify _)) => simple apply (@expr.Wf_reify) : wf.
+  #[global] Hint Opaque expr.APP GallinaReify.Reify_as GallinaReify.base.reify : wf interp rewrite.
+  #[global] Hint Rewrite @expr.Interp_Reify @expr.interp_reify @expr.interp_reify_list @expr.interp_reify_option @expr.Interp_reify @expr.Interp_APP : interp.
 
   Notation Wf := expr.Wf.
 
@@ -1999,7 +1999,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
   Ltac prove_Wf3 _ := prove_Wf3_with ltac:(fun _ => idtac).
 
   Global Hint Extern 0 (?x == ?x) => apply expr.Wf_Interp_Proper_gen : wf interp.
-  Hint Resolve GeneralizeVar.Wf_FromFlat_ToFlat GeneralizeVar.Wf_GeneralizeVar : wf.
-  Hint Opaque GeneralizeVar.FromFlat GeneralizeVar.ToFlat GeneralizeVar.GeneralizeVar : wf interp rewrite.
-  Hint Rewrite @GeneralizeVar.Interp_gen1_GeneralizeVar @GeneralizeVar.Interp_gen1_FromFlat_ToFlat : interp.
+  #[global] Hint Resolve GeneralizeVar.Wf_FromFlat_ToFlat GeneralizeVar.Wf_GeneralizeVar : wf.
+  #[global] Hint Opaque GeneralizeVar.FromFlat GeneralizeVar.ToFlat GeneralizeVar.GeneralizeVar : wf interp rewrite.
+  #[global] Hint Rewrite @GeneralizeVar.Interp_gen1_GeneralizeVar @GeneralizeVar.Interp_gen1_FromFlat_ToFlat : interp.
 End Compilers.
