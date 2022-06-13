@@ -17,7 +17,7 @@ jobs:
       uses: coq-community/docker-coq-action@v1
       with:
         coq_version: dev
-        ocaml_version: 4.05
+        ocaml_version: 4.13-flambda
         custom_script: |
           sudo chmod -R a+rw .
           echo '::group::install general dependencies'
