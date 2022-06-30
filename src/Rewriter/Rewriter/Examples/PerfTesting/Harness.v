@@ -282,10 +282,10 @@ Proof.
   intros x y; specialize (Hr x y); destruct Hr; intuition (eauto; congruence).
 Qed.
 
-Instance reflect_eq_nat : reflect_rel (@eq nat) Nat.eqb
+Global Instance reflect_eq_nat : reflect_rel (@eq nat) Nat.eqb
   := reflect_rel_of_beq_iff Nat.eqb_eq.
 
-Instance reflect_eq_Z : reflect_rel (@eq Z) Z.eqb
+Global Instance reflect_eq_Z : reflect_rel (@eq Z) Z.eqb
   := reflect_rel_of_beq_iff Z.eqb_eq.
 
 Local Set Implicit Arguments.
@@ -301,25 +301,25 @@ Proof.
 Defined.
 Local Unset Implicit Arguments.
 
-Instance reflect_eq_prod {A B eqA eqB} {_ : reflect_rel (@eq A) eqA} {_ : reflect_rel (@eq B) eqB}
+Global Instance reflect_eq_prod {A B eqA eqB} {_ : reflect_rel (@eq A) eqA} {_ : reflect_rel (@eq B) eqB}
   : reflect_rel (@eq (A * B)) (prod_beq eqA eqB)
   := reflect_rel_of_beq_iff (prod_beq_iff (reflect_rel_to_beq_iff _) (reflect_rel_to_beq_iff _)).
 
 Class has_sub T := sub : T -> T -> T.
-Instance: has_sub nat := Nat.sub.
-Instance: has_sub Z := Z.sub.
+Global Instance: has_sub nat := Nat.sub.
+Global Instance: has_sub Z := Z.sub.
 
 Class has_succ T := succ : T -> T.
-Instance: has_succ nat := S.
-Instance: has_succ Z := Z.succ.
+Global Instance: has_succ nat := S.
+Global Instance: has_succ Z := Z.succ.
 
 Class has_zero T := zero : T.
-Instance: has_zero nat := O.
-Instance: has_zero Z := Z0.
+Global Instance: has_zero nat := O.
+Global Instance: has_zero Z := Z0.
 
 Class has_sort T := sort : list T -> list T.
-Instance: has_sort nat := NatSort.sort.
-Instance: has_sort Z := ZSort.sort.
+Global Instance: has_sort nat := NatSort.sort.
+Global Instance: has_sort Z := ZSort.sort.
 
 Definition remove_smaller_args_of_size_by_reflect
            {T} {T_beq : T -> T -> bool}

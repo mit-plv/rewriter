@@ -417,7 +417,7 @@ Ltac describe_goal nm :=
        idtac "Params: 0-nm=" sz ", 1-n=" n ", 2-m=" m ", 3-input-size=" input_num_nodes ", 4-output-size=" output_num_nodes ", 5-num-rewrites=" num_rewrites
   end.
 
-Hint Rewrite Z.add_0_r : mydb.
+#[global] Hint Rewrite Z.add_0_r : mydb.
 
 Ltac do_coq_rewrite _ := rewrite -> !Z.add_0_r.
 
@@ -503,7 +503,7 @@ Ltac mkgoal6 := mkgoal constr:(kind_rewrite_lhs_for).
 Ltac time_solve_goal6 := time_solve_goal constr:(kind_rewrite_lhs_for).
 Ltac run6 sz := Harness.runtests_verify_sanity (args_of_size (kind_rewrite_lhs_for)) describe_goal mkgoal6 redgoal time_solve_goal6 verify sz.
 
-Hint Opaque Z.add : rewrite typeclass_instances.
+#[global] Hint Opaque Z.add : rewrite typeclass_instances.
 
 Global Instance : forall {A}, Proper (eq ==> eq ==> Basics.flip Basics.impl) (@eq A) := _.
 Global Instance : Proper (eq ==> eq ==> eq) Z.add := _.

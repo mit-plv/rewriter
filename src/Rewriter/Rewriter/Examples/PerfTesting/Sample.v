@@ -677,7 +677,7 @@ Class factors_through_prod {T} (f : N * N -> T) :=
     ; factor_correctness : forall x, f x = factor_through_prod (fst x * snd x)%N }.
 Arguments factor_through_prod {T} f {_}.
 
-Hint Unfold id : solve_factors_through_prod.
+#[global] Hint Unfold id : solve_factors_through_prod.
 
 Ltac subst_context_vars f :=
   let run := match goal with
@@ -753,10 +753,10 @@ Definition small_table (* the [n]th element is the number of ways there are to w
          => (n:N, ∑_{i=1}^{n} if (n mod i =? 0) then 1 else 0)%Z)
         (seq 0 (Z.to_nat (1 + cutoff))).
 
-Hint Extern 0 (reified ?f) => let v := reify_poly f in exact v : typeclass_instances.
+#[global] Hint Extern 0 (reified ?f) => let v := reify_poly f in exact v : typeclass_instances.
 
-Hint Extern 0 (factors_through_prod _) => solve_factors_through_prod : typeclass_instances.
-Hint Extern 0 => progress unfold factor_through_prod : typeclass_instances.
+#[global] Hint Extern 0 (factors_through_prod _) => solve_factors_through_prod : typeclass_instances.
+#[global] Hint Extern 0 => progress unfold factor_through_prod : typeclass_instances.
 
 Global Instance nat_has_double_avg : has_double_avg nat
   := { double_T := Nat.mul 2 ; avg_T x y := ((x + y) / 2)%nat }.
@@ -896,21 +896,21 @@ Definition total_time_of_Zpoly
         if (max - min <=? 25)%Z
         then ∑_{i=min}^{max} (size i)
         else f_int max - f_int min.
-Hint Extern 0 (has_total_time Z) => simple eapply @total_time_of_Zpoly : typeclass_instances.
+#[global] Hint Extern 0 (has_total_time Z) => simple eapply @total_time_of_Zpoly : typeclass_instances.
 
 Definition total_time_of_Npoly
        {size : has_size N}
        {p : reified (fun x => size (Z.to_N x))}
   : has_total_time N
   := fun min max => @total_time_of_Zpoly _ p min max.
-Hint Extern 0 (has_total_time N) => simple eapply @total_time_of_Npoly : typeclass_instances.
+#[global] Hint Extern 0 (has_total_time N) => simple eapply @total_time_of_Npoly : typeclass_instances.
 
 Definition total_time_of_nat_poly
        {size : has_size nat}
        {p : reified (fun x => size (N.to_nat (Z.to_N x)))}
   : has_total_time nat
   := fun min max => @total_time_of_Zpoly _ p min max.
-Hint Extern 0 (has_total_time nat) => simple eapply @total_time_of_nat_poly : typeclass_instances.
+#[global] Hint Extern 0 (has_total_time nat) => simple eapply @total_time_of_nat_poly : typeclass_instances.
 
 Fixpoint make_cumulants'
          {T} (add : T -> T -> T) (acc : T) (ls : list T)
@@ -990,7 +990,7 @@ Definition total_time_of_N_prod_poly
        {p : reified (fun x:Z => factor_through_prod size (Z.to_N x))}
   : has_total_time (N * N)
   := dlet cached_table := small_table_rev_cached in total_time_of_N_prod_poly_cached cached_table.
-Hint Extern 0 (has_total_time (N * N)) => simple eapply @total_time_of_N_prod_poly : typeclass_instances.
+#[global] Hint Extern 0 (has_total_time (N * N)) => simple eapply @total_time_of_N_prod_poly : typeclass_instances.
 
 Definition total_time_of_Z_prod_poly_cached
        {size : has_size (Z * Z)}
@@ -1007,7 +1007,7 @@ Definition total_time_of_Z_prod_poly
        {p : reified (fun x => factor_through_prod size' (Z.to_N x))}
   : has_total_time (Z * Z)
   := dlet cached_table := @small_table_rev_cached size' in total_time_of_Z_prod_poly_cached cached_table.
-Hint Extern 0 (has_total_time (Z * Z)) => simple eapply @total_time_of_Z_prod_poly : typeclass_instances.
+#[global] Hint Extern 0 (has_total_time (Z * Z)) => simple eapply @total_time_of_Z_prod_poly : typeclass_instances.
 
 Definition total_time_of_nat_prod_poly_cached
        {size : has_size (nat * nat)}
@@ -1024,11 +1024,11 @@ Definition total_time_of_nat_prod_poly
        {p : reified (fun x => factor_through_prod size' (Z.to_nat x))}
   : has_total_time (nat * nat)
   := dlet cached_table := @small_table_rev_cached size' in total_time_of_nat_prod_poly_cached cached_table.
-Hint Extern 0 (has_total_time (nat * nat)) => simple eapply @total_time_of_nat_prod_poly : typeclass_instances.
+#[global] Hint Extern 0 (has_total_time (nat * nat)) => simple eapply @total_time_of_nat_prod_poly : typeclass_instances.
 
 Class with_assum {T} (v : T) (T' : Type) := val : T'.
 
-Hint Extern 0 (@with_assum ?T ?v ?T') => pose (v : T); change T' : typeclass_instances.
+#[global] Hint Extern 0 (@with_assum ?T ?v ?T') => pose (v : T); change T' : typeclass_instances.
 
 Class has_compress {A B} := compress_T : A -> B.
 Global Arguments has_compress : clear implicits.

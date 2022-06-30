@@ -74,7 +74,7 @@ Local Arguments f_equal {_ _} _ {_ _} _.
 
 Definition fst_pair {A B} (a:A) (b:B) : fst (a,b) = a := eq_refl.
 Definition snd_pair {A B} (a:A) (b:B) : snd (a,b) = b := eq_refl.
-Create HintDb cancel_primpair discriminated. Hint Rewrite @fst_pair @snd_pair : cancel_primpair.
+Create HintDb cancel_primpair discriminated. #[global] Hint Rewrite @fst_pair @snd_pair : cancel_primpair.
 
 (** ** Equality for [prod] *)
 Section prod.
@@ -151,9 +151,9 @@ Global Instance iffTp_iffTp_prod_Proper
 Proof.
   intros ?? [?] ?? [?]; constructor; tauto.
 Defined.
-Hint Extern 2 (Proper _ prod) => apply iffTp_iffTp_prod_Proper : typeclass_instances.
-Hint Extern 2 (Proper _ (fun A => prod A)) => refine iff_iffTp_prod_Proper : typeclass_instances.
-Hint Extern 2 (Proper _ (fun A B => prod A B)) => refine iff_prod_Proper : typeclass_instances.
+#[global] Hint Extern 2 (Proper _ prod) => apply iffTp_iffTp_prod_Proper : typeclass_instances.
+#[global] Hint Extern 2 (Proper _ (fun A => prod A)) => refine iff_iffTp_prod_Proper : typeclass_instances.
+#[global] Hint Extern 2 (Proper _ (fun A B => prod A B)) => refine iff_prod_Proper : typeclass_instances.
 
 (** ** Useful Tactics *)
 (** *** [inversion_prod] *)

@@ -958,7 +958,7 @@ Module Compilers.
                | rExpr t e
                | rValue (type.base t) e
                  => e === e1
-               | rValue t e => False
+               | rValue _t _e => False
                end.
 
           Fixpoint rawexpr_equiv (r1 r2 : rawexpr) : Prop
@@ -2377,7 +2377,7 @@ Module Compilers.
                | rExpr _ e1
                | rValue (type.base _) e1
                  => expr_interp_related e1
-               | rValue t1 v1
+               | rValue _t1 v1
                  => value_interp_related v1
                | rIdent _ t1 idc1 t'1 alt1
                  => fun v2

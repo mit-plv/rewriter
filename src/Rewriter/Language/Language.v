@@ -307,7 +307,7 @@ Module Compilers.
 
     Class try_make_transport_cpsT {base : Type}
       := try_make_transport_cpsv : forall (P : base -> Type) t1 t2, ~> option (P t1 -> P t2).
-    Hint Mode try_make_transport_cpsT ! : typeclass_instances.
+    #[global] Hint Mode try_make_transport_cpsT ! : typeclass_instances.
     Global Arguments try_make_transport_cpsT : clear implicits.
 
     Class try_make_transport_cps_correctT {base : Type}
@@ -323,7 +323,7 @@ Module Compilers.
                  | right _ => None
                  end.
 
-    Hint Mode try_make_transport_cps_correctT ! - - - : typeclass_instances.
+    #[global] Hint Mode try_make_transport_cps_correctT ! - - - : typeclass_instances.
     Global Arguments try_make_transport_cps_correctT base {_ _ _}.
 
     Section transport_cps.
@@ -397,6 +397,7 @@ Module Compilers.
       end.
   End type.
   Notation type := type.type.
+  Declare Scope etype_scope.
   Delimit Scope etype_scope with etype.
   Bind Scope etype_scope with type.type.
   Global Arguments type.base {_} _%etype.
@@ -553,6 +554,8 @@ Module Compilers.
       Notation type := type.type.
 
       Module Notations.
+        Declare Scope pbtype_scope.
+        Declare Scope ptype_scope.
         Bind Scope pbtype_scope with type.type.
         Delimit Scope ptype_scope with ptype.
         Delimit Scope pbtype_scope with pbtype.
@@ -1026,6 +1029,9 @@ Module Compilers.
     Qed.
 
     Module Export Notations.
+      Declare Scope expr_scope.
+      Declare Scope Expr_scope.
+      Declare Scope expr_pat_scope.
       Delimit Scope expr_scope with expr.
       Delimit Scope Expr_scope with Expr.
       Delimit Scope expr_pat_scope with expr_pat.
@@ -1372,6 +1378,7 @@ Module Compilers.
              end.
 
     Module Export Notations.
+      Declare Scope ident_scope.
       Delimit Scope ident_scope with ident.
       Global Arguments expr.Ident {base_type%type ident%function var%function t%etype} idc%ident.
       Notation "# x" := (expr.Ident x) (only parsing) : expr_pat_scope.
