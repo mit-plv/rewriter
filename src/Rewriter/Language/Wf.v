@@ -37,10 +37,10 @@ Module Compilers.
 
   Create HintDb wf discriminated.
   Create HintDb interp discriminated.
-  Hint Constants Opaque : wf interp.
+  #[global] Hint Constants Opaque : wf interp.
 
-  Hint Opaque expr.interp expr.Interp : interp rewrite.
-  Hint Extern 2 => typeclasses eauto : wf.
+  #[global] Hint Opaque expr.interp expr.Interp : interp rewrite.
+  #[global] Hint Extern 2 => typeclasses eauto : wf.
 
   Module type.
     Section eqv.
@@ -63,7 +63,7 @@ Module Compilers.
       Local Instance related_Symmetric {t} {R : forall t, relation (interp_base_type t)}
              {R_sym : forall t, Symmetric (R t)}
         : Symmetric (@type.related base_type interp_base_type R t) | 100.
-      Proof.
+      Proof using Type.
         cbv [Symmetric] in *;
           induction t; cbn [type.related type.interp] in *; repeat intro; eauto.
       Qed.
@@ -72,7 +72,7 @@ Module Compilers.
             {R_sym : forall t, Symmetric (R t)}
             {R_trans : forall t, Transitive (R t)}
         : Transitive (@type.related base_type interp_base_type R t) | 100.
-      Proof.
+      Proof using Type.
         induction t; cbn [type.related]; [ exact _ | ].
         cbv [respectful]; cbn [type.interp].
         intros f g h Hfg Hgh x y Hxy.
@@ -216,9 +216,9 @@ Module Compilers.
         Proof using R_sym R_trans. t. Qed.
       End proper.
     End eqv.
-    Hint Extern 100 (Symmetric (@type.related ?base_type ?interp_base_type ?R ?t))
+    #[global] Hint Extern 100 (Symmetric (@type.related ?base_type ?interp_base_type ?R ?t))
     => (tryif has_evar R then fail else simple apply (@related_Symmetric base_type interp_base_type t R)) : typeclass_instances.
-    Hint Extern 100 (Transitive (@type.related ?base_type ?interp_base_type ?R ?t))
+    #[global] Hint Extern 100 (Transitive (@type.related ?base_type ?interp_base_type ?R ?t))
     => (tryif has_evar R then fail else simple apply (@related_Transitive base_type interp_base_type t R)) : typeclass_instances.
 
     Section app_curried_instances.
@@ -230,30 +230,30 @@ Lemma PER_valid_l {A} {R : relation A} {HS : Symmetric R} {HT : Transitive R} x 
 Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
 Lemma PER_valid_r {A} {R : relation A} {HS : Symmetric R} {HT : Transitive R} x y (H : R x y) : Proper R y.
 Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
-Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_l _ R); [ | | solve [ eauto with nocore ] ] : typeclass_instances.
-Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [ eauto with nocore ] ] : typeclass_instances.
+#[global] Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_l _ R); [ | | solve [ eauto with nocore ] ] : typeclass_instances.
+#[global] Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [ eauto with nocore ] ] : typeclass_instances.
 >>
 *)
       Global Instance app_curried_Proper_gen {R t}
         : Proper (@type.related base_type base_interp R t ==> type.and_for_each_lhs_of_arrow (@type.related base_type base_interp R)  ==> R (type.final_codomain t))
                  (@type.app_curried base_type base_interp t) | 1.
-      Proof.
+      Proof using Type.
         cbv [Proper respectful]; induction t; cbn [type.related type.app_curried]; cbv [Proper respectful]; [ intros; assumption | ].
         intros f g Hfg x y [Hxy ?]; eauto.
       Qed.
       Lemma app_curried_Proper {t}
         : Proper (@type.related base_type base_interp (fun _ => eq) t ==> type.and_for_each_lhs_of_arrow (@type.eqv) ==> eq)
                  (@type.app_curried base_type base_interp t).
-      Proof. exact _. Qed.
+      Proof using Type. exact _. Qed.
       Global Instance and_for_each_lhs_of_arrow_Reflexive {f} {R} {_ : forall t, Reflexive (R t)} {t}
         : Reflexive (@type.and_for_each_lhs_of_arrow base_type f f R t) | 1.
-      Proof. cbv [Reflexive] in *; induction t; cbn; repeat split; eauto. Qed.
+      Proof using Type. cbv [Reflexive] in *; induction t; cbn; repeat split; eauto. Qed.
       Global Instance and_for_each_lhs_of_arrow_Symmetric {f} {R} {_ : forall t, Symmetric (R t)} {t}
         : Symmetric (@type.and_for_each_lhs_of_arrow base_type f f R t) | 1.
-      Proof. cbv [Symmetric] in *; induction t; cbn; repeat split; intuition eauto. Qed.
+      Proof using Type. cbv [Symmetric] in *; induction t; cbn; repeat split; intuition eauto. Qed.
       Global Instance and_for_each_lhs_of_arrow_Transitive {f} {R} {_ : forall t, Transitive (R t)} {t}
         : Transitive (@type.and_for_each_lhs_of_arrow base_type f f R t) | 1.
-      Proof. cbv [Transitive] in *; induction t; cbn; repeat split; intuition eauto. Qed.
+      Proof using Type. cbv [Transitive] in *; induction t; cbn; repeat split; intuition eauto. Qed.
     End app_curried_instances.
 
     Lemma and_eqv_for_each_lhs_of_arrow_not_higher_order {base_type base_interp t}
@@ -772,7 +772,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
     Global Hint Constructors wf : wf.
     Global Hint Resolve Wf_APP : wf.
     Global Hint Opaque expr.APP : wf interp rewrite.
-    Hint Rewrite @expr.Interp_APP : interp.
+    #[global] Hint Rewrite @expr.Interp_APP : interp.
 
     Ltac is_expr_constructor arg :=
       lazymatch arg with
@@ -819,7 +819,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
             t e1 e2
             (Hwf : @wf var1 var2 G1 t e1 e2)
         : @wf var2 var1 G2 t e2 e1.
-      Proof.
+      Proof using Type.
         revert dependent G2; induction Hwf; constructor;
           repeat first [ progress cbn in *
                        | solve [ eauto ]
@@ -836,7 +836,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
             t e1 e2
             (Hwf : @wf var1 var2 G1 t e1 e2)
         : @wf var1 var2 G2 t e1 e2.
-      Proof.
+      Proof using Type.
         revert dependent G2; induction Hwf; constructor;
           repeat first [ progress cbn in *
                        | progress intros
@@ -852,7 +852,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
             t e1 e2
         : @wf var2 var1 (List.map (fun '(existT t (v1, v2)) => existT _ t (v2, v1)) G) t e2 e1
           <-> @wf var1 var2 G t e1 e2.
-      Proof.
+      Proof using Type.
         split; apply wf_sym; intros ???; rewrite in_map_iff;
           intros; destruct_head'_ex; destruct_head'_sigT; destruct_head_prod; destruct_head'_and; inversion_sigma; inversion_prod; subst.
         { assumption. }
@@ -908,7 +908,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
             (Hwf2 : @wf var2 _ G2 t e2 e123)
             (Hwf3 : @wf var3 _ G3 t e3 e123)
         : @wf3 base_type ident var1 var2 var3 G t e1 e2 e3.
-      Proof.
+      Proof using Type.
         subst G2 G3; revert dependent e3; revert dependent e2; revert dependent G; induction Hwf1; intros.
         Time all: repeat first [ progress subst
                                | progress cbn [projT1 projT2 fst snd eq_rect] in *
@@ -944,7 +944,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
             e1 e2 e3
             (Hwf : @wf3 base_type ident var1 var2 var2 G t e1 e2 e3)
         : @wf _ _ G1 t e1 e2.
-      Proof.
+      Proof using Type.
         subst G1 G2.
         induction Hwf; cbn [map] in *; constructor; rewrite ?in_map_iff; intros;
           try eexists (existT (fun t => _ * _ * _)%type _ (_, _, _));
@@ -954,13 +954,13 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
       Qed.
 
       Lemma Wf_of_Wf3 {t} (e : expr.Expr t) : @Wf3 base_type ident t e -> @Wf base_type ident t e.
-      Proof. intros Hwf var1 var2; eapply wf_of_wf3 with (G:=nil), Hwf. Qed.
+      Proof using Type. intros Hwf var1 var2; eapply wf_of_wf3 with (G:=nil), Hwf. Qed.
 
       Lemma Wf3_of_Wf {t} (e : expr.Expr t) : @Wf base_type ident t e -> @Wf3 base_type ident t e.
-      Proof. intros Hwf var1 var2 var3; eapply wf3_of_wf with (G:=nil); try eapply Hwf; reflexivity. Qed.
+      Proof using Type. intros Hwf var1 var2 var3; eapply wf3_of_wf with (G:=nil); try eapply Hwf; reflexivity. Qed.
 
       Lemma Wf_iff_Wf3 {t} (e : expr.Expr t) : @Wf base_type ident t e <-> @Wf3 base_type ident t e.
-      Proof. split; (apply Wf_of_Wf3 + apply Wf3_of_Wf). Qed.
+      Proof using Type. split; (apply Wf_of_Wf3 + apply Wf3_of_Wf). Qed.
     End wf_properties.
     Global Hint Immediate Wf_of_Wf3 : wf.
     Global Hint Resolve Wf3_of_Wf : wf.
@@ -980,7 +980,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
               (Hwf : @wf _ _ _ _ G t e1 e2)
               (HG : forall t v1 v2, In (existT _ t (v1, v2)) G -> type.related R v1 v2)
           : type.related R (expr.interp ident_interp1 e1) (expr.interp ident_interp2 e2).
-        Proof.
+        Proof using ident_interp_Proper.
           induction Hwf;
             repeat first [ reflexivity
                          | assumption
@@ -1013,14 +1013,14 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
         Lemma wf_interp_Proper_gen1 G {t}
               (HG : forall t v1 v2, In (existT _ t (v1, v2)) G -> type.related R v1 v2)
           : Proper (@wf _ _ _ _ G t ==> type.related R) (expr.interp ident_interp).
-        Proof. intros ? ? Hwf; eapply @wf_interp_Proper_gen2; eassumption. Qed.
+        Proof using ident_interp_Proper. intros ? ? Hwf; eapply @wf_interp_Proper_gen2; eassumption. Qed.
 
         Lemma wf_interp_Proper_gen {t}
           : Proper (@wf _ _ _ _ nil t ==> type.related R) (expr.interp ident_interp).
-        Proof. apply wf_interp_Proper_gen1; cbn [In]; tauto. Qed.
+        Proof using ident_interp_Proper. apply wf_interp_Proper_gen1; cbn [In]; tauto. Qed.
 
         Lemma Wf_Interp_Proper_gen {t} (e : expr.Expr t) : Wf e -> Proper (type.related R) (expr.Interp ident_interp e).
-        Proof. intro Hwf; apply wf_interp_Proper_gen, Hwf. Qed.
+        Proof using ident_interp_Proper. intro Hwf; apply wf_interp_Proper_gen, Hwf. Qed.
       End with_1.
     End interp_gen.
 
@@ -1358,16 +1358,16 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
       End with_var2.
 
       Lemma Wf_base_Reify_as {t} v : expr.Wf (GallinaReify.base.Reify_as t v).
-      Proof. repeat intro; apply wf_reify. Qed.
+      Proof using reflect_base_beq. repeat intro; apply wf_reify. Qed.
 
       Lemma Wf_Reify_as {t} (v : base.interp base_interp t) : expr.Wf (GallinaReify.Reify_as (type.base t) (fun _ => v)).
-      Proof. repeat intro; apply wf_reify. Qed.
+      Proof using reflect_base_beq. repeat intro; apply wf_reify. Qed.
 
       Lemma Wf_base_reify {t} v : expr.Wf (fun var => GallinaReify.base.reify (t:=t) v).
-      Proof. repeat intro; apply wf_reify. Qed.
+      Proof using reflect_base_beq. repeat intro; apply wf_reify. Qed.
 
       Lemma Wf_reify {t} (v : base.interp base_interp t) : expr.Wf (fun var => GallinaReify.reify (t:=type.base t) v).
-      Proof. repeat intro; apply wf_reify. Qed.
+      Proof using reflect_base_beq. repeat intro; apply wf_reify. Qed.
 
       Section interp.
         Context {ident_interp : forall t, ident t -> type.interp (base.interp base_interp) t}.
@@ -1420,10 +1420,10 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
 
         Lemma reify_interp_related {t} v
           : expr_interp_related (GallinaReify.base.reify (t:=t) v) v.
-        Proof. apply smart_Literal_interp_related. Qed.
+        Proof using buildInterpIdentCorrect. apply smart_Literal_interp_related. Qed.
 
         Lemma interp_reify {t} v : interp (GallinaReify.base.reify (t:=t) v) = v.
-        Proof.
+        Proof using buildInterpIdentCorrect.
           pose proof (@reify_interp_related t v) as H.
           eapply eqv_of_interp_related in H; assumption.
         Qed.
@@ -1437,13 +1437,13 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
 
         Lemma Reify_as_interp_related {t} v
           : expr_interp_related (GallinaReify.base.Reify_as t v _) v.
-        Proof. apply reify_interp_related. Qed.
+        Proof using buildInterpIdentCorrect. apply reify_interp_related. Qed.
 
         Lemma Interp_Reify_as {t} v : expr.Interp ident_interp (GallinaReify.base.Reify_as t v) = v.
-        Proof. apply interp_reify. Qed.
+        Proof using buildInterpIdentCorrect. apply interp_reify. Qed.
 
         Lemma Interp_reify {t} v : expr.Interp ident_interp (fun var => GallinaReify.base.reify (t:=t) v) = v.
-        Proof. apply interp_reify. Qed.
+        Proof using buildInterpIdentCorrect. apply interp_reify. Qed.
       End interp.
     End invert.
 
@@ -1453,16 +1453,16 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
     Notation Interp_Reify := Interp_Reify_as.
   End expr.
 
-  Hint Constructors expr.wf : wf.
-  Hint Resolve expr.Wf_APP expr.Wf_Reify expr.Wf_reify expr.Wf_base_Reify expr.Wf_base_reify : wf.
+  #[global] Hint Constructors expr.wf : wf.
+  #[global] Hint Resolve expr.Wf_APP expr.Wf_Reify expr.Wf_reify expr.Wf_base_Reify expr.Wf_base_reify : wf.
   (** Work around COQBUG(https://github.com/coq/coq/issues/11536) *)
-  Hint Extern 1 (expr.Wf (GallinaReify.base.Reify_as _ _)) => simple apply (@expr.Wf_base_Reify) : wf.
-  Hint Extern 1 (expr.Wf (GallinaReify.Reify_as _ _)) => simple apply (@expr.Wf_Reify) : wf.
+  #[global] Hint Extern 1 (expr.Wf (GallinaReify.base.Reify_as _ _)) => simple apply (@expr.Wf_base_Reify) : wf.
+  #[global] Hint Extern 1 (expr.Wf (GallinaReify.Reify_as _ _)) => simple apply (@expr.Wf_Reify) : wf.
   (** Work around COQBUG(https://github.com/coq/coq/issues/11536) *)
-  Hint Extern 1 (expr.Wf (fun var => GallinaReify.base.reify _)) => simple apply (@expr.Wf_base_reify) : wf.
-  Hint Extern 1 (expr.Wf (fun var => GallinaReify.reify _)) => simple apply (@expr.Wf_reify) : wf.
-  Hint Opaque expr.APP GallinaReify.Reify_as GallinaReify.base.reify : wf interp rewrite.
-  Hint Rewrite @expr.Interp_Reify @expr.interp_reify @expr.interp_reify_list @expr.interp_reify_option @expr.Interp_reify @expr.Interp_APP : interp.
+  #[global] Hint Extern 1 (expr.Wf (fun var => GallinaReify.base.reify _)) => simple apply (@expr.Wf_base_reify) : wf.
+  #[global] Hint Extern 1 (expr.Wf (fun var => GallinaReify.reify _)) => simple apply (@expr.Wf_reify) : wf.
+  #[global] Hint Opaque expr.APP GallinaReify.Reify_as GallinaReify.base.reify : wf interp rewrite.
+  #[global] Hint Rewrite @expr.Interp_Reify @expr.interp_reify @expr.interp_reify_list @expr.interp_reify_option @expr.Interp_reify @expr.Interp_APP : interp.
 
   Notation Wf := expr.Wf.
 
@@ -1623,13 +1623,13 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
             Context {var1 var2 : type -> Type}.
 
             Lemma wf_default G {t : base_type} : expr.wf (var1:=var1) (var2:=var2) (t:=type.base t) G expr.base.default expr.base.default.
-            Proof.
+            Proof using Type.
               induction t; wf_t.
             Qed.
           End with_var2.
 
           Lemma Wf_Default {t : base_type} : Wf (t:=type.base t) expr.base.Default.
-          Proof. repeat intro; apply @wf_default. Qed.
+          Proof using Type. repeat intro; apply @wf_default. Qed.
         End with_base.
       End base.
 
@@ -1644,9 +1644,9 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
                 {buildIdent : @ident.BuildIdentT base base_interp ident}.
 
         Global Instance wf_default : @ExprDefault_wfT base_type ident _.
-        Proof. intros var1 var2 G t; revert G; induction t; intros; wf_t; apply base.wf_default. Qed.
+        Proof using Type. intros var1 var2 G t; revert G; induction t; intros; wf_t; apply base.wf_default. Qed.
         Global Instance Wf_Default : @ExprDefault_WfT base_type ident _.
-        Proof. repeat intro; apply @wf_default. Qed.
+        Proof using Type. repeat intro; apply @wf_default. Qed.
       End with_base.
     End expr.
   End DefaultValue.
@@ -1768,7 +1768,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
                                  /\ List.In (existT _ t (v1', v2)) G2)
               (Hoffset : forall p, PositiveMap.find p ctx <> None -> (p < offset)%positive)
           : expr.wf G2 (var2:=var2) (from_flat (to_flat' (t:=t) e1 offset) var1 ctx) e2.
-        Proof.
+        Proof using try_make_transport_base_type_cps_correct.
           revert dependent offset; revert dependent G2; revert dependent ctx; induction Hwf; intros.
           all: repeat first [ progress cbn [from_flat to_flat' List.In projT1 projT2 fst snd] in *
                             | progress intros
@@ -1807,12 +1807,12 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
       End with_var.
 
       Lemma Wf_FromFlat {t} (e : Flat_expr t) : Flat.wf (base_type_beq:=base_type_beq) (PositiveMap.empty _) e = true -> expr.Wf (FromFlat e).
-      Proof. intros H ??; apply wf_from_flat, H. Qed.
+      Proof using try_make_transport_base_type_cps_correct. intros H ??; apply wf_from_flat, H. Qed.
 
       Lemma Wf_via_flat {t} (e : Expr t)
         : (e = GeneralizeVar (e _) /\ Flat.wf (base_type_beq:=base_type_beq) (PositiveMap.empty _) (to_flat (e _)) = true)
           -> expr.Wf e.
-      Proof. intros [H0 H1]; rewrite H0; cbv [GeneralizeVar]; apply Wf_FromFlat, H1. Qed.
+      Proof using try_make_transport_base_type_cps_correct. intros [H0 H1]; rewrite H0; cbv [GeneralizeVar]; apply Wf_FromFlat, H1. Qed.
 
       Lemma wf_to_flat'_gen
             {t}
@@ -1884,14 +1884,14 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
       Qed.
 
       Lemma Wf_ToFlat {t} (e : Expr (ident:=ident) t) (Hwf : expr.Wf e) : Flat.wf (base_type_beq:=base_type_beq) (PositiveMap.empty _) (ToFlat e) = true.
-      Proof. eapply wf_to_flat, Hwf. Qed.
+      Proof using try_make_transport_base_type_cps_correct. eapply wf_to_flat, Hwf. Qed.
 
       Lemma Wf_FromFlat_to_flat {t} (e : expr t) : expr.wf (ident:=ident) nil e e -> expr.Wf (FromFlat (to_flat e)).
-      Proof. intro Hwf; eapply Wf_FromFlat, wf_to_flat, Hwf. Qed.
+      Proof using try_make_transport_base_type_cps_correct. intro Hwf; eapply Wf_FromFlat, wf_to_flat, Hwf. Qed.
       Lemma Wf_FromFlat_ToFlat {t} (e : Expr t) : expr.Wf (ident:=ident) e -> expr.Wf (FromFlat (ToFlat e)).
-      Proof. intro H; apply Wf_FromFlat_to_flat, H. Qed.
+      Proof using try_make_transport_base_type_cps_correct. intro H; apply Wf_FromFlat_to_flat, H. Qed.
       Lemma Wf_GeneralizeVar {t} (e : Expr t) : expr.Wf (ident:=ident) e -> expr.Wf (GeneralizeVar (e _)).
-      Proof. apply Wf_FromFlat_ToFlat. Qed.
+      Proof using try_make_transport_base_type_cps_correct. apply Wf_FromFlat_ToFlat. Qed.
 
       Local Ltac t :=
         repeat first [ reflexivity
@@ -1954,7 +1954,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
 
         Lemma Interp_gen2_GeneralizeVar {t} (e : Expr t) (Hwf : expr.Wf e)
           : type.related R (expr.Interp ident_interp1 (GeneralizeVar (e _))) (expr.Interp ident_interp2 e).
-        Proof. apply Interp_gen2_FromFlat_ToFlat, Hwf. Qed.
+        Proof using ident_interp_Proper try_make_transport_base_type_cps_correct. apply Interp_gen2_FromFlat_ToFlat, Hwf. Qed.
       End gen2.
       Section gen1.
         Context {base_interp : base_type -> Type}
@@ -1970,15 +1970,15 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
               cur_idx
               (Hidx : forall p, PositiveMap.mem p ctx = true -> BinPos.Pos.lt p cur_idx)
           : type.related R (expr.interp ident_interp (from_flat (to_flat' e1 cur_idx) _ ctx)) (expr.interp ident_interp e2).
-        Proof. apply @interp_gen2_from_flat_to_flat' with (G:=G); eassumption. Qed.
+        Proof using ident_interp_Proper try_make_transport_base_type_cps_correct. apply @interp_gen2_from_flat_to_flat' with (G:=G); eassumption. Qed.
 
         Lemma Interp_gen1_FromFlat_ToFlat {t} (e : Expr t) (Hwf : expr.Wf e)
           : type.related R (expr.Interp ident_interp (FromFlat (ToFlat e))) (expr.Interp ident_interp e).
-        Proof. apply @Interp_gen2_FromFlat_ToFlat; eassumption. Qed.
+        Proof using ident_interp_Proper try_make_transport_base_type_cps_correct. apply @Interp_gen2_FromFlat_ToFlat; eassumption. Qed.
 
         Lemma Interp_gen1_GeneralizeVar {t} (e : Expr t) (Hwf : expr.Wf e)
           : type.related R (expr.Interp ident_interp (GeneralizeVar (e _))) (expr.Interp ident_interp e).
-        Proof. apply @Interp_gen2_GeneralizeVar; eassumption. Qed.
+        Proof using ident_interp_Proper try_make_transport_base_type_cps_correct. apply @Interp_gen2_GeneralizeVar; eassumption. Qed.
       End gen1.
     End with_base_type.
   End GeneralizeVar.
@@ -1999,7 +1999,7 @@ Hint Extern 10 (Proper ?R ?x) => simple eapply (@PER_valid_r _ R); [ | | solve [
   Ltac prove_Wf3 _ := prove_Wf3_with ltac:(fun _ => idtac).
 
   Global Hint Extern 0 (?x == ?x) => apply expr.Wf_Interp_Proper_gen : wf interp.
-  Hint Resolve GeneralizeVar.Wf_FromFlat_ToFlat GeneralizeVar.Wf_GeneralizeVar : wf.
-  Hint Opaque GeneralizeVar.FromFlat GeneralizeVar.ToFlat GeneralizeVar.GeneralizeVar : wf interp rewrite.
-  Hint Rewrite @GeneralizeVar.Interp_gen1_GeneralizeVar @GeneralizeVar.Interp_gen1_FromFlat_ToFlat : interp.
+  #[global] Hint Resolve GeneralizeVar.Wf_FromFlat_ToFlat GeneralizeVar.Wf_GeneralizeVar : wf.
+  #[global] Hint Opaque GeneralizeVar.FromFlat GeneralizeVar.ToFlat GeneralizeVar.GeneralizeVar : wf interp rewrite.
+  #[global] Hint Rewrite @GeneralizeVar.Interp_gen1_GeneralizeVar @GeneralizeVar.Interp_gen1_FromFlat_ToFlat : interp.
 End Compilers.

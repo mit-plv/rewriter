@@ -1,7 +1,7 @@
 @META@
 -R src/Rewriter Rewriter
 -I src/Rewriter/Util/plugins
--arg -w -arg +implicit-core-hint-db,+implicits-in-term,+non-reversible-notation,+deprecated-intros-until-0,+deprecated-focus,+unused-intro-pattern,+deprecated-hint-constr,+fragile-hint-constr,+variable-collision,+unexpected-implicit-declaration,+omega-is-deprecated,+non-recursive
+-arg -w -arg +implicit-core-hint-db,+implicits-in-term,+non-reversible-notation,+deprecated-intros-until-0,+deprecated-focus,+unused-intro-pattern,+deprecated-hint-constr,+fragile-hint-constr,+variable-collision,+unexpected-implicit-declaration,+omega-is-deprecated,+deprecated-instantiate-syntax,+non-recursive,+deprecated-hint-rewrite-without-locality,+deprecated-hint-without-locality,+deprecated-instance-without-locality,+undeclared-scope,+deprecated-typeclasses-transparency-without-locality,unsupported-attributes
 @NATIVE_COMPILER_ARG@
 src/Rewriter/Demo.v
 src/Rewriter/Language/IdentifiersBasicGenerate.v
@@ -105,9 +105,7 @@ src/Rewriter/Util/Tactics/Test.v
 src/Rewriter/Util/Tactics/TransparentAssert.v
 src/Rewriter/Util/Tactics/UniquePose.v
 src/Rewriter/Util/Tactics/WarnIfGoalsRemain.v
-src/Rewriter/Util/plugins/RewriterBuild.v
 src/Rewriter/Util/plugins/RewriterBuildRegistryImports.v
-src/Rewriter/Util/plugins/StrategyTactic.v
 src/Rewriter/Util/plugins/definition_by_tactic.ml
 src/Rewriter/Util/plugins/definition_by_tactic.mli
 src/Rewriter/Util/plugins/definition_by_tactic_plugin.@ML4_OR_MLG@
@@ -125,3 +123,5 @@ src/Rewriter/Util/plugins/strategy_tactic.mli
 src/Rewriter/Util/plugins/strategy_tactic_plugin.@ML4_OR_MLG@
 src/Rewriter/Util/plugins/strategy_tactic_plugin.mllib
 src/Rewriter/Util/plugins/RewriterBuildRegistry.v
+src/Rewriter/Util/plugins/StrategyTactic.v
+src/Rewriter/Util/plugins/RewriterBuild.v

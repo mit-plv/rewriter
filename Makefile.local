@@ -1,6 +1,5 @@
 PROFILE?=
-# Remove -undeclared-scope once we stop supporting 8.9
-OTHERFLAGS += -w -notation-overridden,-undeclared-scope,-deprecated-hint-rewrite-without-locality
+OTHERFLAGS += -w -notation-overridden,-unusable-identifier
 ifneq ($(PROFILE),)
 OTHERFLAGS += -profile-ltac
 endif
