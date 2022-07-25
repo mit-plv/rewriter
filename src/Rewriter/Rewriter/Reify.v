@@ -592,8 +592,13 @@ Module Compilers.
                => constr_fail_with ltac:(fun _ => fail 1 "Failure to eliminate functional dependencies of" rf0)
              end
         | (@eq ?T ?A ?B, ?side_conditions)
-          => let rA := expr.reify_in_context base_type ident reify_base_type reify_ident var_pos A value_ctx tt in
-             let rB := expr.reify_in_context base_type ident reify_base_type reify_ident var_pos B value_ctx tt in
+          => let ident_cache := constr:(@expr.ident_cache.nil base_type ident) in
+             let rA := expr.reify_in_context base_type ident reify_base_type reify_ident var_pos A value_ctx tt ident_cache in
+             let ident_cache := expr.ident_cache.extract_cache rA in
+             let rA := expr.ident_cache.uncache rA in
+             let rB := expr.reify_in_context base_type ident reify_base_type reify_ident var_pos B value_ctx tt ident_cache in
+             let ident_cache := expr.ident_cache.extract_cache rB in
+             let rB := expr.ident_cache.uncache rB in
              let side_conditions := adjust_side_conditions_for_gets_inlined value_ctx side_conditions in
              let invalid := fresh "invalid" in
              let res := constr:(fun invalid => cexpr_to_pattern_and_replacement_unfolded invalid _ rA rB side_conditions) in

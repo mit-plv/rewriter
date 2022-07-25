@@ -20,6 +20,7 @@ Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.Tactics.RunTacticAsConstr.
 Require Import Rewriter.Util.Tactics.DebugPrint.
+Require Import Rewriter.Util.Tactics.CacheTerm.
 Require Import Rewriter.Util.Tactics.ConstrFail.
 Import Coq.Lists.List ListNotations.
 Export Language.PreCommon.
@@ -134,6 +135,12 @@ Module Compilers.
     Ltac debug_reify_in_context_case tac :=
       debug3 tac.
     Ltac debug_enter_reify_abs e := debug2 ltac:(fun _ => debug_enter_reify_idtac reify_abs e).
+    Ltac debug_ident_cache_cache_ret term template_ctx rterm :=
+      debug1 ltac:(fun _ => idtac "ident_cache.cache_ret: caching" term "(" template_ctx ")" "=>" rterm).
+    Ltac debug_ident_cache_cache_ret_cached id term template_ctx rterm :=
+      debug5or4
+        ltac:(fun _ => idtac "ident_cache.cache_ret: cached" term "(" template_ctx ")" "=>" rterm "as" id)
+               ltac:(fun _ => idtac "ident_cache.cache_ret: cached" term "=>" rterm "as" id).
   End Reify.
 
   Module type.
@@ -227,6 +234,80 @@ Module Compilers.
       | nil
       | cons {T t} (gallina_v : T) (v : var t) (ctx : list).
     End var_context.
+
+    Module ident_cache.
+      Section element.
+        Local Set Warnings Append "-cannot-define-projection".
+        Local Unset Primitive Projections.
+        (* put [element] in [Prop] so it disappears in extraction *)
+        Record element {T1 T2 base_type ident t} : Prop
+          := { ident_v : T1 ; template_ctx : T2 ; val : forall var, @expr base_type ident var t }.
+      End element.
+      Global Arguments Build_element {T1 T2 base_type ident t} _ _ _.
+      Inductive list {base_type ident} :=
+      | nil
+      | cons {T1 T2 t} (_ : @element T1 T2 base_type ident t) (rest : list).
+      Record with_cache {base_type ident T} := ret { cache : @list base_type ident ; res : T }.
+      Global Arguments ret {base_type ident T} _ _.
+
+      Inductive option := | Some {T : Type} (_ : T) | None.
+
+      Ltac find ident_v template_ctx ident_cache :=
+        lazymatch ident_cache with
+        | context[Build_element ident_v template_ctx ?val]
+          => constr:(Some val)
+        | _ => None
+        end.
+
+      Ltac cache_ret val template_ctx rval ident_cache :=
+        let __ := Reify.debug_ident_cache_cache_ret val template_ctx rval in
+        let var := lazymatch type of rval with @expr.expr ?base_type ?ident ?var ?t => var end in
+        let rval := lazymatch (eval pattern var in rval) with ?rval _ => rval end in
+        let id := fresh "reified_" val in
+        let rval := cache_term rval id in
+        let id := fresh "element_" id in
+        let elem := cache_term (Build_element val template_ctx rval) id in
+        let __ := Reify.debug_ident_cache_cache_ret_cached elem val template_ctx rval in
+        constr:(ident_cache.ret (ident_cache.cons elem ident_cache) (rval var)).
+
+      Ltac recache id elem ident_cache :=
+        lazymatch elem with
+        | @Build_element ?T1 ?T2 ?base_type ?ident ?t ?ident_v ?template_ctx ?val
+          => lazymatch find ident_v template_ctx ident_cache with
+             | Some ?val
+               => constr:(ret ident_cache (@Build_element T1 T2 base_type ident t ident_v template_ctx val))
+             | None
+               => let elem := cache_term elem id in
+                  constr:(ret (cons elem ident_cache) (@Build_element T1 T2 base_type ident t ident_v template_ctx val))
+             end
+        end.
+
+      Ltac app ls1 ls2
+        := lazymatch ls1 with
+           | nil => ls2
+           | cons ?x ?xs
+             => let res := app xs ls2 in
+                constr:(cons x res)
+           end.
+
+      Ltac err_no_cache res :=
+        let __ := match goal with
+                  | _ => let form := uconstr:({| ident_cache.res := _ |}) in
+                         idtac "Internal Error:" res "is not of the form" form;
+                         fail 2 "Internal Error:" res "is not of the form" form
+                  end in
+        constr_fail.
+      Ltac extract_cache res :=
+        lazymatch res with
+        | {| ident_cache.cache := ?cache |} => cache
+        | ?res => err_no_cache res
+        end.
+      Ltac uncache res :=
+        lazymatch res with
+        | {| ident_cache.res := ?res |} => res
+        | ?res => err_no_cache res
+        end.
+    End ident_cache.
 
     (* cf COQBUG(https://github.com/coq/coq/issues/5448) , COQBUG(https://github.com/coq/coq/issues/6315) , COQBUG(https://github.com/coq/coq/issues/6559) , COQBUG(https://github.com/coq/coq/issues/6534) , https://github.com/mit-plv/fiat-crypto/issues/320 *)
     Ltac require_same_var n1 n2 :=
@@ -390,33 +471,72 @@ Module Compilers.
       | ?term => reify_ident_preprocess_extra term
       end.
 
+    Ltac lift_cache_fun2 ident_cache term :=
+      let finish := match term with
+                    | (fun (x : ?A) (y : ?B) => let z := ?v in ?f)
+                      => lazymatch type of v with
+                         | forall var, expr.expr _
+                           => fun _
+                              => let v := cache_term v z in
+                                 lift_cache_fun2 ident_cache (fun (x : A) (y : B) => match v with z => f end)
+                         | ident_cache.element
+                           => fun _
+                              => let v := (eval cbv beta in v) in (* v might be [(fun var => ...) var] *)
+                                 let v := ident_cache.recache z v ident_cache in
+                                 let ident_cache := ident_cache.extract_cache v in
+                                 let v := ident_cache.uncache v in
+                                 lift_cache_fun2 ident_cache (fun (x : A) (y : B) => match v with z => f end)
+                         | ?ty
+                           => let __ := match goal with _ => idtac "Warning: could not cache" v "of type" ty end in
+                              fun _ => lift_cache_fun2 ident_cache (fun (x : A) (y : B) => match v with z => f end)
+                         end
+                    | (fun (x : ?A) (y : ?B) => let z := ?v in ?f)
+                      => fun _
+                         => let __ := match term with (fun x y => let z := @?v x y in _) => idtac "Warning: inlining dependent" v end in
+                            lift_cache_fun2 ident_cache (fun (x : A) (y : B) => match v with z => f end)
+                    | (fun (x : ?A) (y : ?B) => {| ident_cache.res := @?val x y |})
+                      => fun _ => constr:(ident_cache.ret ident_cache val)
+                    | ?term
+                      => fail 1 "Invalid term without cache:" term
+                    end in
+      finish ().
 
-    Ltac reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx :=
-      let reify_rec_gen term value_ctx template_ctx := reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx in
-      let reify_rec term := reify_rec_gen term value_ctx template_ctx in
-      let reify_rec_not_head term := reify_rec_gen term value_ctx tt in
+    Ltac reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx ident_cache :=
+      let reify_rec_gen term value_ctx template_ctx ident_cache := reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx ident_cache in
+      let reify_rec term ident_cache := reify_rec_gen term value_ctx template_ctx ident_cache in
+      let reify_rec_not_head term := reify_rec_gen term value_ctx tt ident_cache in
+      let ret_with_cache res := constr:(ident_cache.ret ident_cache res) in
       let do_reify_ident term else_tac
           := reify_ident
                term
-               ltac:(fun idc => constr:(@Ident base_type ident var _ idc))
+               ltac:(fun idc => ret_with_cache (@Ident base_type ident var _ idc))
                       else_tac in
       let __ := Reify.debug_enter_reify_in_context term in
       let
         res :=
         lazymatch value_ctx with
         | context[@var_context.cons _ _ ?T ?rT term ?v _]
-          => constr:(@Var base_type ident var rT v)
+          => ret_with_cache (@Var base_type ident var rT v)
+        | _
+          =>
+        lazymatch ident_cache.find term template_ctx ident_cache with
+        | ident_cache.Some ?res
+          => ret_with_cache (res var)
         | _
           =>
           let term := reify_preprocess term in
           let __ := Reify.debug_enter_reify_in_context_after_preprocess term in
           lazymatch term with
           | @Let_In ?A ?B ?a ?b
-            => let ra := reify_rec a in
-               let rb := reify_rec b in
+            => let ra := reify_rec a ident_cache in
+               let ident_cache := ident_cache.extract_cache ra in
+               let ra := ident_cache.uncache ra in
+               let rb := reify_rec b ident_cache in
+               let ident_cache := ident_cache.extract_cache rb in
+               let rb := ident_cache.uncache rb in
                lazymatch rb with
                | @Abs _ _ _ ?s ?d ?f
-                 => constr:(@LetIn base_type ident var s d ra f)
+                 => constr:(ident_cache.ret ident_cache (@LetIn base_type ident var s d ra f))
                | ?rb => constr_fail_with ltac:(fun _ => fail 1 "Invalid non-Abs function reification of" b "to" rb)
                end
           | (fun x : ?T => ?f)
@@ -430,7 +550,7 @@ Module Compilers.
                 => (* we pull a trick with [match] to plug in [arg] without running cbv β *)
                 lazymatch type of term with
                 | forall y, ?P
-                  => reify_rec_gen (match arg as y return P with x => f end) value_ctx template_ctx
+                  => reify_rec_gen (match arg as y return P with x => f end) value_ctx template_ctx ident_cache
                 end
               end
             | false
@@ -449,13 +569,14 @@ Module Compilers.
                               let f := (eval cbv delta [not_x2] in not_x2) in
                               let var_ctx := (eval cbv delta [not_x3] in not_x3) in
                               (*idtac "rec call" f "was" term;*)
-                              let rf := reify_rec_gen f var_ctx template_ctx in
+                              let rf := reify_rec_gen f var_ctx template_ctx ident_cache in
                               exact rf)
                        end) in
+              let rf0 := lift_cache_fun2 ident_cache rf0 in
               lazymatch rf0 with
-              | (fun _ => ?rf)
-                => constr:(@Abs base_type ident var rT _ rf)
-              | _
+              | ident_cache.ret ?ident_cache (fun _ => ?rf)
+                => constr:(ident_cache.ret ident_cache (@Abs base_type ident var rT _ rf))
+              | ident_cache.ret ?ident_cache ?rf0
                 => (* This will happen if the reified term still
                     mentions the non-var variable.  By chance, [cbv
                     delta] strips type casts, which are only places
@@ -464,6 +585,8 @@ Module Compilers.
                     distinctive error message is much more useful for
                     debugging than the generic "no matching clause" *)
                 constr_fail_with ltac:(fun _ => fail 1 "Failure to eliminate functional dependencies of" rf0)
+              | _
+                => constr_fail_with ltac:(fun _ => fail 1 "Could not find ident_cache.ret in" rf0)
               end
             end
           | _
@@ -483,11 +606,15 @@ Module Compilers.
                   lazymatch x_is_template_parameter with
                   | true
                     => (* we can't reify things of type [Type], so we save it for later to plug in *)
-                    reify_rec_gen f value_ctx (x, template_ctx)
+                    reify_rec_gen f value_ctx (x, template_ctx) ident_cache
                   | false
-                    => let rx := reify_rec_gen x value_ctx tt in
-                       let rf := reify_rec_gen f value_ctx template_ctx in
-                       constr:(App (base_type:=base_type) (ident:=ident) (var:=var) rf rx)
+                    => let rx := reify_rec_gen x value_ctx tt ident_cache in
+                       let ident_cache := ident_cache.extract_cache rx in
+                       let rx := ident_cache.uncache rx in
+                       let rf := reify_rec_gen f value_ctx template_ctx ident_cache in
+                       let ident_cache := ident_cache.extract_cache rf in
+                       let rf := ident_cache.uncache rf in
+                       constr:(ident_cache.ret ident_cache (App (base_type:=base_type) (ident:=ident) (var:=var) rf rx))
                   end
                 | _
                   => let term' := plug_template_ctx term template_ctx in
@@ -496,6 +623,7 @@ Module Compilers.
                        ltac:(fun _
                              =>
                                (*let __ := match goal with _ => idtac "Attempting to unfold" term end in*)
+                               let orig_term := term in
                                let term
                                    := match constr:(Set) with
                                       | _ => (eval cbv delta [term] in term) (* might fail, so we wrap it in a match to give better error messages *)
@@ -505,21 +633,28 @@ Module Compilers.
                                                      end in
                                            constr_fail
                                       end in
-                               match constr:(Set) with
-                               | _ => reify_rec term
-                               | _ => let __ := match goal with
-                                                | _ => idtac "Error: Failed to reify" term' "via unfolding";
-                                                       fail 2 "Failed to reify" term' "via unfolding"
-                                                end in
-                                      constr_fail
-                               end)
+                               let res := match constr:(Set) with
+                                          | _ => reify_rec term ident_cache
+                                          | _ => let __ := match goal with
+                                                           | _ => idtac "Error: Failed to reify" term' "via unfolding";
+                                                                  let __for_error := reify_rec term ident_cache in
+                                                                  fail 2 "Failed to reify" term' "via unfolding"
+                                                           end in
+                                                 constr_fail
+                                          end in
+                               let ident_cache := ident_cache.extract_cache res in
+                               let res := ident_cache.uncache res in
+                               ident_cache.cache_ret orig_term template_ctx res ident_cache)
                 end)
           end
+        end
         end in
-      let __ := Reify.debug_leave_reify_in_context_success term res in
+      let resv := ident_cache.uncache res in
+      let __ := Reify.debug_leave_reify_in_context_success term resv in
       res.
     Ltac reify base_type ident reify_base_type reify_ident var term :=
-      reify_in_context base_type ident reify_base_type reify_ident var term (@var_context.nil base_type var) tt.
+      let res := reify_in_context base_type ident reify_base_type reify_ident var term (@var_context.nil base_type var) tt (@ident_cache.nil base_type ident) in
+      ident_cache.uncache res.
     Ltac Reify base_type ident reify_base_type reify_ident term :=
       constr:(fun var : type base_type -> Type
               => ltac:(let r := reify base_type ident reify_base_type reify_ident var term in
