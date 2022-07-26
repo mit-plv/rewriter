@@ -4,6 +4,7 @@ Require Import Coq.Classes.Morphisms.
 Require Import Coq.Lists.List.
 Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.Reify.
 Require Import Rewriter.Language.IdentifiersBasicLibrary.
 Require Import Rewriter.Util.Prod Rewriter.Util.LetIn.
 Require Import Rewriter.Util.ListUtil Rewriter.Util.NatUtil.
@@ -30,6 +31,7 @@ Import EqNotations.
 Module Compilers.
   Import Language.Pre.
   Import Language.Compilers.
+  Export Reify.Compilers.
   Export IdentifiersBasicLibrary.Compilers.
 
   Module Basic.
@@ -501,13 +503,13 @@ Module Compilers.
            end.
 
       Ltac reify_base_type_via_list base base_interp all_base_and_interp :=
-        Language.Compilers.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
+        Compilers.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
       Ltac reify_type_via_list base base_interp all_base_and_interp :=
-        Language.Compilers.type.reify ltac:(reify_base_type_via_list base base_interp all_base_and_interp) constr:(base.type base).
+        Compilers.type.reify ltac:(reify_base_type_via_list base base_interp all_base_and_interp) constr:(base.type base).
       Ltac reify_pattern_base_type_via_list base base_interp all_base_and_interp :=
-        Language.Compilers.pattern.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
+        Compilers.pattern.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
       Ltac reify_pattern_type_via_list base base_interp all_base_and_interp :=
-        Language.Compilers.type.reify ltac:(reify_pattern_base_type_via_list base base_interp all_base_and_interp) constr:(pattern.base.type base).
+        Compilers.type.reify ltac:(reify_pattern_base_type_via_list base base_interp all_base_and_interp) constr:(pattern.base.type base).
 
       Ltac ident_type_of_interped_type reify_type base_type base_type_interp ident ty :=
         let recur := ident_type_of_interped_type reify_type base_type base_type_interp ident in

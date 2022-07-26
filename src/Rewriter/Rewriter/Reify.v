@@ -8,6 +8,7 @@ Require Import Rewriter.Util.Bool.Reflect.
 Require Rewriter.Util.PrimitiveProd.
 Require Rewriter.Util.PrimitiveHList.
 Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.Reify.
 Require Import Rewriter.Language.UnderLets.
 Require Import Rewriter.Language.IdentifiersLibrary.
 Require Import Rewriter.Rewriter.Rewriter.
@@ -26,6 +27,7 @@ Local Set Primitive Projections.
 Import EqNotations.
 Module Compilers.
   Export Language.Compilers.
+  Export Language.Reify.Compilers.
   Export UnderLets.Compilers.
   Export IdentifiersLibrary.Compilers.
   Import invert_expr.
