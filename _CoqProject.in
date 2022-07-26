@@ -79,6 +79,7 @@ src/Rewriter/Util/Tactics/AssertSucceedsPreserveError.v
 src/Rewriter/Util/Tactics/BreakMatch.v
 src/Rewriter/Util/Tactics/CPSId.v
 src/Rewriter/Util/Tactics/CacheTerm.v
+src/Rewriter/Util/Tactics/ClearFree.v
 src/Rewriter/Util/Tactics/ConstrFail.v
 src/Rewriter/Util/Tactics/Contains.v
 src/Rewriter/Util/Tactics/DebugPrint.v
