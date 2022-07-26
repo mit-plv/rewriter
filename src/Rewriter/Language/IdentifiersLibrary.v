@@ -11,10 +11,6 @@ Require Import Rewriter.Util.Bool.Reflect.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.IdentifiersBasicLibrary.
-Require Import Rewriter.Util.Tactics.Head.
-Require Import Rewriter.Util.Tactics.ConstrFail.
-Require Import Rewriter.Util.Tactics.CacheTerm.
-Require Import Rewriter.Util.Tactics.DebugPrint.
 Import ListNotations. Local Open Scope list_scope.
 Import PrimitiveSigma.Primitive.
 
