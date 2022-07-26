@@ -265,20 +265,18 @@ Module Compilers.
         let rval := lazymatch (eval pattern var in rval) with ?rval _ => rval end in
         let id := fresh "reified_" val in
         let rval := cache_term rval id in
-        let id := fresh "element_" id in
-        let elem := cache_term (Build_element val template_ctx rval) id in
+        let elem := constr:(Build_element val template_ctx rval) in
         let __ := Reify.debug_ident_cache_cache_ret_cached elem val template_ctx rval in
         constr:(ident_cache.ret (ident_cache.cons elem ident_cache) (rval var)).
 
-      Ltac recache id elem ident_cache :=
+      Ltac smart_cons elem ident_cache :=
         lazymatch elem with
         | @Build_element ?T1 ?T2 ?base_type ?ident ?t ?ident_v ?template_ctx ?val
           => lazymatch find ident_v template_ctx ident_cache with
              | Some ?val
-               => constr:(ret ident_cache (@Build_element T1 T2 base_type ident t ident_v template_ctx val))
+               => ident_cache
              | None
-               => let elem := cache_term elem id in
-                  constr:(ret (cons elem ident_cache) (@Build_element T1 T2 base_type ident t ident_v template_ctx val))
+               => constr:(cons elem ident_cache)
              end
         end.
 
@@ -479,13 +477,6 @@ Module Compilers.
                            => fun _
                               => let v := cache_term v z in
                                  lift_cache_fun2 ident_cache (fun (x : A) (y : B) => match v with z => f end)
-                         | ident_cache.element
-                           => fun _
-                              => let v := (eval cbv beta in v) in (* v might be [(fun var => ...) var] *)
-                                 let v := ident_cache.recache z v ident_cache in
-                                 let ident_cache := ident_cache.extract_cache v in
-                                 let v := ident_cache.uncache v in
-                                 lift_cache_fun2 ident_cache (fun (x : A) (y : B) => match v with z => f end)
                          | ?ty
                            => let __ := match goal with _ => idtac "Warning: could not cache" v "of type" ty end in
                               fun _ => lift_cache_fun2 ident_cache (fun (x : A) (y : B) => match v with z => f end)
@@ -494,8 +485,16 @@ Module Compilers.
                       => fun _
                          => let __ := match term with (fun x y => let z := @?v x y in _) => idtac "Warning: inlining dependent" v end in
                             lift_cache_fun2 ident_cache (fun (x : A) (y : B) => match v with z => f end)
-                    | (fun (x : ?A) (y : ?B) => {| ident_cache.res := @?val x y |})
+                    | (fun (x : ?A) (y : ?B) => {| ident_cache.cache := ident_cache.nil ; ident_cache.res := @?val x y |})
                       => fun _ => constr:(ident_cache.ret ident_cache val)
+                    | (fun (x : ?A) (y : ?B) => @ident_cache.ret ?base_type ?ident ?T (ident_cache.cons ?elem ?cache) ?val)
+                      => let ident_cache := ident_cache.smart_cons elem ident_cache in
+                         fun _
+                         => lift_cache_fun2 ident_cache (fun (x : A) (y : B) => @ident_cache.ret base_type ident T cache val)
+                    | (fun (x : ?A) (y : ?B) => @ident_cache.ret ?base_type ?ident ?T (ident_cache.cons (@?elem x y) ?cache) ?val)
+                      => let __ := match goal with _ => idtac "Warning: dropping dependent cache element" elem end in
+                         fun _
+                         => lift_cache_fun2 ident_cache (fun (x : A) (y : B) => @ident_cache.ret base_type ident T cache val)
                     | ?term
                       => fail 1 "Invalid term without cache:" term
                     end in
