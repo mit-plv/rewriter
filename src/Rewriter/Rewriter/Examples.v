@@ -20,6 +20,14 @@ Proof.
   end.
 Qed.
 
+Example ex2 : forall x : nat, id x = id x.
+Proof.
+  Rewrite_for norules.
+  lazymatch goal with
+  | |- ?x = ?x => is_var x; reflexivity
+  end.
+Qed.
+
 (** ==== *)
 
 Local Ltac t :=
@@ -61,7 +69,7 @@ Time Make myrules
 
 (** Now we show some simple examples. *)
 
-Example ex2 : forall x, x + 0 = x.
+Example ex3 : forall x, x + 0 = x.
 Proof.
   Rewrite_for myrules.
   lazymatch goal with
@@ -76,12 +84,12 @@ Ltac test_rewrite :=
                             | fail 1 x "≢" y ]
   end.
 
-Example ex3 : forall y e1 e2,
+Example ex4 : forall y e1 e2,
     map (fun x => y + x) (dlet z := e1 + e2 in [0; 1; 2; z; z+1])
     = dlet z := e1 + e2 in [y; y + 1; y + 2; y + z; y + (z + 1)].
 Proof. test_rewrite. Qed.
 
-Example ex4 : forall (x1 x2 x3 : Z),
+Example ex5 : forall (x1 x2 x3 : Z),
     flat_map (fun a => [a; a; a]) [x1;x2;x3]
     = [x1; x1; x1; x2; x2; x2; x3; x3; x3].
 Proof. test_rewrite. Qed.
