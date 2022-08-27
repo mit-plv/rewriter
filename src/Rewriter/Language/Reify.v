@@ -230,6 +230,14 @@ Module Compilers.
   Module expr.
     Import Language.Compilers.expr.
 
+    (* TODO: move to Util *)
+    Ltac2 mkApp (f : constr) (args : constr list) :=
+      Constr.Unsafe.make (Constr.Unsafe.App f (Array.of_list args)).
+    Ltac2 mkLambda b (body : constr) :=
+      Constr.Unsafe.make (Constr.Unsafe.Lambda b body).
+    Ltac2 mkRel (i : int) :=
+      Constr.Unsafe.make (Constr.Unsafe.Rel i).
+
     Module var_context.
       Inductive list {base_type} {var : type base_type -> Type} :=
       | nil
@@ -282,102 +290,100 @@ Module Compilers.
         end
       end.
 
-    Ltac reify_preprocess_internal term :=
-      let __ := Reify.debug_enter_reify_preprocess term in
-      lazymatch term with
+    Ltac2 rec reify_preprocess (ctx_tys : binder list) (term : constr) : constr :=
+      Reify.debug_enter_reify_preprocess "expr.reify_preprocess" term;
+      let reify_preprocess := reify_preprocess ctx_tys in
+      lazy_match! term with
       | match ?b with true => ?t | false => ?f end
-        => let T := type of term in
-           reify_preprocess_internal (@Thunked.bool_rect T (fun _ => t) (fun _ => f) b)
+        => let ty := Constr.type term in
+           reify_preprocess '(@Thunked.bool_rect $ty (fun _ => $t) (fun _ => $f) $b)
       | match ?x with Datatypes.pair a b => @?f a b end
-        => let T := type of term in
-           reify_preprocess_internal (@prod_rect_nodep _ _ T f x)
-      | match ?x with nil => ?N | cons a b => @?C a b end
-        => let T := type of term in
-           reify_preprocess_internal (@Thunked.list_case _ T (fun _ => N) C x)
-      | match ?x with None => ?N | Some a => @?S a end
-        => let T := type of term in
-           reify_preprocess_internal (@Thunked.option_rect _ T S (fun _ => N) x)
-      | let x := ?a in ?b
-        => let A := type of a in
-           let T := type of term in
-           let rec_val := match constr:(Set) with
-                          | _ => let v := constr:((fun x : A => b) a) in
-                                 let __ := type of v in (* ensure that the abstraction is well-typed, i.e., that we're not relying on the value of the let to well-type the body *)
-                                 v
-                          | _ => constr:(match a return T with x => b end) (* if we do rely on the body of [x] to well-type [b], then just inline it *)
-                          end in
-           (*let B := lazymatch type of b with forall x, @?B x => B end in*)
-           reify_preprocess_internal rec_val (*(@Let_In A B a b)*)
-      | ?term => constr:(ltac:(let f := ltac2:(term |- Control.refine (fun () => reify_preprocess_extra [] (Ltac1.get_to_constr term))) in
-                               f term))
+        => let ty := Constr.type term in
+           reify_preprocess '(@prod_rect_nodep _ _ $ty $f $x)
+      | match ?x with nil => ?n | cons a b => @?c a b end
+        => let ty := Constr.type term in
+           reify_preprocess '(@Thunked.list_case _ $ty (fun _ => $n) $c $x)
+      | match ?x with None => ?n | Some a => @?s a end
+        => let ty := Constr.type term in
+           reify_preprocess '(@Thunked.option_rect _ $ty $s (fun _ => $n) $x)
+      | ?term
+        => match Constr.Unsafe.kind term with
+           | Constr.Unsafe.Cast term _ _ => reify_preprocess term
+           | Constr.Unsafe.LetIn x a b (* let x := ?a in ?b *)
+             => let v := mkApp (mkLambda x b) [a] in
+                match Constr.Unsafe.check v (* ensure that the abstraction is well-typed, i.e., that we're not relying on the value of the let to well-type the body *) with
+                | Val v => reify_preprocess v
+                | Err _ (* if we do rely on the body of [x] to well-type [b], then just inline it *)
+                  => reify_preprocess (Constr.Unsafe.substnl [a] 0 b)
+                end
+           | _ => (* XXX TODO remove constr copying *) '(ltac2:(Control.refine (fun () => reify_preprocess_extra ctx_tys term)))
+           end
       end.
-    Ltac reify_preprocess term :=
-      constr:(ltac:(let v := reify_preprocess_internal term in refine v)).
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac reify_preprocess term :=
+        let f := ltac2:(term
+                        |- Control.refine (fun () => reify_preprocess [] (Ltac1.get_to_constr term))) in
+        constr:(ltac:(f term)).
 
-    Ltac reify_ident_preprocess_internal term :=
-      let __ := Reify.debug_enter_reify_ident_preprocess term in
-      let reify_ident_preprocess_extra term := constr:(ltac:(let f := ltac2:(term |- Control.refine (fun () => reify_ident_preprocess_extra [] (Ltac1.get_to_constr term))) in
-                                                             f term)) in
-      lazymatch term with
-      | Datatypes.S => reify_ident_preprocess_internal Nat.succ
-      | @Datatypes.prod_rect ?A ?B ?T0
-        => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess_internal (@prod_rect_nodep A B T)
-           | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess_internal (@Datatypes.prod_rect A B T')
-           end
-      | @Datatypes.bool_rect ?T0 ?Ptrue ?Pfalse
-        => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess_internal (@Thunked.bool_rect T (fun _ => Ptrue) (fun _ => Pfalse))
-           | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess_internal (@Datatypes.bool_rect T' Ptrue Pfalse)
-           end
-      | @Datatypes.nat_rect ?T0 ?P0
-        => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?A -> ?B => reify_ident_preprocess_internal (@nat_rect_arrow_nodep A B P0)
-           | fun _ => ?T => reify_ident_preprocess_internal (@Thunked.nat_rect T (fun _ => P0))
-           | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess_internal (@Datatypes.nat_rect T' P0)
-           end
-      | ident.eagerly (@Datatypes.nat_rect) ?T0 ?P0
-        => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?A -> ?B => reify_ident_preprocess_internal (ident.eagerly (@nat_rect_arrow_nodep) A B P0)
-           | fun _ => ?T => reify_ident_preprocess_internal (ident.eagerly (@Thunked.nat_rect) T (fun _ => P0))
-           | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess_internal (ident.eagerly (@Datatypes.nat_rect) T' P0)
-           end
-      | @Datatypes.list_rect ?A ?T0 ?Pnil
-        => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?P -> ?Q => reify_ident_preprocess_internal (@list_rect_arrow_nodep A P Q Pnil)
-           | fun _ => ?T => reify_ident_preprocess_internal (@Thunked.list_rect A T (fun _ => Pnil))
-           | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess_internal (@Datatypes.list_rect A T' Pnil)
-           end
-      | ident.eagerly (@Datatypes.list_rect) ?A ?T0 ?Pnil
-        => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?P -> ?Q => reify_ident_preprocess_internal (ident.eagerly (@list_rect_arrow_nodep) A P Q Pnil)
-           | fun _ => ?T => reify_ident_preprocess_internal (ident.eagerly (@Thunked.list_rect) A T (fun _ => Pnil))
-           | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess_internal (ident.eagerly (@Datatypes.list_rect) A T' Pnil)
-           end
-      | @ListUtil.list_case ?A ?T0 ?Pnil
-        => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess_internal (@Thunked.list_case A T (fun _ => Pnil))
-           | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess_internal (@ListUtil.list_case A T' Pnil)
-           end
-      | @Datatypes.option_rect ?A ?T0 ?PSome ?PNone
-        => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess_internal (@Thunked.option_rect A T PSome (fun _ => PNone))
-           | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess_internal (@Datatypes.option_rect A T' PSome PNone)
-           end
+    Ltac2 rec reify_ident_preprocess (ctx_tys : binder list) (term : constr) : constr :=
+      Reify.debug_enter_reify_ident_preprocess "expr.reify_ident_preprocess" term;
+      let reify_ident_preprocess := reify_ident_preprocess ctx_tys in
+      (* XXX TODO remove wrap perf thunking *)
+      let wrap f x := '(ltac2:(Control.refine (fun () => f x))) in
+      let handle_eliminator (motive : constr) (rect_arrow_nodep : constr option) (rect_nodep : constr option) (rect : constr) (mid_args : constr list) (cases_to_thunk : constr list)
+        := let mkApp_thunked_cases f pre_args
+             := Control.with_holes
+                  (fun () => mkApp f (List.append pre_args (List.append mid_args (List.map (fun arg => open_constr:(fun _ => $arg)) cases_to_thunk))))
+                  (fun fv => match Constr.Unsafe.check fv with
+                             | Val fv => fv
+                             | Err err => Control.throw err
+                             end) in
+           let opt_recr (thunked : bool) orect args :=
+             match orect with
+             | Some rect => (reify_ident_preprocess,
+                              if thunked
+                              then mkApp_thunked_cases rect args
+                              else mkApp rect (List.append args (List.append mid_args cases_to_thunk)))
+             | None => Control.zero Match_failure
+             end in
+           let (f, x) := match! (eval cbv beta in $motive) with
+                         | fun _ => ?a -> ?b
+                           => opt_recr false rect_arrow_nodep [a; b]
+                         | fun _ => ?t
+                           => opt_recr true rect_nodep [t]
+                         | ?t'
+                           => if Constr.equal motive t'
+                              then (wrap (reify_ident_preprocess_extra ctx_tys), term)
+                              else opt_recr false (Some rect) [t']
+                         end in
+           f x in
+      lazy_match! term with
+      | Datatypes.S => reify_ident_preprocess 'Nat.succ
+      | @Datatypes.prod_rect ?a ?b ?t0
+        => handle_eliminator t0 None (Some '(@prod_rect_nodep $a $b)) '(@Datatypes.prod_rect $a $b) [] []
+      | @Datatypes.bool_rect ?t0 ?ptrue ?pfalse
+        => handle_eliminator t0 None (Some '@Thunked.bool_rect) '(@Datatypes.bool_rect) [] [ptrue; pfalse]
+      | @Datatypes.nat_rect ?t0 ?p0
+        => handle_eliminator t0 (Some '@nat_rect_arrow_nodep) (Some '@Thunked.nat_rect) '(@Datatypes.nat_rect) [] [p0]
+      | ident.eagerly (@Datatypes.nat_rect) ?t0 ?p0
+        => handle_eliminator t0 (Some '(ident.eagerly (@nat_rect_arrow_nodep))) (Some '(ident.eagerly (@Thunked.nat_rect))) '(ident.eagerly (@Datatypes.nat_rect)) [] [p0]
+      | @Datatypes.list_rect ?a ?t0 ?pnil
+        => handle_eliminator t0 (Some '(@list_rect_arrow_nodep $a)) (Some '(@Thunked.list_rect $a)) '(@Datatypes.list_rect $a) [] [pnil]
+      | ident.eagerly (@Datatypes.list_rect) ?a ?t0 ?pnil
+        => handle_eliminator t0 (Some '(ident.eagerly (@list_rect_arrow_nodep) $a)) (Some '(ident.eagerly (@Thunked.list_rect) $a)) '(ident.eagerly (@Datatypes.list_rect) $a) [] [pnil]
+      | @ListUtil.list_case ?a ?t0 ?pnil
+        => handle_eliminator t0 None (Some '(@Thunked.list_case $a)) '(@ListUtil.list_case $a) [] [pnil]
+      | @Datatypes.option_rect ?a ?t0 ?psome ?pnone
+        => handle_eliminator t0 None (Some '(@Thunked.option_rect $a)) '(@Datatypes.option_rect $a) [psome] [pnone]
       | ident.eagerly (?f ?x)
-        => reify_ident_preprocess_internal (ident.eagerly f x)
-      | ?term => reify_ident_preprocess_extra term
+        => reify_ident_preprocess '(ident.eagerly $f $x)
+      | ?term => wrap (reify_ident_preprocess_extra ctx_tys) term
       end.
-    Ltac reify_ident_preprocess term :=
-      constr:(ltac:(let v := reify_ident_preprocess_internal term in exact v)).
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac reify_ident_preprocess term :=
+        let f := ltac2:(term
+                        |- Control.refine (fun () => reify_ident_preprocess [] (Ltac1.get_to_constr term))) in
+        constr:(ltac:(f term)).
 
 
     Ltac reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx :=
