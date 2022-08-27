@@ -107,6 +107,7 @@ src/Rewriter/Util/Tactics/Test.v
 src/Rewriter/Util/Tactics/TransparentAssert.v
 src/Rewriter/Util/Tactics/UniquePose.v
 src/Rewriter/Util/Tactics/WarnIfGoalsRemain.v
+src/Rewriter/Util/Tactics2/Head.v
 src/Rewriter/Util/plugins/RewriterBuildRegistryImports.v
 src/Rewriter/Util/plugins/definition_by_tactic.ml
 src/Rewriter/Util/plugins/definition_by_tactic.mli
