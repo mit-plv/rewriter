@@ -519,7 +519,7 @@ Module Compilers.
              | type.base _, true => fun v => UnderLets.to_expr v
              | type.arrow s d, _
                => fun f
-                  => λ x , @reify _ d (f (@reflect _ s ($x)))
+                  => λ x , @reify _ d (f (@reflect _ s ($$x)))
              end%expr%under_lets%cps
         with reflect {with_lets} {t} : expr t -> value' with_lets t
              := match t, with_lets return expr t -> value' with_lets t with

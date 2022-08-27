@@ -112,7 +112,7 @@ Module Compilers.
                      | match goal with
                        | [ |- expr.wf _ (_ @ _) (_ @ _) ] => constructor
                        | [ |- expr.wf _ (#_) (#_) ] => constructor
-                       | [ |- expr.wf _ ($_) ($_) ] => constructor
+                       | [ |- expr.wf _ ($$_) ($$_) ] => constructor
                        | [ |- expr.wf _ (expr.Abs _) (expr.Abs _) ] => constructor; intros
                        | [ H : @List.In ?T _ ?ls |- _ ] => is_evar ls; unify ls (@nil T); cbn [List.In] in H
                        | [ |- List.In ?v ?ls ] => is_evar ls; instantiate (1:=cons v _)

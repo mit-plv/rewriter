@@ -22,13 +22,13 @@ Module Compilers.
                     let eC' := fun v => @subst_var_like tC (eC v) in
                     if is_var_like _ ex'
                     then eC' ex'
-                    else expr.LetIn ex' (fun v => eC' ($v))
+                    else expr.LetIn ex' (fun v => eC' ($$v))
                | expr.App s d f x
                  => let f' := @subst_var_like _ f in
                     let x' := @subst_var_like _ x in
                     expr.App f' x'
                | expr.Abs s d f
-                 => expr.Abs (fun v => @subst_var_like _ (f ($v)))
+                 => expr.Abs (fun v => @subst_var_like _ (f ($$v)))
                | expr.Var t v => v
                | expr.Ident t idc => expr.Ident idc
                end%expr.
@@ -177,10 +177,10 @@ Module Compilers.
         Let default_reify_and_let_binds_base_cps {t : base_type} : expr t -> forall T, (expr t -> UnderLets T) -> UnderLets T
           := fun e T k
              => match invert_expr.invert_Var e with
-                | Some v => k ($v)%expr
+                | Some v => k ($$v)%expr
                 | None => if is_var_like e
                           then k e
-                          else UnderLets.UnderLet e (fun v => k ($v)%expr)
+                          else UnderLets.UnderLet e (fun v => k ($$v)%expr)
                 end.
 
         Fixpoint reify_and_let_binds_base_cps {t : base_type} : expr t -> forall T, (expr t -> UnderLets T) -> UnderLets T
@@ -253,7 +253,7 @@ Module Compilers.
                                           d
                                           match invert_Abs e with
                                           | Some f => f v
-                                          | None => e @ $v
+                                          | None => e @ $$v
                                           end%expr)
              end.
       End with_var.

@@ -1602,7 +1602,7 @@ Module Compilers.
                          | solve [ wf_t ]
                          | match goal with
                            | [ H : _ |- expr.interp _ (let_bind_return _ ?e0) == expr.interp _ ?e ?v ]
-                             => eapply (H e0 (e @ $v)%expr (cons _ _)); [ .. | solve [ wf_t ] ]; solve [ wf_t ]
+                             => eapply (H e0 (e @ $$v)%expr (cons _ _)); [ .. | solve [ wf_t ] ]; solve [ wf_t ]
                            | [ H : _ |- expr.interp _ (let_bind_return _ ?e0) == expr.interp _ ?e ?v ]
                              => cbn [expr.interp]; eapply H; [ | solve [ wf_t ] ]; solve [ wf_t ]
                            end ];
