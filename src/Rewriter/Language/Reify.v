@@ -4,6 +4,8 @@ Require Import Coq.Bool.Bool.
 Require Import Coq.Lists.List.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Relations.Relation_Definitions.
+Require Import Ltac2.Ltac2.
+Require Import Ltac2.Printf.
 Require Import Rewriter.Language.PreCommon.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Util.LetIn.
@@ -30,110 +32,117 @@ Import EqNotations.
 Module Compilers.
   Export Language.PreCommon.
   Export Language.Compilers.
+  Module Export Exports.
+    Ltac2 Type exn ::= [ Reification_failure (message) ].
+    Ltac2 Type exn ::= [ Reification_panic (message) ].
+  End Exports.
   Local Set Boolean Equality Schemes.
   Local Set Decidable Equality Schemes.
-  Module Reify.
-    Ltac debug_level := Pre.reify_debug_level.
 
-    Tactic Notation "debug_enter_reify_idtac" ident(funname) uconstr(e)
-      := idtac funname ": Attempting to reify:" e.
-    Tactic Notation "debug_enter_reify_ident_idtac" ident(funname) uconstr(e)
-      := idtac funname ": Attempting to reify (as ident):" e.
-    Tactic Notation "debug_enter_reify_preprocess_idtac" ident(funname) uconstr(e)
-      := idtac funname ": Attempting to preprocess:" e.
-    Tactic Notation "debug_enter_reify_after_preprocess_idtac" ident(funname) uconstr(e)
-      := idtac funname ": Attempting to reify (post-preprocessing):" e.
-    Tactic Notation "debug_enter_reify_ident_preprocess_idtac" ident(funname) uconstr(e)
-      := idtac funname ": Attempting to (ident) preprocess:" e.
-    Tactic Notation "debug_enter_reify_ident_after_preprocess_idtac" ident(funname) uconstr(e)
-      := idtac funname ": Attempting to reify ident (post-preprocessing):" e.
-    Tactic Notation "debug_leave_reify_success_idtac" ident(funname) uconstr(e) uconstr(ret)
-      := idtac funname ": Success in reifying:" e "as" ret.
-    Tactic Notation "debug_leave_reify_failure_idtac" ident(funname) uconstr(e)
-      := idtac funname ": Failure in reifying:" e.
-    Tactic Notation "debug_enter_lookup_ident_idtac" ident(funname) uconstr(e)
-      := idtac funname ": Attempting to lookup ident:" e.
-    Tactic Notation "debug_leave_lookup_ident_success_idtac" ident(funname) uconstr(e) uconstr(ret)
-      := idtac funname ": Success in looking up ident:" e "as" ret.
-    Tactic Notation "debug_leave_lookup_ident_failure_idtac" ident(funname) uconstr(e)
-      := idtac funname ": Failure in looking up:" e.
-    Tactic Notation "debug_leave_lookup_ident_in_failure_idtac" ident(funname) uconstr(e) uconstr(ls)
-      := idtac funname ": Failure in looking up:" e "(in" ls ")".
-    Ltac check_debug_level_then_Set _ :=
-      let lvl := debug_level in
-      lazymatch type of lvl with
-      | nat => constr:(Set)
-      | ?T => constr_run_tac ltac:(fun _ => idtac "Error: debug_level should have type nat but instead has type" T)
-      end.
-    Ltac debug0 tac :=
-      constr_run_tac tac.
-    Ltac debug1 tac :=
-      let lvl := debug_level in
-      lazymatch lvl with
-      | S _ => constr_run_tac tac
-      | _ => check_debug_level_then_Set ()
-      end.
-    Ltac debug2 tac :=
-      let lvl := debug_level in
-      lazymatch lvl with
-      | S (S _) => constr_run_tac tac
-      | _ => check_debug_level_then_Set ()
-      end.
-    Ltac debug3 tac :=
-      let lvl := debug_level in
-      lazymatch lvl with
-      | S (S (S _)) => constr_run_tac tac
-      | _ => check_debug_level_then_Set ()
-      end.
-    Ltac debug4 tac :=
-      let lvl := debug_level in
-      lazymatch lvl with
-      | S (S (S (S _))) => constr_run_tac tac
-      | _ => check_debug_level_then_Set ()
-      end.
-    Ltac debug5or4 tac5 tac4 :=
-      let lvl := debug_level in
-      lazymatch lvl with
-      | S (S (S (S (S _)))) => constr_run_tac tac5
-      | S (S (S (S _))) => constr_run_tac tac4
-      | _ => check_debug_level_then_Set ()
-      end.
-    Ltac debug5 tac :=
-      let lvl := debug_level in
-      lazymatch lvl with
-      | S (S (S (S (S _)))) => constr_run_tac tac
-      | _ => check_debug_level_then_Set ()
-      end.
-    Ltac debug_enter_reify_base_type e := debug2 ltac:(fun _ => debug_enter_reify_idtac reify_base_type e).
-    Ltac debug_enter_reify_pattern_base_type e := debug2 ltac:(fun _ => debug_enter_reify_idtac reify_pattern_base_type e).
-    Ltac debug_enter_reify_type e := debug2 ltac:(fun _ => debug_enter_reify_idtac reify_type e).
-    Ltac debug_enter_reify_in_context e := debug2 ltac:(fun _ => debug_enter_reify_idtac reify_in_context e).
-    Ltac debug_enter_reify_ident e := debug3 ltac:(fun _ => debug_enter_reify_ident_idtac reify_ident e).
-    Ltac debug_enter_reify_preprocess e := debug2 ltac:(fun _ => debug_enter_reify_preprocess_idtac reify_preprocess e).
-    Ltac debug_enter_reify_ident_preprocess e := debug3 ltac:(fun _ => debug_enter_reify_ident_preprocess_idtac reify_ident_preprocess e).
-    Ltac debug_enter_reify_in_context_after_preprocess e := debug3 ltac:(fun _ => debug_enter_reify_after_preprocess_idtac reify_in_context e).
-    Ltac debug_enter_reify_ident_after_preprocess e := debug3 ltac:(fun _ => debug_enter_reify_ident_after_preprocess_idtac reify_in_context e).
-    Ltac debug_leave_reify_in_context_success e ret := debug5 ltac:(fun _ => debug_leave_reify_success_idtac reify_in_context e ret).
-    Ltac debug_leave_reify_in_context_failure e
-      := let dummy := debug0 ltac:(fun _ => debug_leave_reify_failure_idtac reify_in_context e) in
-         constr_fail.
-    Ltac debug_enter_lookup_ident e := debug3 ltac:(fun _ => debug_enter_lookup_ident_idtac reify_ident e).
-    Ltac debug_leave_lookup_ident_success e ret := debug3 ltac:(fun _ => debug_leave_lookup_ident_success_idtac reify_ident e ret).
-    Ltac debug_leave_lookup_ident_in_failure e ls :=
-      debug5or4
-        ltac:(fun _ => debug_leave_lookup_ident_in_failure_idtac reify_ident e ls)
-               ltac:(fun _ => debug_leave_lookup_ident_failure_idtac reify_ident e).
-    Ltac debug_leave_reify_base_type_failure e
-      := let dummy := debug0 ltac:(fun _ => debug_leave_reify_failure_idtac reify_base_type e) in
-         constr_fail.
-    Ltac debug_leave_reify_pattern_base_type_failure e
-      := let dummy := debug0 ltac:(fun _ => debug_leave_reify_failure_idtac reify_pattern_base_type e) in
-         constr_fail.
-    Tactic Notation "idtac_reify_in_context_case" ident(case) :=
-      idtac "reify_in_context:" case.
-    Ltac debug_reify_in_context_case tac :=
-      debug3 tac.
-    Ltac debug_enter_reify_abs e := debug2 ltac:(fun _ => debug_enter_reify_idtac reify_abs e).
+  Module Ltac1.
+    (* TODO: remove or move to util *)
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac2 get_to_constr v := Option.get (Ltac1.to_constr v).
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac2 apply_c (f : Ltac1.t) (args : constr list) : constr :=
+      '(ltac2:(Ltac1.apply f (List.map Ltac1.of_constr args) (fun v => Control.refine (fun () => get_to_constr v)))).
+  End Ltac1.
+
+  Module Reify.
+    Ltac2 debug_level := Pre.reify_debug_level.
+
+    Ltac2 mutable should_debug_enter_reify () := Int.le 2 debug_level.
+    Ltac2 mutable should_debug_enter_reify_preprocess () := Int.le 2 debug_level.
+    Ltac2 mutable should_debug_enter_reify_ident_preprocess () := Int.le 3 debug_level.
+    Ltac2 mutable should_debug_enter_reify_after_preprocess () := Int.le 3 debug_level.
+    Ltac2 mutable should_debug_leave_reify_success () := Int.le 5 debug_level.
+    Ltac2 mutable should_debug_leave_reify_failure () := Int.le 0 debug_level.
+    Ltac2 mutable should_debug_enter_reify_ident_after_preprocess () := Int.le 3 debug_level.
+    Ltac2 mutable should_debug_enter_lookup_ident () := Int.le 3 debug_level.
+    Ltac2 mutable should_debug_leave_lookup_ident_success () := Int.le 3 debug_level.
+    Ltac2 mutable should_debug_leave_lookup_ident_failure_verbose () := Int.le 5 debug_level.
+    Ltac2 mutable should_debug_leave_lookup_ident_failure () := Int.le 4 debug_level.
+
+    Ltac2 debug_if (cond : unit -> bool) (tac : unit -> 'a) (default : 'a) :=
+      if cond ()
+      then tac ()
+      else default.
+
+    Ltac2 debug_enter_reify (funname : string) (e : constr)
+      := debug_if should_debug_enter_reify (fun () => printf "%s: Attempting to reify: %t" funname e) ().
+    Ltac2 debug_enter_reify_preprocess (funname : string) (e : constr)
+      := debug_if should_debug_enter_reify_preprocess (fun () => printf "%s: Attempting to preprocess: %t" funname e) ().
+    (*Ltac2 debug_enter_reify_ident_idtac (funname : string) (e : constr)
+      := printf "%s: Attempting to reify (as ident): %t" funname e.*)
+    Ltac2 debug_enter_reify_after_preprocess (funname : string) (e : constr)
+      := debug_if should_debug_enter_reify_after_preprocess (fun () => printf "%s: Attempting to reify (post-preprocessing): %t" funname e) ().
+    Ltac2 debug_enter_reify_ident_preprocess (funname : string) (e : constr)
+      := debug_if should_debug_enter_reify_ident_preprocess (fun () => printf "%s: Attempting to (ident) preprocess: %t" funname e) ().
+    Ltac2 debug_enter_reify_ident_after_preprocess (funname : string) (e : constr)
+      := debug_if should_debug_enter_reify_ident_after_preprocess (fun () => printf "%s: Attempting to reify ident (post-preprocessing): %t" funname e) ().
+    Ltac2 debug_leave_reify_success (funname : string) (e : constr) (ret : constr)
+      := debug_if should_debug_leave_reify_success (fun () => printf "%s: Success in reifying: %t as %t" funname e ret) ().
+    Ltac2 debug_leave_reify_failure (funname : string) (e : constr)
+      := debug_if should_debug_leave_reify_failure (fun () => printf "%s: Failure in reifying: %t" funname e) ().
+    Ltac2 debug_enter_lookup_ident (funname : string) (e : constr)
+      := debug_if should_debug_enter_lookup_ident (fun () => printf "%s: Attempting to lookup ident: %t" funname e) ().
+    Ltac2 debug_leave_lookup_ident_success (funname : string) (e : constr) (ret : constr)
+      := debug_if should_debug_leave_lookup_ident_success (fun () => printf "%s: Success in looking up ident: %t as %t" funname e ret) ().
+    Ltac2 debug_leave_lookup_ident_failure (funname : string) (e : constr) (ls : constr)
+      := if should_debug_leave_lookup_ident_failure_verbose ()
+         then printf "%s: Failure in looking up: %t (in %t)" funname e ls
+         else if should_debug_leave_lookup_ident_failure ()
+              then printf "%s: Failure in looking up: %t" funname e
+              else ().
+
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_enter_reify_type ty :=
+      let f := ltac2:(ty |- debug_enter_reify "type.reify" (Ltac1.get_to_constr ty)) in
+      f ty.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_enter_reify_base_type ty :=
+      let f := ltac2:(ty |- debug_enter_reify "base.reify" (Ltac1.get_to_constr ty)) in
+      f ty.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_enter_reify_pattern_base_type ty :=
+      let f := ltac2:(ty |- debug_enter_reify "pattern.base.reify" (Ltac1.get_to_constr ty)) in
+      f ty.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_enter_reify_preprocess term :=
+      let f := ltac2:(term |- debug_enter_reify_preprocess "expr.reify_preprocess" (Ltac1.get_to_constr term)) in
+      f term.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_enter_reify_ident_preprocess term :=
+      let f := ltac2:(term |- debug_enter_reify_ident_preprocess "expr.reify_ident_preprocess" (Ltac1.get_to_constr term)) in
+      f term.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_enter_reify_in_context term :=
+      let f := ltac2:(term |- debug_enter_reify "expr.reify_in_context" (Ltac1.get_to_constr term)) in
+      f term.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_enter_reify_in_context_after_preprocess term :=
+      let f := ltac2:(term |- debug_enter_reify_after_preprocess "expr.reify_in_context" (Ltac1.get_to_constr term)) in
+      f term.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_enter_reify_ident_after_preprocess term :=
+      let f := ltac2:(term |- debug_enter_reify_ident_after_preprocess "expr.reify_in_context" (Ltac1.get_to_constr term)) in
+      f term.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_leave_reify_in_context_success term res :=
+      let f := ltac2:(term res |- debug_leave_reify_success "expr.reify_in_context" (Ltac1.get_to_constr term) (Ltac1.get_to_constr res)) in
+      f term res.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_enter_lookup_ident term :=
+      let f := ltac2:(term |- debug_enter_lookup_ident "reify_ident_via_list" (Ltac1.get_to_constr term)) in
+      f term.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_leave_lookup_ident_in_failure idc all_ident_and_interp :=
+      let f := ltac2:(idc all_ident_and_interp |- debug_leave_lookup_ident_failure "reify_ident_via_list" (Ltac1.get_to_constr idc) (Ltac1.get_to_constr all_ident_and_interp)) in
+      f idc all_ident_and_interp.
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac debug_leave_lookup_ident_success idc ret :=
+      let f := ltac2:(idc ret |- debug_leave_lookup_ident_success "reify_ident_via_list" (Ltac1.get_to_constr idc) (Ltac1.get_to_constr ret)) in
+      f idc ret.
   End Reify.
 
   Module type.
@@ -326,12 +335,14 @@ Module Compilers.
                           end in
            (*let B := lazymatch type of b with forall x, @?B x => B end in*)
            reify_preprocess rec_val (*(@Let_In A B a b)*)
-      | ?term => constr:(ltac:(let v := reify_preprocess_extra term in refine v))
+      | ?term => constr:(ltac:(let f := ltac2:(term |- Control.refine (fun () => reify_preprocess_extra [] (Ltac1.get_to_constr term))) in
+                               f term))
       end.
 
     Ltac reify_ident_preprocess term :=
       let __ := Reify.debug_enter_reify_ident_preprocess term in
-      let reify_ident_preprocess_extra term := constr:(ltac:(let v := reify_ident_preprocess_extra term in refine v)) in
+      let reify_ident_preprocess_extra term := constr:(ltac:(let f := ltac2:(term |- Control.refine (fun () => reify_ident_preprocess_extra [] (Ltac1.get_to_constr term))) in
+                                                             f term)) in
       lazymatch term with
       | Datatypes.S => reify_ident_preprocess Nat.succ
       | @Datatypes.prod_rect ?A ?B ?T0
@@ -543,3 +554,4 @@ Module Compilers.
     Qed.
   End expr.
 End Compilers.
+Export Compilers.Exports.
