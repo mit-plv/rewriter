@@ -1744,8 +1744,8 @@ Module Compilers.
                 | specialize (fun with_lets G => @wf_reify with_lets G d); specialize (fun with_lets G => wf_reflect with_lets G s) ].
               { destruct with_lets; cbn; intros; auto using UnderLets.wf_to_expr. }
               { intros e1 e2 Hwf.
-                change (reify e1) with (λ x, @reify _ _ d (e1 (@reflect _ _ s ($x))))%expr.
-                change (reify e2) with (λ x, @reify _ _ d (e2 (@reflect _ _ s ($x))))%expr.
+                change (reify e1) with (λ x, @reify _ _ d (e1 (@reflect _ _ s ($$x))))%expr.
+                change (reify e2) with (λ x, @reify _ _ d (e2 (@reflect _ _ s ($$x))))%expr.
                 constructor; intros; eapply wf_reify, Hwf with (seg:=cons _ nil); [ | eapply wf_reflect; constructor ]; wf_t. } }
             { destruct t as [t|s d];
                 [ clear wf_reflect wf_reify
@@ -3204,7 +3204,7 @@ Module Compilers.
                        | [ |- expr.wf ?seg (#_) (#_) ]
                          => (tryif is_evar seg then instantiate (1:=nil) else idtac);
                             constructor
-                       | [ |- expr.wf _ ($_) ($_) ] => constructor
+                       | [ |- expr.wf _ ($$_) ($$_) ] => constructor
                        | [ |- expr.wf _ (expr.Abs _) (expr.Abs _) ] => constructor; intros
                        | [ |- expr.wf _ (UnderLets.to_expr _) (UnderLets.to_expr _) ] => apply UnderLets.wf_to_expr
                        | [ H : expr.wf ?G ?x ?y |- expr.wf ?seg ?x ?y ] => first [ is_evar seg | constr_eq G seg ]; exact H
