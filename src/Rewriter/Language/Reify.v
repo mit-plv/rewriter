@@ -282,21 +282,21 @@ Module Compilers.
         end
       end.
 
-    Ltac reify_preprocess term :=
+    Ltac reify_preprocess_internal term :=
       let __ := Reify.debug_enter_reify_preprocess term in
       lazymatch term with
       | match ?b with true => ?t | false => ?f end
         => let T := type of term in
-           reify_preprocess (@Thunked.bool_rect T (fun _ => t) (fun _ => f) b)
+           reify_preprocess_internal (@Thunked.bool_rect T (fun _ => t) (fun _ => f) b)
       | match ?x with Datatypes.pair a b => @?f a b end
         => let T := type of term in
-           reify_preprocess (@prod_rect_nodep _ _ T f x)
+           reify_preprocess_internal (@prod_rect_nodep _ _ T f x)
       | match ?x with nil => ?N | cons a b => @?C a b end
         => let T := type of term in
-           reify_preprocess (@Thunked.list_case _ T (fun _ => N) C x)
+           reify_preprocess_internal (@Thunked.list_case _ T (fun _ => N) C x)
       | match ?x with None => ?N | Some a => @?S a end
         => let T := type of term in
-           reify_preprocess (@Thunked.option_rect _ T S (fun _ => N) x)
+           reify_preprocess_internal (@Thunked.option_rect _ T S (fun _ => N) x)
       | let x := ?a in ?b
         => let A := type of a in
            let T := type of term in
@@ -307,73 +307,77 @@ Module Compilers.
                           | _ => constr:(match a return T with x => b end) (* if we do rely on the body of [x] to well-type [b], then just inline it *)
                           end in
            (*let B := lazymatch type of b with forall x, @?B x => B end in*)
-           reify_preprocess rec_val (*(@Let_In A B a b)*)
+           reify_preprocess_internal rec_val (*(@Let_In A B a b)*)
       | ?term => constr:(ltac:(let f := ltac2:(term |- Control.refine (fun () => reify_preprocess_extra [] (Ltac1.get_to_constr term))) in
                                f term))
       end.
+    Ltac reify_preprocess term :=
+      constr:(ltac:(let v := reify_preprocess_internal term in refine v)).
 
-    Ltac reify_ident_preprocess term :=
+    Ltac reify_ident_preprocess_internal term :=
       let __ := Reify.debug_enter_reify_ident_preprocess term in
       let reify_ident_preprocess_extra term := constr:(ltac:(let f := ltac2:(term |- Control.refine (fun () => reify_ident_preprocess_extra [] (Ltac1.get_to_constr term))) in
                                                              f term)) in
       lazymatch term with
-      | Datatypes.S => reify_ident_preprocess Nat.succ
+      | Datatypes.S => reify_ident_preprocess_internal Nat.succ
       | @Datatypes.prod_rect ?A ?B ?T0
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess (@prod_rect_nodep A B T)
+           | fun _ => ?T => reify_ident_preprocess_internal (@prod_rect_nodep A B T)
            | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess (@Datatypes.prod_rect A B T')
+           | ?T' => reify_ident_preprocess_internal (@Datatypes.prod_rect A B T')
            end
       | @Datatypes.bool_rect ?T0 ?Ptrue ?Pfalse
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess (@Thunked.bool_rect T (fun _ => Ptrue) (fun _ => Pfalse))
+           | fun _ => ?T => reify_ident_preprocess_internal (@Thunked.bool_rect T (fun _ => Ptrue) (fun _ => Pfalse))
            | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess (@Datatypes.bool_rect T' Ptrue Pfalse)
+           | ?T' => reify_ident_preprocess_internal (@Datatypes.bool_rect T' Ptrue Pfalse)
            end
       | @Datatypes.nat_rect ?T0 ?P0
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?A -> ?B => reify_ident_preprocess (@nat_rect_arrow_nodep A B P0)
-           | fun _ => ?T => reify_ident_preprocess (@Thunked.nat_rect T (fun _ => P0))
+           | fun _ => ?A -> ?B => reify_ident_preprocess_internal (@nat_rect_arrow_nodep A B P0)
+           | fun _ => ?T => reify_ident_preprocess_internal (@Thunked.nat_rect T (fun _ => P0))
            | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess (@Datatypes.nat_rect T' P0)
+           | ?T' => reify_ident_preprocess_internal (@Datatypes.nat_rect T' P0)
            end
       | ident.eagerly (@Datatypes.nat_rect) ?T0 ?P0
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?A -> ?B => reify_ident_preprocess (ident.eagerly (@nat_rect_arrow_nodep) A B P0)
-           | fun _ => ?T => reify_ident_preprocess (ident.eagerly (@Thunked.nat_rect) T (fun _ => P0))
+           | fun _ => ?A -> ?B => reify_ident_preprocess_internal (ident.eagerly (@nat_rect_arrow_nodep) A B P0)
+           | fun _ => ?T => reify_ident_preprocess_internal (ident.eagerly (@Thunked.nat_rect) T (fun _ => P0))
            | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess (ident.eagerly (@Datatypes.nat_rect) T' P0)
+           | ?T' => reify_ident_preprocess_internal (ident.eagerly (@Datatypes.nat_rect) T' P0)
            end
       | @Datatypes.list_rect ?A ?T0 ?Pnil
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?P -> ?Q => reify_ident_preprocess (@list_rect_arrow_nodep A P Q Pnil)
-           | fun _ => ?T => reify_ident_preprocess (@Thunked.list_rect A T (fun _ => Pnil))
+           | fun _ => ?P -> ?Q => reify_ident_preprocess_internal (@list_rect_arrow_nodep A P Q Pnil)
+           | fun _ => ?T => reify_ident_preprocess_internal (@Thunked.list_rect A T (fun _ => Pnil))
            | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess (@Datatypes.list_rect A T' Pnil)
+           | ?T' => reify_ident_preprocess_internal (@Datatypes.list_rect A T' Pnil)
            end
       | ident.eagerly (@Datatypes.list_rect) ?A ?T0 ?Pnil
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?P -> ?Q => reify_ident_preprocess (ident.eagerly (@list_rect_arrow_nodep) A P Q Pnil)
-           | fun _ => ?T => reify_ident_preprocess (ident.eagerly (@Thunked.list_rect) A T (fun _ => Pnil))
+           | fun _ => ?P -> ?Q => reify_ident_preprocess_internal (ident.eagerly (@list_rect_arrow_nodep) A P Q Pnil)
+           | fun _ => ?T => reify_ident_preprocess_internal (ident.eagerly (@Thunked.list_rect) A T (fun _ => Pnil))
            | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess (ident.eagerly (@Datatypes.list_rect) A T' Pnil)
+           | ?T' => reify_ident_preprocess_internal (ident.eagerly (@Datatypes.list_rect) A T' Pnil)
            end
       | @ListUtil.list_case ?A ?T0 ?Pnil
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess (@Thunked.list_case A T (fun _ => Pnil))
+           | fun _ => ?T => reify_ident_preprocess_internal (@Thunked.list_case A T (fun _ => Pnil))
            | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess (@ListUtil.list_case A T' Pnil)
+           | ?T' => reify_ident_preprocess_internal (@ListUtil.list_case A T' Pnil)
            end
       | @Datatypes.option_rect ?A ?T0 ?PSome ?PNone
         => lazymatch (eval cbv beta in T0) with
-           | fun _ => ?T => reify_ident_preprocess (@Thunked.option_rect A T PSome (fun _ => PNone))
+           | fun _ => ?T => reify_ident_preprocess_internal (@Thunked.option_rect A T PSome (fun _ => PNone))
            | T0 => reify_ident_preprocess_extra term
-           | ?T' => reify_ident_preprocess (@Datatypes.option_rect A T' PSome PNone)
+           | ?T' => reify_ident_preprocess_internal (@Datatypes.option_rect A T' PSome PNone)
            end
       | ident.eagerly (?f ?x)
-        => reify_ident_preprocess (ident.eagerly f x)
+        => reify_ident_preprocess_internal (ident.eagerly f x)
       | ?term => reify_ident_preprocess_extra term
       end.
+    Ltac reify_ident_preprocess term :=
+      constr:(ltac:(let v := reify_ident_preprocess_internal term in exact v)).
 
 
     Ltac reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx :=
