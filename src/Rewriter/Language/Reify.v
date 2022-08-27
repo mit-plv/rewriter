@@ -326,11 +326,12 @@ Module Compilers.
                           end in
            (*let B := lazymatch type of b with forall x, @?B x => B end in*)
            reify_preprocess rec_val (*(@Let_In A B a b)*)
-      | ?term => reify_preprocess_extra term
+      | ?term => constr:(ltac:(let v := reify_preprocess_extra term in refine v))
       end.
 
     Ltac reify_ident_preprocess term :=
       let __ := Reify.debug_enter_reify_ident_preprocess term in
+      let reify_ident_preprocess_extra term := constr:(ltac:(let v := reify_ident_preprocess_extra term in refine v)) in
       lazymatch term with
       | Datatypes.S => reify_ident_preprocess Nat.succ
       | @Datatypes.prod_rect ?A ?B ?T0
