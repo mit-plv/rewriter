@@ -96,18 +96,6 @@ Module Compilers.
               else ().
 
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_enter_reify_type ty :=
-      let f := ltac2:(ty |- debug_enter_reify "type.reify" (Ltac1.get_to_constr ty)) in
-      f ty.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_enter_reify_base_type ty :=
-      let f := ltac2:(ty |- debug_enter_reify "base.reify" (Ltac1.get_to_constr ty)) in
-      f ty.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_enter_reify_pattern_base_type ty :=
-      let f := ltac2:(ty |- debug_enter_reify "pattern.base.reify" (Ltac1.get_to_constr ty)) in
-      f ty.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac debug_enter_reify_preprocess term :=
       let f := ltac2:(term |- debug_enter_reify_preprocess "expr.reify_preprocess" (Ltac1.get_to_constr term)) in
       f term.
@@ -145,31 +133,32 @@ Module Compilers.
       f idc ret.
   End Reify.
 
-  Local Ltac wrap tac arg :=
-    constr:(ltac:(let v := tac arg in refine v)).
-
   Module type.
     Import Language.Compilers.type.
-    Ltac reify_internal base_reify base_type ty :=
-      let __ := Reify.debug_enter_reify_type ty in
-      let reify_rec t := reify_internal base_reify base_type t in
-      lazymatch eval cbv beta in ty with
-      | ?A -> ?B
-        => let rA := reify_rec A in
-           let rB := reify_rec B in
-           constr:(@arrow base_type rA rB)
-      | @interp _ _ ?T => T
+    Ltac2 rec reify (base_reify : constr -> constr) (base_type : constr) (ty : constr) :=
+      Reify.debug_enter_reify "type.reify" ty;
+      let reify_rec (t : constr) := reify base_reify base_type t in
+      lazy_match! (eval cbv beta in $ty) with
+      | ?a -> ?b
+        => let ra := reify_rec a in
+           let rb := reify_rec b in
+           '(@arrow $base_type $ra $rb)
+      | @interp _ _ ?t => t
       | _ => let rt := base_reify ty in
-             constr:(@base base_type rt)
+             '(@base $base_type $rt)
       end.
-    Ltac reify base_reify base_type ty := wrap ltac:(reify_internal ltac:(wrap base_reify) base_type) ty.
+    #[deprecated((*since="8.14",*)note="Use Ltac2 type.reify instead.")]
+     Ltac reify base_reify base_type ty :=
+      let f := ltac2:(base_reify base_type ty
+                      |- Control.refine (fun () => reify (fun v => Ltac1.apply_c base_reify [v]) (Ltac1.get_to_constr base_type) (Ltac1.get_to_constr ty))) in
+      constr:(ltac:(f base_reify base_type ty)).
 
     Class reified_of {base_type} {interp_base_type : base_type -> Type} (v : Type) (rv : type base_type)
       := reified_ok : @interp base_type interp_base_type rv = v.
 
-    Ltac reify_via_tc base_type interp_base_type ty :=
-      let rv := constr:(_ : @reified_of base_type interp_base_type ty _) in
-      lazymatch type of rv with
+    Ltac2 reify_via_tc (base_type : constr) (interp_base_type : constr) (ty : constr) :=
+      let rv := '(_ : @reified_of $base_type $interp_base_type $ty _) in
+      lazy_match! Constr.type rv with
       | @reified_of _ _ _ ?rv => rv
       end.
   End type.
@@ -177,31 +166,31 @@ Module Compilers.
     Import Language.Compilers.base.
     Local Notation einterp := type.interp.
 
-    Ltac reify_internal base reify_base ty :=
-      let reify_rec ty := reify_internal base reify_base ty in
-      let __ := Reify.debug_enter_reify_base_type ty in
-      lazymatch eval cbv beta in ty with
-      | Datatypes.unit => constr:(@type.unit base)
-      | Datatypes.prod ?A ?B
-        => let rA := reify_rec A in
-          let rB := reify_rec B in
-          constr:(@type.prod base rA rB)
-      | Datatypes.list ?T
-        => let rT := reify_rec T in
-          constr:(@type.list base rT)
-      | Datatypes.option ?T
-        => let rT := reify_rec T in
-          constr:(@type.option base rT)
-      | @interp base ?base_interp ?T => T
-      | @einterp (@type base) (@interp base ?base_interp) (@Compilers.type.base (@type base) ?T) => T
-      | ?ty => let rT := reify_base ty in
-              constr:(@type.type_base base rT)
+    Ltac2 rec reify (base : constr) (reify_base : constr -> constr) (ty : constr) :=
+      let reify_rec (ty : constr) := reify base reify_base ty in
+      Reify.debug_enter_reify "base.reify" ty;
+      lazy_match! (eval cbv beta in $ty) with
+      | Datatypes.unit => '(@type.unit $base)
+      | Datatypes.prod ?a ?b
+        => let ra := reify_rec a in
+           let rb := reify_rec b in
+           '(@type.prod $base $ra $rb)
+      | Datatypes.list ?t
+        => let rt := reify_rec t in
+           '(@type.list $base $rt)
+      | Datatypes.option ?t
+        => let rt := reify_rec t in
+           '(@type.option $base $rt)
+      | @interp (*$base*)?base' ?base_interp ?t => t
+      | @einterp (@type (*$base*)?base') (@interp (*$base*)?base' ?base_interp) (@Compilers.type.base (@type (*$base*)?base') ?t) => t
+      | ?ty => let rt := reify_base ty in
+               '(@type.type_base $base $rt)
       end.
-    Ltac reify base reify_base ty := wrap ltac:(reify_internal base ltac:(wrap reify_base)) ty.
-    (*Notation reify t := (ltac:(let rt := reify t in exact rt)) (only parsing).
-    Notation reify_norm t := (ltac:(let t' := eval cbv in t in let rt := reify t' in exact rt)) (only parsing).*)
-    (*Notation reify_type_of e := (reify ((fun t (_ : t) => t) _ e)) (only parsing).*)
-    (*Notation reify_norm_type_of e := (reify_norm ((fun t (_ : t) => t) _ e)) (only parsing).*)
+    #[deprecated(since="8.15",note="Use Ltac2 base.reify instead.")]
+     Ltac reify base reify_base ty :=
+      let f := ltac2:(base reify_base ty
+                      |- Control.refine (fun () => reify (Ltac1.get_to_constr base) (fun v => Ltac1.apply_c reify_base [v]) (Ltac1.get_to_constr ty))) in
+      constr:(ltac:(f base reify_base ty)).
   End base.
 
   Module pattern.
@@ -210,27 +199,31 @@ Module Compilers.
       Import Language.Compilers.pattern.base.
       Local Notation einterp := type.interp.
 
-      Ltac reify_internal base reify_base ty :=
-        let reify_rec ty := reify_internal base reify_base ty in
-        let __ := Reify.debug_enter_reify_pattern_base_type ty in
-        lazymatch eval cbv beta in ty with
-        | Datatypes.unit => constr:(@type.unit base)
-        | Datatypes.prod ?A ?B
-          => let rA := reify_rec A in
-             let rB := reify_rec B in
-             constr:(@type.prod base rA rB)
-        | Datatypes.list ?T
-          => let rT := reify_rec T in
-             constr:(@type.list base rT)
-        | Datatypes.option ?T
-          => let rT := reify_rec T in
-             constr:(@type.option base rT)
-        | @interp base ?base_interp ?lookup ?T => T
-        | @einterp (@type base) (@interp base ?base_interp ?lookup) (@Compilers.type.base (@type base) ?T) => T
-        | ?ty => let rT := reify_base ty in
-                 constr:(@type.type_base base rT)
+      Ltac2 rec reify (base : constr) (reify_base : constr -> constr) (ty : constr) :=
+        let reify_rec (ty : constr) := reify base reify_base ty in
+        Reify.debug_enter_reify "pattern.base.reify" ty;
+        lazy_match! (eval cbv beta in $ty) with
+        | Datatypes.unit => '(@type.unit $base)
+        | Datatypes.prod ?a ?b
+          => let ra := reify_rec a in
+             let rb := reify_rec b in
+             '(@type.prod $base $ra $rb)
+        | Datatypes.list ?t
+          => let rt := reify_rec t in
+             '(@type.list $base $rt)
+        | Datatypes.option ?t
+          => let rt := reify_rec t in
+             '(@type.option $base $rt)
+        | @interp (*$base*)?base' ?base_interp ?lookup ?t => t
+        | @einterp (@type (*$base*)?base') (@interp (*$base*)?base' ?base_interp ?lookup) (@Compilers.type.base (@type (*$base*)?base') ?t) => t
+        | ?ty => let rt := reify_base ty in
+                 '(@type.type_base $base $rt)
         end.
-      Ltac reify base reify_base ty := wrap ltac:(reify_internal base ltac:(wrap reify_base)) ty.
+      #[deprecated(since="8.15",note="Use Ltac2 pattern.base.reify instead.")]
+       Ltac reify base reify_base ty :=
+        let f := ltac2:(base reify_base ty
+                        |- Control.refine (fun () => reify (Ltac1.get_to_constr base) (fun v => Ltac1.apply_c reify_base [v]) (Ltac1.get_to_constr ty))) in
+        constr:(ltac:(f base reify_base ty)).
     End base.
   End pattern.
 
@@ -242,32 +235,6 @@ Module Compilers.
       | nil
       | cons {T t} (gallina_v : T) (v : var t) (ctx : list).
     End var_context.
-
-    (* cf COQBUG(https://github.com/coq/coq/issues/5448) , COQBUG(https://github.com/coq/coq/issues/6315) , COQBUG(https://github.com/coq/coq/issues/6559) , COQBUG(https://github.com/coq/coq/issues/6534) , https://github.com/mit-plv/fiat-crypto/issues/320 *)
-    Ltac require_same_var n1 n2 :=
-      (*idtac n1 n2;*)
-      let c1 := constr:(fun n1 n2 : Set => ltac:(exact n1)) in
-      let c2 := constr:(fun n1 n2 : Set => ltac:(exact n2)) in
-      (*idtac c1 c2;*)
-      first [ constr_eq c1 c2 | fail 1 "Not the same var:" n1 "and" n2 "(via constr_eq" c1 c2 ")" ].
-    Ltac is_same_var n1 n2 :=
-      match goal with
-      | _ => let check := match goal with _ => require_same_var n1 n2 end in
-             true
-      | _ => false
-      end.
-    Ltac is_underscore v :=
-      let v' := fresh v in
-      let v' := fresh v' in
-      is_same_var v v'.
-    Ltac refresh n fresh_tac :=
-      let n_is_underscore := is_underscore n in
-      let n' := lazymatch n_is_underscore with
-                | true => fresh
-                | false => fresh_tac n
-                end in
-      let n' := fresh_tac n' in
-      n'.
 
     Ltac type_of_first_argument_of f :=
       let f_ty := type of f in

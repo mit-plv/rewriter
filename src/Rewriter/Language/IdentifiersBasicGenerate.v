@@ -2,6 +2,8 @@ Require Import Coq.ZArith.ZArith.
 Require Import Coq.Bool.Bool.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Lists.List.
+Require Import Ltac2.Ltac2.
+Require Import Ltac2.Printf.
 Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.Reify.
@@ -485,32 +487,60 @@ Module Compilers.
       Ltac make_base_type_list base_type_list_named :=
         let res := build_base_type_list base_type_list_named in refine res.
 
-      Ltac reify_base_via_list_internal base base_interp all_base_and_interp :=
-        let all_base_and_interp := (eval hnf in all_base_and_interp) in
-        let all_base_and_interp := (eval cbv beta in all_base_and_interp) in
+      Ltac2 reify_base_via_list_opt (base : constr) (base_interp : constr) (all_base_and_interp : constr) :=
+        let all_base_and_interp := (eval hnf in $all_base_and_interp) in
+        let all_base_and_interp := (eval cbv beta in $all_base_and_interp) in
         fun ty
-        => let ty := (eval cbv beta in ty) in
-           let __ := Reify.debug_enter_reify_base_type ty in
-           lazymatch all_base_and_interp with
-           | context[Datatypes.cons (?rty, ty)] => rty
-           | _
-             => lazymatch ty with
-                | base_interp ?T => T
-                | @base.interp base base_interp (@base.type.type_base base ?T) => T
-                | @type.interp (base.type base) (@base.interp base base_interp) (@Compilers.type.base (base.type base) (@base.type.type_base base ?T)) => T
-                | _ => constr_fail_with ltac:(fun _ => fail 1 "Unrecognized type:" ty)
-                end
+        => let ty := (eval cbv beta in $ty) in
+           Reify.debug_enter_reify "reify_base_via_list" ty;
+           let rty := match! all_base_and_interp with
+                      | context[Datatypes.cons (?rty, ?ty')]
+                        => if Constr.equal ty ty'
+                           then Some rty
+                           else Control.zero Match_failure
+                      | _ => None
+                      end in
+           match rty with
+           | Some rty => Some rty
+           | None
+             => (* work around COQBUG(https://github.com/coq/coq/issues/13962) *)
+               lazy_match! '($base_interp, $base, $ty) with
+               | (?base_interp, ?base, ?base_interp ?t) => Some t
+               | (?base_interp, ?base, @base.interp ?base ?base_interp (@base.type.type_base ?base ?t)) => Some t
+               | (?base_interp, ?base, @type.interp (base.type ?base) (@base.interp ?base ?base_interp) (@Compilers.type.base (base.type ?base) (@base.type.type_base ?base ?t))) => Some t
+               | _ => None
+               end
            end.
-      Ltac reify_base_via_list base base_interp all_base_and_interp ty :=
-        constr:(ltac:(let v := reify_base_via_list_internal base base_interp all_base_and_interp ty in refine v)).
+      Ltac2 reify_base_via_list (base : constr) (base_interp : constr) (all_base_and_interp : constr) (ty : constr) : constr :=
+        match reify_base_via_list_opt base base_interp all_base_and_interp ty with
+        | Some res => res
+        | None => Control.zero (Reification_failure (fprintf "Unrecognized type: %t" ty))
+        end.
+      #[deprecated(since="8.15",note="Use Ltac2 reify_base_via_list instead.")]
+       Ltac reify_base_via_list base base_interp all_base_and_interp ty :=
+        let f := ltac2:(base base_interp all_base_and_interp ty
+                        |- Control.refine (fun () => reify_base_via_list (Ltac1.get_to_constr base) (Ltac1.get_to_constr base_interp) (Ltac1.get_to_constr all_base_and_interp) (Ltac1.get_to_constr ty))) in
+        constr:(ltac:(f base base_interp all_base_and_interp ty)).
 
-      Ltac reify_base_type_via_list base base_interp all_base_and_interp :=
+      Ltac2 reify_base_type_via_list (base : constr) (base_interp : constr) (all_base_and_interp : constr) : constr -> constr :=
+        Compilers.base.reify base (reify_base_via_list base base_interp all_base_and_interp).
+      #[deprecated(since="8.15",note="Use Ltac2 reify_base_type_via_list instead.")]
+       Ltac reify_base_type_via_list base base_interp all_base_and_interp :=
         Compilers.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
-      Ltac reify_type_via_list base base_interp all_base_and_interp :=
+      Ltac2 reify_type_via_list (base : constr) (base_interp : constr) (all_base_and_interp : constr) : constr -> constr :=
+        Compilers.type.reify (reify_base_type_via_list base base_interp all_base_and_interp) '(base.type $base).
+      #[deprecated(since="8.15",note="Use Ltac2 reify_type_via_list instead.")]
+       Ltac reify_type_via_list base base_interp all_base_and_interp :=
         Compilers.type.reify ltac:(reify_base_type_via_list base base_interp all_base_and_interp) constr:(base.type base).
-      Ltac reify_pattern_base_type_via_list base base_interp all_base_and_interp :=
+      Ltac2 reify_pattern_base_type_via_list (base : constr) (base_interp : constr) (all_base_and_interp : constr) : constr -> constr :=
+        Compilers.pattern.base.reify base (reify_base_via_list base base_interp all_base_and_interp).
+      #[deprecated(since="8.15",note="Use Ltac2 reify_pattern_base_type_via_list instead.")]
+       Ltac reify_pattern_base_type_via_list base base_interp all_base_and_interp :=
         Compilers.pattern.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
-      Ltac reify_pattern_type_via_list base base_interp all_base_and_interp :=
+      Ltac2 reify_pattern_type_via_list (base : constr) (base_interp : constr) (all_base_and_interp : constr) : constr -> constr :=
+        Compilers.type.reify (reify_pattern_base_type_via_list base base_interp all_base_and_interp) '(pattern.base.type $base).
+      #[deprecated(since="8.15",note="Use Ltac2 reify_pattern_type_via_list instead.")]
+       Ltac reify_pattern_type_via_list base base_interp all_base_and_interp :=
         Compilers.type.reify ltac:(reify_pattern_base_type_via_list base base_interp all_base_and_interp) constr:(pattern.base.type base).
 
       Ltac ident_type_of_interped_type reify_type base_type base_type_interp ident ty :=
