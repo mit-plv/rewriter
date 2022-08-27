@@ -162,10 +162,13 @@ Module Compilers.
         Global Hint Extern 0 (rules_proofsT_with_args _) => make_rules_proofsT_with_args : typeclass_instances.
       End Hints.
 
-      Ltac scrape_preprocess T :=
-        let T := Compilers.expr.reify_preprocess T in
-        let T := Compilers.expr.reify_ident_preprocess T in
-        T.
+      Ltac2 scrape_preprocess (t : constr) : constr :=
+        let t := Compilers.expr.reify_preprocess [] t in
+        let t := Compilers.expr.reify_ident_preprocess [] t in
+        t.
+      Ltac scrape_preprocess t :=
+        let f := ltac2:(t |- Control.refine (fun () => scrape_preprocess (Option.get (Ltac1.to_constr t)))) in
+        constr:(ltac:(f t)).
 
       Ltac scrape_data_of_type' scrape_data_of_term so_far T :=
         let recr := scrape_data_of_type' scrape_data_of_term in

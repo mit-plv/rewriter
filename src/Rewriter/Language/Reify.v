@@ -96,14 +96,6 @@ Module Compilers.
               else ().
 
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_enter_reify_preprocess term :=
-      let f := ltac2:(term |- debug_enter_reify_preprocess "expr.reify_preprocess" (Ltac1.get_to_constr term)) in
-      f term.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_enter_reify_ident_preprocess term :=
-      let f := ltac2:(term |- debug_enter_reify_ident_preprocess "expr.reify_ident_preprocess" (Ltac1.get_to_constr term)) in
-      f term.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac debug_enter_reify_in_context term :=
       let f := ltac2:(term |- debug_enter_reify "expr.reify_in_context" (Ltac1.get_to_constr term)) in
       f term.
@@ -316,7 +308,7 @@ Module Compilers.
                 | Err _ (* if we do rely on the body of [x] to well-type [b], then just inline it *)
                   => reify_preprocess (Constr.Unsafe.substnl [a] 0 b)
                 end
-           | _ => (* XXX TODO remove constr copying *) '(ltac2:(Control.refine (fun () => reify_preprocess_extra ctx_tys term)))
+           | _ => reify_preprocess_extra ctx_tys term
            end
       end.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
@@ -328,8 +320,6 @@ Module Compilers.
     Ltac2 rec reify_ident_preprocess (ctx_tys : binder list) (term : constr) : constr :=
       Reify.debug_enter_reify_ident_preprocess "expr.reify_ident_preprocess" term;
       let reify_ident_preprocess := reify_ident_preprocess ctx_tys in
-      (* XXX TODO remove wrap perf thunking *)
-      let wrap f x := '(ltac2:(Control.refine (fun () => f x))) in
       let handle_eliminator (motive : constr) (rect_arrow_nodep : constr option) (rect_nodep : constr option) (rect : constr) (mid_args : constr list) (cases_to_thunk : constr list)
         := let mkApp_thunked_cases f pre_args
              := Control.with_holes
@@ -353,7 +343,7 @@ Module Compilers.
                            => opt_recr true rect_nodep [t]
                          | ?t'
                            => if Constr.equal motive t'
-                              then (wrap (reify_ident_preprocess_extra ctx_tys), term)
+                              then (reify_ident_preprocess_extra ctx_tys, term)
                               else opt_recr false (Some rect) [t']
                          end in
            f x in
@@ -377,7 +367,7 @@ Module Compilers.
         => handle_eliminator t0 None (Some '(@Thunked.option_rect $a)) '(@Datatypes.option_rect $a) [psome] [pnone]
       | ident.eagerly (?f ?x)
         => reify_ident_preprocess '(ident.eagerly $f $x)
-      | ?term => wrap (reify_ident_preprocess_extra ctx_tys) term
+      | ?term => reify_ident_preprocess_extra ctx_tys term
       end.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac reify_ident_preprocess term :=
