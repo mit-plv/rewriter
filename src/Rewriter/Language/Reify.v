@@ -145,11 +145,14 @@ Module Compilers.
       f idc ret.
   End Reify.
 
+  Local Ltac wrap tac arg :=
+    constr:(ltac:(let v := tac arg in refine v)).
+
   Module type.
     Import Language.Compilers.type.
-    Ltac reify base_reify base_type ty :=
+    Ltac reify_internal base_reify base_type ty :=
       let __ := Reify.debug_enter_reify_type ty in
-      let reify_rec t := reify base_reify base_type t in
+      let reify_rec t := reify_internal base_reify base_type t in
       lazymatch eval cbv beta in ty with
       | ?A -> ?B
         => let rA := reify_rec A in
@@ -159,6 +162,7 @@ Module Compilers.
       | _ => let rt := base_reify ty in
              constr:(@base base_type rt)
       end.
+    Ltac reify base_reify base_type ty := wrap ltac:(reify_internal ltac:(wrap base_reify) base_type) ty.
 
     Class reified_of {base_type} {interp_base_type : base_type -> Type} (v : Type) (rv : type base_type)
       := reified_ok : @interp base_type interp_base_type rv = v.
@@ -173,8 +177,8 @@ Module Compilers.
     Import Language.Compilers.base.
     Local Notation einterp := type.interp.
 
-    Ltac reify base reify_base ty :=
-      let reify_rec ty := reify base reify_base ty in
+    Ltac reify_internal base reify_base ty :=
+      let reify_rec ty := reify_internal base reify_base ty in
       let __ := Reify.debug_enter_reify_base_type ty in
       lazymatch eval cbv beta in ty with
       | Datatypes.unit => constr:(@type.unit base)
@@ -193,6 +197,7 @@ Module Compilers.
       | ?ty => let rT := reify_base ty in
               constr:(@type.type_base base rT)
       end.
+    Ltac reify base reify_base ty := wrap ltac:(reify_internal base ltac:(wrap reify_base)) ty.
     (*Notation reify t := (ltac:(let rt := reify t in exact rt)) (only parsing).
     Notation reify_norm t := (ltac:(let t' := eval cbv in t in let rt := reify t' in exact rt)) (only parsing).*)
     (*Notation reify_type_of e := (reify ((fun t (_ : t) => t) _ e)) (only parsing).*)
@@ -205,8 +210,8 @@ Module Compilers.
       Import Language.Compilers.pattern.base.
       Local Notation einterp := type.interp.
 
-      Ltac reify base reify_base ty :=
-        let reify_rec ty := reify base reify_base ty in
+      Ltac reify_internal base reify_base ty :=
+        let reify_rec ty := reify_internal base reify_base ty in
         let __ := Reify.debug_enter_reify_pattern_base_type ty in
         lazymatch eval cbv beta in ty with
         | Datatypes.unit => constr:(@type.unit base)
@@ -225,6 +230,7 @@ Module Compilers.
         | ?ty => let rT := reify_base ty in
                  constr:(@type.type_base base rT)
         end.
+      Ltac reify base reify_base ty := wrap ltac:(reify_internal base ltac:(wrap reify_base)) ty.
     End base.
   End pattern.
 

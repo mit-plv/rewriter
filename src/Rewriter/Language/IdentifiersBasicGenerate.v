@@ -485,7 +485,7 @@ Module Compilers.
       Ltac make_base_type_list base_type_list_named :=
         let res := build_base_type_list base_type_list_named in refine res.
 
-      Ltac reify_base_via_list base base_interp all_base_and_interp :=
+      Ltac reify_base_via_list_internal base base_interp all_base_and_interp :=
         let all_base_and_interp := (eval hnf in all_base_and_interp) in
         let all_base_and_interp := (eval cbv beta in all_base_and_interp) in
         fun ty
@@ -501,6 +501,8 @@ Module Compilers.
                 | _ => constr_fail_with ltac:(fun _ => fail 1 "Unrecognized type:" ty)
                 end
            end.
+      Ltac reify_base_via_list base base_interp all_base_and_interp ty :=
+        constr:(ltac:(let v := reify_base_via_list_internal base base_interp all_base_and_interp ty in refine v)).
 
       Ltac reify_base_type_via_list base base_interp all_base_and_interp :=
         Compilers.base.reify base ltac:(reify_base_via_list base base_interp all_base_and_interp).
