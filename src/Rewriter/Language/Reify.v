@@ -166,23 +166,6 @@ Module Compilers.
            ().
     Ltac2 debug_print_args (funname : string) (pr : 'a -> message) (args : 'a)
       := debug_if should_debug_print_args (fun () => printf "%s: args: %a" funname (fun () => pr) args) ().
-
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_enter_reify_in_context term :=
-      let f := ltac2:(term |- debug_enter_reify "expr.reify_in_context" (Ltac1.get_to_constr "term" term)) in
-      f term.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_enter_reify_in_context_after_preprocess term :=
-      let f := ltac2:(term |- debug_enter_reify_after_preprocess "expr.reify_in_context" (Ltac1.get_to_constr "term" term)) in
-      f term.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_enter_reify_ident_after_preprocess term :=
-      let f := ltac2:(term |- debug_enter_reify_ident_after_preprocess "expr.reify_in_context" (Ltac1.get_to_constr "term" term)) in
-      f term.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_leave_reify_in_context_success term res :=
-      let f := ltac2:(term res |- debug_leave_reify_success "expr.reify_in_context" (Ltac1.get_to_constr "term" term) (Ltac1.get_to_constr "res" res)) in
-      f term res.
     Ltac2 debug_Constr_check (funname : string) (descr : constr -> constr -> exn -> message) (var : constr) (var_ty_ctx : constr list) (e : constr)
       := debug_if
            should_debug_check_app_early
@@ -316,12 +299,6 @@ Module Compilers.
       | cons {T t} (gallina_v : T) (v : var t) (ctx : list).
     End var_context.
 
-    Ltac type_of_first_argument_of f :=
-      let f_ty := type of f in
-      lazymatch eval hnf in f_ty with
-      | forall x : ?T, _ => T
-      end.
-
     (** Forms of abstraction in Gallina that our reflective language
         cannot handle get handled by specializing the code "template"
         to each particular application of that abstraction. In
@@ -365,6 +342,31 @@ Module Compilers.
       | (?arg, ?template_ctx')
         => arg :: template_ctx_to_list template_ctx'
       end.
+
+    Ltac2 rec value_ctx_to_list (value_ctx : constr) : (ident * constr (* ty *) * constr (* var *)) list
+      := lazy_match! value_ctx with
+         | var_context.nil => []
+         | @var_context.cons ?base_type ?var ?t ?rt ?v ?rv ?rest
+           => match Constr.Unsafe.kind v with
+              | Constr.Unsafe.Var c
+                => (c, rt, rv)
+              | _ => Control.zero (Invalid_argument (Some (fprintf "value_ctx_to_list: not a Var: %t (of type %t, mapped to %t : %t)" v t rv rt)))
+              end
+                :: value_ctx_to_list rest
+         end.
+
+    Ltac2 eval_cbv_delta_only (i : Std.reference list) (c : constr) :=
+      Std.eval_cbv { Std.rBeta := false; Std.rMatch := false;
+                     Std.rFix := false; Std.rCofix := false;
+                     Std.rZeta := false; Std.rDelta := false;
+                     Std.rConst := i }
+                   c.
+    Ltac2 eval_cbv_beta (c : constr) :=
+      Std.eval_cbv { Std.rBeta := true; Std.rMatch := false;
+                     Std.rFix := false; Std.rCofix := false;
+                     Std.rZeta := false; Std.rDelta := false;
+                     Std.rConst := [] }
+                   c.
 
     (* f, f_ty, arg *)
     Ltac2 Type exn ::= [ Template_ctx_mismatch (constr, constr, constr) ].
@@ -537,134 +539,216 @@ Module Compilers.
                         |- Control.refine (fun () => reify_ident_preprocess [] (Ltac1.get_to_constr "term" term))) in
         constr:(ltac:(f term)).
 
+    Ltac2 Type exn ::= [ Reify_ident_cps_failed ].
+    Ltac wrap_reify_ident_cps reify_ident_cps idc :=
+      reify_ident_cps
+        idc
+        ltac:(fun idc => refine idc)
+               ltac:(fun _ => ltac2:(Control.zero Reify_ident_cps_failed)).
+    Ltac2 reify_ident_opt_of_cps (wrapped_reify_ident_cps : Ltac1.t) : binder list -> constr -> constr option
+      := fun ctx_tys idc
+         => match Control.case (fun () => Ltac1.apply_c wrapped_reify_ident_cps [idc]) with
+            | Val v => let (v, _) := v in Some v
+            | Err err
+              => match err with
+                 | Reify_ident_cps_failed => None
+                 | _ => Control.zero err
+                 end
+            end.
+
+    Ltac2 Type exn ::= [ Not_headed_by_a_constant_under_binders (Constr.Unsafe.kind) ].
+    Ltac2 rec head_reference_under_binders (term : constr) : (Std.reference * constr) result :=
+      let k := Constr.Unsafe.kind term in
+      match k with
+      | Constr.Unsafe.App f args => head_reference_under_binders f
+      | Constr.Unsafe.Cast c _ _ => head_reference_under_binders c
+      | Constr.Unsafe.Lambda _ body => head_reference_under_binders body
+      | Constr.Unsafe.Constant c inst => Val (Std.ConstRef c, term)
+      | Constr.Unsafe.Var id => Val (Std.VarRef id, term)
+      | _ => Err (Not_headed_by_a_constant_under_binders k)
+      end.
+
+    Ltac2 rec reify_in_context_opt (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (var : constr) (term : constr) (ctx_tys : binder list) (var_ty_ctx : constr list) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (template_ctx : constr list) : constr option :=
+      let reify_rec_gen term ctx_tys var_ty_ctx template_ctx := reify_in_context_opt base_type ident reify_base_type reify_ident_opt var term ctx_tys var_ty_ctx value_ctx template_ctx in
+      let reify_rec term := reify_rec_gen term ctx_tys var_ty_ctx template_ctx in
+      let reify_rec_not_head term := reify_rec_gen term ctx_tys var_ty_ctx [] in
+      let reify_ident_opt term
+        := Option.map (fun idc => mkApp '(@Ident) [base_type; ident; var; open_constr:(_); idc])
+                      (reify_ident_opt ctx_tys term) in
+      Reify.debug_enter_reify "expr.reify_in_context" term;
+      Reify.debug_print_args
+        "expr.reify_in_context"
+        (fun ()
+         => fprintf
+              "{ base_type= %t ; ident = %t ; var = %t ; term = %t ; ctx_tys = %a ; var_ty_ctx = %a ; value_ctx = %a ; template_ctx = %a }"
+              base_type ident var term
+              (fun () => Message.of_list (fun v => fprintf "%a : %t" (fun () a => a) (match Constr.Binder.name v with Some n => Message.of_ident n | None => Message.of_string "" end) (Constr.Binder.type v))) ctx_tys
+              (fun () => Message.of_list Message.of_constr) var_ty_ctx
+              (fun () => Message.of_list (fun (id, t, v) => fprintf "(%I, %t, %t)" id t v)) value_ctx
+              (fun () => Message.of_list Message.of_constr) template_ctx) ();
+      let found :=
+        match Constr.Unsafe.kind term with
+        | Constr.Unsafe.Rel n
+          => Reify.debug_enter_reify_case "expr.reify_in_context" "Rel" term;
+             let rt := List.nth var_ty_ctx (Int.sub n 1) in
+             Some (mkApp ('@Var) [base_type; ident; var; rt; term])
+        | Constr.Unsafe.Var id
+          => Reify.debug_enter_reify_case "expr.reify_in_context" "Var" term;
+             Reify.debug_fine_grained "expr.reify_in_context" (fun () => fprintf "Searching in %a" (fun () => Message.of_list (fun (id', x, y) => fprintf "(%I, %t, %t)" id' x y)) value_ctx);
+             Option.bind
+               (List.find_opt (fun (id', _, _) => Ident.equal id' id) value_ctx)
+               (fun (_, rt, rv)
+                => Some (mkApp ('@Var) [base_type; ident; var; rt; rv]))
+        | _ => None
+        end in
+      let res :=
+        match found with
+        | Some v => Some v
+        | None
+          => Reify.debug_enter_reify_case "expr.reify_in_context" "preprocess" term;
+             let term := reify_preprocess ctx_tys term in
+             Reify.debug_enter_reify_after_preprocess "expr.reify_in_context" term;
+             let found :=
+               match Constr.Unsafe.kind term with
+               | Constr.Unsafe.Cast term _ _
+                 => Reify.debug_enter_reify_case "expr.reify_in_context" "Cast" term;
+                    Some (reify_rec term)
+               | Constr.Unsafe.Lambda x f
+                 => Some
+                      (Reify.debug_enter_reify_case "expr.reify_in_context" "Lambda" term;
+                       let t := Constr.Binder.type x in
+                       if is_template_parameter ctx_tys t
+                       then match template_ctx with
+                            | arg :: template_ctx
+                              => Reify.debug_enter_reify_case "expr.reify_in_context" "substnl template arg" term;
+                                 reify_rec_gen (Constr.Unsafe.substnl [arg] 0 f) ctx_tys var_ty_ctx template_ctx
+                            | []
+                              => Control.throw (Reification_panic (fprintf "Empty template_ctx when reifying template binder of type %t" t))
+                            end
+                       else
+                         (Reify.debug_enter_reify_case "expr.reify_in_context" "λ body" term;
+                          let rt := type.reify reify_base_type base_type t in
+                          let rx := Constr.Binder.make (Constr.Binder.name x) (mkApp var [rt]) in
+                          Option.map
+                            (fun rf => mkApp ('@Abs) [base_type; ident; var; rt; open_constr:(_); mkLambda rx rf])
+                            (reify_rec_gen f (x :: ctx_tys) (rt :: var_ty_ctx) template_ctx)))
+               | Constr.Unsafe.App c args
+                 => Reify.debug_enter_reify_case "expr.reify_in_context" "App (check LetIn)" term;
+                    if Constr.equal c '@Let_In
+                    then if Int.equal (Array.length args) 4
+                         then Reify.debug_enter_reify_case "expr.reify_in_context" "LetIn" term;
+                              let (ta, tb, a, b) := (Array.get args 0, Array.get args 1, Array.get args 2, Array.get args 3) in
+                              Some
+                                (Option.bind
+                                   (reify_rec a)
+                                   (fun ra
+                                    => Option.bind
+                                         (reify_rec b)
+                                         (fun rb
+                                          => lazy_match! rb with
+                                             | @Abs _ _ _ ?s ?d ?f
+                                               => Some (mkApp ('@LetIn) [base_type; ident; var; s; d; ra; f])
+                                             | ?rb => Control.throw (Reification_panic (fprintf "Invalid non-Abs function reification of %t to %t" b rb))
+                                             end)))
+                         else None
+                    else None
+               | _ => None
+               end in
+             match found with
+             | Some res => res
+             | None
+               => Reify.debug_enter_reify_case "expr.reify_in_context" "ident_preprocess" term;
+                  let term := reify_ident_preprocess ctx_tys term in
+                  Reify.debug_enter_reify_ident_after_preprocess "expr.reify_in_context" term;
+                  match reify_ident_opt term with
+                  | Some res => Some res
+                  | None
+                    => Reify.debug_enter_reify_case "expr.reify_in_context" "not ident" term;
+                       lazy_match! term with
+                       | ?f ?x
+                         =>
+                           Reify.debug_enter_reify_case "expr.reify_in_context" "App" term;
+                           let x_is_template_arg
+                             := match Control.case (fun () => Constr.type x) with
+                                | Val ty
+                                  => let (ty, _) := ty in
+                                     is_template_parameter ctx_tys ty
+                                | Err err
+                                  => Reify.debug_typing_failure "expr.reify_in_context" x err;
+                                     false
+                                end in
+                           if x_is_template_arg
+                           then (* we can't reify things of type [Type], so we save it for later to plug in *)
+                             Reify.debug_enter_reify_case "expr.reify_in_context" "accumulate template" term;
+                             reify_rec_gen f ctx_tys var_ty_ctx (x :: template_ctx)
+                           else
+                             (Reify.debug_enter_reify_case "expr.reify_in_context" "App (non-template)" term;
+                              Option.bind
+                                (reify_rec_gen x ctx_tys var_ty_ctx [])
+                                (fun rx
+                                 => Option.bind
+                                      (reify_rec_gen f ctx_tys var_ty_ctx template_ctx)
+                                      (fun rf
+                                       => Some (mkApp '@App [base_type; ident; var; open_constr:(_); open_constr:(_); rf; rx]))))
+                       | _
+                         => Reify.debug_enter_reify_case "expr.reify_in_context" "pre-plug template_ctx" term;
+                            let term := plug_template_ctx ctx_tys term template_ctx in
+                            Reify.debug_enter_reify_case "expr.reify_in_context" "reify_ident_opt" term;
+                            match reify_ident_opt term with
+                            | Some res => Some res
+                            | None
+                              => match head_reference_under_binders term with
+                                 | Val c
+                                   => let (c, h) := c in
+                                      Reify.debug_enter_reify_case "expr.reify_in_context" "App Constant (unfold)" term;
+                                      let term' := eval_cbv_delta_only [c] term in
+                                      if Constr.equal term term'
+                                      then printf "Unrecognized (non-unfoldable) term: %t" term;
+                                           None
+                                      else
+                                        match reify_rec term' with
+                                        | Some v => Some v
+                                        | None
+                                          => printf "Failed to reify %t via unfolding to %t" term term';
+                                             None
+                                        end
+                                 | Err err => printf "Unrecognized (non-constant-headed) term: %t (%a)" term (fun () => Message.of_exn) err;
+                                              None
+                                 end
+                            end
+                       end
+                  end
+             end
+        end in
+      match res with
+      | Some res
+        => Reify.debug_leave_reify_success "expr.reify_in_context" term res;
+           Some res
+      | None
+        => Reify.debug_leave_reify_failure "expr.reify_in_context" term;
+           None
+      end.
+
+    Ltac2 rec reify_in_context (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (var : constr) (term : constr) (ctx_tys : binder list) (var_ty_ctx : constr list) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (template_ctx : constr list) : constr :=
+      match reify_in_context_opt base_type ident reify_base_type reify_ident_opt var term ctx_tys var_ty_ctx value_ctx template_ctx with
+      | Some v => v
+      | None => Control.zero (Reification_failure (fprintf "Failed to reify: %t" term))
+      end.
 
     Ltac reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx :=
-      let reify_rec_gen term value_ctx template_ctx := reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx in
-      let reify_rec term := reify_rec_gen term value_ctx template_ctx in
-      let reify_rec_not_head term := reify_rec_gen term value_ctx tt in
-      let do_reify_ident term else_tac
-          := reify_ident
-               term
-               ltac:(fun idc => constr:(@Ident base_type ident var _ idc))
-                      else_tac in
-      let __ := Reify.debug_enter_reify_in_context term in
-      let
-        res :=
-        lazymatch value_ctx with
-        | context[@var_context.cons _ _ ?T ?rT term ?v _]
-          => constr:(@Var base_type ident var rT v)
-        | _
-          =>
-          let term := reify_preprocess term in
-          let __ := Reify.debug_enter_reify_in_context_after_preprocess term in
-          lazymatch term with
-          | @Let_In ?A ?B ?a ?b
-            => let ra := reify_rec a in
-               let rb := reify_rec b in
-               lazymatch rb with
-               | @Abs _ _ _ ?s ?d ?f
-                 => constr:(@LetIn base_type ident var s d ra f)
-               | ?rb => constr_fail_with ltac:(fun _ => fail 1 "Invalid non-Abs function reification of" b "to" rb)
-               end
-          | (fun x : ?T => ?f)
-            =>
-            let x_is_template_parameter := is_template_parameter T in
-            lazymatch x_is_template_parameter with
-            | true
-              =>
-              lazymatch template_ctx with
-              | (?arg, ?template_ctx)
-                => (* we pull a trick with [match] to plug in [arg] without running cbv β *)
-                lazymatch type of term with
-                | forall y, ?P
-                  => reify_rec_gen (match arg as y return P with x => f end) value_ctx template_ctx
-                end
-              end
-            | false
-              =>
-              let rT := type.reify reify_base_type base_type T in
-              let not_x := fresh (* could be [refresh x ltac:(fun n => fresh n)] in 8.8; c.f. https://github.com/mit-plv/fiat-crypto/issues/320 and probably COQBUG(https://github.com/coq/coq/issues/6534) *) in
-              let not_x2 := fresh (* could be [refresh not_x ltac:(fun n => fresh n)] in 8.8; c.f. https://github.com/mit-plv/fiat-crypto/issues/320 and probably COQBUG(https://github.com/coq/coq/issues/6534) *) in
-              let not_x3 := fresh (* could be [refresh not_x2 ltac:(fun n => fresh n)] in 8.8; c.f. https://github.com/mit-plv/fiat-crypto/issues/320 and probably COQBUG(https://github.com/coq/coq/issues/6534) *) in
-              (*let __ := match goal with _ => idtac "reify_in_context: λ case:" term "using vars:" not_x not_x2 not_x3 end in*)
-              let rf0 :=
-                  constr:(
-                    fun (x : T) (not_x : var rT)
-                    => match f, @var_context.cons base_type var T rT x not_x value_ctx return _ with (* c.f. COQBUG(https://github.com/coq/coq/issues/6252#issuecomment-347041995) for [return _] *)
-                       | not_x2, not_x3
-                         => ltac:(
-                              let f := (eval cbv delta [not_x2] in not_x2) in
-                              let var_ctx := (eval cbv delta [not_x3] in not_x3) in
-                              (*idtac "rec call" f "was" term;*)
-                              let rf := reify_rec_gen f var_ctx template_ctx in
-                              exact rf)
-                       end) in
-              lazymatch rf0 with
-              | (fun _ => ?rf)
-                => constr:(@Abs base_type ident var rT _ rf)
-              | _
-                => (* This will happen if the reified term still
-                    mentions the non-var variable.  By chance, [cbv
-                    delta] strips type casts, which are only places
-                    that I can think of where such dependency might
-                    remain.  However, if this does come up, having a
-                    distinctive error message is much more useful for
-                    debugging than the generic "no matching clause" *)
-                constr_fail_with ltac:(fun _ => fail 1 "Failure to eliminate functional dependencies of" rf0)
-              end
-            end
-          | _
-            =>
-            let term := reify_ident_preprocess term in
-            let __ := Reify.debug_enter_reify_ident_after_preprocess term in
-            do_reify_ident
-              term
-              ltac:(
-              fun _
-              =>
-                lazymatch term with
-                | ?f ?x
-                  =>
-                  let ty := type_of_first_argument_of f in
-                  let x_is_template_parameter := is_template_parameter ty in
-                  lazymatch x_is_template_parameter with
-                  | true
-                    => (* we can't reify things of type [Type], so we save it for later to plug in *)
-                    reify_rec_gen f value_ctx (x, template_ctx)
-                  | false
-                    => let rx := reify_rec_gen x value_ctx tt in
-                       let rf := reify_rec_gen f value_ctx template_ctx in
-                       constr:(App (base_type:=base_type) (ident:=ident) (var:=var) rf rx)
-                  end
-                | _
-                  => let term' := plug_template_ctx term template_ctx in
-                     do_reify_ident
-                       term'
-                       ltac:(fun _
-                             =>
-                               (*let __ := match goal with _ => idtac "Attempting to unfold" term end in*)
-                               let term
-                                   := match constr:(Set) with
-                                      | _ => (eval cbv delta [term] in term) (* might fail, so we wrap it in a match to give better error messages *)
-                                      | _
-                                        => let __ := match goal with
-                                                     | _ => fail 2 "Unrecognized term:" term'
-                                                     end in
-                                           constr_fail
-                                      end in
-                               match constr:(Set) with
-                               | _ => reify_rec term
-                               | _ => let __ := match goal with
-                                                | _ => idtac "Error: Failed to reify" term' "via unfolding";
-                                                       fail 2 "Failed to reify" term' "via unfolding"
-                                                end in
-                                      constr_fail
-                               end)
-                end)
-          end
-        end in
-      let __ := Reify.debug_leave_reify_in_context_success term res in
-      res.
+      let f := ltac2:(base_type ident reify_base_type reify_ident var term value_ctx template_ctx
+                      |- let template_ctx := Ltac1.get_to_constr "template_ctx" template_ctx in
+                         let value_ctx := Ltac1.get_to_constr "value_ctx" value_ctx in
+                         Reify.debug_print_args
+                           "ltac:expr.reify_in_context"
+                           (fun () => fprintf "{ template_ctx = %t ; value_ctx = %t }" template_ctx value_ctx)
+                           ();
+                         let template_ctx := template_ctx_to_list template_ctx in
+                         let value_ctx := value_ctx_to_list value_ctx in
+                         let reify_base_type := fun ty => Ltac1.apply_c reify_base_type [ty] in
+                         let reify_ident_opt := reify_ident_opt_of_cps reify_ident in
+                         Control.refine (fun () => reify_in_context (Ltac1.get_to_constr "base_type" base_type) (Ltac1.get_to_constr "ident" ident) reify_base_type reify_ident_opt (Ltac1.get_to_constr "var" var) (Ltac1.get_to_constr "term" term) [] [] value_ctx template_ctx)) in
+      constr:(ltac:(f base_type ident reify_base_type ltac:(wrap_reify_ident_cps reify_ident) constr:(var) term value_ctx template_ctx)).
     Ltac reify base_type ident reify_base_type reify_ident var term :=
       reify_in_context base_type ident reify_base_type reify_ident var term (@var_context.nil base_type var) tt.
     Ltac Reify base_type ident reify_base_type reify_ident term :=
