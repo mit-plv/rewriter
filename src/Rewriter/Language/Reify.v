@@ -62,6 +62,7 @@ Module Compilers.
     Ltac2 mutable should_debug_leave_lookup_ident_success () := Int.le 3 debug_level.
     Ltac2 mutable should_debug_leave_lookup_ident_failure_verbose () := Int.le 5 debug_level.
     Ltac2 mutable should_debug_leave_lookup_ident_failure () := Int.le 4 debug_level.
+    Ltac2 mutable should_debug_enter_plug_template_ctx () := Int.le 6 debug_level.
 
     Ltac2 debug_if (cond : unit -> bool) (tac : unit -> 'a) (default : 'a) :=
       if cond ()
@@ -94,6 +95,19 @@ Module Compilers.
          else if should_debug_leave_lookup_ident_failure ()
               then printf "%s: Failure in looking up: %t" funname e
               else ().
+    Ltac2 debug_enter_plug_template_ctx (funname : string) (e : constr) (template_ctx : constr list)
+      := debug_if
+           should_debug_enter_plug_template_ctx
+           (fun ()
+            => printf
+                 "%s: Attempting to plug template ctx into %t [%a]"
+                 funname e (fun () a => a)
+                 (match template_ctx with
+                  | [] => fprintf ""
+                  | x :: xs
+                    => List.fold_left (fprintf "%a, %t" (fun () a => a)) xs (fprintf "%t" x)
+                  end))
+           ().
 
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac debug_enter_reify_in_context term :=
@@ -252,35 +266,74 @@ Module Compilers.
         right-associated tuple, using [tt] as the "nil" base case.
         When we hit a λ or an identifier, we plug in the template
         parameters as necessary. *)
-    Ltac require_template_parameter parameter_type :=
-      first [ unify parameter_type Prop
-            | unify parameter_type Set
-            | unify parameter_type Type
-            | lazymatch eval hnf in parameter_type with
-              | forall x : ?T, @?P x
-                => let check := constr:(fun x : T
-                                        => ltac:(require_template_parameter (P x);
-                                                 exact I)) in
-                   idtac
-              end ].
-    Ltac is_template_parameter parameter_type :=
-      is_success_run_tactic ltac:(fun _ => require_template_parameter parameter_type).
-    Ltac plug_template_ctx f template_ctx :=
-      lazymatch template_ctx with
-      | tt => f
-      | (?arg, ?template_ctx')
-        =>
-        let T := type_of_first_argument_of f in
-        let x_is_template_parameter := is_template_parameter T in
-        lazymatch x_is_template_parameter with
-        | true
-          => plug_template_ctx (f arg) template_ctx'
-        | false
-          => constr:(fun x : T
-                     => ltac:(let v := plug_template_ctx (f x) template_ctx in
-                              exact v))
-        end
+    Ltac2 rec is_template_parameter (ctx_tys : binder list) (parameter_type : constr) : bool :=
+      let do_red () :=
+        let t := Std.eval_hnf parameter_type in
+        if Constr.equal t parameter_type
+        then false
+        else is_template_parameter ctx_tys t in
+      match Constr.Unsafe.kind parameter_type with
+      | Constr.Unsafe.Sort _ => true
+      | Constr.Unsafe.Cast x _ _ => is_template_parameter ctx_tys x
+      | Constr.Unsafe.Prod b body => is_template_parameter (b :: ctx_tys) body
+      | Constr.Unsafe.App _ _
+        => do_red ()
+      | Constr.Unsafe.Constant _ _
+        => do_red ()
+      | Constr.Unsafe.LetIn _ _ _
+        => do_red ()
+      | Constr.Unsafe.Case _ _ _ _ _
+        => do_red ()
+      | Constr.Unsafe.Proj _ _
+        => do_red ()
+      | _ => false
       end.
+    #[deprecated(since="8.15",note="Use Ltac2 is_template_parameter instead.")]
+    Ltac is_template_parameter parameter_type :=
+      let f := ltac2:(parameter_type |- Control.refine (fun () => if is_template_parameter [] (Ltac1.get_to_constr parameter_type) then 'true else 'false)) in
+      constr:(ltac:(f parameter_type)).
+
+    Ltac2 rec template_ctx_to_list (template_ctx : constr) : constr list :=
+      lazy_match! template_ctx with
+      | tt => []
+      | (?arg, ?template_ctx')
+        => arg :: template_ctx_to_list template_ctx'
+      end.
+
+    (* f, f_ty, arg *)
+    Ltac2 Type exn ::= [ Template_ctx_mismatch (constr, constr, constr) ].
+    Ltac2 plug_template_ctx (ctx_tys : binder list) (f : constr) (template_ctx : constr list) :=
+      Reify.debug_enter_plug_template_ctx "expr.plug_template_ctx" f template_ctx;
+      let rec mkargs (ctx_tys : binder list) (f_ty : constr) (template_ctx : constr list) :=
+        match template_ctx with
+        | [] => (1, [], (fun body => body))
+        | arg :: template_ctx'
+          => match Constr.Unsafe.kind f_ty with
+             | Constr.Unsafe.Cast f_ty _ _
+               => mkargs ctx_tys f_ty template_ctx
+             | Constr.Unsafe.Prod b f_ty
+               => if is_template_parameter ctx_tys (Constr.Binder.type b)
+                  then let (rel_base, args, close) := mkargs (b :: ctx_tys) f_ty template_ctx' in
+                       (rel_base, arg :: args, close)
+                  else let (rel_base, args, close) := mkargs (b :: ctx_tys) f_ty template_ctx' in
+                       let rel_base := Int.add rel_base 1 in
+                       (rel_base, mkRel rel_base :: args,
+                         (fun body => mkLambda b (close body)))
+             | _ => let f_ty' := Std.eval_hnf f_ty in
+                    if Constr.equal f_ty f_ty'
+                    then Control.throw (Template_ctx_mismatch f f_ty arg)
+                    else mkargs ctx_tys f_ty' template_ctx
+             end
+        end in
+      let (_, args, close) := mkargs ctx_tys (Constr.type f) template_ctx in
+      close (mkApp f args).
+   #[deprecated(since="8.15",note="Use Ltac2 plug_template_ctx instead.")]
+     Ltac plug_template_ctx f template_ctx :=
+      let plug := ltac2:(f template_ctx
+                         |- let template_ctx := (Ltac1.get_to_constr template_ctx) in
+                            let template_ctx := template_ctx_to_list template_ctx in
+                            Control.refine (fun () => plug_template_ctx [] (Ltac1.get_to_constr f) template_ctx)) in
+      constr:(ltac:(plug f template_ctx)).
 
     Ltac2 rec reify_preprocess (ctx_tys : binder list) (term : constr) : constr :=
       Reify.debug_enter_reify_preprocess "expr.reify_preprocess" term;
