@@ -41,12 +41,29 @@ Module Compilers.
 
   Module Ltac1.
     (* TODO: remove or move to util *)
+    Ltac2 Type exn ::= [ Not_a_constr (string, Ltac1.t) ].
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac2 get_to_constr v := Option.get (Ltac1.to_constr v).
+     Ltac2 get_to_constr (debug_name : string) v :=
+      match Ltac1.to_constr v with
+      | Some v => v
+      | None => Control.throw (Not_a_constr debug_name v)
+      end.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac2 apply_c (f : Ltac1.t) (args : constr list) : constr :=
-      '(ltac2:(Ltac1.apply f (List.map Ltac1.of_constr args) (fun v => Control.refine (fun () => get_to_constr v)))).
+      '(ltac2:(Ltac1.apply f (List.map Ltac1.of_constr args) (fun v => Control.refine (fun () => get_to_constr "apply_c:arg" v)))).
   End Ltac1.
+  (* TODO: move *)
+  Module Message.
+    Ltac2 of_list (pr : 'a -> message) (ls : 'a list) : message
+      := fprintf
+           "[%a]"
+           (fun () a => a)
+           (match ls with
+            | [] => fprintf ""
+            | x :: xs
+              => List.fold_left (fun init x => fprintf "%a, %a" (fun () a => a) init (fun () => pr) x) xs (pr x)
+            end).
+  End Message.
 
   Module Reify.
     Ltac2 debug_level := Pre.reify_debug_level.
@@ -63,79 +80,83 @@ Module Compilers.
     Ltac2 mutable should_debug_leave_lookup_ident_failure_verbose () := Int.le 5 debug_level.
     Ltac2 mutable should_debug_leave_lookup_ident_failure () := Int.le 4 debug_level.
     Ltac2 mutable should_debug_enter_plug_template_ctx () := Int.le 6 debug_level.
+    Ltac2 mutable should_debug_enter_reify_case () := Int.le 6 debug_level.
+    Ltac2 mutable should_debug_fine_grained () := Int.le 100 debug_level.
+    Ltac2 mutable should_debug_print_args () := Int.le 50 debug_level.
 
     Ltac2 debug_if (cond : unit -> bool) (tac : unit -> 'a) (default : 'a) :=
       if cond ()
       then tac ()
       else default.
 
+    Ltac2 debug_fine_grained (funname : string) (msg : unit -> message)
+      := debug_if should_debug_fine_grained (fun () => printf "%s: %a" funname (fun () => msg) ()) ().
     Ltac2 debug_enter_reify (funname : string) (e : constr)
-      := debug_if should_debug_enter_reify (fun () => printf "%s: Attempting to reify: %t" funname e) ().
+      := debug_if should_debug_enter_reify (fun () => printf "%s: Attempting to reify:" funname; printf "%t" e) ().
+    Ltac2 debug_enter_reify_case (funname : string) (casename : string) (e : constr)
+      := debug_if should_debug_enter_reify_case (fun () => printf "%s: Case: %s" funname casename) ().
     Ltac2 debug_enter_reify_preprocess (funname : string) (e : constr)
-      := debug_if should_debug_enter_reify_preprocess (fun () => printf "%s: Attempting to preprocess: %t" funname e) ().
+      := debug_if should_debug_enter_reify_preprocess (fun () => printf "%s: Attempting to preprocess:" funname; printf "%t" e) ().
     (*Ltac2 debug_enter_reify_ident_idtac (funname : string) (e : constr)
-      := printf "%s: Attempting to reify (as ident): %t" funname e.*)
+      := printf "%s: Attempting to reify (as ident):" funname; printf "%t" e.*)
     Ltac2 debug_enter_reify_after_preprocess (funname : string) (e : constr)
-      := debug_if should_debug_enter_reify_after_preprocess (fun () => printf "%s: Attempting to reify (post-preprocessing): %t" funname e) ().
+      := debug_if should_debug_enter_reify_after_preprocess (fun () => printf "%s: Attempting to reify (post-preprocessing):" funname; printf "%t" e) ().
     Ltac2 debug_enter_reify_ident_preprocess (funname : string) (e : constr)
-      := debug_if should_debug_enter_reify_ident_preprocess (fun () => printf "%s: Attempting to (ident) preprocess: %t" funname e) ().
+      := debug_if should_debug_enter_reify_ident_preprocess (fun () => printf "%s: Attempting to (ident) preprocess:" funname; printf "%t" e) ().
     Ltac2 debug_enter_reify_ident_after_preprocess (funname : string) (e : constr)
-      := debug_if should_debug_enter_reify_ident_after_preprocess (fun () => printf "%s: Attempting to reify ident (post-preprocessing): %t" funname e) ().
+      := debug_if should_debug_enter_reify_ident_after_preprocess (fun () => printf "%s: Attempting to reify ident (post-preprocessing):" funname; printf "%t" e) ().
     Ltac2 debug_leave_reify_success (funname : string) (e : constr) (ret : constr)
       := debug_if should_debug_leave_reify_success (fun () => printf "%s: Success in reifying: %t as %t" funname e ret) ().
     Ltac2 debug_leave_reify_failure (funname : string) (e : constr)
-      := debug_if should_debug_leave_reify_failure (fun () => printf "%s: Failure in reifying: %t" funname e) ().
+      := debug_if should_debug_leave_reify_failure (fun () => printf "%s: Failure in reifying:" funname; printf "%t" e) ().
     Ltac2 debug_enter_lookup_ident (funname : string) (e : constr)
-      := debug_if should_debug_enter_lookup_ident (fun () => printf "%s: Attempting to lookup ident: %t" funname e) ().
+      := debug_if should_debug_enter_lookup_ident (fun () => printf "%s: Attempting to lookup ident:" funname; printf "%t" e) ().
     Ltac2 debug_leave_lookup_ident_success (funname : string) (e : constr) (ret : constr)
       := debug_if should_debug_leave_lookup_ident_success (fun () => printf "%s: Success in looking up ident: %t as %t" funname e ret) ().
     Ltac2 debug_leave_lookup_ident_failure (funname : string) (e : constr) (ls : constr)
       := if should_debug_leave_lookup_ident_failure_verbose ()
-         then printf "%s: Failure in looking up: %t (in %t)" funname e ls
+         then printf "%s: Failure in looking up:" funname; printf "%t (in %t)" e ls
          else if should_debug_leave_lookup_ident_failure ()
-              then printf "%s: Failure in looking up: %t" funname e
+              then printf "%s: Failure in looking up:" funname; printf "%t" e
               else ().
     Ltac2 debug_enter_plug_template_ctx (funname : string) (e : constr) (template_ctx : constr list)
       := debug_if
            should_debug_enter_plug_template_ctx
            (fun ()
             => printf
-                 "%s: Attempting to plug template ctx into %t [%a]"
-                 funname e (fun () a => a)
-                 (match template_ctx with
-                  | [] => fprintf ""
-                  | x :: xs
-                    => List.fold_left (fprintf "%a, %t" (fun () a => a)) xs (fprintf "%t" x)
-                  end))
+                 "%s: Attempting to plug template ctx into %t %a"
+                 funname e (fun () => Message.of_list (fprintf "%t")) template_ctx)
            ().
+    Ltac2 debug_print_args (funname : string) (pr : 'a -> message) (args : 'a)
+      := debug_if should_debug_print_args (fun () => printf "%s: args: %a" funname (fun () => pr) args) ().
 
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac debug_enter_reify_in_context term :=
-      let f := ltac2:(term |- debug_enter_reify "expr.reify_in_context" (Ltac1.get_to_constr term)) in
+      let f := ltac2:(term |- debug_enter_reify "expr.reify_in_context" (Ltac1.get_to_constr "term" term)) in
       f term.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac debug_enter_reify_in_context_after_preprocess term :=
-      let f := ltac2:(term |- debug_enter_reify_after_preprocess "expr.reify_in_context" (Ltac1.get_to_constr term)) in
+      let f := ltac2:(term |- debug_enter_reify_after_preprocess "expr.reify_in_context" (Ltac1.get_to_constr "term" term)) in
       f term.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac debug_enter_reify_ident_after_preprocess term :=
-      let f := ltac2:(term |- debug_enter_reify_ident_after_preprocess "expr.reify_in_context" (Ltac1.get_to_constr term)) in
+      let f := ltac2:(term |- debug_enter_reify_ident_after_preprocess "expr.reify_in_context" (Ltac1.get_to_constr "term" term)) in
       f term.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac debug_leave_reify_in_context_success term res :=
-      let f := ltac2:(term res |- debug_leave_reify_success "expr.reify_in_context" (Ltac1.get_to_constr term) (Ltac1.get_to_constr res)) in
+      let f := ltac2:(term res |- debug_leave_reify_success "expr.reify_in_context" (Ltac1.get_to_constr "term" term) (Ltac1.get_to_constr "res" res)) in
       f term res.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac debug_enter_lookup_ident term :=
-      let f := ltac2:(term |- debug_enter_lookup_ident "reify_ident_via_list" (Ltac1.get_to_constr term)) in
+      let f := ltac2:(term |- debug_enter_lookup_ident "reify_ident_via_list" (Ltac1.get_to_constr "debug_enter" term)) in
       f term.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac debug_leave_lookup_ident_in_failure idc all_ident_and_interp :=
-      let f := ltac2:(idc all_ident_and_interp |- debug_leave_lookup_ident_failure "reify_ident_via_list" (Ltac1.get_to_constr idc) (Ltac1.get_to_constr all_ident_and_interp)) in
+      let f := ltac2:(idc all_ident_and_interp |- debug_leave_lookup_ident_failure "reify_ident_via_list" (Ltac1.get_to_constr "debug_leave:idc" idc) (Ltac1.get_to_constr "debug_leave:all_ident_and_interp" all_ident_and_interp)) in
       f idc all_ident_and_interp.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac debug_leave_lookup_ident_success idc ret :=
-      let f := ltac2:(idc ret |- debug_leave_lookup_ident_success "reify_ident_via_list" (Ltac1.get_to_constr idc) (Ltac1.get_to_constr ret)) in
+      let f := ltac2:(idc ret |- debug_leave_lookup_ident_success "reify_ident_via_list" (Ltac1.get_to_constr "debug_leave:idc" idc) (Ltac1.get_to_constr "debug_leave:ret" ret)) in
       f idc ret.
   End Reify.
 
@@ -144,19 +165,22 @@ Module Compilers.
     Ltac2 rec reify (base_reify : constr -> constr) (base_type : constr) (ty : constr) :=
       Reify.debug_enter_reify "type.reify" ty;
       let reify_rec (t : constr) := reify base_reify base_type t in
-      lazy_match! (eval cbv beta in $ty) with
-      | ?a -> ?b
-        => let ra := reify_rec a in
-           let rb := reify_rec b in
-           '(@arrow $base_type $ra $rb)
-      | @interp _ _ ?t => t
-      | _ => let rt := base_reify ty in
-             '(@base $base_type $rt)
-      end.
-    #[deprecated((*since="8.14",*)note="Use Ltac2 type.reify instead.")]
+      let res :=
+        lazy_match! (eval cbv beta in $ty) with
+        | ?a -> ?b
+          => let ra := reify_rec a in
+             let rb := reify_rec b in
+             '(@arrow $base_type $ra $rb)
+        | @interp _ _ ?t => t
+        | _ => let rt := base_reify ty in
+               '(@base $base_type $rt)
+        end in
+      Reify.debug_leave_reify_success "type.reify" ty res;
+      res.
+    #[deprecated(since="8.15",note="Use Ltac2 type.reify instead.")]
      Ltac reify base_reify base_type ty :=
       let f := ltac2:(base_reify base_type ty
-                      |- Control.refine (fun () => reify (fun v => Ltac1.apply_c base_reify [v]) (Ltac1.get_to_constr base_type) (Ltac1.get_to_constr ty))) in
+                      |- Control.refine (fun () => reify (fun v => Ltac1.apply_c base_reify [v]) (Ltac1.get_to_constr "type.reify:base_type" base_type) (Ltac1.get_to_constr "type.reify:ty" ty))) in
       constr:(ltac:(f base_reify base_type ty)).
 
     Class reified_of {base_type} {interp_base_type : base_type -> Type} (v : Type) (rv : type base_type)
@@ -175,39 +199,7 @@ Module Compilers.
     Ltac2 rec reify (base : constr) (reify_base : constr -> constr) (ty : constr) :=
       let reify_rec (ty : constr) := reify base reify_base ty in
       Reify.debug_enter_reify "base.reify" ty;
-      lazy_match! (eval cbv beta in $ty) with
-      | Datatypes.unit => '(@type.unit $base)
-      | Datatypes.prod ?a ?b
-        => let ra := reify_rec a in
-           let rb := reify_rec b in
-           '(@type.prod $base $ra $rb)
-      | Datatypes.list ?t
-        => let rt := reify_rec t in
-           '(@type.list $base $rt)
-      | Datatypes.option ?t
-        => let rt := reify_rec t in
-           '(@type.option $base $rt)
-      | @interp (*$base*)?base' ?base_interp ?t => t
-      | @einterp (@type (*$base*)?base') (@interp (*$base*)?base' ?base_interp) (@Compilers.type.base (@type (*$base*)?base') ?t) => t
-      | ?ty => let rt := reify_base ty in
-               '(@type.type_base $base $rt)
-      end.
-    #[deprecated(since="8.15",note="Use Ltac2 base.reify instead.")]
-     Ltac reify base reify_base ty :=
-      let f := ltac2:(base reify_base ty
-                      |- Control.refine (fun () => reify (Ltac1.get_to_constr base) (fun v => Ltac1.apply_c reify_base [v]) (Ltac1.get_to_constr ty))) in
-      constr:(ltac:(f base reify_base ty)).
-  End base.
-
-  Module pattern.
-    Import Language.Compilers.pattern.
-    Module base.
-      Import Language.Compilers.pattern.base.
-      Local Notation einterp := type.interp.
-
-      Ltac2 rec reify (base : constr) (reify_base : constr -> constr) (ty : constr) :=
-        let reify_rec (ty : constr) := reify base reify_base ty in
-        Reify.debug_enter_reify "pattern.base.reify" ty;
+      let res :=
         lazy_match! (eval cbv beta in $ty) with
         | Datatypes.unit => '(@type.unit $base)
         | Datatypes.prod ?a ?b
@@ -220,15 +212,53 @@ Module Compilers.
         | Datatypes.option ?t
           => let rt := reify_rec t in
              '(@type.option $base $rt)
-        | @interp (*$base*)?base' ?base_interp ?lookup ?t => t
-        | @einterp (@type (*$base*)?base') (@interp (*$base*)?base' ?base_interp ?lookup) (@Compilers.type.base (@type (*$base*)?base') ?t) => t
+        | @interp (*$base*)?base' ?base_interp ?t => t
+        | @einterp (@type (*$base*)?base') (@interp (*$base*)?base' ?base_interp) (@Compilers.type.base (@type (*$base*)?base') ?t) => t
         | ?ty => let rt := reify_base ty in
                  '(@type.type_base $base $rt)
-        end.
+        end in
+      Reify.debug_leave_reify_success "base.reify" ty res;
+      res.
+    #[deprecated(since="8.15",note="Use Ltac2 base.reify instead.")]
+     Ltac reify base reify_base ty :=
+      let f := ltac2:(base reify_base ty
+                      |- Control.refine (fun () => reify (Ltac1.get_to_constr "base" base) (fun v => Ltac1.apply_c reify_base [v]) (Ltac1.get_to_constr "ty" ty))) in
+      constr:(ltac:(f base reify_base ty)).
+  End base.
+
+  Module pattern.
+    Import Language.Compilers.pattern.
+    Module base.
+      Import Language.Compilers.pattern.base.
+      Local Notation einterp := type.interp.
+
+      Ltac2 rec reify (base : constr) (reify_base : constr -> constr) (ty : constr) :=
+        let reify_rec (ty : constr) := reify base reify_base ty in
+        Reify.debug_enter_reify "pattern.base.reify" ty;
+        let res :=
+          lazy_match! (eval cbv beta in $ty) with
+          | Datatypes.unit => '(@type.unit $base)
+          | Datatypes.prod ?a ?b
+            => let ra := reify_rec a in
+               let rb := reify_rec b in
+               '(@type.prod $base $ra $rb)
+          | Datatypes.list ?t
+            => let rt := reify_rec t in
+               '(@type.list $base $rt)
+          | Datatypes.option ?t
+            => let rt := reify_rec t in
+               '(@type.option $base $rt)
+          | @interp (*$base*)?base' ?base_interp ?lookup ?t => t
+          | @einterp (@type (*$base*)?base') (@interp (*$base*)?base' ?base_interp ?lookup) (@Compilers.type.base (@type (*$base*)?base') ?t) => t
+          | ?ty => let rt := reify_base ty in
+                   '(@type.type_base $base $rt)
+          end in
+        Reify.debug_leave_reify_success "pattern.base.reify" ty res;
+        res.
       #[deprecated(since="8.15",note="Use Ltac2 pattern.base.reify instead.")]
        Ltac reify base reify_base ty :=
         let f := ltac2:(base reify_base ty
-                        |- Control.refine (fun () => reify (Ltac1.get_to_constr base) (fun v => Ltac1.apply_c reify_base [v]) (Ltac1.get_to_constr ty))) in
+                        |- Control.refine (fun () => reify (Ltac1.get_to_constr "base" base) (fun v => Ltac1.apply_c reify_base [v]) (Ltac1.get_to_constr "ty" ty))) in
         constr:(ltac:(f base reify_base ty)).
     End base.
   End pattern.
@@ -290,7 +320,7 @@ Module Compilers.
       end.
     #[deprecated(since="8.15",note="Use Ltac2 is_template_parameter instead.")]
     Ltac is_template_parameter parameter_type :=
-      let f := ltac2:(parameter_type |- Control.refine (fun () => if is_template_parameter [] (Ltac1.get_to_constr parameter_type) then 'true else 'false)) in
+      let f := ltac2:(parameter_type |- Control.refine (fun () => if is_template_parameter [] (Ltac1.get_to_constr "parameter_type" parameter_type) then 'true else 'false)) in
       constr:(ltac:(f parameter_type)).
 
     Ltac2 rec template_ctx_to_list (template_ctx : constr) : constr list :=
@@ -330,9 +360,9 @@ Module Compilers.
    #[deprecated(since="8.15",note="Use Ltac2 plug_template_ctx instead.")]
      Ltac plug_template_ctx f template_ctx :=
       let plug := ltac2:(f template_ctx
-                         |- let template_ctx := (Ltac1.get_to_constr template_ctx) in
+                         |- let template_ctx := (Ltac1.get_to_constr "template_ctx" template_ctx) in
                             let template_ctx := template_ctx_to_list template_ctx in
-                            Control.refine (fun () => plug_template_ctx [] (Ltac1.get_to_constr f) template_ctx)) in
+                            Control.refine (fun () => plug_template_ctx [] (Ltac1.get_to_constr "f" f) template_ctx)) in
       constr:(ltac:(plug f template_ctx)).
 
     Ltac2 rec reify_preprocess (ctx_tys : binder list) (term : constr) : constr :=
@@ -359,7 +389,8 @@ Module Compilers.
                 match Constr.Unsafe.check v (* ensure that the abstraction is well-typed, i.e., that we're not relying on the value of the let to well-type the body *) with
                 | Val v => reify_preprocess v
                 | Err _ (* if we do rely on the body of [x] to well-type [b], then just inline it *)
-                  => reify_preprocess (Constr.Unsafe.substnl [a] 0 b)
+                  => printf "Warning: expr.reify_preprocess: could not well-type %t (from %t)" v term;
+                     reify_preprocess (Constr.Unsafe.substnl [a] 0 b)
                 end
            | _ => reify_preprocess_extra ctx_tys term
            end
@@ -367,7 +398,7 @@ Module Compilers.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac reify_preprocess term :=
         let f := ltac2:(term
-                        |- Control.refine (fun () => reify_preprocess [] (Ltac1.get_to_constr term))) in
+                        |- Control.refine (fun () => reify_preprocess [] (Ltac1.get_to_constr "term" term))) in
         constr:(ltac:(f term)).
 
     Ltac2 rec reify_ident_preprocess (ctx_tys : binder list) (term : constr) : constr :=
@@ -425,7 +456,7 @@ Module Compilers.
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac reify_ident_preprocess term :=
         let f := ltac2:(term
-                        |- Control.refine (fun () => reify_ident_preprocess [] (Ltac1.get_to_constr term))) in
+                        |- Control.refine (fun () => reify_ident_preprocess [] (Ltac1.get_to_constr "term" term))) in
         constr:(ltac:(f term)).
 
 

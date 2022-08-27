@@ -540,7 +540,7 @@ Module Compilers.
       #[deprecated(since="8.15",note="Use Ltac2 reify_base_via_list instead.")]
        Ltac reify_base_via_list base base_interp all_base_and_interp ty :=
         let f := ltac2:(base base_interp all_base_and_interp ty
-                        |- Control.refine (fun () => reify_base_via_list (Ltac1.get_to_constr base) (Ltac1.get_to_constr base_interp) (Ltac1.get_to_constr all_base_and_interp) (Ltac1.get_to_constr ty))) in
+                        |- Control.refine (fun () => reify_base_via_list (Ltac1.get_to_constr "base" base) (Ltac1.get_to_constr "base_interp" base_interp) (Ltac1.get_to_constr "all_base_and_interp" all_base_and_interp) (Ltac1.get_to_constr "ty" ty))) in
         constr:(ltac:(f base base_interp all_base_and_interp ty)).
 
       Ltac2 reify_base_type_via_list (base : constr) (base_interp : constr) (all_base_and_interp : constr) : constr -> constr :=
