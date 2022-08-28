@@ -52,6 +52,16 @@ Module Compilers.
      Ltac2 apply_c (f : Ltac1.t) (args : constr list) : constr :=
       '(ltac2:(Ltac1.apply f (List.map Ltac1.of_constr args) (fun v => Control.refine (fun () => get_to_constr "apply_c:arg" v)))).
   End Ltac1.
+  (* TODO: move to Util *)
+  Ltac2 mkApp (f : constr) (args : constr list) :=
+    Constr.Unsafe.make (Constr.Unsafe.App f (Array.of_list args)).
+  Ltac2 mkLambda b (body : constr) :=
+    Constr.Unsafe.make (Constr.Unsafe.Lambda b body).
+  Ltac2 mkRel (i : int) :=
+    Constr.Unsafe.make (Constr.Unsafe.Rel i).
+  Ltac2 mkVar (i : ident) :=
+    Constr.Unsafe.make (Constr.Unsafe.Var i).
+
   (* TODO: move *)
   Module Message.
     Ltac2 of_list (pr : 'a -> message) (ls : 'a list) : message
@@ -63,7 +73,27 @@ Module Compilers.
             | x :: xs
               => List.fold_left (fun init x => fprintf "%a, %a" (fun () a => a) init (fun () => pr) x) xs (pr x)
             end).
+    Ltac2 of_binder (b : binder) : message
+      := fprintf "%a : %t" (fun () a => a) (match Constr.Binder.name b with
+                                            | Some n => fprintf "%I" n
+                                            | None => fprintf ""
+                                            end)
+                 (Constr.Binder.type b).
   End Message.
+
+  (* this is very super-linear, should not be used in production code *)
+  Ltac2 with_term_in_context (tys : constr list) (term : constr) (tac : constr -> unit) : unit :=
+    printf "Warning: with_term_in_context: Bad asymptotics";
+    let rec aux (tys : constr list) (acc : ident list) (avoid : Fresh.Free.t)
+      := match tys with
+         | [] => tac (Constr.Unsafe.substnl (List.map mkVar (List.rev acc)) 0 term)
+         | ty :: tys
+           => let id := Fresh.fresh avoid @DUMMY in
+              let avoid := Fresh.Free.union avoid (Fresh.Free.of_ids [id]) in
+              let _ := Constr.in_context id ty (fun () => aux tys (id :: acc) avoid; Control.refine (fun () => 'I)) in
+              ()
+         end in
+    aux tys [] (Fresh.Free.of_constr term).
 
   Module Reify.
     Ltac2 debug_level := Pre.reify_debug_level.
@@ -85,6 +115,7 @@ Module Compilers.
     Ltac2 mutable should_debug_fine_grained () := Int.le 100 debug_level.
     Ltac2 mutable should_debug_print_args () := Int.le 50 debug_level.
     Ltac2 mutable should_debug_typing_failure () := Int.le 1 debug_level.
+    Ltac2 mutable should_debug_check_app_early () := Int.le 5 debug_level.
 
     Ltac2 debug_if (cond : unit -> bool) (tac : unit -> 'a) (default : 'a) :=
       if cond ()
@@ -152,6 +183,25 @@ Module Compilers.
      Ltac debug_leave_reify_in_context_success term res :=
       let f := ltac2:(term res |- debug_leave_reify_success "expr.reify_in_context" (Ltac1.get_to_constr "term" term) (Ltac1.get_to_constr "res" res)) in
       f term res.
+    Ltac2 debug_Constr_check (funname : string) (descr : constr -> constr -> exn -> message) (var : constr) (var_ty_ctx : constr list) (e : constr)
+      := debug_if
+           should_debug_check_app_early
+           (fun () => match Constr.Unsafe.check e with
+                      | Val e => e
+                      | Err _
+                        => with_term_in_context
+                             (List.map (fun t => mkApp var [t]) var_ty_ctx) e
+                             (fun e' => match Constr.Unsafe.check e' with
+                                        | Val _ => (* wasted a bunch of time *) ()
+                                        | Err err
+                                          => let descr := descr e e' err in
+                                             Control.throw
+                                              (Reification_panic
+                                                 (fprintf "Anomaly: %s: %t failed to check (in context %a as %t): %a" funname e (fun () => Message.of_list Message.of_constr) var_ty_ctx e' (fun () a => a) descr))
+                                        end);
+                           e
+                      end)
+           e.
   End Reify.
 
   Module type.
@@ -259,14 +309,6 @@ Module Compilers.
 
   Module expr.
     Import Language.Compilers.expr.
-
-    (* TODO: move to Util *)
-    Ltac2 mkApp (f : constr) (args : constr list) :=
-      Constr.Unsafe.make (Constr.Unsafe.App f (Array.of_list args)).
-    Ltac2 mkLambda b (body : constr) :=
-      Constr.Unsafe.make (Constr.Unsafe.Lambda b body).
-    Ltac2 mkRel (i : int) :=
-      Constr.Unsafe.make (Constr.Unsafe.Rel i).
 
     Module var_context.
       Inductive list {base_type} {var : type base_type -> Type} :=
@@ -387,36 +429,48 @@ Module Compilers.
            | _ => Control.throw (Reification_panic (fprintf "Anomaly: reify_preprocess: %t is not a Lambda!" v))
            end in
       match Constr.Unsafe.kind term with
-      | Constr.Unsafe.Cast term _ _ => reify_preprocess term
+      | Constr.Unsafe.Cast x _ _
+        => Reify.debug_enter_reify_case "expr.reify_preprocess" "Cast" term;
+           reify_preprocess x
       | Constr.Unsafe.LetIn x a b (* let x := ?a in ?b *)
-        => let v := mkApp (mkLambda x b) [a] in
+        => Reify.debug_enter_reify_case "expr.reify_preprocess" "LetIn" term;
+           let v := mkApp (mkLambda x b) [a] in
            match Constr.Unsafe.check v (* ensure that the abstraction is well-typed, i.e., that we're not relying on the value of the let to well-type the body *) with
            | Val v => reify_preprocess v
            | Err err (* if we do rely on the body of [x] to well-type [b], then just inline it *)
              => match Constr.Unsafe.check term with
                 | Val _ => Reify.debug_typing_failure "expr.reify_preprocess" v err
-                | Err _ => printf "Warning: expr.reify_preprocess: could not well-type %t due to underlying issue typechecking %t" v term
+                | Err _ => printf "Warning: expr.reify_preprocess: could not well-type %t due to underlying issue typechecking %t without relevant context %a" v term (fun () => Message.of_list Message.of_binder) ctx_tys
                 end;
                 reify_preprocess (Constr.Unsafe.substnl [a] 0 b)
            end
       | Constr.Unsafe.Case cinfo ret_ty cinv x branches
-        => match Constr.Unsafe.kind ret_ty with
+        => Reify.debug_enter_reify_case "expr.reify_preprocess" "Case" term;
+           match Constr.Unsafe.kind ret_ty with
            | Constr.Unsafe.Lambda xb ret_ty
              => let ty := Constr.Unsafe.substnl [x] 0 ret_ty in
                 lazy_match! Constr.Binder.type xb with
-                | bool => reify_preprocess (mkApp '@Thunked.bool_rect [ty; thunk (Array.get branches 0); thunk (Array.get branches 1); x])
+                | bool
+                  => Reify.debug_enter_reify_case "expr.reify_preprocess" "Case:bool" term;
+                     reify_preprocess (mkApp '@Thunked.bool_rect [ty; thunk (Array.get branches 0); thunk (Array.get branches 1); x])
                 | prod ?a ?b
-                  => reify_preprocess (mkApp '@prod_rect_nodep [a; b; ty; Array.get branches 0; x])
+                  => Reify.debug_enter_reify_case "expr.reify_preprocess" "Case:prod" term;
+                     reify_preprocess (mkApp '@prod_rect_nodep [a; b; ty; Array.get branches 0; x])
                 | list ?t
-                  => reify_preprocess (mkApp '@Thunked.list_case [t; ty; thunk (Array.get branches 0); Array.get branches 1; x])
+                  => Reify.debug_enter_reify_case "expr.reify_preprocess" "Case:list" term;
+                     reify_preprocess (mkApp '@Thunked.list_case [t; ty; thunk (Array.get branches 0); Array.get branches 1; x])
                 | option ?t
-                  => reify_preprocess (mkApp '@Thunked.option_rect [t; ty; Array.get branches 0; thunk (Array.get branches 1); x])
-                | _ => reify_preprocess_extra ctx_tys term
+                  => Reify.debug_enter_reify_case "expr.reify_preprocess" "Case:option" term;
+                     reify_preprocess (mkApp '@Thunked.option_rect [t; ty; Array.get branches 0; thunk (Array.get branches 1); x])
+                | _ => Reify.debug_enter_reify_preprocess "expr.reify_preprocess_extra" term;
+                       reify_preprocess_extra ctx_tys term
                 end
            | _ => printf "Warning: non-Lambda case return type %t in %t" ret_ty term;
+                  Reify.debug_enter_reify_preprocess "expr.reify_preprocess_extra" term;
                   reify_preprocess_extra ctx_tys term
            end
-      | _ => reify_preprocess_extra ctx_tys term
+      | _ => Reify.debug_enter_reify_preprocess "expr.reify_preprocess_extra" term;
+             reify_preprocess_extra ctx_tys term
       end.
 
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
