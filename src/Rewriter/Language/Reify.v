@@ -84,12 +84,15 @@ Module Compilers.
     Ltac2 mutable should_debug_enter_reify_case () := Int.le 6 debug_level.
     Ltac2 mutable should_debug_fine_grained () := Int.le 100 debug_level.
     Ltac2 mutable should_debug_print_args () := Int.le 50 debug_level.
+    Ltac2 mutable should_debug_typing_failure () := Int.le 1 debug_level.
 
     Ltac2 debug_if (cond : unit -> bool) (tac : unit -> 'a) (default : 'a) :=
       if cond ()
       then tac ()
       else default.
 
+    Ltac2 debug_typing_failure (funname : string) (x : constr) (err : exn)
+      := debug_if should_debug_typing_failure (fun () => printf "Warning: %s: failure to typecheck %t: %a" funname x (fun () => Message.of_exn) err) ().
     Ltac2 debug_fine_grained (funname : string) (msg : unit -> message)
       := debug_if should_debug_fine_grained (fun () => printf "%s: %a" funname (fun () => msg) ()) ().
     Ltac2 debug_enter_reify (funname : string) (e : constr)
@@ -346,8 +349,13 @@ Module Compilers.
                     else mkargs ctx_tys f_ty' template_ctx
              end
         end in
-      let (_, args, close) := mkargs ctx_tys (Constr.type f) template_ctx in
-      close (mkApp f args).
+      (* fast type-free path for empty template_ctx *)
+      match template_ctx with
+      | [] => f
+      | _::_
+        => let (_, args, close) := mkargs ctx_tys (Constr.type f) template_ctx in
+           close (mkApp f args)
+      end.
    #[deprecated(since="8.15",note="Use Ltac2 plug_template_ctx instead.")]
      Ltac plug_template_ctx f template_ctx :=
       let plug := ltac2:(f template_ctx
@@ -359,33 +367,40 @@ Module Compilers.
     Ltac2 rec reify_preprocess (ctx_tys : binder list) (term : constr) : constr :=
       Reify.debug_enter_reify_preprocess "expr.reify_preprocess" term;
       let reify_preprocess := reify_preprocess ctx_tys in
-      lazy_match! term with
-      | match ?b with true => ?t | false => ?f end
-        => let ty := Constr.type term in
-           reify_preprocess '(@Thunked.bool_rect $ty (fun _ => $t) (fun _ => $f) $b)
-      | match ?x with Datatypes.pair a b => @?f a b end
-        => let ty := Constr.type term in
-           reify_preprocess '(@prod_rect_nodep _ _ $ty $f $x)
-      | match ?x with nil => ?n | cons a b => @?c a b end
-        => let ty := Constr.type term in
-           reify_preprocess '(@Thunked.list_case _ $ty (fun _ => $n) $c $x)
-      | match ?x with None => ?n | Some a => @?s a end
-        => let ty := Constr.type term in
-           reify_preprocess '(@Thunked.option_rect _ $ty $s (fun _ => $n) $x)
-      | ?term
-        => match Constr.Unsafe.kind term with
-           | Constr.Unsafe.Cast term _ _ => reify_preprocess term
-           | Constr.Unsafe.LetIn x a b (* let x := ?a in ?b *)
-             => let v := mkApp (mkLambda x b) [a] in
-                match Constr.Unsafe.check v (* ensure that the abstraction is well-typed, i.e., that we're not relying on the value of the let to well-type the body *) with
-                | Val v => reify_preprocess v
-                | Err _ (* if we do rely on the body of [x] to well-type [b], then just inline it *)
-                  => printf "Warning: expr.reify_preprocess: could not well-type %t (from %t)" v term;
-                     reify_preprocess (Constr.Unsafe.substnl [a] 0 b)
-                end
-           | _ => reify_preprocess_extra ctx_tys term
+      let thunk (v : constr) := '(fun _ : unit => $v) in
+      match Constr.Unsafe.kind term with
+      | Constr.Unsafe.Cast term _ _ => reify_preprocess term
+      | Constr.Unsafe.LetIn x a b (* let x := ?a in ?b *)
+        => let v := mkApp (mkLambda x b) [a] in
+           match Constr.Unsafe.check v (* ensure that the abstraction is well-typed, i.e., that we're not relying on the value of the let to well-type the body *) with
+           | Val v => reify_preprocess v
+           | Err err (* if we do rely on the body of [x] to well-type [b], then just inline it *)
+             => match Constr.Unsafe.check term with
+                | Val _ => Reify.debug_typing_failure "expr.reify_preprocess" v err
+                | Err _ => printf "Warning: expr.reify_preprocess: could not well-type %t due to underlying issue typechecking %t" v term
+                end;
+                reify_preprocess (Constr.Unsafe.substnl [a] 0 b)
            end
+      | Constr.Unsafe.Case cinfo ret_ty cinv x branches
+        => match Constr.Unsafe.kind ret_ty with
+           | Constr.Unsafe.Lambda xb ret_ty
+             => let ty := Constr.Unsafe.substnl [x] 0 ret_ty in
+                lazy_match! Constr.Binder.type xb with
+                | bool => reify_preprocess (mkApp '@Thunked.bool_rect [ty; thunk (Array.get branches 0); thunk (Array.get branches 1); x])
+                | prod ?a ?b
+                  => reify_preprocess (mkApp '@prod_rect_nodep [a; b; ty; Array.get branches 0; x])
+                | list ?t
+                  => reify_preprocess (mkApp '@Thunked.list_case [t; ty; thunk (Array.get branches 0); Array.get branches 1; x])
+                | option ?t
+                  => reify_preprocess (mkApp '@Thunked.option_rect [t; ty; Array.get branches 0; thunk (Array.get branches 1); x])
+                | _ => reify_preprocess_extra ctx_tys term
+                end
+           | _ => printf "Warning: non-Lambda case return type %t in %t" ret_ty term;
+                  reify_preprocess_extra ctx_tys term
+           end
+      | _ => reify_preprocess_extra ctx_tys term
       end.
+
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac reify_preprocess term :=
         let f := ltac2:(term
