@@ -74,6 +74,7 @@ Module Compilers.
     Ltac2 mutable should_debug_enter_reify_after_preprocess () := Int.le 3 debug_level.
     Ltac2 mutable should_debug_leave_reify_success () := Int.le 5 debug_level.
     Ltac2 mutable should_debug_leave_reify_failure () := Int.le 0 debug_level.
+    Ltac2 mutable should_debug_leave_reify_normal_failure () := Int.le 5 debug_level.
     Ltac2 mutable should_debug_enter_reify_ident_after_preprocess () := Int.le 3 debug_level.
     Ltac2 mutable should_debug_enter_lookup_ident () := Int.le 3 debug_level.
     Ltac2 mutable should_debug_leave_lookup_ident_success () := Int.le 3 debug_level.
@@ -109,6 +110,8 @@ Module Compilers.
       := debug_if should_debug_leave_reify_success (fun () => printf "%s: Success in reifying: %t as %t" funname e ret) ().
     Ltac2 debug_leave_reify_failure (funname : string) (e : constr)
       := debug_if should_debug_leave_reify_failure (fun () => printf "%s: Failure in reifying:" funname; printf "%t" e) ().
+    Ltac2 debug_leave_reify_normal_failure (funname : string) (e : constr)
+      := debug_if should_debug_leave_reify_normal_failure (fun () => printf "%s: Failure in reifying:" funname; printf "%t" e) ().
     Ltac2 debug_enter_lookup_ident (funname : string) (e : constr)
       := debug_if should_debug_enter_lookup_ident (fun () => printf "%s: Attempting to lookup ident:" funname; printf "%t" e) ().
     Ltac2 debug_leave_lookup_ident_success (funname : string) (e : constr) (ret : constr)
@@ -146,18 +149,6 @@ Module Compilers.
      Ltac debug_leave_reify_in_context_success term res :=
       let f := ltac2:(term res |- debug_leave_reify_success "expr.reify_in_context" (Ltac1.get_to_constr "term" term) (Ltac1.get_to_constr "res" res)) in
       f term res.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_enter_lookup_ident term :=
-      let f := ltac2:(term |- debug_enter_lookup_ident "reify_ident_via_list" (Ltac1.get_to_constr "debug_enter" term)) in
-      f term.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_leave_lookup_ident_in_failure idc all_ident_and_interp :=
-      let f := ltac2:(idc all_ident_and_interp |- debug_leave_lookup_ident_failure "reify_ident_via_list" (Ltac1.get_to_constr "debug_leave:idc" idc) (Ltac1.get_to_constr "debug_leave:all_ident_and_interp" all_ident_and_interp)) in
-      f idc all_ident_and_interp.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac debug_leave_lookup_ident_success idc ret :=
-      let f := ltac2:(idc ret |- debug_leave_lookup_ident_success "reify_ident_via_list" (Ltac1.get_to_constr "debug_leave:idc" idc) (Ltac1.get_to_constr "debug_leave:ret" ret)) in
-      f idc ret.
   End Reify.
 
   Module type.

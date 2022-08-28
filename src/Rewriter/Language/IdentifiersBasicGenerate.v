@@ -1184,97 +1184,119 @@ Module Compilers.
         let res := build_all_ident_and_interp all_idents all_ident_named_interped in
         refine res.
 
-      Ltac try_build f x :=
-        match constr:(Set) with
-        | _ => let res := f x in
-               constr:(Datatypes.Some res)
-        | _ => constr:(@Datatypes.None Datatypes.unit)
+      (* TODO: move to Util *)
+      Ltac2 mkApp (f : constr) (args : constr list) :=
+        Constr.Unsafe.make (Constr.Unsafe.App f (Array.of_list args)).
+
+      Ltac2 rec is_recursively_constructor_or_literal (term : constr) : bool :=
+        match Constr.Unsafe.kind term with
+        | Constr.Unsafe.Cast term _ _ => is_recursively_constructor_or_literal term
+        | Constr.Unsafe.App f args
+          => if Constr.equal f '@ident.literal
+             then true
+             else
+               is_recursively_constructor_or_literal f
+               && Array.for_all is_recursively_constructor_or_literal args
+        | _ => Constr.is_constructor term
         end.
 
-      Ltac require_recursively_constructor_or_literal term :=
-        lazymatch term with
-        | ident.literal _ => idtac
-        | ?f ?x => require_recursively_constructor_or_literal f;
-                   require_recursively_constructor_or_literal x
-        | ?term => is_constructor term
-        end.
-      Ltac is_recursively_constructor_or_literal term :=
-        match constr:(Set) with
-        | _ => let check := match constr:(Set) with
-                            | _ => require_recursively_constructor_or_literal term
-                            end in
-               true
-        | _ => false
-        end.
+      Ltac2 try_reify_literal (try_reify_base : constr -> constr option) (ident_Literal : constr) (term : constr) : constr option :=
+        if is_recursively_constructor_or_literal term
+        then
+          Option.bind
+            (try_reify_base (Constr.type term))
+            (fun rt => Some (mkApp ident_Literal [rt; term]))
+        else None.
 
-      Ltac try_reify_literal try_reify_base ident_Literal term :=
-        let T := type of term in
-        let rT := try_reify_base T in
-        lazymatch rT with
-        | Datatypes.Some ?rT
-          => let term_is_primitive_const := is_recursively_constructor_or_literal term in
-             lazymatch term_is_primitive_const with
-             | true => constr:(Datatypes.Some (@ident_Literal rT term))
-             | false => constr:(@Datatypes.None unit)
-             end
-        | Datatypes.None => constr:(@Datatypes.None unit)
-        end.
-
-      Ltac get_head_with_eagerly_then_plug_reified_types reify_base_type lookup_cps term then_tac else_tac :=
-        let recr := get_head_with_eagerly_then_plug_reified_types reify_base_type lookup_cps in
-        lazymatch term with
-        | ident.eagerly ?f => lookup_cps term then_tac else_tac
+      Ltac2 rec get_head_with_eagerly_then_plug_reified_types (reify_base_type : constr -> constr) (lookup : constr -> constr option) (term : constr) : constr option :=
+        let recr := get_head_with_eagerly_then_plug_reified_types reify_base_type lookup in
+        lazy_match! term with
+        | ident.eagerly ?f => lookup term
         | ?f ?x
-          => recr
-               f
-               ltac:(fun rf
-                     => lazymatch type of rf with
-                        | forall t, _
-                          => let rx := reify_base_type x in
-                             then_tac (rf rx)
-                        | _ => else_tac ()
-                        end)
-                      else_tac
-        | _ => lookup_cps term then_tac else_tac
+          => Option.bind
+               (recr f)
+               (fun rf
+                => lazy_match! Constr.type rf with
+                   | forall t, _
+                     => let rx := reify_base_type x in
+                        Some (mkApp rf [rx])
+                   | _ => None
+                   end)
+        | _ => lookup term
         end.
 
-      Ltac reify_ident_via_list_internal base base_interp all_base_and_interp all_ident_and_interp ident_interp :=
-        fun term then_tac else_tac =>
-        let all_ident_and_interp := (eval hnf in all_ident_and_interp) in
-        let try_reify_base := try_build ltac:(reify_base_via_list base base_interp all_base_and_interp) in
+      Ltac2 reify_ident_via_list_opt (base : constr) (base_interp : constr) (all_base_and_interp : constr) (all_ident_and_interp : constr) (ident_interp : constr) : binder list -> constr -> constr option :=
+        let all_ident_and_interp := (eval hnf in $all_ident_and_interp) in
+        let try_reify_base := reify_base_via_list_opt base base_interp all_base_and_interp in
         let reify_base := reify_base_via_list base base_interp all_base_and_interp in
         let reify_base_type := reify_base_type_via_list base base_interp all_base_and_interp in
-        let ident_Literal := let idc := constr:(@ident.literal) in
-                             lazymatch all_ident_and_interp with
-                             | context[GallinaAndReifiedIdentList.cons ?ridc idc] => ridc
-                             | _ => constr_fail_with ltac:(fun _ => fail 1 "Missing reification for" idc "in" all_ident_and_interp)
+        let ident_Literal := let idc := '(@ident.literal) in
+                             let found := match! all_ident_and_interp with
+                                          | context[GallinaAndReifiedIdentList.cons ?ridc ?idc']
+                                            => if Constr.equal idc idc'
+                                               then Some ridc
+                                               else Control.zero Match_failure
+                                          | _ => None
+                                          end in
+                             match found with
+                             | Some ridc => ridc
+                             | None => Control.throw (Reification_panic (fprintf "Missing reification for %t in %t" idc all_ident_and_interp))
                              end in
+        fun ctx_tys term
+        => Reify.debug_enter_reify "reify_ident_via_list_opt" term;
+           Reify.debug_enter_reify_case "reify_ident_via_list_opt" "literal?" term;
            let as_lit := try_reify_literal try_reify_base ident_Literal term in
-           lazymatch as_lit with
-           | Datatypes.Some ?ridc => then_tac ridc
-           | Datatypes.None
-             => lazymatch term with
-                | @ident_interp _ ?idc => then_tac idc
-                | _
-                  => get_head_with_eagerly_then_plug_reified_types
-                       reify_base_type
-                       ltac:(fun idc then_tac else_tac
-                             => let __ := Reify.debug_enter_lookup_ident idc in
-                                lazymatch all_ident_and_interp with
-                                | context[GallinaAndReifiedIdentList.cons ?ridc idc]
-                                  => let __ := Reify.debug_leave_lookup_ident_success idc ridc in
-                                     then_tac ridc
-                                | _
-                                  => let __ := Reify.debug_leave_lookup_ident_in_failure idc all_ident_and_interp in
-                                     else_tac ()
-                                end)
-                              term
-                              then_tac
-                              else_tac
-                end
+           let res :=
+             match as_lit with
+             | Some ridc
+               => Reify.debug_enter_reify_case "reify_ident_via_list_opt" "literal✓" term;
+                  Some ridc
+             | None
+               => Reify.debug_enter_reify_case "reify_ident_via_list_opt" "interp?" term;
+                  lazy_match! '($ident_interp, $term) with
+                  | (?ident_interp, ?ident_interp _ ?idc)
+                    => Reify.debug_enter_reify_case "reify_ident_via_list_opt" "interp✓" term;
+                       Some idc
+                  | _
+                    => get_head_with_eagerly_then_plug_reified_types
+                         reify_base_type
+                         (fun idc
+                          => Reify.debug_enter_lookup_ident "reify_ident_via_list_opt" idc;
+                             let found := match! all_ident_and_interp with
+                                          | context[GallinaAndReifiedIdentList.cons ?ridc ?idc']
+                                            => if Constr.equal idc idc'
+                                               then Some ridc
+                                               else Control.zero Match_failure
+                                          | _ => None
+                                          end in
+                             match found with
+                             | Some ridc
+                               => Reify.debug_leave_lookup_ident_success "reify_ident_via_list_opt" idc ridc;
+                                  Some ridc
+                             | None
+                               => Reify.debug_leave_lookup_ident_failure "reify_ident_via_list_opt" idc all_ident_and_interp;
+                                  None
+                             end)
+                         term
+                  end
+             end in
+           match res with
+           | Some res
+             => Reify.debug_leave_reify_success "reify_ident_via_list_opt" term res;
+                Some res
+           | None
+             => Reify.debug_leave_reify_normal_failure "reify_ident_via_list_opt" term;
+                None
            end.
-      Ltac reify_ident_via_list base base_interp all_base_and_interp all_ident_and_interp ident_interp term then_tac else_tac :=
-        lazymatch constr:(ltac:(reify_ident_via_list_internal base base_interp all_base_and_interp all_ident_and_interp ident_interp term ltac:(fun v => refine (@Datatypes.Some _ v)) ltac:(fun _ => refine (@Datatypes.None unit)))) with
+
+      #[deprecated(since="8.15",note="Use Ltac2 reify_ident_via_list_opt instead.")]
+       Ltac reify_ident_via_list base base_interp all_base_and_interp all_ident_and_interp ident_interp term then_tac else_tac :=
+        let f := ltac2:(base base_interp all_base_and_interp all_ident_and_interp ident_interp term
+                        |- match reify_ident_via_list_opt (Ltac1.get_to_constr "base" base) (Ltac1.get_to_constr "base_interp" base_interp) (Ltac1.get_to_constr "all_base_and_interp" all_base_and_interp) (Ltac1.get_to_constr "all_ident_and_interp" all_ident_and_interp) (Ltac1.get_to_constr "ident_interp" ident_interp) [] (Ltac1.get_to_constr "term" term) with
+                           | Some v => Control.refine (fun () => '(@Datatypes.Some _ $v))
+                           | None => Control.refine (fun () => '(@Datatypes.None unit))
+                           end) in
+        match constr:(ltac:(f base base_interp all_base_and_interp all_ident_and_interp ident_interp term)) with
         | Datatypes.Some ?v => then_tac v
         | Datatypes.None => else_tac ()
         end.
