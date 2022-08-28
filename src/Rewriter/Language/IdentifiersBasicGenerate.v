@@ -1224,6 +1224,15 @@ Module Compilers.
                    end)
         | _ => lookup term
         end.
+      Ltac2 reify_ident_from_interp (ident_interp : constr) (term : constr) : constr option :=
+        (* [match term with ident_interp _ ?idc => Some idc | _ => None end], except robust against open terms *)
+        lazy_match! term with
+        | ?ident_interp' _ ?idc
+          => if Constr.equal ident_interp ident_interp'
+             then Some idc
+             else None
+        | _ => None
+        end.
 
       Ltac2 reify_ident_via_list_opt (base : constr) (base_interp : constr) (all_base_and_interp : constr) (all_ident_and_interp : constr) (ident_interp : constr) : binder list -> constr -> constr option :=
         let all_ident_and_interp := (eval hnf in $all_ident_and_interp) in
@@ -1253,12 +1262,14 @@ Module Compilers.
                   Some ridc
              | None
                => Reify.debug_enter_reify_case "reify_ident_via_list_opt" "interp?" term;
-                  lazy_match! '($ident_interp, $term) with
-                  | (?ident_interp, ?ident_interp _ ?idc)
+                  let as_interped := reify_ident_from_interp ident_interp term in
+                  match as_interped with
+                  | Some idc
                     => Reify.debug_enter_reify_case "reify_ident_via_list_opt" "interp✓" term;
                        Some idc
-                  | _
-                    => get_head_with_eagerly_then_plug_reified_types
+                  | None
+                    => Reify.debug_enter_reify_case "reify_ident_via_list_opt" "head eagerly?" term;
+                       get_head_with_eagerly_then_plug_reified_types
                          reify_base_type
                          (fun idc
                           => Reify.debug_enter_lookup_ident "reify_ident_via_list_opt" idc;
