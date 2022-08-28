@@ -367,7 +367,25 @@ Module Compilers.
     Ltac2 rec reify_preprocess (ctx_tys : binder list) (term : constr) : constr :=
       Reify.debug_enter_reify_preprocess "expr.reify_preprocess" term;
       let reify_preprocess := reify_preprocess ctx_tys in
-      let thunk (v : constr) := '(fun _ : unit => $v) in
+      let thunk
+        := (* kludge around retyping *)
+        let (cst, cTrue) := let term := '(I : True) in
+                            match Constr.Unsafe.kind term with
+                            | Constr.Unsafe.Cast _ cst cTrue => (cst, cTrue)
+                            | _ => Control.throw (Reification_panic (fprintf "Anomaly: reify_preprocess: %t is not a Cast!" term))
+                            end in
+        fun (v : constr)
+        => let v := Constr.Unsafe.make (Constr.Unsafe.Cast v cst cTrue) in (* ill-typed, but we'll strip the type soon *)
+           (* this is a terrible kludge to access lifting of de Bruijn indices without retyping getting in our way *)
+           let v := '(match $v return unit -> True with x => fun _ : unit => x end) in
+           match Constr.Unsafe.kind v with
+           | Constr.Unsafe.Lambda x v
+             => match Constr.Unsafe.kind v with
+                | Constr.Unsafe.Cast v _ _ => mkLambda x v
+                | _ => Control.throw (Reification_panic (fprintf "Anomaly: reify_preprocess: %t is not a Cast (from under a Lambda)!" v))
+                end
+           | _ => Control.throw (Reification_panic (fprintf "Anomaly: reify_preprocess: %t is not a Lambda!" v))
+           end in
       match Constr.Unsafe.kind term with
       | Constr.Unsafe.Cast term _ _ => reify_preprocess term
       | Constr.Unsafe.LetIn x a b (* let x := ?a in ?b *)
