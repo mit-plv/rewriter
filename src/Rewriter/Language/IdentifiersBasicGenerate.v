@@ -1238,7 +1238,8 @@ Module Compilers.
         | _ => lookup_cps term then_tac else_tac
         end.
 
-      Ltac reify_ident_via_list base base_interp all_base_and_interp all_ident_and_interp ident_interp :=
+      Ltac reify_ident_via_list_internal base base_interp all_base_and_interp all_ident_and_interp ident_interp :=
+        fun term then_tac else_tac =>
         let all_ident_and_interp := (eval hnf in all_ident_and_interp) in
         let try_reify_base := try_build ltac:(reify_base_via_list base base_interp all_base_and_interp) in
         let reify_base := reify_base_via_list base base_interp all_base_and_interp in
@@ -1248,8 +1249,7 @@ Module Compilers.
                              | context[GallinaAndReifiedIdentList.cons ?ridc idc] => ridc
                              | _ => constr_fail_with ltac:(fun _ => fail 1 "Missing reification for" idc "in" all_ident_and_interp)
                              end in
-        fun term then_tac else_tac
-        => let as_lit := try_reify_literal try_reify_base ident_Literal term in
+           let as_lit := try_reify_literal try_reify_base ident_Literal term in
            lazymatch as_lit with
            | Datatypes.Some ?ridc => then_tac ridc
            | Datatypes.None
@@ -1273,6 +1273,11 @@ Module Compilers.
                               else_tac
                 end
            end.
+      Ltac reify_ident_via_list base base_interp all_base_and_interp all_ident_and_interp ident_interp term then_tac else_tac :=
+        lazymatch constr:(ltac:(reify_ident_via_list_internal base base_interp all_base_and_interp all_ident_and_interp ident_interp term ltac:(fun v => refine (@Datatypes.Some _ v)) ltac:(fun _ => refine (@Datatypes.None unit)))) with
+        | Datatypes.Some ?v => then_tac v
+        | Datatypes.None => else_tac ()
+        end.
 
       Ltac reify_package_of_package pkg :=
         constr:(GoalType.exprReifyInfo pkg).
