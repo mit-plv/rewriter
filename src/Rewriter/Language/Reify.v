@@ -572,8 +572,9 @@ Module Compilers.
       let reify_rec_gen term ctx_tys var_ty_ctx template_ctx := reify_in_context_opt base_type ident reify_base_type reify_ident_opt var term ctx_tys var_ty_ctx value_ctx template_ctx in
       let reify_rec term := reify_rec_gen term ctx_tys var_ty_ctx template_ctx in
       let reify_rec_not_head term := reify_rec_gen term ctx_tys var_ty_ctx [] in
+      let debug_check e := Reify.debug_Constr_check "expr.reify_in_context" (fun e e' err => Message.of_exn err) var var_ty_ctx e in
       let reify_ident_opt term
-        := Option.map (fun idc => mkApp '(@Ident) [base_type; ident; var; open_constr:(_); idc])
+        := Option.map (fun idc => debug_check (mkApp '(@Ident) [base_type; ident; var; open_constr:(_); idc]))
                       (reify_ident_opt ctx_tys term) in
       Reify.debug_enter_reify "expr.reify_in_context" term;
       Reify.debug_print_args
@@ -591,14 +592,14 @@ Module Compilers.
         | Constr.Unsafe.Rel n
           => Reify.debug_enter_reify_case "expr.reify_in_context" "Rel" term;
              let rt := List.nth var_ty_ctx (Int.sub n 1) in
-             Some (mkApp ('@Var) [base_type; ident; var; rt; term])
+             Some (debug_check (mkApp ('@Var) [base_type; ident; var; rt; term]))
         | Constr.Unsafe.Var id
           => Reify.debug_enter_reify_case "expr.reify_in_context" "Var" term;
              Reify.debug_fine_grained "expr.reify_in_context" (fun () => fprintf "Searching in %a" (fun () => Message.of_list (fun (id', x, y) => fprintf "(%I, %t, %t)" id' x y)) value_ctx);
              Option.bind
                (List.find_opt (fun (id', _, _) => Ident.equal id' id) value_ctx)
                (fun (_, rt, rv)
-                => Some (mkApp ('@Var) [base_type; ident; var; rt; rv]))
+                => Some (debug_check (mkApp ('@Var) [base_type; ident; var; rt; rv])))
         | _ => None
         end in
       let res :=
@@ -628,9 +629,9 @@ Module Compilers.
                        else
                          (Reify.debug_enter_reify_case "expr.reify_in_context" "λ body" term;
                           let rt := type.reify reify_base_type base_type t in
-                          let rx := Constr.Binder.make (Constr.Binder.name x) (mkApp var [rt]) in
+                          let rx := Constr.Binder.make (Constr.Binder.name x) (debug_check (mkApp var [rt])) in
                           Option.map
-                            (fun rf => mkApp ('@Abs) [base_type; ident; var; rt; open_constr:(_); mkLambda rx rf])
+                            (fun rf => debug_check (mkApp ('@Abs) [base_type; ident; var; rt; open_constr:(_); mkLambda rx rf]))
                             (reify_rec_gen f (x :: ctx_tys) (rt :: var_ty_ctx) template_ctx)))
                | Constr.Unsafe.App c args
                  => Reify.debug_enter_reify_case "expr.reify_in_context" "App (check LetIn)" term;
@@ -647,7 +648,7 @@ Module Compilers.
                                          (fun rb
                                           => lazy_match! rb with
                                              | @Abs _ _ _ ?s ?d ?f
-                                               => Some (mkApp ('@LetIn) [base_type; ident; var; s; d; ra; f])
+                                               => Some (debug_check (mkApp ('@LetIn) [base_type; ident; var; s; d; ra; f]))
                                              | ?rb => Control.throw (Reification_panic (fprintf "Invalid non-Abs function reification of %t to %t" b rb))
                                              end)))
                          else None
@@ -689,7 +690,7 @@ Module Compilers.
                                  => Option.bind
                                       (reify_rec_gen f ctx_tys var_ty_ctx template_ctx)
                                       (fun rf
-                                       => Some (mkApp '@App [base_type; ident; var; open_constr:(_); open_constr:(_); rf; rx]))))
+                                       => Some (debug_check (mkApp '@App [base_type; ident; var; open_constr:(_); open_constr:(_); rf; rx])))))
                        | _
                          => Reify.debug_enter_reify_case "expr.reify_in_context" "pre-plug template_ctx" term;
                             let term := plug_template_ctx ctx_tys term template_ctx in
