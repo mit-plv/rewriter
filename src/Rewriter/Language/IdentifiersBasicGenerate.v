@@ -1235,7 +1235,7 @@ Module Compilers.
         end.
 
       Ltac2 reify_ident_via_list_opt (base : constr) (base_interp : constr) (all_base_and_interp : constr) (all_ident_and_interp : constr) (ident_interp : constr) : binder list -> constr -> constr option :=
-        let all_ident_and_interp := (eval hnf in $all_ident_and_interp) in
+        let all_ident_and_interp := Std.eval_hnf all_ident_and_interp in
         let try_reify_base := reify_base_via_list_opt base base_interp all_base_and_interp in
         let reify_base := reify_base_via_list base base_interp all_base_and_interp in
         let reify_base_type := reify_base_type_via_list base base_interp all_base_and_interp in
