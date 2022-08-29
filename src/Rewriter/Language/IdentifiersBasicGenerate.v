@@ -1312,51 +1312,71 @@ Module Compilers.
         | Datatypes.None => else_tac ()
         end.
 
+      Ltac2 reify_package_of_package (pkg : constr) : constr :=
+        '(GoalType.exprReifyInfo $pkg).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac reify_package_of_package pkg :=
-        constr:(GoalType.exprReifyInfo pkg).
+        let f := ltac2:(pkg |- let v := reify_package_of_package (Ltac1.get_to_constr "pkg" pkg) in Control.refine (fun () => v)) in
+        constr:(ltac:(f pkg)).
 
-      Ltac call_with_base_via_reify_package tac reify_pkg :=
-        let pkgT := type of reify_pkg in
-        let exprInfo := lazymatch (eval hnf in pkgT) with @GoalType.ExprReifyInfoT ?exprInfo => (eval hnf in exprInfo) end in
-        let exprReifyInfo := (eval hnf in reify_pkg) in
-        lazymatch exprInfo with
+      Ltac2 call_with_base_via_reify_package (tac : constr -> constr -> constr -> 'a) (reify_pkg : constr) : 'a :=
+        let pkgT := Constr.type reify_pkg in
+        let exprInfo := lazy_match! Std.eval_hnf pkgT with @GoalType.ExprReifyInfoT ?exprInfo => Std.eval_hnf exprInfo end in
+        let exprReifyInfo := Std.eval_hnf reify_pkg in
+        lazy_match! exprInfo with
         | {| Classes.base := ?base
              ; Classes.base_interp := ?base_interp |}
-          => lazymatch exprReifyInfo with
+          => lazy_match! exprReifyInfo with
              | {| GoalType.all_base_and_interp := ?all_base_and_interp
                   ; GoalType.all_ident_and_interp := ?all_ident_and_interp |}
                => tac base base_interp all_base_and_interp
              end
         end.
 
-      Ltac reify_base_via_reify_package_internal := call_with_base_via_reify_package ltac:(reify_base_via_list).
-      Ltac reify_base_type_via_reify_package_internal := call_with_base_via_reify_package ltac:(reify_base_type_via_list).
-      Ltac reify_type_via_reify_package_internal := call_with_base_via_reify_package ltac:(reify_type_via_list).
-      Ltac reify_ident_via_reify_package_internal reify_pkg :=
-        let pkgT := type of reify_pkg in
-        let exprInfo := lazymatch (eval hnf in pkgT) with @GoalType.ExprReifyInfoT ?exprInfo => (eval hnf in exprInfo) end in
-        let exprReifyInfo := (eval hnf in reify_pkg) in
-        lazymatch exprInfo with
+      Ltac2 reify_base_via_reify_package (reify_pkg : constr) : constr -> constr := call_with_base_via_reify_package reify_base_via_list reify_pkg.
+      Ltac2 reify_base_type_via_reify_package (reify_pkg : constr) : constr -> constr := call_with_base_via_reify_package reify_base_type_via_list reify_pkg.
+      Ltac2 reify_type_via_reify_package (reify_pkg : constr) : constr -> constr := call_with_base_via_reify_package reify_type_via_list reify_pkg.
+      Ltac2 reify_ident_via_reify_package_opt (reify_pkg : constr) : binder list -> constr -> constr option :=
+        let pkgT := Constr.type reify_pkg in
+        let exprInfo := lazy_match! Std.eval_hnf pkgT with @GoalType.ExprReifyInfoT ?exprInfo => Std.eval_hnf exprInfo end in
+        let exprReifyInfo := Std.eval_hnf reify_pkg in
+        lazy_match! exprInfo with
         | {| Classes.base := ?base
              ; Classes.base_interp := ?base_interp
              ; Classes.ident_interp := ?ident_interp |}
-          => lazymatch exprReifyInfo with
+          => lazy_match! exprReifyInfo with
              | {| GoalType.all_base_and_interp := ?all_base_and_interp
                   ; GoalType.all_ident_and_interp := ?all_ident_and_interp |}
-               => reify_ident_via_list base base_interp all_base_and_interp all_ident_and_interp ident_interp
+               => reify_ident_via_list_opt base base_interp all_base_and_interp all_ident_and_interp ident_interp
              end
         end.
-      Ltac reify_base_via_reify_package reify_pkg ty :=
-        constr:(ltac:(let v := reify_base_via_reify_package_internal reify_pkg ty in refine v)).
-      Ltac reify_base_type_via_reify_package reify_pkg ty :=
-        constr:(ltac:(let v := reify_base_type_via_reify_package_internal reify_pkg ty in refine v)).
-      Ltac reify_type_via_reify_package reify_pkg ty :=
-        constr:(ltac:(let v := reify_type_via_reify_package_internal reify_pkg ty in refine v)).
-      Ltac reify_ident_via_reify_package reify_pkg idc then_tac else_tac :=
-        match constr:(ltac:(reify_ident_via_reify_package_internal reify_pkg idc ltac:(fun idc => refine (@Datatypes.Some _ idc)) ltac:(fun _ => refine (@Datatypes.None unit)))) with
-        | Some ?v => then_tac v
-        | None => else_tac ()
-        end.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+       Ltac reify_base_via_reify_package reify_pkg ty :=
+        let f := ltac2:(reify_pkg ty
+                        |- Control.refine (fun () => reify_base_via_reify_package (Ltac1.get_to_constr "reify_pkg" reify_pkg) (Ltac1.get_to_constr "ty" ty))) in
+        constr:(ltac:(f reify_pkg ty)).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+       Ltac reify_base_type_via_reify_package reify_pkg ty :=
+        let f := ltac2:(reify_pkg ty
+                        |- Control.refine (fun () => reify_base_type_via_reify_package (Ltac1.get_to_constr "reify_pkg" reify_pkg) (Ltac1.get_to_constr "ty" ty))) in
+        constr:(ltac:(f reify_pkg ty)).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+       Ltac reify_type_via_reify_package reify_pkg ty :=
+        let f := ltac2:(reify_pkg ty
+                        |- Control.refine (fun () => reify_type_via_reify_package (Ltac1.get_to_constr "reify_pkg" reify_pkg) (Ltac1.get_to_constr "ty" ty))) in
+        constr:(ltac:(f reify_pkg ty)).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+       Ltac reify_ident_via_reify_package reify_pkg idc :=
+        let f := ltac2:(reify_pkg idc
+                        |- match reify_ident_via_reify_package_opt (Ltac1.get_to_constr "reify_pkg" reify_pkg) [] (Ltac1.get_to_constr "idc" idc) with
+                           | Some v => Control.refine (fun () => '(@Datatypes.Some _ $v))
+                           | None => Control.refine (fun () => '(@Datatypes.None unit))
+                           end) in
+        fun then_tac else_tac
+        => match constr:(ltac:(f reify_pkg idc)) with
+           | Datatypes.Some ?v => then_tac v
+           | Datatypes.None => else_tac ()
+           end.
       Ltac base_type_reified_hint_via_reify_package reify_pkg :=
         let pkgT := type of reify_pkg in
         let exprInfo := lazymatch (eval hnf in pkgT) with @GoalType.ExprReifyInfoT ?exprInfo => (eval hnf in exprInfo) end in
