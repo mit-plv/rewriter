@@ -1104,16 +1104,20 @@ Module Compilers.
                 : @DefaultValue.type.base.DefaultT _ base_interp).
       Ltac make_base_default base_interp := let res := build_base_default base_interp in refine res.
 
-      Ltac base_type_reified_hint base_type reify_type :=
-        lazymatch goal with
-        | [ |- @type.reified_of base_type _ ?T ?e ]
-          => (* solve [ *) let rT := reify_type T in unify e rT; reflexivity (* | idtac "ERROR: Failed to reify" T ] *)
+      Ltac2 base_type_reified_hint (base_type : constr) (reify_type : constr -> constr) : unit :=
+        lazy_match! goal with
+        | [ |- @type.reified_of ?base_type' _ ?t ?e ]
+          => if Constr.equal base_type' base_type
+             then (* solve [ *) let rt := reify_type t in unify $e $rt; reflexivity (* | idtac "ERROR: Failed to reify" T ] *)
+             else Control.zero Match_failure
         end.
 
-      Ltac expr_reified_hint base_type ident reify_base_type reify_ident :=
-        lazymatch goal with
-        | [ |- @expr.Reified_of _ ident _ _ ?t ?v ?e ]
-          => (*solve [ *) let rv := expr.Reify constr:(base_type) ident ltac:(reify_base_type) ltac:(reify_ident) v in unify e rv; reflexivity (* | idtac "ERROR: Failed to reify" v "(of type" t "); try setting Reify.debug_level to see output" ] *)
+      Ltac2 expr_reified_hint (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) :=
+        lazy_match! goal with
+        | [ |- @expr.Reified_of _ ?ident' _ _ ?t ?v ?e ]
+          => if Constr.equal ident ident'
+             then (*solve [ *) let rv := expr._Reify base_type ident reify_base_type reify_ident_opt v in unify $e $rv; reflexivity (* | idtac "ERROR: Failed to reify" v "(of type" t "); try setting Reify.debug_level to see output" ] *)
+             else Control.zero Match_failure
         end.
 
       Ltac build_index_of_ident ident :=
@@ -1377,27 +1381,37 @@ Module Compilers.
            | Datatypes.Some ?v => then_tac v
            | Datatypes.None => else_tac ()
            end.
-      Ltac base_type_reified_hint_via_reify_package reify_pkg :=
-        let pkgT := type of reify_pkg in
-        let exprInfo := lazymatch (eval hnf in pkgT) with @GoalType.ExprReifyInfoT ?exprInfo => (eval hnf in exprInfo) end in
-        lazymatch exprInfo with
+      Ltac2 base_type_reified_hint_via_reify_package (reify_pkg : constr) : unit :=
+        let pkgT := Constr.type reify_pkg in
+        let exprInfo := lazy_match! Std.eval_hnf pkgT with @GoalType.ExprReifyInfoT ?exprInfo => Std.eval_hnf exprInfo end in
+        lazy_match! exprInfo with
         | {| Classes.base := ?base
-             ; Classes.ident := ?ident |}
-          => let base_type := constr:(base.type base) in
+                             ; Classes.ident := ?ident |}
+          => let base_type := '(base.type $base) in
              let reify_type := reify_type_via_reify_package reify_pkg in
              base_type_reified_hint base_type reify_type
         end.
-      Ltac expr_reified_hint_via_reify_package reify_pkg :=
-        let pkgT := type of reify_pkg in
-        let exprInfo := lazymatch (eval hnf in pkgT) with @GoalType.ExprReifyInfoT ?exprInfo => (eval hnf in exprInfo) end in
-        lazymatch exprInfo with
+      Ltac2 expr_reified_hint_via_reify_package (reify_pkg : constr) : unit :=
+        let pkgT := Constr.type reify_pkg in
+        let exprInfo := lazy_match! Std.eval_hnf pkgT with @GoalType.ExprReifyInfoT ?exprInfo => Std.eval_hnf exprInfo end in
+        lazy_match! exprInfo with
         | {| Classes.base := ?base
              ; Classes.ident := ?ident |}
-          => let base_type := constr:(base.type base) in
+          => let base_type := '(base.type $base) in
              let reify_base_type := reify_base_type_via_reify_package reify_pkg in
-             let reify_ident := reify_ident_via_reify_package reify_pkg in
-             expr_reified_hint base_type ident reify_base_type reify_ident
+             let reify_ident_opt := reify_ident_via_reify_package_opt reify_pkg in
+             expr_reified_hint base_type ident reify_base_type reify_ident_opt
         end.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+      Ltac base_type_reified_hint_via_reify_package reify_pkg :=
+        let f := ltac2:(reify_pkg
+                        |- base_type_reified_hint_via_reify_package (Ltac1.get_to_constr "reify_pkg" reify_pkg)) in
+        f reify_pkg.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+      Ltac expr_reified_hint_via_reify_package reify_pkg :=
+        let f := ltac2:(reify_pkg
+                        |- expr_reified_hint_via_reify_package (Ltac1.get_to_constr "reify_pkg" reify_pkg)) in
+        f reify_pkg.
 
       Ltac cache_build_index_of_base base :=
         let name := fresh "index_of_base" in
@@ -1665,13 +1679,28 @@ Module Compilers.
     End PrintIdent.
 
     Module Tactic.
-      Ltac reify_package_of_package := Tactics.reify_package_of_package.
+      Ltac2 reify_package_of_package := Tactics.reify_package_of_package.
 
+      Ltac2 reify_base_via_reify_package := Tactics.reify_base_via_reify_package.
+      Ltac2 reify_base_type_via_reify_package := Tactics.reify_base_type_via_reify_package.
+      Ltac2 reify_type_via_reify_package := Tactics.reify_type_via_reify_package.
+      Ltac2 reify_ident_via_reify_package_opt := Tactics.reify_ident_via_reify_package_opt.
+      Ltac2 base_type_reified_hint_via_reify_package := Tactics.base_type_reified_hint_via_reify_package.
+      Ltac2 expr_reified_hint_via_reify_package := Tactics.expr_reified_hint_via_reify_package.
+
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+       Ltac reify_package_of_package := Tactics.reify_package_of_package.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac reify_base_via_reify_package := Tactics.reify_base_via_reify_package.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac reify_base_type_via_reify_package := Tactics.reify_base_type_via_reify_package.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac reify_type_via_reify_package := Tactics.reify_type_via_reify_package.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac reify_ident_via_reify_package := Tactics.reify_ident_via_reify_package.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac base_type_reified_hint_via_reify_package := Tactics.base_type_reified_hint_via_reify_package.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac expr_reified_hint_via_reify_package := Tactics.expr_reified_hint_via_reify_package.
 
       Ltac build_package base ident base_type_list_named var_like_idents all_ident_named_interped :=

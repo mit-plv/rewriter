@@ -736,7 +736,24 @@ Module Compilers.
       | None => Control.zero (Reification_failure (fprintf "Failed to reify: %t" term))
       end.
 
-    Ltac reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx :=
+    Ltac2 reify (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (var : constr) (term : constr) : constr :=
+      reify_in_context base_type ident reify_base_type reify_ident_opt var term [] [] [] [].
+    (* TODO: come up with a better naming convention than prefix [_] to replace starting-with-capital-letters *)
+    Ltac2 _Reify (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (term : constr) : constr :=
+      let var := Fresh.fresh (Fresh.Free.union (Fresh.Free.of_goal ()) (Fresh.Free.of_constr term)) @var in
+      Constr.in_context
+        var '(type $base_type -> Type)
+        (fun ()
+         => let r := reify base_type ident reify_base_type reify_ident_opt (mkVar var) term in
+            Control.refine (fun () => r)).
+    Ltac2 _Reify_rhs (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (base_interp : constr) (interp_ident : constr) () : unit :=
+      let rhs := lazy_match! goal with [ |- _ = ?rhs ] => rhs end in
+      let r := _Reify base_type ident reify_base_type reify_ident_opt rhs in
+      Std.transitivity '(@Interp $base_type $ident $base_interp $interp_ident _ $r)
+      > [ | reflexivity ].
+
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx :=
       let f := ltac2:(base_type ident reify_base_type reify_ident var term value_ctx template_ctx
                       |- let template_ctx := Ltac1.get_to_constr "template_ctx" template_ctx in
                          let value_ctx := Ltac1.get_to_constr "value_ctx" value_ctx in
@@ -750,17 +767,27 @@ Module Compilers.
                          let reify_ident_opt := reify_ident_opt_of_cps reify_ident in
                          Control.refine (fun () => reify_in_context (Ltac1.get_to_constr "base_type" base_type) (Ltac1.get_to_constr "ident" ident) reify_base_type reify_ident_opt (Ltac1.get_to_constr "var" var) (Ltac1.get_to_constr "term" term) [] [] value_ctx template_ctx)) in
       constr:(ltac:(f base_type ident reify_base_type ltac:(wrap_reify_ident_cps reify_ident) constr:(var) term value_ctx template_ctx)).
-    Ltac reify base_type ident reify_base_type reify_ident var term :=
-      reify_in_context base_type ident reify_base_type reify_ident var term (@var_context.nil base_type var) tt.
-    Ltac Reify base_type ident reify_base_type reify_ident term :=
-      constr:(fun var : type base_type -> Type
-              => ltac:(let r := reify base_type ident reify_base_type reify_ident var term in
-                       exact r)).
-    Ltac Reify_rhs base_type ident reify_base_type reify_ident base_interp interp_ident _ :=
-      let RHS := lazymatch goal with |- _ = ?RHS => RHS end in
-      let R := Reify base_type ident reify_base_type reify_ident RHS in
-      transitivity (@Interp base_type ident base_interp interp_ident _ R);
-      [ | reflexivity ].
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac reify base_type ident reify_base_type reify_ident var term :=
+      let f := ltac2:(base_type ident reify_base_type reify_ident var term
+                      |- let reify_base_type := fun ty => Ltac1.apply_c reify_base_type [ty] in
+                         let reify_ident_opt := reify_ident_opt_of_cps reify_ident in
+                         Control.refine (fun () => reify (Ltac1.get_to_constr "base_type" base_type) (Ltac1.get_to_constr "ident" ident) reify_base_type reify_ident_opt (Ltac1.get_to_constr "var" var) (Ltac1.get_to_constr "term" term))) in
+      constr:(ltac:(f base_type ident reify_base_type ltac:(wrap_reify_ident_cps reify_ident) constr:(var) term)).
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac Reify base_type ident reify_base_type reify_ident term :=
+      let f := ltac2:(base_type ident reify_base_type reify_ident term
+                      |- let reify_base_type := fun ty => Ltac1.apply_c reify_base_type [ty] in
+                         let reify_ident_opt := reify_ident_opt_of_cps reify_ident in
+                         Control.refine (fun () => _Reify (Ltac1.get_to_constr "base_type" base_type) (Ltac1.get_to_constr "ident" ident) reify_base_type reify_ident_opt (Ltac1.get_to_constr "term" term))) in
+      constr:(ltac:(f base_type ident reify_base_type ltac:(wrap_reify_ident_cps reify_ident) term)).
+    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+     Ltac Reify_rhs base_type ident reify_base_type reify_ident base_interp interp_ident _ :=
+      let f := ltac2:(base_type ident reify_base_type reify_ident base_interp interp_ident
+                      |- let reify_base_type := fun ty => Ltac1.apply_c reify_base_type [ty] in
+                         let reify_ident_opt := reify_ident_opt_of_cps reify_ident in
+                         _Reify_rhs (Ltac1.get_to_constr "base_type" base_type) (Ltac1.get_to_constr "ident" ident) reify_base_type reify_ident_opt (Ltac1.get_to_constr "base_interp" base_interp) (Ltac1.get_to_constr "interp_ident" interp_ident) ()) in
+      f base_type ident reify_base_type ltac:(wrap_reify_ident_cps reify_ident) base_interp interp_ident.
 
     Class Reified_of {base_type ident interp_base_type interp_ident} {t} (v : type.interp interp_base_type t) (rv : @Expr base_type ident t)
       := reified_ok : @Interp base_type ident interp_base_type interp_ident t rv = v.
