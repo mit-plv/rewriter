@@ -1329,10 +1329,10 @@ Module Compilers.
              end
         end.
 
-      Ltac reify_base_via_reify_package := call_with_base_via_reify_package ltac:(reify_base_via_list).
-      Ltac reify_base_type_via_reify_package := call_with_base_via_reify_package ltac:(reify_base_type_via_list).
-      Ltac reify_type_via_reify_package := call_with_base_via_reify_package ltac:(reify_type_via_list).
-      Ltac reify_ident_via_reify_package reify_pkg :=
+      Ltac reify_base_via_reify_package_internal := call_with_base_via_reify_package ltac:(reify_base_via_list).
+      Ltac reify_base_type_via_reify_package_internal := call_with_base_via_reify_package ltac:(reify_base_type_via_list).
+      Ltac reify_type_via_reify_package_internal := call_with_base_via_reify_package ltac:(reify_type_via_list).
+      Ltac reify_ident_via_reify_package_internal reify_pkg :=
         let pkgT := type of reify_pkg in
         let exprInfo := lazymatch (eval hnf in pkgT) with @GoalType.ExprReifyInfoT ?exprInfo => (eval hnf in exprInfo) end in
         let exprReifyInfo := (eval hnf in reify_pkg) in
@@ -1345,6 +1345,17 @@ Module Compilers.
                   ; GoalType.all_ident_and_interp := ?all_ident_and_interp |}
                => reify_ident_via_list base base_interp all_base_and_interp all_ident_and_interp ident_interp
              end
+        end.
+      Ltac reify_base_via_reify_package reify_pkg ty :=
+        constr:(ltac:(let v := reify_base_via_reify_package_internal reify_pkg ty in refine v)).
+      Ltac reify_base_type_via_reify_package reify_pkg ty :=
+        constr:(ltac:(let v := reify_base_type_via_reify_package_internal reify_pkg ty in refine v)).
+      Ltac reify_type_via_reify_package reify_pkg ty :=
+        constr:(ltac:(let v := reify_type_via_reify_package_internal reify_pkg ty in refine v)).
+      Ltac reify_ident_via_reify_package reify_pkg idc then_tac else_tac :=
+        match constr:(ltac:(reify_ident_via_reify_package_internal reify_pkg idc ltac:(fun idc => refine (@Datatypes.Some _ idc)) ltac:(fun _ => refine (@Datatypes.None unit)))) with
+        | Some ?v => then_tac v
+        | None => else_tac ()
         end.
       Ltac base_type_reified_hint_via_reify_package reify_pkg :=
         let pkgT := type of reify_pkg in
