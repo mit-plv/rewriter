@@ -114,7 +114,8 @@ Module Compilers.
     Ltac2 mutable should_debug_enter_reify_case () := Int.le 6 debug_level.
     Ltac2 mutable should_debug_fine_grained () := Int.le 100 debug_level.
     Ltac2 mutable should_debug_print_args () := Int.le 50 debug_level.
-    Ltac2 mutable should_debug_typing_failure () := Int.le 1 debug_level.
+    Ltac2 mutable should_debug_typing_failure () := Int.le 4 debug_level.
+    Ltac2 mutable should_debug_typing_failure_assume_well_typed () := Int.le 1 debug_level.
     Ltac2 mutable should_debug_check_app_early () := Int.le 5 debug_level.
 
     Ltac2 debug_if (cond : unit -> bool) (tac : unit -> 'a) (default : 'a) :=
@@ -124,6 +125,8 @@ Module Compilers.
 
     Ltac2 debug_typing_failure (funname : string) (x : constr) (err : exn)
       := debug_if should_debug_typing_failure (fun () => printf "Warning: %s: failure to typecheck %t: %a" funname x (fun () => Message.of_exn) err) ().
+    Ltac2 debug_typing_failure_assume_well_typed (funname : string) (v : constr) (term : constr) (ctx_tys : binder list) (ty : constr)
+      := debug_if should_debug_typing_failure_assume_well_typed (fun () => printf "Warning: %s: could not well-type %t due to underlying issue typechecking %t without relevant context %a, but assuming that it's well-typed because %t is not a template-parameter type" funname v term (fun () => Message.of_list Message.of_binder) ctx_tys ty) ().
     Ltac2 debug_fine_grained (funname : string) (msg : unit -> message)
       := debug_if should_debug_fine_grained (fun () => printf "%s: %a" funname (fun () => msg) ()) ().
     Ltac2 debug_enter_reify (funname : string) (e : constr)
@@ -436,15 +439,26 @@ Module Compilers.
            reify_preprocess x
       | Constr.Unsafe.LetIn x a b (* let x := ?a in ?b *)
         => Reify.debug_enter_reify_case "expr.reify_preprocess" "LetIn" term;
-           let v := mkApp (mkLambda x b) [a] in
-           match Constr.Unsafe.check v (* ensure that the abstraction is well-typed, i.e., that we're not relying on the value of the let to well-type the body *) with
-           | Val v => reify_preprocess v
-           | Err err (* if we do rely on the body of [x] to well-type [b], then just inline it *)
-             => match Constr.Unsafe.check term with
-                | Val _ => Reify.debug_typing_failure "expr.reify_preprocess" v err
-                | Err _ => printf "Warning: expr.reify_preprocess: could not well-type %t due to underlying issue typechecking %t without relevant context %a" v term (fun () => Message.of_list Message.of_binder) ctx_tys
-                end;
-                reify_preprocess (Constr.Unsafe.substnl [a] 0 b)
+           let v_lam () := mkApp (mkLambda x b) [a] in
+           let v_inlined () := Constr.Unsafe.substnl [a] 0 b in
+           let tx := Constr.Binder.type x in
+           if is_template_parameter ctx_tys tx
+           then (* it's a template parameter (something like a type), no need to abstract over it since we're just going to inline it later *)
+             reify_preprocess (v_inlined ())
+           else
+             let v := v_lam () in
+             match Constr.Unsafe.check v (* ensure that the abstraction is well-typed, i.e., that we're not relying on the value of the let to well-type the body *) with
+             | Val v => reify_preprocess v
+             | Err err (* if we do rely on the body of [x] to well-type [b], then just inline it *)
+               => match Constr.Unsafe.check term with
+                  | Val _
+                    => Reify.debug_typing_failure "expr.reify_preprocess" v err;
+                       reify_preprocess (v_inlined ())
+                  | Err err'
+                    => (* since the underlying term failed to typecheck, but the argument is not a template parameter, we just assume that it's well-typed to abstract over it *)
+                      Reify.debug_typing_failure_assume_well_typed "expr.reify_preprocess" v term ctx_tys tx;
+                      reify_preprocess v
+                  end
            end
       | Constr.Unsafe.Case cinfo ret_ty cinv x branches
         => Reify.debug_enter_reify_case "expr.reify_preprocess" "Case" term;
