@@ -3,6 +3,7 @@ Require Import Coq.Bool.Bool.
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Lists.List.
 Require Import Ltac2.Ltac2.
+Require Import Ltac2.Bool.
 Require Import Ltac2.Printf.
 Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Language.Language.
@@ -504,10 +505,19 @@ Module Compilers.
            | Some rty => Some rty
            | None
              => (* work around COQBUG(https://github.com/coq/coq/issues/13962) *)
-               lazy_match! '($base_interp, $base, $ty) with
-               | (?base_interp, ?base, ?base_interp ?t) => Some t
-               | (?base_interp, ?base, @base.interp ?base ?base_interp (@base.type.type_base ?base ?t)) => Some t
-               | (?base_interp, ?base, @type.interp (base.type ?base) (@base.interp ?base ?base_interp) (@Compilers.type.base (base.type ?base) (@base.type.type_base ?base ?t))) => Some t
+               match! ty with
+               | ?base_interp' ?t
+                 => if Constr.equal base_interp' base_interp
+                    then Some t
+                    else Control.zero Match_failure
+               | @base.interp ?base' ?base_interp' (@base.type.type_base ?base' ?t)
+                 => if Constr.equal base_interp' base_interp && Constr.equal base base
+                    then Some t
+                    else Control.zero Match_failure
+               | @type.interp (base.type ?base') (@base.interp ?base' ?base_interp') (@Compilers.type.base (base.type ?base') (@base.type.type_base ?base' ?t))
+                 => if Constr.equal base_interp' base_interp && Constr.equal base base
+                    then Some t
+                    else Control.zero Match_failure
                | _ => None
                end
            end.
