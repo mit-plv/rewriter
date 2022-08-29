@@ -98,25 +98,26 @@ Module Compilers.
   Module Reify.
     Ltac2 debug_level := Pre.reify_debug_level.
 
-    Ltac2 mutable should_debug_enter_reify () := Int.le 2 debug_level.
-    Ltac2 mutable should_debug_enter_reify_preprocess () := Int.le 2 debug_level.
-    Ltac2 mutable should_debug_enter_reify_ident_preprocess () := Int.le 3 debug_level.
-    Ltac2 mutable should_debug_enter_reify_after_preprocess () := Int.le 3 debug_level.
-    Ltac2 mutable should_debug_leave_reify_success () := Int.le 5 debug_level.
+    Ltac2 mutable should_debug_enter_reify () := Int.le 3 debug_level.
+    Ltac2 mutable should_debug_enter_reify_preprocess () := Int.le 3 debug_level.
+    Ltac2 mutable should_debug_enter_reify_ident_preprocess () := Int.le 4 debug_level.
+    Ltac2 mutable should_debug_enter_reify_after_preprocess () := Int.le 4 debug_level.
+    Ltac2 mutable should_debug_leave_reify_success () := Int.le 6 debug_level.
     Ltac2 mutable should_debug_leave_reify_failure () := Int.le 0 debug_level.
-    Ltac2 mutable should_debug_leave_reify_normal_failure () := Int.le 5 debug_level.
-    Ltac2 mutable should_debug_enter_reify_ident_after_preprocess () := Int.le 3 debug_level.
-    Ltac2 mutable should_debug_enter_lookup_ident () := Int.le 3 debug_level.
-    Ltac2 mutable should_debug_leave_lookup_ident_success () := Int.le 3 debug_level.
-    Ltac2 mutable should_debug_leave_lookup_ident_failure_verbose () := Int.le 5 debug_level.
-    Ltac2 mutable should_debug_leave_lookup_ident_failure () := Int.le 4 debug_level.
-    Ltac2 mutable should_debug_enter_plug_template_ctx () := Int.le 6 debug_level.
-    Ltac2 mutable should_debug_enter_reify_case () := Int.le 6 debug_level.
+    Ltac2 mutable should_debug_leave_reify_normal_failure () := Int.le 6 debug_level.
+    Ltac2 mutable should_debug_enter_reify_ident_after_preprocess () := Int.le 4 debug_level.
+    Ltac2 mutable should_debug_enter_lookup_ident () := Int.le 4 debug_level.
+    Ltac2 mutable should_debug_leave_lookup_ident_success () := Int.le 4 debug_level.
+    Ltac2 mutable should_debug_leave_lookup_ident_failure_verbose () := Int.le 6 debug_level.
+    Ltac2 mutable should_debug_leave_lookup_ident_failure () := Int.le 5 debug_level.
+    Ltac2 mutable should_debug_enter_plug_template_ctx () := Int.le 7 debug_level.
+    Ltac2 mutable should_debug_enter_reify_case () := Int.le 7 debug_level.
     Ltac2 mutable should_debug_fine_grained () := Int.le 100 debug_level.
     Ltac2 mutable should_debug_print_args () := Int.le 50 debug_level.
-    Ltac2 mutable should_debug_typing_failure () := Int.le 4 debug_level.
-    Ltac2 mutable should_debug_typing_failure_assume_well_typed () := Int.le 1 debug_level.
-    Ltac2 mutable should_debug_check_app_early () := Int.le 5 debug_level.
+    Ltac2 mutable should_debug_typing_failure () := Int.le 5 debug_level.
+    Ltac2 mutable should_debug_typing_failure_assume_well_typed () := Int.le 2 debug_level.
+    Ltac2 mutable should_debug_check_app_early () := Int.le 6 debug_level.
+    Ltac2 mutable should_debug_profile () := Int.le 1 debug_level.
 
     Ltac2 debug_if (cond : unit -> bool) (tac : unit -> 'a) (default : 'a) :=
       if cond ()
@@ -127,6 +128,10 @@ Module Compilers.
       := debug_if should_debug_typing_failure (fun () => printf "Warning: %s: failure to typecheck %t: %a" funname x (fun () => Message.of_exn) err) ().
     Ltac2 debug_typing_failure_assume_well_typed (funname : string) (v : constr) (term : constr) (ctx_tys : binder list) (ty : constr)
       := debug_if should_debug_typing_failure_assume_well_typed (fun () => printf "Warning: %s: could not well-type %t due to underlying issue typechecking %t without relevant context %a, but assuming that it's well-typed because %t is not a template-parameter type" funname v term (fun () => Message.of_list Message.of_binder) ctx_tys ty) ().
+    Ltac2 debug_profile (descr : string) (f : unit -> 'a) : 'a
+      := if should_debug_profile ()
+         then Control.time (Some descr) f
+         else f ().
     Ltac2 debug_fine_grained (funname : string) (msg : unit -> message)
       := debug_if should_debug_fine_grained (fun () => printf "%s: %a" funname (fun () => msg) ()) ().
     Ltac2 debug_enter_reify (funname : string) (e : constr)
@@ -745,7 +750,10 @@ Module Compilers.
       end.
 
     Ltac2 rec reify_in_context (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (var : constr) (term : constr) (ctx_tys : binder list) (var_ty_ctx : constr list) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (template_ctx : constr list) : constr :=
-      match reify_in_context_opt base_type ident reify_base_type reify_ident_opt var term ctx_tys var_ty_ctx value_ctx template_ctx with
+      match Reify.debug_profile
+              "reify_in_context_opt"
+              (fun () => reify_in_context_opt base_type ident reify_base_type reify_ident_opt var term ctx_tys var_ty_ctx value_ctx template_ctx)
+      with
       | Some v => v
       | None => Control.zero (Reification_failure (fprintf "Failed to reify: %t" term))
       end.
