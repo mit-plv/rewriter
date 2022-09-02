@@ -296,9 +296,11 @@ Module Compilers.
         | ?pat => pat
         end.
 
-      Ltac adjust_pattern_type_variables pat :=
+      Ltac adjust_pattern_type_variables_internal pat :=
         let pat := preadjust_pattern_type_variables pat in
         adjust_pattern_type_variables' pat.
+      Ltac adjust_pattern_type_variables pat :=
+        constr:(ltac:(let v := adjust_pattern_type_variables_internal pat in refine v)).
 
       Ltac walk_term_under_binders_fail_invalid invalid term fv :=
         lazymatch fv with
@@ -341,7 +343,7 @@ Module Compilers.
       Definition pattern_base_unsubst_default_relax' {base} t evm P
         := @pattern.base.unsubst_default_relax base P t evm.
 
-      Ltac change_pattern_base_subst_default_relax term :=
+      Ltac change_pattern_base_subst_default_relax_internal term :=
         lazymatch (eval pattern (@pattern.base.subst_default_relax), (@pattern.base.unsubst_default_relax) in term) with
         | ?f _ _
           => let base := fresh "base" in
@@ -350,8 +352,10 @@ Module Compilers.
              let evm := fresh "evm" in
              (eval cbv beta in (f (fun base P t evm => @pattern_base_subst_default_relax' base t evm P) (fun base P t evm => @pattern_base_unsubst_default_relax' base t evm P)))
         end.
+      Ltac change_pattern_base_subst_default_relax term :=
+        constr:(ltac:(let v := change_pattern_base_subst_default_relax_internal term in refine v)).
 
-      Ltac adjust_lookup_default rewr :=
+      Ltac adjust_lookup_default_internal rewr :=
         lazymatch (eval pattern (@pattern.base.lookup_default) in rewr) with
         | ?rewr _
           => let base := fresh "base" in
@@ -359,8 +363,10 @@ Module Compilers.
              let evm := fresh "evm" in
              (eval cbv beta in (rewr (fun base p evm => @pattern.base.subst_default base (pattern.base.type.var p) evm)))
         end.
+      Ltac adjust_lookup_default rewr :=
+        constr:(ltac:(let v := adjust_lookup_default_internal rewr in refine v)).
 
-      Ltac replace_evar_map evm rewr :=
+      Ltac replace_evar_map_internal evm rewr :=
         let evm' := match rewr with
                     | context[pattern.base.lookup_default _ ?evm']
                       => let __ := match goal with _ => tryif constr_eq evm evm' then fail else idtac end in
@@ -376,10 +382,12 @@ Module Compilers.
           => let rewr := lazymatch (eval pattern evm' in rewr) with
                          | ?rewr _ => (eval cbv beta in (rewr evm))
                          end in
-             replace_evar_map evm rewr
+             replace_evar_map_internal evm rewr
         end.
+      Ltac replace_evar_map evm rewr :=
+        constr:(ltac:(let v := replace_evar_map_internal evm rewr in refine v)).
 
-      Ltac adjust_type_variables rewr :=
+      Ltac adjust_type_variables_internal rewr :=
         lazymatch rewr with
         | context[@pattern.base.subst_default ?base (pattern.base.relax ?t) ?evm'']
           => let t' := constr:(@pattern.base.subst_default base (pattern.base.relax t) evm'') in
@@ -393,20 +401,24 @@ Module Compilers.
                  | ?rewr _ _ _
                    => (eval cbv beta in (rewr t (fun P x => x) (fun P x => x)))
                  end in
-             adjust_type_variables rewr
+             adjust_type_variables_internal rewr
         | _ => rewr
         end.
+      Ltac adjust_type_variables rewr :=
+        constr:(ltac:(let v := adjust_type_variables_internal rewr in refine v)).
 
-      Ltac replace_type_try_transport term :=
+      Ltac replace_type_try_transport_internal term :=
         lazymatch term with
         | context[@type.try_transport ?base_type ?try_make_transport_base_type_cps ?P ?t ?t]
           => let v := constr:(@type.try_transport base_type try_make_transport_base_type_cps P t t) in
              let term := lazymatch (eval pattern v in term) with
                          | ?term _ => (eval cbv beta in (term (@Some _)))
                          end in
-             replace_type_try_transport term
+             replace_type_try_transport_internal term
         | _ => term
         end.
+      Ltac replace_type_try_transport term :=
+        constr:(ltac:(let v := replace_type_try_transport_internal term in refine v)).
 
       Ltac under_binders payload term cont ctx :=
         lazymatch term with
@@ -526,7 +538,7 @@ Module Compilers.
              term
         end.
 
-      Ltac clean_beq base_interp_beq only_eliminate_in_ctx term :=
+      Ltac clean_beq_internal base_interp_beq only_eliminate_in_ctx term :=
         let base_interp_beq_head := head base_interp_beq in
         let term := (eval cbn [Prod.prod_beq] in term) in
         let term := (eval cbv [ident.literal] in term) in
@@ -534,6 +546,8 @@ Module Compilers.
         let term := (eval cbv [base.interp_beq base_interp_beq_head] in term) in
         let term := remove_andb_true term in
         term.
+      Ltac clean_beq base_interp_beq only_eliminate_in_ctx term :=
+        constr:(ltac:(let v := clean_beq_internal base_interp_beq only_eliminate_in_ctx term in refine v)).
 
       Ltac adjust_side_conditions_for_gets_inlined' value_ctx side_conditions lookup_gets_inlined :=
         lazymatch side_conditions with
