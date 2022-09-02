@@ -11,6 +11,7 @@ Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.Reify.
 Require Import Rewriter.Language.UnderLets.
 Require Import Rewriter.Language.IdentifiersLibrary.
+Require Import Rewriter.Language.IdentifiersBasicGenerate. (* For reify*_via_reify_package *)
 Require Import Rewriter.Rewriter.Rewriter.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.Tactics.BreakMatch.
@@ -31,6 +32,7 @@ Module Compilers.
   Export Language.Reify.Compilers.
   Export UnderLets.Compilers.
   Export IdentifiersLibrary.Compilers.
+  Export IdentifiersBasicGenerate.Compilers.
   Import invert_expr.
   Export Rewriter.Compilers.
 
@@ -1163,7 +1165,7 @@ Module Compilers.
                    exact v)) in
         cache_term v rewrite_head.
 
-      Ltac Build_rewriter_dataT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs :=
+      Ltac Build_rewriter_dataT reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs :=
         let pkg_type := type of pkg in
         let base := lazymatch (eval hnf in pkg_type) with @package ?base ?ident => base end in
         let ident := lazymatch (eval hnf in pkg_type) with @package ?base ?ident => ident end in
@@ -1173,7 +1175,11 @@ Module Compilers.
         let invert_bind_args_unknown := lazymatch (eval hnf in pkg) with {| invert_bind_args_unknown := ?v |} => v end in
         let pident_unify_unknown := lazymatch (eval hnf in pkg) with {| unify_unknown := ?v |} => v end in
         let __ := debug1 ltac:(fun _ => idtac "Reifying...") in
-        let specs_lems := Reify reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs in
+        let specs_lems :=
+          let reify_base := Basic.Tactic.reify_base_via_reify_package reify_package in
+          let reify_ident := Basic.Tactic.reify_ident_via_reify_package reify_package in
+
+          Reify reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs in
         let dummy_count := lazymatch specs_lems with (?n, ?specs, ?lems) => n end in
         let specs := lazymatch specs_lems with (?n, ?specs, ?lems) => specs end in
         let rewrite_rules := lazymatch specs_lems with (?n, ?specs, ?lems) => lems end in
@@ -1227,17 +1233,17 @@ Module Compilers.
           Global Arguments id / .
         End Settings.
 
-        Tactic Notation "make_rewriter_data" tactic3(reify_base) tactic3(reify_ident) constr(exprInfo) constr(exprExtraInfo) constr(pkg) constr(ident_is_var_like) constr(include_interp) constr(skip_early_reduction) constr(skip_early_reduction_no_dtree) constr(specs) :=
-          let res := Build_rewriter_dataT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in refine res.
+        Tactic Notation "make_rewriter_data" constr(reify_package) constr(exprInfo) constr(exprExtraInfo) constr(pkg) constr(ident_is_var_like) constr(include_interp) constr(skip_early_reduction) constr(skip_early_reduction_no_dtree) constr(specs) :=
+          let res := Build_rewriter_dataT reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in refine res.
       End Tactic.
     End Make.
     Export Make.GoalType.
     Import Make.Tactic.
 
-    Ltac Build_RewriterT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs :=
+    Ltac Build_RewriterT reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs :=
       let pkg := (eval hnf in pkg) in
       let rewriter_data := fresh "rewriter_data" in
-      let data := Make.Build_rewriter_dataT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in
+      let data := Make.Build_rewriter_dataT reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in
       let Rewrite_name := fresh "Rewriter" in
       let Rewrite := (eval cbv [Make.Rewrite rewrite_head Make.GoalType.ident_is_var_like Classes.base Classes.base_interp Classes.ident Classes.buildIdent Classes.invertIdent Classes.try_make_transport_base_cps default_fuel] in (@Make.Rewrite exprInfo exprExtraInfo pkg data)) in
       let Rewrite := cache_term Rewrite Rewrite_name in
@@ -1248,8 +1254,8 @@ Module Compilers.
         Export Make.Tactic.Settings.
       End Settings.
 
-      Tactic Notation "make_Rewriter" tactic3(reify_base) tactic3(reify_ident) constr(exprInfo) constr(exprExtraInfo) constr(pkg) constr(ident_is_var_like) constr(include_interp) constr(skip_early_reduction) constr(skip_early_reduction_no_dtree) constr(specs) :=
-        let res := Build_RewriterT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in refine res.
+      Tactic Notation "make_Rewriter" constr(reify_package) constr(exprInfo) constr(exprExtraInfo) constr(pkg) constr(ident_is_var_like) constr(include_interp) constr(skip_early_reduction) constr(skip_early_reduction_no_dtree) constr(specs) :=
+        let res := Build_RewriterT reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in refine res.
     End Tactic.
   End RewriteRules.
 End Compilers.

@@ -146,8 +146,6 @@ Module Compilers.
       let exprReifyInfo := (eval hnf in (Basic.GoalType.exprReifyInfo basic_package)) in
       let ident_is_var_like := lazymatch basic_package with {| Basic.GoalType.ident_is_var_like := ?ident_is_var_like |} => ident_is_var_like end in
       let reify_package := Basic.Tactic.reify_package_of_package basic_package in
-      let reify_base := Basic.Tactic.reify_base_via_reify_package reify_package in
-      let reify_ident := Basic.Tactic.reify_ident_via_reify_package reify_package in
       let pkg_proofs_type := type of pkg_proofs in
       let pkg := lazymatch (eval hnf in pkg_proofs_type) with @package_proofs ?base ?ident ?pkg => pkg end in
       let specs := lazymatch type of specs_proofs with
@@ -157,7 +155,7 @@ Module Compilers.
                         constr_fail_with ltac:(fun _ => fail 1 "Invalid type for specs_proofs:" T "Expected:" expected_type)
                    end in
       let R_name := fresh "Rewriter_data" in
-      let R := Build_RewriterT reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in
+      let R := Build_RewriterT reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp skip_early_reduction skip_early_reduction_no_dtree specs in
       let R := cache_term R R_name in
       let __ := Make.debug1 ltac:(fun _ => idtac "Proving Rewriter_Wf...") in
       let Rwf := fresh "Rewriter_Wf" in
