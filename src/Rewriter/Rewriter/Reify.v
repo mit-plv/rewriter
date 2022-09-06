@@ -264,39 +264,54 @@ Module Compilers.
                            refine_reify_under_forall_types (Ltac1.get_to_constr "base_type" base_type) (Ltac1.get_to_constr "base_type_interp" base_type_interp) (Fresh.Free.of_goal ()) (Ltac1.get_to_constr "lem" lem) cont) in
         constr:(ltac:(f base_type base_type_interp lem ltac:(fun ty_ctx cur_i lem => let v := cont ty_ctx cur_i lem in refine v))).
 
-      Ltac prop_to_bool H := eval cbv [decb] in (decb H).
+      (* uses typeclass resolution *)
+      Ltac2 prop_to_bool (h : constr) : constr := eval cbv [decb] in constr:(decb $h).
 
+      Ltac2 push_side_conditions (h : constr) (side_conditions : constr) : constr :=
+        Reify.Constr.debug_check_strict "push_side_conditions" (fun () => mkApp '@cons ['bool; h; side_conditions]).
 
-      Ltac push_side_conditions H side_conditions :=
-        constr:(H :: side_conditions).
-
-      Ltac equation_to_parts' lem side_conditions :=
-        lazymatch lem with
-        | ?H -> ?P
-          => let __ := lazymatch type of H with
-                       | Prop => constr:(I)
-                       | ?T => constr_fail_with ltac:(fun _ => fail 1 "Invalid non-Prop non-dependent hypothesis of type" H ":" T "when reifying a lemma of type" lem)
-                       end in
-             let H := prop_to_bool H in
-             let side_conditions := push_side_conditions H side_conditions in
-             equation_to_parts' P side_conditions
-        | forall x : ?T, ?P
-          => let P' := fresh in
-             constr:(
-               fun x : T
-               => match P return _ with
-                  | P'
-                    => ltac:(let P := (eval cbv delta [P'] in P') in
-                             clear P';
-                             let res := equation_to_parts' P side_conditions in
-                             exact res)
-                  end)
-        | @eq ?T ?A ?B
-          => constr:((@eq T A B, side_conditions))
-        | ?T => constr_fail_with ltac:(fun _ => fail 1 "Invalid type of equation:" T)
-        end.
+      Ltac2 Type exn ::= [ Reification_missing_reflect_instance (constr, exn) ].
+      Ltac2 rec equation_to_parts' (lem : constr) (side_conditions : constr) : constr :=
+        Reify.debug_wrap
+          "equation_to_parts'" (fun (lem, side_conditions) => fprintf "%t (side: %t)" lem side_conditions) (lem, side_conditions)
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "equation_to_parts'" in
+              lazy_match! lem with
+              | ?h -> ?p
+                => let t := Constr.type h in
+                   (if Constr.equal t 'Prop
+                    then ()
+                    else Control.zero (Reification_failure (fprintf "Invalid non-Prop non-dependent hypothesis of type %t : %t when reifying a lemma of type %t" h t lem)));
+                   let h := match Control.case (fun () => prop_to_bool h) with
+                            | Val h => let (h, _) := h in h
+                            | Err err => Control.zero (Reification_failure (fprintf "Missing Bool.reflect instance for %t: %a" lem (fun () => Message.of_exn) err))
+                            end in
+                   let side_conditions := push_side_conditions h side_conditions in
+                   equation_to_parts' p side_conditions
+              | @eq ?t ?a ?b
+                => '((@eq $t $a $b, $side_conditions))
+              | ?t
+                => match Constr.Unsafe.kind t with
+                   | Constr.Unsafe.Cast t _ _ => equation_to_parts' t side_conditions
+                   | Constr.Unsafe.Prod b p
+                     => (* we use in_context so we can do typeclass resolution later *)
+                       Constr.in_fresh_context_avoiding
+                         @x true (Some (Fresh.Free.of_constr lem)) [b]
+                         (fun ns
+                          => let p := debug_Constr_check (fun () => Constr.Unsafe.substnl (List.map (fun (n, _) => mkVar n) ns) 0 p) in
+                             let res := equation_to_parts' p side_conditions in
+                             Control.refine (fun () => res))
+                   | _ => Control.zero (Reification_failure (fprintf "Invalid type of equation: %t" t))
+                   end
+              end).
+      Ltac2 equation_to_parts (lem : constr) : constr :=
+        equation_to_parts' lem '(@nil bool).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac equation_to_parts lem :=
-        equation_to_parts' lem (@nil bool).
+        let f := ltac2:(lem
+                        |- Control.refine (fun () => equation_to_parts (Ltac1.get_to_constr "lem" lem))) in
+        constr:(ltac:(f lem)).
 
       Ltac preadjust_pattern_type_variables pat :=
         let pat := (eval cbv [pattern.type.relax pattern.type.subst_default pattern.type.subst_default_relax pattern.type.unsubst_default_relax] in pat) in
