@@ -23,6 +23,11 @@ Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.Tactics.RunTacticAsConstr.
 Require Import Rewriter.Util.Tactics.DebugPrint.
 Require Import Rewriter.Util.Tactics.ConstrFail.
+Require Rewriter.Util.Tactics2.List.
+Require Rewriter.Util.Tactics2.Ltac1.
+Require Rewriter.Util.Tactics2.Message.
+Require Rewriter.Util.Tactics2.Ident.
+Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
 Import Coq.Lists.List ListNotations.
 Export Language.PreCommon.
 
@@ -39,93 +44,18 @@ Module Compilers.
   Local Set Boolean Equality Schemes.
   Local Set Decidable Equality Schemes.
 
-  Module Ltac1.
-    (* TODO: remove or move to util *)
-    Ltac2 Type exn ::= [ Not_a_constr (string, Ltac1.t) ].
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac2 get_to_constr (debug_name : string) v :=
-      match Ltac1.to_constr v with
-      | Some v => v
-      | None => Control.throw (Not_a_constr debug_name v)
-      end.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac2 apply_c (f : Ltac1.t) (args : constr list) : constr :=
-      '(ltac2:(Ltac1.apply f (List.map Ltac1.of_constr args) (fun v => Control.refine (fun () => get_to_constr "apply_c:arg" v)))).
-  End Ltac1.
-  (* TODO: move *)
-  Module List.
-    (* Drop once the minimum dependency has been bumpped to 8.17 *)
-    Ltac2 rec for_all2_aux (on_length_mismatch : 'a list -> 'b list -> bool) f xs ys :=
-      match xs with
-      | [] => match ys with
-              | [] => true
-              | y :: ys' => on_length_mismatch xs ys
-              end
-      | x :: xs'
-        => match ys with
-           | [] => on_length_mismatch xs ys
-           | y :: ys'
-             => match f x y with
-                | true => for_all2_aux on_length_mismatch f xs' ys'
-                | false => false
-                end
-           end
-      end.
-
-    (* Drop once the minimum dependency has been bumpped to 8.17 *)
-    Ltac2 equal f xs ys := for_all2_aux (fun _ _ => false) f xs ys.
-  End List.
-
-  (* TODO: move to Util *)
-  Ltac2 mkApp (f : constr) (args : constr list) :=
-    Constr.Unsafe.make (Constr.Unsafe.App f (Array.of_list args)).
-  Ltac2 mkLambda b (body : constr) :=
-    Constr.Unsafe.make (Constr.Unsafe.Lambda b body).
-  Ltac2 mkLetIn (b : binder) (val : constr) (body : constr) :=
-    Constr.Unsafe.make (Constr.Unsafe.LetIn b val body).
-  Ltac2 mkRel (i : int) :=
-    Constr.Unsafe.make (Constr.Unsafe.Rel i).
-  Ltac2 mkVar (i : ident) :=
-    Constr.Unsafe.make (Constr.Unsafe.Var i).
-  Ltac2 mkConstant (c : constant) (inst : instance) :=
-    Constr.Unsafe.make (Constr.Unsafe.Constant c inst).
-
-  (* TODO: find a less hacky way of doing this *)
-  Ltac constant_to_lambda_reified cst :=
-    let cst := fresh "reified_" cst in constr:(fun cst : True => cst).
-  (* TODO: move *)
-  Module Ident.
-    Ltac2 reified_of_constr (c : constr) : ident
-      := let f := ltac1:(c |- let v := constant_to_lambda_reified constr:(c) in exact v) in
-         let default () := Control.throw (Tactic_failure (Some (fprintf "Ident.of_constr: failure to make a name from %t" c))) in
-         match Constr.Unsafe.kind '(ltac2:(f (Ltac1.of_constr c))) with
-         | Constr.Unsafe.Lambda x _
-           => match Constr.Binder.name x with
-              | Some id => id
-              | None => default ()
-              end
-         | _ => default ()
-         end.
-  End Ident.
-
-  (* TODO: move *)
-  Module Message.
-    Ltac2 of_list (pr : 'a -> message) (ls : 'a list) : message
-      := fprintf
-           "[%a]"
-           (fun () a => a)
-           (match ls with
-            | [] => fprintf ""
-            | x :: xs
-              => List.fold_left (fun init x => fprintf "%a, %a" (fun () a => a) init (fun () => pr) x) xs (pr x)
-            end).
-    Ltac2 of_binder (b : binder) : message
-      := fprintf "%a : %t" (fun () a => a) (match Constr.Binder.name b with
-                                            | Some n => fprintf "%I" n
-                                            | None => fprintf ""
-                                            end)
-                 (Constr.Binder.type b).
-  End Message.
+  Module Import Ltac2.
+    Module Ident.
+      (* TODO: find a less hacky way of doing this *)
+      Ltac constant_to_lambda_reified cst :=
+        let cst := fresh "reified_" cst in constr:(fun cst : True => cst).
+      Ltac2 refine_constant_to_lambda_reified (c : Ltac1.t) : unit :=
+        let f := ltac1:(c |- let v := constant_to_lambda_reified constr:(c) in exact v) in
+        f c.
+      Ltac2 reified_of_constr (c : constr) : ident
+        := Ident.of_constr refine_constant_to_lambda_reified c.
+    End Ident.
+  End Ltac2.
 
   (* this is very super-linear, should not be used in production code *)
   Ltac2 with_term_in_context (cache : (unit -> binder) list) (tys : constr list) (term : constr) (tac : constr -> unit) : unit :=

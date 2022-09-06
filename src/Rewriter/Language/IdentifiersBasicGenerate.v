@@ -27,6 +27,7 @@ Require Import Rewriter.Util.Tactics.Head.
 Require Import Rewriter.Util.Tactics.HeadUnderBinders.
 Require Import Rewriter.Util.Tactics.PrintGoal.
 Require Import Rewriter.Util.Tactics.CacheTerm.
+Require Import Rewriter.Util.Tactics2.Notations.
 Require Import Rewriter.Util.HProp.
 Import Coq.Lists.List ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
 
@@ -491,19 +492,11 @@ Module Compilers.
       Ltac make_base_type_list base_type_list_named :=
         let res := build_base_type_list base_type_list_named in refine res.
 
-      (* TODO MOVE to util *)
-      Ltac2 eval_cbv_beta (c : constr) :=
-        Std.eval_cbv { Std.rBeta := true; Std.rMatch := false;
-                       Std.rFix := false; Std.rCofix := false;
-                       Std.rZeta := false; Std.rDelta := false;
-                       Std.rConst := [] }
-                     c.
-
       Ltac2 reify_base_via_list_opt (base : constr) (base_interp : constr) (all_base_and_interp : constr) :=
         let all_base_and_interp := Std.eval_hnf all_base_and_interp in
-        let all_base_and_interp := eval_cbv_beta all_base_and_interp in
+        let all_base_and_interp := Std.eval_cbv (strategy:(beta)) all_base_and_interp in
         fun ty
-        => let ty := eval_cbv_beta ty in
+        => let ty := Std.eval_cbv (strategy:(beta)) ty in
            Reify.debug_enter_reify "reify_base_via_list" ty;
            let rty := match! all_base_and_interp with
                       | context[Datatypes.cons (?rty, ?ty')]
