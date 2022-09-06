@@ -27,6 +27,7 @@ Require Rewriter.Util.Tactics2.List.
 Require Rewriter.Util.Tactics2.Ltac1.
 Require Rewriter.Util.Tactics2.Message.
 Require Rewriter.Util.Tactics2.Ident.
+Require Rewriter.Util.Tactics2.String.
 Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
 Import Coq.Lists.List ListNotations.
 Export Language.PreCommon.
@@ -185,7 +186,7 @@ Module Compilers.
                                           => let descr := descr e e' err in
                                              Control.throw
                                               (Reification_panic
-                                                 (fprintf "Anomaly: %s: %t failed to check (in context %a as %t): %a" funname e (fun () => Message.of_list Message.of_constr) var_ty_ctx e' (fun () a => a) descr))
+                                                 (fprintf "Anomaly: %s:%s%t failed to check (in context %a as %t):%s%a" funname (String.newline ()) e (fun () => Message.of_list Message.of_constr) var_ty_ctx e' (String.newline ()) (fun () a => a) descr))
                                         end);
                            e
                       end)
