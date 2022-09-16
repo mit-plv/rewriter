@@ -45,9 +45,15 @@ ifneq (,$(filter 8.15%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v815
 ML_DESCRIPTION := "Coq v8.15"
 else
+ifneq (,$(filter 8.16%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v816
 ML_DESCRIPTION := "Coq v8.16"
 META_FILE_FRAGMENT := src/Rewriter/Util/plugins/META.coq-rewriter
+else
+EXPECTED_EXT:=.v817
+ML_DESCRIPTION := "Coq v8.17"
+META_FILE_FRAGMENT := src/Rewriter/Util/plugins/META.coq-rewriter
+endif
 endif
 endif
 endif
