@@ -58,6 +58,34 @@ Lemma flat_map_rect
         xs.
 Proof. t. Qed.
 
+Module ForDebugging.
+  Definition rules_proofs :=
+    Eval cbv [projT2] in
+      projT2
+        (ltac:(RewriterBuildRegistry.make_rules_proofs_with_args)
+          : Pre.rules_proofsT_with_args
+              (Z.add_0_r
+                , (@Prod.fst_pair)
+                , (@Prod.snd_pair)
+                , map_eagerly_rect
+                , app_eagerly_rect
+                , eval_rect list
+                , do_again flat_map_rect)).
+
+  Definition scraped_data :=
+    (ltac:(cbv [projT1]; RewriterBuildRegistry.make_scraped_data_with_args)
+      : PreCommon.Pre.ScrapedData.t_with_args
+          rules_proofs
+          (* extra, can be anything whose subterms get added *) false).
+
+  Rewriter Emit Inductives From Scraped scraped_data As base ident raw_ident pattern_ident.
+
+  Definition myrules :=
+    (ltac:(RewriterBuildRegistry.make_verified_rewriter_with_args)
+      : ProofsCommon.Compilers.RewriteRules.GoalType.VerifiedRewriter_with_ind_args
+          scraped_data InductiveHList.nil base ident raw_ident pattern_ident (* inlcude_interp: *) false (* skip_early_reduction: *) false (* skip_early_reduction_no_dtree: *) true rules_proofs).
+End ForDebugging.
+
 Time Make myrules
   := Rewriter For (Z.add_0_r
                    , (@Prod.fst_pair)
