@@ -128,13 +128,14 @@ Module Compilers.
   End Message.
 
   (* this is very super-linear, should not be used in production code *)
-  Ltac2 with_term_in_context (cache : binder list) (tys : constr list) (term : constr) (tac : constr -> unit) : unit :=
+  Ltac2 with_term_in_context (cache : (unit -> binder) list) (tys : constr list) (term : constr) (tac : constr -> unit) : unit :=
     printf "Warning: with_term_in_context: Bad asymptotics";
-    let rec aux0 (cache : binder list) (avoid : Fresh.Free.t) (k : unit -> unit)
+    let rec aux0 (cache : (unit -> binder) list) (avoid : Fresh.Free.t) (k : unit -> unit)
       := match cache with
          | [] => k ()
          | b :: bs
-           => let id := match Constr.Binder.name b with
+           => let b := b () in
+              let id := match Constr.Binder.name b with
                         | Some id => id
                         | None => Fresh.fresh avoid @DUMMY_with_term_in_context_MISSING
                         end in
@@ -239,14 +240,14 @@ Module Compilers.
            ().
     Ltac2 debug_print_args (funname : string) (pr : 'a -> message) (args : 'a)
       := debug_if should_debug_print_args (fun () => printf "%s: args: %a" funname (fun () => pr) args) ().
-    Ltac2 debug_Constr_check (funname : string) (descr : constr -> constr -> exn -> message) (var : constr) (cache : unit -> binder list) (var_ty_ctx : constr list) (e : constr)
+    Ltac2 debug_Constr_check (funname : string) (descr : constr -> constr -> exn -> message) (var : constr) (cache : (unit -> binder) list) (var_ty_ctx : constr list) (e : constr)
       := debug_if
            should_debug_check_app_early
            (fun () => match Constr.Unsafe.check e with
                       | Val e => e
                       | Err _
                         => with_term_in_context
-                             (cache ())
+                             cache
                              (List.map (fun t => mkApp var [t]) var_ty_ctx) e
                              (fun e' => match Constr.Unsafe.check e' with
                                         | Val _ => (* wasted a bunch of time *) ()
@@ -679,6 +680,9 @@ Module Compilers.
       Ltac2 elements (cache : t) : (constr * elem) list
         := let (_, cache) := cache.(contents) in
            cache.
+
+      Ltac2 to_thunked_binder_context (cache : t) : (unit -> binder) list
+        := List.rev (List.map (fun (_, e) () => Constr.Binder.make (Some (e.(Cache.name))) (Constr.type (e.(Cache.rterm)))) (Cache.elements cache)).
     End Cache.
 
     (* - [ctx_tys] is the list of binders that correspond to free de
@@ -705,7 +709,7 @@ Module Compilers.
       let debug_check e
         := Reify.debug_Constr_check
              "expr.reify_in_context" (fun e e' err => Message.of_exn err) var
-             (fun () => List.map (fun (_, e) => Constr.Binder.make (Some (e.(Cache.name))) (Constr.type (e.(Cache.rterm)))) (Cache.elements cache))
+             (Cache.to_thunked_binder_context cache)
              var_ty_ctx e in
       let reify_ident_opt term
         := Option.map (fun idc => debug_check (mkApp '(@Ident) [base_type; ident; var; open_constr:(_); idc]))
