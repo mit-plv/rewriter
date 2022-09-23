@@ -151,8 +151,6 @@ let set_strategy_of_package sigma level verified_rewriter_package =
 let make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_like_idents base ident raw_ident pattern_ident include_interp skip_early_reduction skip_early_reduction_no_dtree rules_proofs =
   let env = Global.env () in
   let (sigma, verified_rewriter_with_args) = Evd.fresh_global env sigma (r_verified_rewriter_with_args ()) in
-
-  let (sigma, verified_rewriter_with_args) = Evd.fresh_global env sigma (r_verified_rewriter_with_args ()) in
   let rules_ty = rules_ty_of_rules_proofs env sigma rules_proofs in
   let verified_rewriter_ty = mkApp (verified_rewriter_with_args, [|scraped_data; var_like_idents; base; ident; raw_ident; pattern_ident; include_interp; skip_early_reduction; skip_early_reduction_no_dtree; rules_ty; rules_proofs|]) in
   (* force a typecheck of the application, propogate universe constraints *)
