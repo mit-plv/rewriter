@@ -28,6 +28,7 @@ Require Rewriter.Util.Tactics2.Ltac1.
 Require Rewriter.Util.Tactics2.Message.
 Require Rewriter.Util.Tactics2.Ident.
 Require Rewriter.Util.Tactics2.String.
+Require Rewriter.Util.Tactics2.Constr.
 Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
 Import Coq.Lists.List ListNotations.
 Export Language.PreCommon.
@@ -679,11 +680,11 @@ Module Compilers.
            { contents := (avoid, []) }.
       Ltac2 find_opt (term : constr) (cache : t) : elem option
         := let (_, cache) := cache.(contents) in
-           List.assoc_opt Constr.equal term cache.
+           List.assoc_opt Constr.equal_nounivs term cache.
       Ltac2 Type exn ::= [ Cache_contains_element (constr, constr, constr, elem) ].
       Ltac2 add (head_constant : constr) (term : constr) (rterm : constr) (cache : t) : ident (* newly bound name *)
         := let (avoid, known) := cache.(contents) in
-           match List.assoc_opt Constr.equal term known with
+           match List.assoc_opt Constr.equal_nounivs term known with
            | Some e => Control.throw (Cache_contains_element head_constant term rterm e)
 
            | None
@@ -789,7 +790,7 @@ Module Compilers.
                             (reify_rec_gen f (x :: ctx_tys) (rt :: var_ty_ctx) template_ctx)))
                | Constr.Unsafe.App c args
                  => Reify.debug_enter_reify_case "expr.reify_in_context" "App (check LetIn)" term;
-                    if Constr.equal c '@Let_In
+                    if Constr.equal_nounivs c '@Let_In
                     then if Int.equal (Array.length args) 4
                          then Reify.debug_enter_reify_case "expr.reify_in_context" "LetIn" term;
                               let (ta, tb, a, b) := (Array.get args 0, Array.get args 1, Array.get args 2, Array.get args 3) in
