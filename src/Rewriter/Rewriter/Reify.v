@@ -4,6 +4,7 @@ Require Import Coq.MSets.MSetPositive.
 Require Import Coq.Lists.List.
 Require Import Ltac2.Ltac2.
 Require Import Ltac2.Printf.
+Require Import Ltac2.Bool.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.OptionList.
 Require Import Rewriter.Util.Bool.Reflect.
@@ -28,6 +29,7 @@ Require Import Rewriter.Util.Tactics2.Head.
 Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
 Require Import Rewriter.Util.Tactics2.FixNotationsForPerformance.
 Require Import Rewriter.Util.Tactics2.InFreshContext.
+Require Import Rewriter.Util.Tactics2.Notations.
 Require Rewriter.Util.Tactics2.Ltac1.
 Require Rewriter.Util.Tactics2.Constr.
 Import ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
@@ -314,36 +316,54 @@ Module Compilers.
                         |- Control.refine (fun () => equation_to_parts (Fresh.Free.of_goal ()) (Ltac1.get_to_constr "lem" lem))) in
         constr:(ltac:(f lem)).
 
-      Ltac preadjust_pattern_type_variables pat :=
-        let pat := (eval cbv [pattern.type.relax pattern.type.subst_default pattern.type.subst_default_relax pattern.type.unsubst_default_relax] in pat) in
-        let pat := (eval cbn [pattern.base.relax pattern.base.subst_default pattern.base.subst_default_relax pattern.base.unsubst_default_relax] in pat) in
-        pat.
+      Ltac2 preadjust_pattern_type_variables (pat : constr) : constr :=
+        Reify.debug_wrap
+          "preadjust_pattern_type_variables'" Message.of_constr pat
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let s := strategy:([pattern.type.relax pattern.type.subst_default pattern.type.subst_default_relax pattern.type.unsubst_default_relax]) in
+              let pat := Std.eval_cbv s pat in
+              let pat := Std.eval_cbn s pat in
+              pat).
 
-      Ltac adjust_pattern_type_variables' pat :=
-        lazymatch pat with
-        | context[@pattern.base.relax ?base (pattern.base.lookup_default ?p ?evm')]
-          => let t := constr:(@pattern.base.relax base (pattern.base.lookup_default p evm')) in
-             let T := fresh in
-             let pat :=
-                 lazymatch (eval pattern t in pat) with
-                 | ?pat _
-                   => let P := match type of pat with forall x, @?P x => P end in
-                      lazymatch pat with
-                      | fun T => ?pat
-                        => constr:(match pattern.base.type.var p as T return P T with
-                                   | T => pat
-                                   end)
-                      end
-                 end in
-             adjust_pattern_type_variables' pat
-        | ?pat => pat
-        end.
+      Ltac2 rec adjust_pattern_type_variables' (pat : constr) : constr :=
+        Reify.debug_wrap
+          "adjust_pattern_type_variables'" Message.of_constr pat
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_pattern_type_variables'" in
+              let t_base_p_evm' := match! pat with
+                                   | context[?t]
+                                     => lazy_match! t with
+                                        | @pattern.base.relax ?base (@pattern.base.lookup_default ?base ?p ?evm')
+                                          => Some (t, base, p, evm')
+                                        end
+                                   | _ => None
+                                   end in
+              match t_base_p_evm' with
+              | Some t_base_p_evm'
+                => let (t, base, p, evm') := t_base_p_evm' in
+                   let pat :=
+                     lazy_match! (eval pattern t in pat) with
+                     | ?pat _
+                       => match Constr.Unsafe.kind_nocast pat with
+                          | Constr.Unsafe.Lambda _ pat
+                            => debug_Constr_check (fun () => Constr.Unsafe.substnl [mkApp '@pattern.base.type.var [base; p] ] 0 pat)
+                          | _ => Control.throw (Reification_panic (fprintf "adjust_pattern_type_variables': pattern produced a non-Lambda: %t" pat))
+                          end
+                     end in
+                   adjust_pattern_type_variables' pat
+              | None => pat
+              end).
 
-      Ltac adjust_pattern_type_variables_internal pat :=
+      Ltac2 adjust_pattern_type_variables (pat : constr) : constr :=
         let pat := preadjust_pattern_type_variables pat in
         adjust_pattern_type_variables' pat.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac adjust_pattern_type_variables pat :=
-        constr:(ltac:(let v := adjust_pattern_type_variables_internal pat in refine v)).
+        let f := ltac2:(pat
+                        |- Control.refine (fun () => adjust_pattern_type_variables (Ltac1.get_to_constr "pat" pat))) in
+        constr:(ltac:(f pat)).
 
       Ltac walk_term_under_binders_fail_invalid invalid term fv :=
         lazymatch fv with
