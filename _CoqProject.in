@@ -107,6 +107,7 @@ src/Rewriter/Util/Tactics/Test.v
 src/Rewriter/Util/Tactics/TransparentAssert.v
 src/Rewriter/Util/Tactics/UniquePose.v
 src/Rewriter/Util/Tactics/WarnIfGoalsRemain.v
+src/Rewriter/Util/Tactics2/Array.v
 src/Rewriter/Util/Tactics2/Char.v
 src/Rewriter/Util/Tactics2/Constr.v
 src/Rewriter/Util/Tactics2/Head.v
@@ -115,6 +116,8 @@ src/Rewriter/Util/Tactics2/List.v
 src/Rewriter/Util/Tactics2/Ltac1.v
 src/Rewriter/Util/Tactics2/Message.v
 src/Rewriter/Util/Tactics2/Notations.v
+src/Rewriter/Util/Tactics2/Option.v
+src/Rewriter/Util/Tactics2/Proj.v
 src/Rewriter/Util/Tactics2/String.v
 src/Rewriter/Util/Tactics2/Constr/Unsafe/MakeAbbreviations.v
 src/Rewriter/Util/plugins/RewriterBuildRegistryImports.v
