@@ -26,6 +26,7 @@ Require Import Rewriter.Util.Tactics.DebugPrint.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.Tactics2.Head.
+Require Import Rewriter.Util.Tactics2.HeadReference.
 Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
 Require Import Rewriter.Util.Tactics2.ReplaceByPattern.
 Require Import Rewriter.Util.Tactics2.FixNotationsForPerformance.
@@ -839,27 +840,48 @@ Module Compilers.
                         |- Control.refine (fun () => substitute_bool_eqb (Ltac1.get_to_constr "term" term))) in
         constr:(ltac:(f term)).
 
-      Ltac substitute_beq_internal base_interp_beq only_eliminate_in_ctx full_ctx ctx term :=
-        let base_interp_beq_head := head base_interp_beq in
-        lazymatch ctx with
-        | dynnil
-          => let term := (eval cbv [base.interp_beq base_interp_beq_head] in term) in
-             let term := substitute_bool_eqb term in
-             let term := remove_andb_true term in
-             let term := adjust_if_negb term in
-             term
-        | dyncons ?v ?ctx
-          => let term := substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term Z.eqb v in
-             let term := match constr:(Set) with
-                         | _ => let T := type of v in
-                                let beq := (eval cbv beta delta [Reflect.decb_rel] in (Reflect.decb_rel (@eq T))) in
-                                substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq v
-                         | _ => term
-                         end in
-             substitute_beq_internal base_interp_beq only_eliminate_in_ctx full_ctx ctx term
-        end.
+      Ltac2 rec substitute_beq (base_interp_beq : constr) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (full_ctx : ident list) (ctx : ident list) (term : constr) : constr :=
+        Reify.debug_wrap
+          "substitute_beq" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let base_interp_beq_head := head_reference base_interp_beq in
+              match ctx with
+              | []
+                => let term := (eval cbv [base.interp_beq $base_interp_beq_head] in term) in
+                   let term := '(ltac2:(Control.refine (fun () => substitute_bool_eqb term))) in
+                   let term := '(ltac2:(Control.refine (fun () => remove_andb_true term))) in
+                   let term := '(ltac2:(Control.refine (fun () => adjust_if_negb term))) in
+                   term
+              | v :: ctx
+                => let v := mkVar v in
+                   let term := '(ltac2:(Control.refine (fun () => substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term 'Z.eqb v))) in
+                   let term
+                     := match Control.case
+                                (fun ()
+                                 => let t := Constr.type v in
+                                    (* IMPORTANT: Typeclass resolution happens here, so this must be constr, not open_constr (N.B. ' is open_constr) *)
+                                    let beq := (eval cbv beta delta [Reflect.decb_rel] in constr:(Reflect.decb_rel (@eq $t))) in
+                                    '(ltac2:(Control.refine (fun () => substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq v))))
+                        with
+                        | Val term => let (term, _) := term in term
+                        | Err _ => term
+                        end in
+                   substitute_beq base_interp_beq only_eliminate_in_ctx full_ctx ctx term
+              end).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac substitute_beq base_interp_beq only_eliminate_in_ctx full_ctx ctx term :=
-        constr:(ltac:(let res := substitute_beq_internal base_interp_beq only_eliminate_in_ctx full_ctx ctx term in exact res)).
+        let f := ltac2:(base_interp_beq only_eliminate_in_ctx full_ctx ctx term
+                        |- let base_interp_beq := Ltac1.get_to_constr "base_interp_beq" base_interp_beq in
+                           let only_eliminate_in_ctx := Ltac1.get_to_constr "only_eliminate_in_ctx" only_eliminate_in_ctx in
+                           let only_eliminate_in_ctx := expr.value_ctx_to_list only_eliminate_in_ctx in
+                           let full_ctx := Ltac1.get_to_constr "full_ctx" full_ctx in
+                           let full_ctx := var_dynlist_to_list full_ctx in
+                           let ctx := Ltac1.get_to_constr "ctx" ctx in
+                           let ctx := var_dynlist_to_list ctx in
+                           let term := Ltac1.get_to_constr "term" term in
+                           Control.refine (fun () => substitute_beq base_interp_beq only_eliminate_in_ctx full_ctx ctx term)) in
+        constr:(ltac:(f base_interp_beq only_eliminate_in_ctx full_ctx ctx term)).
 
       Ltac deep_substitute_beq_internal base_interp_beq only_eliminate_in_ctx term :=
         lazymatch term with
