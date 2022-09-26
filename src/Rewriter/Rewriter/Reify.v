@@ -1416,7 +1416,9 @@ Module Compilers.
             all_rewrite_rules.
       End AdjustRewriteRulesForReduction.
 
-      Ltac Reify reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs :=
+      Ltac Reify reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs :=
+        let reify_base := Basic.Tactic.reify_base_via_reify_package reify_package in
+        let reify_ident := Basic.Tactic.reify_ident_via_reify_package reify_package in
         let exprInfo := (eval hnf in exprInfo) in
         let exprExtraInfo := (eval hnf in exprExtraInfo) in
         let pkg := (eval hnf in pkg) in
@@ -1576,11 +1578,7 @@ Module Compilers.
         let invert_bind_args_unknown := lazymatch (eval hnf in pkg) with {| invert_bind_args_unknown := ?v |} => v end in
         let pident_unify_unknown := lazymatch (eval hnf in pkg) with {| unify_unknown := ?v |} => v end in
         let __ := debug1 ltac:(fun _ => idtac "Reifying...") in
-        let specs_lems :=
-          let reify_base := Basic.Tactic.reify_base_via_reify_package reify_package in
-          let reify_ident := Basic.Tactic.reify_ident_via_reify_package reify_package in
-
-          Reify reify_base reify_ident exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs in
+        let specs_lems := Reify reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs in
         let dummy_count := lazymatch specs_lems with (?n, ?specs, ?lems) => n end in
         let specs := lazymatch specs_lems with (?n, ?specs, ?lems) => specs end in
         let rewrite_rules := lazymatch specs_lems with (?n, ?specs, ?lems) => lems end in
