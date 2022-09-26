@@ -579,26 +579,36 @@ Module Compilers.
                         |- Control.refine (fun () => adjust_lookup_default (Ltac1.get_to_constr "rewr" rewr))) in
         constr:(ltac:(f rewr)).
 
-      Ltac replace_evar_map_internal evm rewr :=
-        let evm' := match rewr with
-                    | context[pattern.base.lookup_default _ ?evm']
-                      => let __ := match goal with _ => tryif constr_eq evm evm' then fail else idtac end in
-                         evm'
-                    | context[pattern.base.subst_default _ ?evm']
-                      => let __ := match goal with _ => tryif constr_eq evm evm' then fail else idtac end in
-                         evm'
-                    | _ => tt
-                    end in
-        lazymatch evm' with
-        | tt => rewr
-        | _
-          => let rewr := lazymatch (eval pattern evm' in rewr) with
-                         | ?rewr _ => (eval cbv beta in (rewr evm))
-                         end in
-             replace_evar_map_internal evm rewr
-        end.
+      Ltac2 rec replace_evar_map (evm : constr) (rewr : constr) : constr :=
+        Reify.debug_wrap
+          "replace_evar_map" (fun (evm, rewr) => fprintf "(%t) in %t" evm rewr) (evm, rewr)
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let evm' := match! rewr with
+                          | context[@pattern.base.lookup_default ?_base ?_p ?evm']
+                            => if Constr.equal evm evm'
+                               then Control.zero Match_failure
+                               else Some evm'
+                          | context[@pattern.base.subst_default ?_base ?_p ?evm']
+                            => if Constr.equal evm evm'
+                               then Control.zero Match_failure
+                               else Some evm'
+                          | _ => None
+                          end in
+              match evm' with
+              | None => rewr
+              | Some evm'
+                => Reify.debug_fine_grained "replace_evar_map" (fun () => fprintf "(%t) → (%t)" evm' evm);
+                   let rewr := lazy_match! (eval pattern '$evm' in '$rewr) with
+                               | ?rewr _ => (eval cbv beta in '($rewr $evm))
+                               end in
+                   replace_evar_map evm rewr
+              end).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac replace_evar_map evm rewr :=
-        constr:(ltac:(let v := replace_evar_map_internal evm rewr in refine v)).
+        let f := ltac2:(evm rewr
+                        |- Control.refine (fun () => replace_evar_map (Ltac1.get_to_constr "evm" evm) (Ltac1.get_to_constr "rewr" rewr))) in
+        constr:(ltac:(f constr:(evm) rewr)).
 
       Ltac adjust_type_variables_internal rewr :=
         lazymatch rewr with
