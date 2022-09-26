@@ -809,24 +809,35 @@ Module Compilers.
         let f := ltac2:(term
                         |- Control.refine (fun () => adjust_if_negb (Ltac1.get_to_constr "term" term))) in
         constr:(ltac:(f term)).
-      Ltac substitute_bool_eqb_internal term :=
-        lazymatch term with
-        | context term'[Bool.eqb ?x true]
-          => let term := context term'[x] in
-             substitute_bool_eqb_internal term
-        | context term'[Bool.eqb ?x false]
-          => let term := context term'[negb x] in
-             substitute_bool_eqb_internal term
-        | context term'[Bool.eqb true ?x]
-          => let term := context term'[x] in
-             substitute_bool_eqb_internal term
-        | context term'[Bool.eqb false ?x]
-          => let term := context term'[negb x] in
-             substitute_bool_eqb_internal term
-        | _ => term
-        end.
+      Ltac2 rec substitute_bool_eqb (term : constr) : constr :=
+        Reify.debug_wrap
+          "substitute_bool_eqb" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => lazy_match! term with
+              | context term'[Bool.eqb ?x true]
+                => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found %t =? true" x);
+                   let term := Pattern.instantiate term' x in
+                   substitute_bool_eqb term
+              | context term'[Bool.eqb ?x false]
+                => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found %t =? false" x);
+                   let term := Pattern.instantiate term' (mkApp 'negb [x]) in
+                   substitute_bool_eqb term
+              | context term'[Bool.eqb true ?x]
+                => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found true =? %t" x);
+                   let term := Pattern.instantiate term' x in
+                   substitute_bool_eqb term
+              | context term'[Bool.eqb false ?x]
+                => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found false =? %t" x);
+                   let term := Pattern.instantiate term' (mkApp 'negb [x]) in
+                   substitute_bool_eqb term
+              | _ => term
+              end).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac substitute_bool_eqb term :=
-        constr:(ltac:(let res := substitute_bool_eqb_internal term in exact res)).
+        let f := ltac2:(term
+                        |- Control.refine (fun () => substitute_bool_eqb (Ltac1.get_to_constr "term" term))) in
+        constr:(ltac:(f term)).
 
       Ltac substitute_beq_internal base_interp_beq only_eliminate_in_ctx full_ctx ctx term :=
         let base_interp_beq_head := head base_interp_beq in
