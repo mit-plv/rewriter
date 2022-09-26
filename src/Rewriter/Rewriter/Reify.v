@@ -1043,27 +1043,77 @@ Module Compilers.
         constr:(ltac:(f base reify_base base_interp base_interp_beq try_make_transport_base_cps ident ltac:(expr.wrap_reify_ident_cps reify_ident) pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota gets_inlined should_do_again lem)).
 
       (* lems is either a list of [Prop]s, or a list of [bool (* should_do_again *) * Prop] *)
+      Ltac2 reify_list (base : constr) (reify_base : constr -> constr) (base_interp : constr) (base_interp_beq : constr) (try_make_transport_base_cps : constr) (ident : constr) (reify_ident_opt : binder list -> constr -> constr option) (pident : constr) (pident_arg_types : constr) (pident_type_of_list_arg_types_beq : constr) (pident_of_typed_ident : constr) (pident_arg_types_of_typed_ident : constr) (reflect_ident_iota : constr) (var : constr) (gets_inlined : constr) (lems : constr) : constr :=
+        let debug_Constr_check := Reify.Constr.debug_check_strict "RewriteRules.Reify.reify_list" in
+        let avoid := Fresh.Free.of_goal () in
+        let reify' := reify base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota avoid var gets_inlined in
+        let listT := debug_Constr_check (fun () => mkApp '@rewrite_ruleT [base; ident; var; pident; pident_arg_types]) in
+        let rec aux (lems : constr) : constr
+          := lazy_match! Std.eval_hnf lems with
+             | (?b, ?lem) :: ?lems
+               => let rlem := reify' b lem in
+                  let rlems := aux lems in
+                  debug_Constr_check (fun () => mkApp '@cons [listT; rlem; rlems])
+             | nil => debug_Constr_check (fun () => mkApp '@nil [listT])
+             | _
+               => let list_map := (eval cbv delta [List.map] in '(@List.map)) in
+                  let lems := (eval cbv beta iota in
+                                constr:($list_map _ _ (fun p : Prop => (false, p)) $lems)) in
+                  aux lems
+             end in
+        aux lems.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac reify_list base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota var gets_inlined lems :=
-        let reify' := reify base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota var gets_inlined in
-        let reify_list_rec := reify_list base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota var gets_inlined in
-        lazymatch (eval hnf in lems) with
-        | (?b, ?lem) :: ?lems
-          => let rlem := reify' b lem in
-             let rlems := reify_list_rec lems in
-             constr:(rlem :: rlems)
-        | nil => constr:(@nil (@rewrite_ruleT base ident var pident pident_arg_types))
-        | _
-          => let List_map := (eval cbv delta [List.map] in (@List.map)) in
-             let lems := (eval cbv beta iota in
-                             (List_map _ _ (fun p : Prop => (false, p)) lems)) in
-             reify_list_rec lems
-        end.
+        let f := ltac2:(base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota var gets_inlined lems
+                        |- let base := Ltac1.get_to_constr "base" base in
+                           let reify_base := fun ty => Ltac1.apply_c reify_base [ty] in
+                           let base_interp := Ltac1.get_to_constr "base_interp" base_interp in
+                           let base_interp_beq := Ltac1.get_to_constr "base_interp_beq" base_interp_beq in
+                           let try_make_transport_base_cps := Ltac1.get_to_constr "try_make_transport_base_cps" try_make_transport_base_cps in
+                           let ident := Ltac1.get_to_constr "ident" ident in
+                           let reify_ident_opt := expr.reify_ident_opt_of_cps reify_ident in
+                           let pident := Ltac1.get_to_constr "pident" pident in
+                           let pident_arg_types := Ltac1.get_to_constr "pident_arg_types" pident_arg_types in
+                           let pident_type_of_list_arg_types_beq := Ltac1.get_to_constr "pident_type_of_list_arg_types_beq" pident_type_of_list_arg_types_beq in
+                           let pident_of_typed_ident := Ltac1.get_to_constr "pident_of_typed_ident" pident_of_typed_ident in
+                           let pident_arg_types_of_typed_ident := Ltac1.get_to_constr "pident_arg_types_of_typed_ident" pident_arg_types_of_typed_ident in
+                           let reflect_ident_iota := Ltac1.get_to_constr "reflect_ident_iota" reflect_ident_iota in
+                           let var := Ltac1.get_to_constr "var" var in
+                           let gets_inlined := Ltac1.get_to_constr "gets_inlined" gets_inlined in
+                           let lems := Ltac1.get_to_constr "lems" lems in
+                           Control.refine (fun () => reify_list base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota var gets_inlined lems)) in
+        constr:(ltac:(f base reify_base base_interp base_interp_beq try_make_transport_base_cps ident ltac:(expr.wrap_reify_ident_cps reify_ident) pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota constr:(var) gets_inlined lems)).
 
-      Ltac Reify_list base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota gets_inlined lems :=
-        let var := fresh "var" in
-        constr:(fun var : Compilers.type.type (Compilers.base.type base) -> Type
-                => ltac:(let res := reify_list base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota var (gets_inlined var) lems in
-                         exact res)).
+      Ltac2 _Reify_list (base : constr) (reify_base : constr -> constr) (base_interp : constr) (base_interp_beq : constr) (try_make_transport_base_cps : constr) (ident : constr) (reify_ident_opt : binder list -> constr -> constr option) (pident : constr) (pident_arg_types : constr) (pident_type_of_list_arg_types_beq : constr) (pident_of_typed_ident : constr) (pident_arg_types_of_typed_ident : constr) (reflect_ident_iota : constr) (gets_inlined : constr) (lems : constr) : constr :=
+        let debug_Constr_check := Reify.Constr.debug_check_strict "RewriteRules.Reify._Reify_list" in
+        Constr.in_fresh_context_avoiding
+          @var true None [Constr.Binder.make None '(Compilers.type.type (Compilers.base.type $base) -> Type)]
+          (fun ns
+           => let (var, _) := List.nth ns 0 in
+              let var := mkVar var in
+              let res := reify_list base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota var (debug_Constr_check (fun () => mkApp gets_inlined [var])) lems in
+              Control.refine (fun () => res)).
+
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+       Ltac Reify_list base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota gets_inlined lems :=
+        let f := ltac2:(base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota gets_inlined lems
+                        |- let base := Ltac1.get_to_constr "base" base in
+                           let reify_base := fun ty => Ltac1.apply_c reify_base [ty] in
+                           let base_interp := Ltac1.get_to_constr "base_interp" base_interp in
+                           let base_interp_beq := Ltac1.get_to_constr "base_interp_beq" base_interp_beq in
+                           let try_make_transport_base_cps := Ltac1.get_to_constr "try_make_transport_base_cps" try_make_transport_base_cps in
+                           let ident := Ltac1.get_to_constr "ident" ident in
+                           let reify_ident_opt := expr.reify_ident_opt_of_cps reify_ident in
+                           let pident := Ltac1.get_to_constr "pident" pident in
+                           let pident_arg_types := Ltac1.get_to_constr "pident_arg_types" pident_arg_types in
+                           let pident_type_of_list_arg_types_beq := Ltac1.get_to_constr "pident_type_of_list_arg_types_beq" pident_type_of_list_arg_types_beq in
+                           let pident_of_typed_ident := Ltac1.get_to_constr "pident_of_typed_ident" pident_of_typed_ident in
+                           let pident_arg_types_of_typed_ident := Ltac1.get_to_constr "pident_arg_types_of_typed_ident" pident_arg_types_of_typed_ident in
+                           let reflect_ident_iota := Ltac1.get_to_constr "reflect_ident_iota" reflect_ident_iota in
+                           let gets_inlined := Ltac1.get_to_constr "gets_inlined" gets_inlined in
+                           let lems := Ltac1.get_to_constr "lems" lems in
+                           Control.refine (fun () => _Reify_list base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota gets_inlined lems)) in
+        constr:(ltac:(f base reify_base base_interp base_interp_beq try_make_transport_base_cps ident ltac:(expr.wrap_reify_ident_cps reify_ident) pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota gets_inlined lems)).
     End Reify.
 
     Module Make.
