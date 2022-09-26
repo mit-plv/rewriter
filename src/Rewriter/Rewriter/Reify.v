@@ -602,11 +602,6 @@ Module Compilers.
                    let rewr := debug_Constr_check (fun () => Constr.Unsafe.replace_by_pattern [evm'] [evm] rewr) in
                    replace_evar_map evm rewr
               end).
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac replace_evar_map evm rewr :=
-        let f := ltac2:(evm rewr
-                        |- Control.refine (fun () => replace_evar_map (Ltac1.get_to_constr "evm" evm) (Ltac1.get_to_constr "rewr" rewr))) in
-        constr:(ltac:(f constr:(evm) rewr)).
 
       Definition adjust_type_variables_id base t (P : base.type base -> Type) (x : P t) := x.
       Ltac2 rec adjust_type_variables (rewr : constr) : constr :=
@@ -633,11 +628,6 @@ Module Compilers.
                    adjust_type_variables rewr
               | _ => rewr
               end).
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac adjust_type_variables rewr :=
-        let f := ltac2:(rewr
-                        |- Control.refine (fun () => adjust_type_variables (Ltac1.get_to_constr "rewr" rewr))) in
-        constr:(ltac:(f rewr)).
 
       Ltac2 replace_type_try_transport (term : constr) : constr :=
         Reify.debug_wrap
@@ -672,11 +662,6 @@ Module Compilers.
                 => (eval cbv beta in
                      (debug_Constr_check (fun () => mkApp term args)))
               end).
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac replace_type_try_transport term :=
-        let f := ltac2:(term
-                        |- Control.refine (fun () => replace_type_try_transport (Ltac1.get_to_constr "term" term))) in
-        constr:(ltac:(f term)).
 
       Ltac2 rec under_binders (avoid : Fresh.Free.t) (term : constr) (cont : ident list -> constr -> constr) (ctx : ident list) : constr :=
         match Constr.Unsafe.kind_nocast term with
@@ -750,11 +735,6 @@ Module Compilers.
                           | ?f _ _ => (eval cbn [andb] in constr:($f (fun x y => andb y x) (fun b => b)))
                           end in
               term).
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac remove_andb_true term :=
-        let f := ltac2:(term
-                        |- Control.refine (fun () => remove_andb_true (Ltac1.get_to_constr "term" term))) in
-        constr:(ltac:(f term)).
       Ltac2 rec adjust_if_negb (term : constr) : constr :=
         Reify.debug_wrap
           "adjust_if_negb" Message.of_constr term
@@ -846,15 +826,6 @@ Module Compilers.
               let term := (eval cbv [base.interp_beq $base_interp_beq_head] in term) in
               let term := remove_andb_true term in
               term).
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac clean_beq base_interp_beq only_eliminate_in_ctx term :=
-        let f := ltac2:(base_interp_beq only_eliminate_in_ctx term
-                        |- let base_interp_beq := Ltac1.get_to_constr "base_interp_beq" base_interp_beq in
-                           let only_eliminate_in_ctx := Ltac1.get_to_constr "only_eliminate_in_ctx" only_eliminate_in_ctx in
-                           let only_eliminate_in_ctx := expr.value_ctx_to_list only_eliminate_in_ctx in
-                           let term := Ltac1.get_to_constr "term" term in
-                           Control.refine (fun () => clean_beq base_interp_beq (Fresh.Free.of_goal ()) only_eliminate_in_ctx term)) in
-        constr:(ltac:(f base_interp_beq only_eliminate_in_ctx term)).
 
       Ltac2 rec adjust_side_conditions_for_gets_inlined' (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (side_conditions : constr) (lookup_gets_inlined : constr) : constr :=
         Reify.debug_wrap
@@ -890,17 +861,8 @@ Module Compilers.
           lookup_gets_inlined '(positive -> bool)
           (fun () => Control.refine
                        (fun () => adjust_side_conditions_for_gets_inlined' value_ctx side_conditions (mkVar lookup_gets_inlined))).
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac adjust_side_conditions_for_gets_inlined value_ctx side_conditions :=
-        let f := ltac2:(value_ctx side_conditions
-                        |- let value_ctx := Ltac1.get_to_constr "value_ctx" value_ctx in
-                           let value_ctx := expr.value_ctx_to_list value_ctx in
-                           let side_conditions := Ltac1.get_to_constr "side_conditions" side_conditions in
-                           Control.refine (fun () => adjust_side_conditions_for_gets_inlined (Fresh.Free.of_goal ()) value_ctx side_conditions)) in
-        constr:(ltac:(f value_ctx side_conditions)).
 
       Ltac2 rec reify_to_pattern_and_replacement_in_context (base : constr) (reify_base : constr -> constr) (base_interp : constr) (base_interp_beq : constr) (try_make_transport_base_cps : constr) (ident : constr) (reify_ident_opt : binder list -> constr -> constr option) (pident : constr) (pident_arg_types : constr) (pident_type_of_list_arg_types_beq : constr) (pident_of_typed_ident : constr) (pident_arg_types_of_typed_ident : constr) (reflect_ident_iota : constr) (type_ctx : constr) (var : constr) (gets_inlined : constr) (should_do_again : constr) (cur_i : constr) (term : constr) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) : constr :=
-        let wrap_constr_for_perf c := '(ltac2:(Control.refine (fun () => c))) in
         Reify.debug_wrap
           "reify_to_pattern_and_replacement_in_context" Message.of_constr term
           Reify.should_debug_enter_reify Reify.should_debug_leave_reify_success (Some Message.of_constr)
@@ -944,9 +906,9 @@ Module Compilers.
               | _
                 => lazy_match! term with
                    | (@eq ?t ?a ?b, ?side_conditions)
-                     => let rA := wrap_constr_for_perf (expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None) in
-                        let rB := wrap_constr_for_perf (expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos b [] [] value_ctx [] None) in
-                        let side_conditions := wrap_constr_for_perf (adjust_side_conditions_for_gets_inlined (Fresh.Free.of_goal ()) value_ctx side_conditions) in
+                     => let rA := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None in
+                        let rB := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos b [] [] value_ctx [] None in
+                        let side_conditions := adjust_side_conditions_for_gets_inlined (Fresh.Free.of_goal ()) value_ctx side_conditions in
                         let res := check "res"
                                          (fun () => mkLambda
                                                       (* Hack around COQBUG(https://github.com/coq/coq/issues/16419) *)
@@ -958,14 +920,14 @@ Module Compilers.
                                    let pident_arg_types_of_typed_ident := head_reference pident_arg_types_of_typed_ident in
                                    (eval cbv [expr_to_pattern_and_replacement_unfolded $pident_arg_types $pident_of_typed_ident $pident_type_of_list_arg_types_beq $pident_arg_types_of_typed_ident (*reflect_ident_iota*)] in res) in
                         let res := (eval cbn [fst snd andb pattern.base.relax pattern.base.subst_default pattern.base.subst_default_relax] in res) in
-                        let res := wrap_constr_for_perf (change_pattern_base_subst_default_relax res) in
+                        let res := change_pattern_base_subst_default_relax res in
                         let p := (eval cbv [projT1] in
                                    (check "projT1_res"
                                           (fun () => mkLambda (Constr.Binder.make (Some @invalid) '(match _ return Type with ev => ev end))
                                                               (mkApp '@projT1 ['_; '_; mkApp res [mkRel 1] ]))))
                         (*(fun invalid => projT1 (res invalid))*) in
-                        let p := wrap_constr_for_perf (strip_invalid_or_fail p) in
-                        let p := wrap_constr_for_perf (adjust_pattern_type_variables p) in
+                        let p := strip_invalid_or_fail p in
+                        let p := adjust_pattern_type_variables p in
                         (* avoid capturing invalid *)
                         let res := (eval cbv [projT2] in
                                      (check "projT2_res"
@@ -988,15 +950,15 @@ Module Compilers.
                                                  (fun ()
                                                   => (* we must check here to unify the evar in the type of invalid, lest we run into COQBUG(https://github.com/coq/coq/issues/16540) *)
                                                     let res := (eval cbv beta in (check "res invalid" (fun () => mkApp res [mkVar invalid]))) in
-                                                    let res := wrap_constr_for_perf (adjust_lookup_default res) in
-                                                    let res := wrap_constr_for_perf (adjust_type_variables res) in
-                                                    let res := wrap_constr_for_perf (replace_evar_map (mkVar evm') res) in
-                                                    let res := wrap_constr_for_perf (replace_type_try_transport res) in
+                                                    let res := adjust_lookup_default res in
+                                                    let res := adjust_type_variables res in
+                                                    let res := replace_evar_map (mkVar evm') res in
+                                                    let res := replace_type_try_transport res in
                                                     res)))) in
                         let res := debug_Constr_check res in
                         let res := (eval cbv [UnderLets.map UnderLets.flat_map reify_expr_beta_iota reflect_expr_beta_iota reify_to_UnderLets] in res) in
                         let res := (eval cbn [reify reflect UnderLets.of_expr UnderLets.to_expr UnderLets.splice value' Base_value invert_Literal invert_ident_Literal splice_under_lets_with_value] in res) in
-                        let res := wrap_constr_for_perf (strip_invalid_or_fail res) in
+                        let res := strip_invalid_or_fail res in
                         (* cbv here not strictly needed *)
                         let res := (eval cbv [partial_lam_unif_rewrite_ruleTP_gen_unfolded]
                                      in constr:(existT
@@ -1010,7 +972,7 @@ Module Compilers.
                                                   (@rewrite_ruleTP $base $ident $var $pident $pident_arg_types)
                                                   {| pattern.pattern_of_anypattern := projT1 $res |}
                                                   {| rew_replacement := projT2 $res |})) in
-                        let res := wrap_constr_for_perf (clean_beq base_interp_beq (Fresh.Free.of_goal ()) value_ctx res) in
+                        let res := clean_beq base_interp_beq (Fresh.Free.of_goal ()) value_ctx res in
                         res
                    end
               end).
