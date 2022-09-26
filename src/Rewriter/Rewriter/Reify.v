@@ -700,45 +700,82 @@ Module Compilers.
                      end)
         | ?term => cont payload ctx term
         end.
-      Ltac substitute_with term x y :=
-        lazymatch (eval pattern y in term) with
-        | (fun z => ?term) _ => constr:(match x return _ with z => term end)
-        end.
-      Ltac substitute_beq_with_internal base_interp_beq only_eliminate_in_ctx full_ctx term beq x :=
-        let is_good y :=
-            lazymatch full_ctx with
-            | context[dyncons y _] => fail
-            | _ => is_var y;
-                   lazymatch only_eliminate_in_ctx with
-                   | context[y] => idtac
-                   end
-            end in
-        let y := match term with
-                 | context term' [beq x ?y]
-                   => let __ := is_good y in
-                      constr:(Some (beq x y))
-                 | context term' [@base.interp_beq ?base ?base_interp ?base_interp_beq ?t x ?y]
-                   => let __ := is_good y in
-                      constr:(Some (@base.interp_beq base base_interp base_interp_beq t x y))
-                 | context term' [base_interp_beq ?t x ?y]
-                   => let __ := is_good y in
-                      constr:(Some (base_interp_beq t x y))
-                 | context term' [base_interp_beq ?t1 ?t2 x ?y] (* heterogenous form *)
-                   => let __ := is_good y in
-                      constr:(Some (base_interp_beq t1 t2 x y))
-                 | _ => constr:(@None unit)
-                 end in
-        lazymatch y with
-        | Some (?beq x ?y)
-          => lazymatch term with
-             | context term'[beq x y]
-               => let term := context term'[true] in
-                  substitute_with term x y
+      Ltac2 substitute_with (term : constr) (x : constr) (y : constr) : constr :=
+        Reify.debug_wrap
+          "substitute_with" (fun () => fprintf "(%t) → (%t) in %t" y x term) ()
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => Reify.Constr.debug_check_strict "substitute_with" (fun () => Constr.Unsafe.replace_by_pattern [y] [x] term)).
+
+      Ltac2 substitute_beq_with (base_interp_beq : constr) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (full_ctx : ident list) (term : constr) (beq : constr) (x : constr) : constr :=
+        Reify.debug_wrap
+          "substitute_beq_with" (fun () => fprintf "(%t) =? _ in %t" x term) ()
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let only_eliminate_in_ctx := List.map (fun (n, _ty, _v) => n) only_eliminate_in_ctx in
+              let is_good (y : constr) :=
+                match Constr.Unsafe.kind_nocast y with
+                | Constr.Unsafe.Var y
+                  => neg (List.mem Ident.equal y full_ctx) && List.mem Ident.equal y only_eliminate_in_ctx
+                | _ => false
+                end in
+              let term'_y := match! term with
+                             | context term'[?beq' ?x' ?y]
+                               => if Constr.equal_nounivs x x'
+                                     && is_good y
+                                     && (Constr.equal_nounivs beq' beq
+                                         || match! beq' with
+                                            | @base.interp_beq ?base ?base_interp ?base_interp_beq ?t
+                                              => true
+                                            | ?base_interp_beq' ?t
+                                              => if Constr.equal_nounivs base_interp_beq' base_interp_beq
+                                                 then true
+                                                 else Control.zero Match_failure
+                                            | ?base_interp_beq' ?t1 ?t2
+                                              => if Constr.equal_nounivs base_interp_beq' base_interp_beq
+                                                 then true
+                                                 else Control.zero Match_failure
+                                            end)
+                                  then Some (term', y)
+                                  else Control.zero Match_failure
+                             | _ => None
+                             end in
+              match term'_y with
+              | Some term'_y
+                => let (term', y) := term'_y in
+                   let term := Pattern.instantiate term' 'true in
+                   substitute_with term x y
+              | None => term
+              end).
+
+      #[deprecated(since="8.15",note="Use Ltac2 direct instead.")]
+       Ltac2 rec var_dynlist_to_list (full_ctx : constr) : ident list :=
+        lazy_match! full_ctx with
+        | dyncons ?x ?xs
+          => match Constr.Unsafe.kind_nocast x with
+             | Constr.Unsafe.Var x
+               => x :: var_dynlist_to_list xs
+             | _
+               => Control.throw (Reification_panic (fprintf "Non-var in dynlist: %t" x))
              end
-        | None => term
+        | dynnil => []
+        | _ => Control.throw (Reification_panic (fprintf "Non-dynlist passed to var_dynlist_to_dynlist: %t" full_ctx))
         end.
+
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq x :=
-        constr:(ltac:(let res := substitute_beq_with_internal base_interp_beq only_eliminate_in_ctx full_ctx term beq x in exact res)).
+        let f := ltac2:(base_interp_beq only_eliminate_in_ctx full_ctx term beq x
+                        |- let base_interp_beq := Ltac1.get_to_constr "base_interp_beq" base_interp_beq in
+                           let only_eliminate_in_ctx := Ltac1.get_to_constr "only_eliminate_in_ctx" only_eliminate_in_ctx in
+                           let only_eliminate_in_ctx := expr.value_ctx_to_list only_eliminate_in_ctx in
+                           let full_ctx := Ltac1.get_to_constr "full_ctx" full_ctx in
+                           let full_ctx := var_dynlist_to_list full_ctx in
+                           let term := Ltac1.get_to_constr "term" term in
+                           let beq := Ltac1.get_to_constr "beq" beq in
+                           let x := Ltac1.get_to_constr "x" x in
+                           Control.refine (fun () => substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq x)) in
+        constr:(ltac:(f base_interp_beq only_eliminate_in_ctx full_ctx term beq x)).
+
       Ltac remove_andb_true term :=
         let term := lazymatch (eval pattern andb, (andb true) in term) with
                     | ?f _ _ => (eval cbn [andb] in (f (fun x y => andb y x) (fun b => b)))
