@@ -538,17 +538,21 @@ Module Compilers.
       Definition pattern_base_unsubst_default_relax' {base} t evm P
         := @pattern.base.unsubst_default_relax base P t evm.
 
-      Ltac change_pattern_base_subst_default_relax_internal term :=
-        lazymatch (eval pattern (@pattern.base.subst_default_relax), (@pattern.base.unsubst_default_relax) in term) with
-        | ?f _ _
-          => let base := fresh "base" in
-             let P := fresh "P" in
-             let t := fresh "t" in
-             let evm := fresh "evm" in
-             (eval cbv beta in (f (fun base P t evm => @pattern_base_subst_default_relax' base t evm P) (fun base P t evm => @pattern_base_unsubst_default_relax' base t evm P)))
-        end.
+      Ltac2 change_pattern_base_subst_default_relax (term : constr) : constr :=
+        Reify.debug_wrap
+          "change_pattern_base_subst_default_relax" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => lazy_match! (eval pattern '@pattern.base.subst_default_relax, '@pattern.base.unsubst_default_relax in '$term) with
+              | ?f _ _
+                => (eval cbv beta in constr:($f (fun base P t evm => @pattern_base_subst_default_relax' base t evm P) (fun base P t evm => @pattern_base_unsubst_default_relax' base t evm P)))
+              end).
+
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac change_pattern_base_subst_default_relax term :=
-        constr:(ltac:(let v := change_pattern_base_subst_default_relax_internal term in refine v)).
+        let f := ltac2:(term
+                        |- Control.refine (fun () => change_pattern_base_subst_default_relax (Ltac1.get_to_constr "term" term))) in
+        constr:(ltac:(f term)).
 
       Ltac adjust_lookup_default_internal rewr :=
         lazymatch (eval pattern (@pattern.base.lookup_default) in rewr) with
