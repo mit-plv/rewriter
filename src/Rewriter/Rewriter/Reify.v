@@ -856,24 +856,53 @@ Module Compilers.
                            Control.refine (fun () => clean_beq base_interp_beq (Fresh.Free.of_goal ()) only_eliminate_in_ctx term)) in
         constr:(ltac:(f base_interp_beq only_eliminate_in_ctx term)).
 
-      Ltac adjust_side_conditions_for_gets_inlined' value_ctx side_conditions lookup_gets_inlined :=
-        lazymatch side_conditions with
-        | context sc[ident.gets_inlined _ ?x]
-          => lazymatch value_ctx with
-             | context[expr.var_context.cons x ?p _]
-               => let rep := constr:(lookup_gets_inlined p) in
-                  let side_conditions := context sc[rep] in
-                  adjust_side_conditions_for_gets_inlined' value_ctx side_conditions lookup_gets_inlined
-             | _ => constr_fail_with ltac:(fun _ => fail 1 "Could not find an expression corresponding to" x "in context" value_ctx)
-             end
-        | _ => side_conditions
-        end.
-
+      Ltac2 rec adjust_side_conditions_for_gets_inlined' (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (side_conditions : constr) (lookup_gets_inlined : constr) : constr :=
+        Reify.debug_wrap
+          "adjust_side_conditions_for_gets_inlined'" Message.of_constr side_conditions
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_side_conditions_for_gets_inlined'" in
+              lazy_match! side_conditions with
+              | context sc[ident.gets_inlined _ ?x]
+                => match Constr.Unsafe.kind_nocast x with
+                   | Constr.Unsafe.Var x
+                     => match List.find_opt (fun (n, ty, rv) => Ident.equal n x) value_ctx with
+                        | Some v
+                          => let (_x, ty, p) := v in
+                             let rep := debug_Constr_check (fun () => mkApp lookup_gets_inlined [p]) in
+                             let side_conditions := Pattern.instantiate sc rep in
+                             adjust_side_conditions_for_gets_inlined' value_ctx side_conditions lookup_gets_inlined
+                        | None
+                          => Control.zero
+                               (Reification_failure
+                                  (fprintf
+                                     "Could not find an expression corresponding to %I in context %a"
+                                     x
+                                     (fun () => Message.of_list (fun (id, t, v) => fprintf "(%I, %t, %t)" id t v)) value_ctx))
+                        end
+                   | _ => Control.zero (Reification_failure (fprintf "adjust_side_conditions_for_gets_inlined': In side-condition:%s%t%sFound ident.gets_inlined _ x with x not a Var: %t" (String.newline ()) side_conditions (String.newline ()) x))
+                   end
+              | _ => side_conditions
+              end).
+      Ltac2 adjust_side_conditions_for_gets_inlined (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (side_conditions : constr) : constr :=
+        let lookup_gets_inlined := Fresh.fresh (Fresh.Free.union
+                                                  (Fresh.Free.of_goal ())
+                                                  (Fresh.Free.union
+                                                     (Fresh.Free.of_constr side_conditions)
+                                                     (Fresh.Free.of_ids (List.map (fun (n, _, _) => n) value_ctx))))
+                                               @lookup_gets_inlined in
+        Constr.in_context
+          lookup_gets_inlined '(positive -> bool)
+          (fun () => Control.refine
+                       (fun () => adjust_side_conditions_for_gets_inlined' value_ctx side_conditions (mkVar lookup_gets_inlined))).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac adjust_side_conditions_for_gets_inlined value_ctx side_conditions :=
-        let lookup_gets_inlined := fresh in
-        constr:(fun lookup_gets_inlined : positive -> bool
-                => ltac:(let v := adjust_side_conditions_for_gets_inlined' value_ctx side_conditions lookup_gets_inlined in
-                         exact v)).
+        let f := ltac2:(value_ctx side_conditions
+                        |- let value_ctx := Ltac1.get_to_constr "value_ctx" value_ctx in
+                           let value_ctx := expr.value_ctx_to_list value_ctx in
+                           let side_conditions := Ltac1.get_to_constr "side_conditions" side_conditions in
+                           Control.refine (fun () => adjust_side_conditions_for_gets_inlined value_ctx side_conditions)) in
+        constr:(ltac:(f value_ctx side_conditions)).
 
       Ltac reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx var gets_inlined should_do_again cur_i term value_ctx :=
         let base_type := constr:(base.type base) in
