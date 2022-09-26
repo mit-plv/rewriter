@@ -793,15 +793,22 @@ Module Compilers.
         let f := ltac2:(term
                         |- Control.refine (fun () => remove_andb_true (Ltac1.get_to_constr "term" term))) in
         constr:(ltac:(f term)).
-      Ltac adjust_if_negb_internal term :=
-        lazymatch term with
-        | context term'[if negb ?x then ?a else ?b]
-          => let term := context term'[if x then b else a] in
-             adjust_if_negb_internal term
-        | _ => term
-        end.
+      Ltac2 rec adjust_if_negb (term : constr) : constr :=
+        Reify.debug_wrap
+          "adjust_if_negb" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => lazy_match! term with
+              | context term'[if negb ?x then ?a else ?b]
+                => let term := Pattern.instantiate term' '(if $x then $b else $a) in
+                   adjust_if_negb term
+              | _ => term
+              end).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac adjust_if_negb term :=
-        constr:(ltac:(let res := adjust_if_negb_internal term in exact res)).
+        let f := ltac2:(term
+                        |- Control.refine (fun () => adjust_if_negb (Ltac1.get_to_constr "term" term))) in
+        constr:(ltac:(f term)).
       Ltac substitute_bool_eqb_internal term :=
         lazymatch term with
         | context term'[Bool.eqb ?x true]
