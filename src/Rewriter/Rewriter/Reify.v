@@ -640,18 +640,32 @@ Module Compilers.
                         |- Control.refine (fun () => adjust_type_variables (Ltac1.get_to_constr "rewr" rewr))) in
         constr:(ltac:(f rewr)).
 
-      Ltac replace_type_try_transport_internal term :=
-        lazymatch term with
-        | context[@type.try_transport ?base_type ?try_make_transport_base_type_cps ?P ?t ?t]
-          => let v := constr:(@type.try_transport base_type try_make_transport_base_type_cps P t t) in
-             let term := lazymatch (eval pattern v in term) with
-                         | ?term _ => (eval cbv beta in (term (@Some _)))
+      Ltac2 rec replace_type_try_transport (term : constr) : constr :=
+        Reify.debug_wrap
+          "replace_type_try_transport" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let res := match! term with
+                         | context[?v]
+                           => lazy_match! v with
+                              | @type.try_transport ?base_type ?try_make_transport_base_type_cps ?p ?t ?t
+                                => Some v
+                              end
+                         | _ => None
                          end in
-             replace_type_try_transport_internal term
-        | _ => term
-        end.
+              match res with
+              | Some v
+                => let term := lazy_match! (eval pattern $v in $term) with
+                               | ?term _ => (eval cbv beta in '($term (@Some _)))
+                               end in
+                   replace_type_try_transport term
+              | None => term
+              end).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac replace_type_try_transport term :=
-        constr:(ltac:(let v := replace_type_try_transport_internal term in refine v)).
+        let f := ltac2:(term
+                        |- Control.refine (fun () => replace_type_try_transport (Ltac1.get_to_constr "term" term))) in
+        constr:(ltac:(f term)).
 
       Ltac under_binders payload term cont ctx :=
         lazymatch term with
