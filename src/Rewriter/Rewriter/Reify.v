@@ -763,20 +763,6 @@ Module Compilers.
         | _ => Control.throw (Reification_panic (fprintf "Non-dynlist passed to var_dynlist_to_dynlist: %t" full_ctx))
         end.
 
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq x :=
-        let f := ltac2:(base_interp_beq only_eliminate_in_ctx full_ctx term beq x
-                        |- let base_interp_beq := Ltac1.get_to_constr "base_interp_beq" base_interp_beq in
-                           let only_eliminate_in_ctx := Ltac1.get_to_constr "only_eliminate_in_ctx" only_eliminate_in_ctx in
-                           let only_eliminate_in_ctx := expr.value_ctx_to_list only_eliminate_in_ctx in
-                           let full_ctx := Ltac1.get_to_constr "full_ctx" full_ctx in
-                           let full_ctx := var_dynlist_to_list full_ctx in
-                           let term := Ltac1.get_to_constr "term" term in
-                           let beq := Ltac1.get_to_constr "beq" beq in
-                           let x := Ltac1.get_to_constr "x" x in
-                           Control.refine (fun () => substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq x)) in
-        constr:(ltac:(f base_interp_beq only_eliminate_in_ctx full_ctx term beq x)).
-
       Ltac2 remove_andb_true (term : constr) : constr :=
         Reify.debug_wrap
           "remove_andb_true" Message.of_constr term
@@ -805,11 +791,6 @@ Module Compilers.
                    adjust_if_negb term
               | _ => term
               end).
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac adjust_if_negb term :=
-        let f := ltac2:(term
-                        |- Control.refine (fun () => adjust_if_negb (Ltac1.get_to_constr "term" term))) in
-        constr:(ltac:(f term)).
       Ltac2 rec substitute_bool_eqb (term : constr) : constr :=
         Reify.debug_wrap
           "substitute_bool_eqb" Message.of_constr term
@@ -834,11 +815,6 @@ Module Compilers.
                    substitute_bool_eqb term
               | _ => term
               end).
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac substitute_bool_eqb term :=
-        let f := ltac2:(term
-                        |- Control.refine (fun () => substitute_bool_eqb (Ltac1.get_to_constr "term" term))) in
-        constr:(ltac:(f term)).
 
       Ltac2 rec substitute_beq (base_interp_beq : constr) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (full_ctx : ident list) (ctx : ident list) (term : constr) : constr :=
         Reify.debug_wrap
@@ -849,20 +825,20 @@ Module Compilers.
               match ctx with
               | []
                 => let term := (eval cbv [base.interp_beq $base_interp_beq_head] in term) in
-                   let term := '(ltac2:(Control.refine (fun () => substitute_bool_eqb term))) in
-                   let term := '(ltac2:(Control.refine (fun () => remove_andb_true term))) in
-                   let term := '(ltac2:(Control.refine (fun () => adjust_if_negb term))) in
+                   let term := substitute_bool_eqb term in
+                   let term := remove_andb_true term in
+                   let term := adjust_if_negb term in
                    term
               | v :: ctx
                 => let v := mkVar v in
-                   let term := '(ltac2:(Control.refine (fun () => substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term 'Z.eqb v))) in
+                   let term := substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term 'Z.eqb v in
                    let term
                      := match Control.case
                                 (fun ()
                                  => let t := Constr.type v in
                                     (* IMPORTANT: Typeclass resolution happens here, so this must be constr, not open_constr (N.B. ' is open_constr) *)
                                     let beq := (eval cbv beta delta [Reflect.decb_rel] in constr:(Reflect.decb_rel (@eq $t))) in
-                                    '(ltac2:(Control.refine (fun () => substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq v))))
+                                    substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq v)
                         with
                         | Val term => let (term, _) := term in term
                         | Err _ => term
