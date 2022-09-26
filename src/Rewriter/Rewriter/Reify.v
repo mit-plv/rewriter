@@ -258,14 +258,6 @@ Module Compilers.
       Ltac2 reify_under_forall_types (base_type : constr) (base_type_interp : constr) (avoid : Fresh.Free.t) (lem : constr) (cont : Fresh.Free.t -> constr (* ty_ctx *) -> constr (* cur_i *) -> constr (* lem *) -> constr) : constr :=
         '(ltac2:(refine_reify_under_forall_types base_type base_type_interp avoid lem (fun avoid ty_ctx cur_i lem => Control.refine (fun () => cont avoid ty_ctx cur_i lem)))).
 
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-       Ltac reify_under_forall_types base_type base_type_interp lem cont :=
-        let f := ltac2:(base_type base_type_interp lem cont
-                        |- let cont avoid ty_ctx cur_i lem
-                             := Ltac1.apply cont [Ltac1.of_constr ty_ctx; Ltac1.of_constr cur_i; Ltac1.of_constr lem] Ltac1.run in
-                           refine_reify_under_forall_types (Ltac1.get_to_constr "base_type" base_type) (Ltac1.get_to_constr "base_type_interp" base_type_interp) (Fresh.Free.of_goal ()) (Ltac1.get_to_constr "lem" lem) cont) in
-        constr:(ltac:(f base_type base_type_interp lem ltac:(fun ty_ctx cur_i lem => let v := cont ty_ctx cur_i lem in refine v))).
-
       (* uses typeclass resolution *)
       Ltac2 prop_to_bool (h : constr) : constr := eval cbv [decb] in constr:(decb $h).
 
@@ -346,11 +338,6 @@ Module Compilers.
       Ltac2 adjust_pattern_type_variables (pat : constr) : constr :=
         let pat := preadjust_pattern_type_variables pat in
         adjust_pattern_type_variables' pat.
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac adjust_pattern_type_variables pat :=
-        let f := ltac2:(pat
-                        |- Control.refine (fun () => adjust_pattern_type_variables (Ltac1.get_to_constr "pat" pat))) in
-        constr:(ltac:(f pat)).
 
       (* this is fancy but probably too complicated to maintain *)
       Ltac2 walk_term_under_binders_fail_invalid_fast (term : constr) (free : Fresh.Free.t) (invalid : ident) (fv : constr) : unit :=
@@ -521,12 +508,6 @@ Module Compilers.
              end
         end.
 
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac strip_invalid_or_fail term :=
-        let f := ltac2:(term
-                        |- Control.refine (fun () => strip_invalid_or_fail (Ltac1.get_to_constr "term" term))) in
-        constr:(ltac:(f term)).
-
       Definition pattern_base_subst_default_relax' {base} t evm P
         := @pattern.base.subst_default_relax base P t evm.
       Definition pattern_base_unsubst_default_relax' {base} t evm P
@@ -548,12 +529,6 @@ Module Compilers.
                      (debug_Constr_check (fun () => mkApp f ['@pattern_base_subst_default_relax'_reordered; '@pattern_base_unsubst_default_relax'_reordered])))
               end).
 
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac change_pattern_base_subst_default_relax term :=
-        let f := ltac2:(term
-                        |- Control.refine (fun () => change_pattern_base_subst_default_relax (Ltac1.get_to_constr "term" term))) in
-        constr:(ltac:(f term)).
-
       Definition pattern_base_subst_default_reordered base p evm
         := @pattern.base.subst_default base (pattern.base.type.var p) evm.
       Ltac2 adjust_lookup_default (rewr : constr) : constr :=
@@ -567,11 +542,6 @@ Module Compilers.
                 => (eval cbv beta delta [pattern_base_subst_default_reordered] in
                      (debug_Constr_check (fun () => mkApp rewr ['@pattern_base_subst_default_reordered])))
               end).
-      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac adjust_lookup_default rewr :=
-        let f := ltac2:(rewr
-                        |- Control.refine (fun () => adjust_lookup_default (Ltac1.get_to_constr "rewr" rewr))) in
-        constr:(ltac:(f rewr)).
 
       Ltac2 rec replace_evar_map (evm : constr) (rewr : constr) : constr :=
         Reify.debug_wrap
