@@ -57,8 +57,6 @@ Module Compilers.
       Local Notation EvarMap := pattern.EvarMap.
       Local Notation EvarMap_at base := (pattern.EvarMap_at base).
 
-      Inductive dynlist := dynnil | dyncons {T} (x : T) (xs : dynlist).
-
       Section with_var.
         Local Notation type_of_list
           := (fold_right (fun a b => prod a b) unit).
@@ -680,26 +678,17 @@ Module Compilers.
                         |- Control.refine (fun () => replace_type_try_transport (Ltac1.get_to_constr "term" term))) in
         constr:(ltac:(f term)).
 
-      Ltac under_binders payload term cont ctx :=
-        lazymatch term with
-        | (fun x : ?T => ?f)
-          => let ctx' := fresh in
-             let f' := fresh in
-             let payload' := fresh in (* COQBUG(https://github.com/coq/coq/issues/7210#issuecomment-470009463) *)
-             constr:(match payload return _ with
-                     | payload'
-                       => fun x : T
-                          => match f, dyncons x ctx return _ with
-                             | f', ctx'
-                               => ltac:(let ctx := (eval cbv delta [ctx'] in ctx') in
-                                        let f := (eval cbv delta [f'] in f') in
-                                        let payload := (eval cbv delta [payload'] in payload') in
-                                        clear f' ctx' payload';
-                                        let res := under_binders payload f cont ctx in
-                                        exact res)
-                             end
-                     end)
-        | ?term => cont payload ctx term
+      Ltac2 rec under_binders (avoid : Fresh.Free.t) (term : constr) (cont : ident list -> constr -> constr) (ctx : ident list) : constr :=
+        match Constr.Unsafe.kind_nocast term with
+        | Constr.Unsafe.Lambda xb term
+          => Constr.in_fresh_context_avoiding
+               @UNNAMED_BINDER false (Some avoid) [xb]
+               (fun ns
+                => let ns := List.map (fun (n, _t) => n) ns in
+                   let term := Constr.Unsafe.substnl (List.map mkVar ns) 0 term in
+                   let ctx := List.append ns ctx in
+                   Control.refine (fun () => under_binders (Fresh.Free.union avoid (Fresh.Free.of_ids ns)) term cont ctx))
+        | _ => cont ctx term
         end.
       Ltac2 substitute_with (term : constr) (x : constr) (y : constr) : constr :=
         Reify.debug_wrap
@@ -748,20 +737,6 @@ Module Compilers.
                    substitute_with term x y
               | None => term
               end).
-
-      #[deprecated(since="8.15",note="Use Ltac2 direct instead.")]
-       Ltac2 rec var_dynlist_to_list (full_ctx : constr) : ident list :=
-        lazy_match! full_ctx with
-        | dyncons ?x ?xs
-          => match Constr.Unsafe.kind_nocast x with
-             | Constr.Unsafe.Var x
-               => x :: var_dynlist_to_list xs
-             | _
-               => Control.throw (Reification_panic (fprintf "Non-var in dynlist: %t" x))
-             end
-        | dynnil => []
-        | _ => Control.throw (Reification_panic (fprintf "Non-dynlist passed to var_dynlist_to_dynlist: %t" full_ctx))
-        end.
 
       Ltac2 remove_andb_true (term : constr) : constr :=
         Reify.debug_wrap
@@ -845,29 +820,33 @@ Module Compilers.
                         end in
                    substitute_beq base_interp_beq only_eliminate_in_ctx full_ctx ctx term
               end).
+
+      Ltac2 deep_substitute_beq (base_interp_beq : constr) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (term : constr) : constr :=
+        Reify.debug_wrap
+          "deep_substitute_beq" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "deep_substitute_beq" in
+              lazy_match! term with
+              | context term'[@Build_rewrite_rule_data ?base ?ident ?var ?pident ?pident_arg_types ?t ?p ?sda ?wo ?ul ?subterm]
+                => let avoid := Fresh.Free.union
+                                  (Fresh.Free.of_goal ())
+                                  (Fresh.Free.union
+                                     (Fresh.Free.of_ids (List.map (fun (n, _ty, _var) => n) only_eliminate_in_ctx))
+                                     (Fresh.Free.of_constr term)) in
+                   let subterm := under_binders avoid subterm (fun ctx term => substitute_beq base_interp_beq only_eliminate_in_ctx ctx ctx term) [] in
+                   let term := Pattern.instantiate term' (debug_Constr_check (fun () => mkApp '@Build_rewrite_rule_data [base; ident; var; pident; pident_arg_types; t; p; sda; wo; ul; subterm])) in
+                   term
+              end).
       #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-      Ltac substitute_beq base_interp_beq only_eliminate_in_ctx full_ctx ctx term :=
-        let f := ltac2:(base_interp_beq only_eliminate_in_ctx full_ctx ctx term
+      Ltac deep_substitute_beq base_interp_beq only_eliminate_in_ctx term :=
+        let f := ltac2:(base_interp_beq only_eliminate_in_ctx term
                         |- let base_interp_beq := Ltac1.get_to_constr "base_interp_beq" base_interp_beq in
                            let only_eliminate_in_ctx := Ltac1.get_to_constr "only_eliminate_in_ctx" only_eliminate_in_ctx in
                            let only_eliminate_in_ctx := expr.value_ctx_to_list only_eliminate_in_ctx in
-                           let full_ctx := Ltac1.get_to_constr "full_ctx" full_ctx in
-                           let full_ctx := var_dynlist_to_list full_ctx in
-                           let ctx := Ltac1.get_to_constr "ctx" ctx in
-                           let ctx := var_dynlist_to_list ctx in
                            let term := Ltac1.get_to_constr "term" term in
-                           Control.refine (fun () => substitute_beq base_interp_beq only_eliminate_in_ctx full_ctx ctx term)) in
-        constr:(ltac:(f base_interp_beq only_eliminate_in_ctx full_ctx ctx term)).
-
-      Ltac deep_substitute_beq_internal base_interp_beq only_eliminate_in_ctx term :=
-        lazymatch term with
-        | context term'[@Build_rewrite_rule_data ?base ?ident ?var ?pident ?pident_arg_types ?t ?p ?sda ?wo ?ul ?subterm]
-          => let subterm := under_binders only_eliminate_in_ctx subterm ltac:(fun only_eliminate_in_ctx ctx term => substitute_beq base_interp_beq only_eliminate_in_ctx ctx ctx term) dynnil in
-             let term := context term'[@Build_rewrite_rule_data base ident var pident pident_arg_types t p sda wo ul subterm] in
-             term
-        end.
-      Ltac deep_substitute_beq base_interp_beq only_eliminate_in_ctx term :=
-        constr:(ltac:(let res := deep_substitute_beq_internal base_interp_beq only_eliminate_in_ctx term in exact res)).
+                           Control.refine (fun () => deep_substitute_beq base_interp_beq only_eliminate_in_ctx term)) in
+        constr:(ltac:(f base_interp_beq only_eliminate_in_ctx term)).
 
       Ltac clean_beq_internal base_interp_beq only_eliminate_in_ctx term :=
         let base_interp_beq_head := head base_interp_beq in
