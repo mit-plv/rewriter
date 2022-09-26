@@ -899,93 +899,148 @@ Module Compilers.
                            Control.refine (fun () => adjust_side_conditions_for_gets_inlined (Fresh.Free.of_goal ()) value_ctx side_conditions)) in
         constr:(ltac:(f value_ctx side_conditions)).
 
-      Ltac reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx var gets_inlined should_do_again cur_i term value_ctx :=
-        let base_type := constr:(base.type base) in
-        let reify_base_type := ltac:(Compilers.base.reify base reify_base) in
-        let base_interp_head := head base_interp in
-        let t := fresh "t" in
-        let p := fresh "p" in
-        let reify_rec_gen type_ctx := reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx var gets_inlined should_do_again in
-        let var_pos := constr:(fun _ : type base_type => positive) in
-        let value := constr:(@value base_type ident var) in
-        let cexpr_to_pattern_and_replacement_unfolded := constr:(@expr_to_pattern_and_replacement_unfolded base try_make_transport_base_cps ident var pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident (reflect_ident_iota var) gets_inlined should_do_again type_ctx) in
-        let cpartial_lam_unif_rewrite_ruleTP_gen := constr:(@partial_lam_unif_rewrite_ruleTP_gen_unfolded base ident var pident pident_arg_types should_do_again) in
-        let cwith_unif_rewrite_ruleTP_gen := constr:(fun t p => @with_unif_rewrite_ruleTP_gen base ident var pident pident_arg_types value t p should_do_again true true) in
-        lazymatch term with
-        | (fun x : ?T => ?f)
-          => let rT := Compilers.type.reify reify_base_type base_type T in
-             let not_x1 := fresh in
-             let not_x2 := fresh in
-             let next_i := (eval vm_compute in (Pos.succ cur_i)) in
-             let type_ctx' := fresh in (* COQBUG(https://github.com/coq/coq/issues/7210#issuecomment-470009463) *)
-             let rf0 :=
-                 constr:(
-                   match type_ctx return _ with
-                   | type_ctx'
-                     => fun (x : T)
-                        => match f, @expr.var_context.cons base_type var_pos T rT x cur_i value_ctx return _ with (* c.f. COQBUG(https://github.com/coq/coq/issues/6252#issuecomment-347041995) for [return _] *)
-                           | not_x1, not_x2
-                             => ltac:(
-                                  let f := (eval cbv delta [not_x1] in not_x1) in
-                                  let value_ctx := (eval cbv delta [not_x2] in not_x2) in
-                                  let type_ctx := (eval cbv delta [type_ctx'] in type_ctx') in
-                                  clear not_x1 not_x2 type_ctx';
-                                  let rf := reify_rec_gen type_ctx next_i f value_ctx in
-                                  exact rf)
-                           end
-                   end) in
-             lazymatch rf0 with
-             | (fun _ => ?f) => f
-             | _
-               => constr_fail_with ltac:(fun _ => fail 1 "Failure to eliminate functional dependencies of" rf0)
-             end
-        | (@eq ?T ?A ?B, ?side_conditions)
-          => let rA := expr.reify_in_context base_type ident reify_base_type reify_ident var_pos A value_ctx tt in
-             let rB := expr.reify_in_context base_type ident reify_base_type reify_ident var_pos B value_ctx tt in
-             let side_conditions := adjust_side_conditions_for_gets_inlined value_ctx side_conditions in
-             let invalid := fresh "invalid" in
-             let res := constr:(fun invalid => cexpr_to_pattern_and_replacement_unfolded invalid _ rA rB side_conditions) in
-             let res := (eval cbv [expr_to_pattern_and_replacement_unfolded pident_arg_types pident_of_typed_ident pident_type_of_list_arg_types_beq pident_arg_types_of_typed_ident (*reflect_ident_iota*)] in res) in
-             let res := (eval cbn [fst snd andb pattern.base.relax pattern.base.subst_default pattern.base.subst_default_relax] in res) in
-             let res := change_pattern_base_subst_default_relax res in
-             let p := (eval cbv [projT1] in (fun invalid => projT1 (res invalid))) in
-             let p := strip_invalid_or_fail p in
-             let p := adjust_pattern_type_variables p in
-             let res := (eval cbv [projT2] in (fun invalid => projT2 (res invalid))) in
-             let evm' := fresh "evm" in
-             let res' := fresh in
-             let res :=
-                 constr:(
-                   fun invalid (evm' : EvarMap_at base)
-                   => match res invalid return _ with
-                      | res'
-                        => ltac:(let res := (eval cbv beta delta [res'] in res') in
-                                 clear res';
-                                 let res := adjust_lookup_default res in
-                                 let res := adjust_type_variables res in
-                                 let res := replace_evar_map evm' res in
-                                 let res := replace_type_try_transport res in
-                                 exact res)
-                      end) in
-             let res := (eval cbv [UnderLets.map UnderLets.flat_map reify_expr_beta_iota reflect_expr_beta_iota reify_to_UnderLets] in res) in
-             let res := (eval cbn [reify reflect UnderLets.of_expr UnderLets.to_expr UnderLets.splice value' Base_value invert_Literal invert_ident_Literal splice_under_lets_with_value] in res) in
-             let res := strip_invalid_or_fail res in
-             (* cbv here not strictly needed *)
-             let res := (eval cbv [partial_lam_unif_rewrite_ruleTP_gen_unfolded] in
-                            (existT
-                               (cwith_unif_rewrite_ruleTP_gen _)
-                               p
-                               (cpartial_lam_unif_rewrite_ruleTP_gen _ p res))) in
-             (* not strictly needed *)
-             let res := (eval cbn [pattern.base.subst_default pattern.base.lookup_default PositiveMap.find type.interp base.interp base_interp_head] in res) in
-             let res := (eval cbv [projT1 projT2] in
-                            (existT
-                               (@rewrite_ruleTP base ident var pident pident_arg_types)
-                               {| pattern.pattern_of_anypattern := projT1 res |}
-                               {| rew_replacement := projT2 res |})) in
-             let res := clean_beq base_interp_beq value_ctx res in
-             res
-        end.
+      Ltac2 rec reify_to_pattern_and_replacement_in_context (base : constr) (reify_base : constr -> constr) (base_interp : constr) (base_interp_beq : constr) (try_make_transport_base_cps : constr) (ident : constr) (reify_ident_opt : binder list -> constr -> constr option) (pident : constr) (pident_arg_types : constr) (pident_type_of_list_arg_types_beq : constr) (pident_of_typed_ident : constr) (pident_arg_types_of_typed_ident : constr) (reflect_ident_iota : constr) (type_ctx : constr) (var : constr) (gets_inlined : constr) (should_do_again : constr) (cur_i : constr) (term : constr) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) : constr :=
+        let wrap_constr_for_perf c := '(ltac2:(Control.refine (fun () => c))) in
+        Reify.debug_wrap
+          "reify_to_pattern_and_replacement_in_context" Message.of_constr term
+          Reify.should_debug_enter_reify Reify.should_debug_leave_reify_success (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "reify_to_pattern_and_replacement_in_context" in
+              let base_type := debug_Constr_check (fun () => mkApp 'base.type [base]) in
+              let reify_base_type := Compilers.base.reify base reify_base in
+              let base_interp_head := head_reference base_interp in
+              let reify_rec_gen := reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx var gets_inlined should_do_again in
+              let var_pos := '(fun _ : type $base_type => positive) in
+              let value := debug_Constr_check (fun () => mkApp '@value [base_type; ident; var]) in
+              let cexpr_to_pattern_and_replacement_unfolded := debug_Constr_check (fun () => mkApp '@expr_to_pattern_and_replacement_unfolded [base; try_make_transport_base_cps; ident; var; pident; pident_arg_types; pident_type_of_list_arg_types_beq; pident_of_typed_ident; pident_arg_types_of_typed_ident; mkApp reflect_ident_iota [var]; gets_inlined; should_do_again; type_ctx]) in
+              let cpartial_lam_unif_rewrite_ruleTP_gen := debug_Constr_check (fun () => mkApp '@partial_lam_unif_rewrite_ruleTP_gen_unfolded [base; ident; var; pident; pident_arg_types; should_do_again]) in
+              let check name c
+                := let c := debug_Constr_check c in
+                   match Constr.Unsafe.check c with
+                   | Val c => c
+                   | Err err => Control.throw (Reification_panic (fprintf "reify_to_pattern_and_replacement_in_context: Could not make %s from %t: %a" name c (fun () => Message.of_exn) err))
+                   end in
+              let cwith_unif_rewrite_ruleTP_gen
+                := let tb := Constr.Binder.make (Some @t) (debug_Constr_check (fun () => mkApp '@type.type [mkApp '@pattern.base.type.type [base] ])) in
+                   (* can't check this one, it's not under binders *)
+                   let pb := Constr.Binder.make (Some @p) (mkApp '@pattern.pattern [base; pident; mkRel 1]) in
+                   let t := mkRel 2 in
+                   let p := mkRel 1 in
+                   debug_Constr_check (fun () => mkLambda tb (mkLambda pb (mkApp '@with_unif_rewrite_ruleTP_gen [base; ident; var; pident; pident_arg_types; value; t; p; should_do_again; 'true; 'true]))) in
+              match Constr.Unsafe.kind_nocast term with
+              | Constr.Unsafe.Lambda xb f
+                => let t := Constr.Binder.type xb in
+                   let rT := Compilers.type.reify reify_base_type base_type t in
+                   let next_i := (eval vm_compute in (debug_Constr_check (fun () => mkApp 'Pos.succ [cur_i]))) in
+                   strip_functional_dependency
+                     (Constr.in_fresh_context
+                        @UNNAMED_VARIABLE [xb]
+                        (fun ns
+                         => let (x, _) := List.nth ns 0 in
+                            let f := debug_Constr_check (fun () => Constr.Unsafe.substnl [mkVar x] 0 f) in
+                            let value_ctx := (x, rT, cur_i) :: value_ctx in
+                            let rf := reify_rec_gen next_i f value_ctx in
+                            Control.refine (fun () => rf)))
+              | _
+                => lazy_match! term with
+                   | (@eq ?t ?a ?b, ?side_conditions)
+                     => let rA := wrap_constr_for_perf (expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None) in
+                        let rB := wrap_constr_for_perf (expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos b [] [] value_ctx [] None) in
+                        let side_conditions := wrap_constr_for_perf (adjust_side_conditions_for_gets_inlined (Fresh.Free.of_goal ()) value_ctx side_conditions) in
+                        let res := check "res"
+                                         (fun () => mkLambda
+                                                      (* Hack around COQBUG(https://github.com/coq/coq/issues/16419) *)
+                                                      (Constr.Binder.make (Some @invalid) '(match _ return Type with ev => ev end))
+                                                      (mkApp cexpr_to_pattern_and_replacement_unfolded [mkRel 1; '_; rA; rB; side_conditions])) in
+                        let res := let pident_arg_types := head_reference pident_arg_types in
+                                   let pident_of_typed_ident := head_reference pident_of_typed_ident in
+                                   let pident_type_of_list_arg_types_beq := head_reference pident_type_of_list_arg_types_beq in
+                                   let pident_arg_types_of_typed_ident := head_reference pident_arg_types_of_typed_ident in
+                                   (eval cbv [expr_to_pattern_and_replacement_unfolded $pident_arg_types $pident_of_typed_ident $pident_type_of_list_arg_types_beq $pident_arg_types_of_typed_ident (*reflect_ident_iota*)] in res) in
+                        let res := (eval cbn [fst snd andb pattern.base.relax pattern.base.subst_default pattern.base.subst_default_relax] in res) in
+                        let res := wrap_constr_for_perf (change_pattern_base_subst_default_relax res) in
+                        let p := (eval cbv [projT1] in
+                                   (check "projT1_res"
+                                          (fun () => mkLambda (Constr.Binder.make (Some @invalid) '(match _ return Type with ev => ev end))
+                                                              (mkApp '@projT1 ['_; '_; mkApp res [mkRel 1] ]))))
+                        (*(fun invalid => projT1 (res invalid))*) in
+                        let p := wrap_constr_for_perf (strip_invalid_or_fail p) in
+                        let p := wrap_constr_for_perf (adjust_pattern_type_variables p) in
+                        (* avoid capturing invalid *)
+                        let res := (eval cbv [projT2] in
+                                     (check "projT2_res"
+                                            (fun () => mkLambda (Constr.Binder.make (Some @invalid) '(match _ return Type with ev => ev end))
+                                                                (mkApp '@projT2 ['_; '_; mkApp res [mkRel 1] ]))))
+                        (*(fun invalid => projT2 (res invalid))*) in
+                        let avoid := Fresh.Free.union (Fresh.Free.of_goal ()) (Fresh.Free.of_constr res) in
+                        let invalid := Fresh.fresh avoid @invalid in
+                        let evm' := Fresh.fresh avoid @evm' in
+                        let res ()
+                          := Constr.in_context
+                               invalid '_
+                               (fun ()
+                                => Control.refine
+                                     (fun ()
+                                      => Constr.in_context
+                                           evm' '(EvarMap_at $base)
+                                           (fun ()
+                                            => Control.refine
+                                                 (fun ()
+                                                  => (* we must check here to unify the evar in the type of invalid, lest we run into COQBUG(https://github.com/coq/coq/issues/16540) *)
+                                                    let res := (eval cbv beta in (check "res invalid" (fun () => mkApp res [mkVar invalid]))) in
+                                                    let res := wrap_constr_for_perf (adjust_lookup_default res) in
+                                                    let res := wrap_constr_for_perf (adjust_type_variables res) in
+                                                    let res := wrap_constr_for_perf (replace_evar_map (mkVar evm') res) in
+                                                    let res := wrap_constr_for_perf (replace_type_try_transport res) in
+                                                    res)))) in
+                        let res := debug_Constr_check res in
+                        let res := (eval cbv [UnderLets.map UnderLets.flat_map reify_expr_beta_iota reflect_expr_beta_iota reify_to_UnderLets] in res) in
+                        let res := (eval cbn [reify reflect UnderLets.of_expr UnderLets.to_expr UnderLets.splice value' Base_value invert_Literal invert_ident_Literal splice_under_lets_with_value] in res) in
+                        let res := wrap_constr_for_perf (strip_invalid_or_fail res) in
+                        (* cbv here not strictly needed *)
+                        let res := (eval cbv [partial_lam_unif_rewrite_ruleTP_gen_unfolded]
+                                     in constr:(existT
+                                                  ($cwith_unif_rewrite_ruleTP_gen _)
+                                                  $p
+                                                  ($cpartial_lam_unif_rewrite_ruleTP_gen _ $p $res))) in
+                        (* not strictly needed *)
+                        let res := (eval cbn [pattern.base.subst_default pattern.base.lookup_default PositiveMap.find type.interp base.interp $base_interp_head] in res) in
+                        let res := (eval cbv [projT1 projT2]
+                                     in constr:(existT
+                                                  (@rewrite_ruleTP $base $ident $var $pident $pident_arg_types)
+                                                  {| pattern.pattern_of_anypattern := projT1 $res |}
+                                                  {| rew_replacement := projT2 $res |})) in
+                        let res := wrap_constr_for_perf (clean_beq base_interp_beq (Fresh.Free.of_goal ()) value_ctx res) in
+                        res
+                   end
+              end).
+
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
+       Ltac reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx var gets_inlined should_do_again cur_i term value_ctx :=
+        let f := ltac2:(base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx var gets_inlined should_do_again cur_i term value_ctx
+                        |- let base := Ltac1.get_to_constr "base" base in
+                           let reify_base := fun ty => Ltac1.apply_c reify_base [ty] in
+                           let base_interp := Ltac1.get_to_constr "base_interp" base_interp in
+                           let base_interp_beq := Ltac1.get_to_constr "base_interp_beq" base_interp_beq in
+                           let try_make_transport_base_cps := Ltac1.get_to_constr "try_make_transport_base_cps" try_make_transport_base_cps in
+                           let ident := Ltac1.get_to_constr "ident" ident in
+                           let reify_ident_opt := expr.reify_ident_opt_of_cps reify_ident in
+                           let pident := Ltac1.get_to_constr "pident" pident in
+                           let pident_arg_types := Ltac1.get_to_constr "pident_arg_types" pident_arg_types in
+                           let pident_type_of_list_arg_types_beq := Ltac1.get_to_constr "pident_type_of_list_arg_types_beq" pident_type_of_list_arg_types_beq in
+                           let pident_of_typed_ident := Ltac1.get_to_constr "pident_of_typed_ident" pident_of_typed_ident in
+                           let pident_arg_types_of_typed_ident := Ltac1.get_to_constr "pident_arg_types_of_typed_ident" pident_arg_types_of_typed_ident in
+                           let reflect_ident_iota := Ltac1.get_to_constr "reflect_ident_iota" reflect_ident_iota in
+                           let type_ctx := Ltac1.get_to_constr "type_ctx" type_ctx in
+                           let var := Ltac1.get_to_constr "var" var in
+                           let gets_inlined := Ltac1.get_to_constr "gets_inlined" gets_inlined in
+                           let should_do_again := Ltac1.get_to_constr "should_do_again" should_do_again in
+                           let cur_i := Ltac1.get_to_constr "cur_i" cur_i in
+                           let term := Ltac1.get_to_constr "term" term in
+                           let value_ctx := Ltac1.get_to_constr "value_ctx" value_ctx in
+                           let value_ctx := expr.value_ctx_to_list value_ctx in
+                           Control.refine (fun () => reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx var gets_inlined should_do_again cur_i term value_ctx)) in
+        constr:(ltac:(f base reify_base base_interp base_interp_beq try_make_transport_base_cps ident ltac:(expr.wrap_reify_ident_cps reify_ident) pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx constr:(var) gets_inlined should_do_again cur_i term value_ctx)).
 
       Ltac reify base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota var gets_inlined should_do_again lem :=
         let base_type := constr:(Compilers.base.type base) in
@@ -995,10 +1050,10 @@ Module Compilers.
           base_type_interp
           lem
           ltac:(
-          fun ty_ctx cur_i lem
-          => let lem := equation_to_parts lem in
-             let res := reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota ty_ctx var gets_inlined should_do_again constr:(1%positive) lem (@expr.var_context.nil (base.type base) (fun _ => positive)) in
-             res).
+                  fun ty_ctx cur_i lem
+                  => let lem := equation_to_parts lem in
+                     let res := reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota ty_ctx var gets_inlined should_do_again constr:(1%positive) lem (@expr.var_context.nil (base.type base) (fun _ => positive)) in
+                     res).
 
       Ltac Reify base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota gets_inlined should_do_again lem :=
         let var := fresh "var" in
