@@ -560,16 +560,20 @@ Module Compilers.
                         |- Control.refine (fun () => change_pattern_base_subst_default_relax (Ltac1.get_to_constr "term" term))) in
         constr:(ltac:(f term)).
 
-      Ltac adjust_lookup_default_internal rewr :=
-        lazymatch (eval pattern (@pattern.base.lookup_default) in rewr) with
-        | ?rewr _
-          => let base := fresh "base" in
-             let p := fresh "p" in
-             let evm := fresh "evm" in
-             (eval cbv beta in (rewr (fun base p evm => @pattern.base.subst_default base (pattern.base.type.var p) evm)))
-        end.
+      Ltac2 adjust_lookup_default (rewr : constr) : constr :=
+        Reify.debug_wrap
+          "adjust_lookup_default" Message.of_constr rewr
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => lazy_match! (eval pattern '@pattern.base.lookup_default in '$rewr) with
+              | ?rewr _
+                => (eval cbv beta in constr:($rewr (fun base p evm => @pattern.base.subst_default base (pattern.base.type.var p) evm)))
+              end).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac adjust_lookup_default rewr :=
-        constr:(ltac:(let v := adjust_lookup_default_internal rewr in refine v)).
+        let f := ltac2:(rewr
+                        |- Control.refine (fun () => adjust_lookup_default (Ltac1.get_to_constr "rewr" rewr))) in
+        constr:(ltac:(f rewr)).
 
       Ltac replace_evar_map_internal evm rewr :=
         let evm' := match rewr with
