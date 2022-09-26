@@ -358,43 +358,180 @@ Module Compilers.
                         |- Control.refine (fun () => adjust_pattern_type_variables (Ltac1.get_to_constr "pat" pat))) in
         constr:(ltac:(f pat)).
 
-      Ltac walk_term_under_binders_fail_invalid invalid term fv :=
-        lazymatch fv with
-        | context[invalid _ _ ?x]
-          => fail 0 "Invalid (in" term "): Invalid:" x
-        | context[invalid]
-          => lazymatch fv with
-             | ?f ?x => walk_term_under_binders_fail_invalid invalid term f;
-                        walk_term_under_binders_fail_invalid invalid term x
-             | fun (x : ?T) => @?f x
-               => let __ :=
-                      constr:(
-                        fun x : T
-                        => ltac:(let f := (eval cbv beta in (f x)) in
-                                 walk_term_under_binders_fail_invalid invalid term f;
-                                 exact I)) in
-                  idtac
-             | context[invalid _ ?x]
-               => fail 0 "Invalid (second arg) (in" term "): Invalid:" x
+      (* this is fancy but probably too complicated to maintain *)
+      Ltac2 walk_term_under_binders_fail_invalid_fast (term : constr) (free : Fresh.Free.t) (invalid : ident) (fv : constr) : unit :=
+        Reify.debug_wrap
+          "walk_term_under_binders_fail_invalid_fast" Message.of_constr fv
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained None
+          (fun ()
+           => let res : (int (* len *) * message) list ref := { contents := [] } in
+              let check_var i args k :=
+                if Ident.equal i invalid
+                then res.(contents) := match args with
+                                       | None => (0, Message.of_string "")
+                                       | Some args
+                                         => let len := Array.length args in
+                                            (len, (fprintf "%t" (Array.get args (Int.sub len 1))))
+                                       end
+                                         :: res.(contents)
+                else k () in
+              let subst_ns (ns : ident list) :=
+                let ns := List.map mkVar ns in
+                Constr.Unsafe.substnl ns 0 in
+              let rec aux (fv : constr) : unit :=
+                Reify.debug_wrap
+                  "walk_term_under_binders_fail_invalid_fast:aux" Message.of_constr fv
+                  Reify.should_debug_fine_grained Reify.should_debug_fine_grained None
+                  (fun ()
+                   => let under (bs : binder list) (k : ident list -> unit) :=
+                        let __ := Constr.in_fresh_context_avoiding
+                                    @UNNAMED_BINDER false (Some free) bs
+                                    (fun ns => List.iter (fun (_, t) => aux t) ns;
+                                               k (List.map (fun (n, _) => n) ns);
+                                               Control.refine (fun () => 'I)) in
+                        () in
+                      match Constr.Unsafe.kind fv with
+                      | Constr.Unsafe.Rel _ => () | Constr.Unsafe.Meta _ => () | Constr.Unsafe.Sort _ => () | Constr.Unsafe.Constant _ _ => () | Constr.Unsafe.Ind _ _ => ()
+                      | Constr.Unsafe.Constructor _ _ => () | Constr.Unsafe.Uint63 _ => () | Constr.Unsafe.Float _ => ()
+                      | Constr.Unsafe.Var v => check_var v None (fun () => ())
+                      | Constr.Unsafe.Cast c _ t => aux c; aux t
+                      | Constr.Unsafe.Prod b c
+                        => under [b] (fun ns => aux (subst_ns ns c))
+                      | Constr.Unsafe.Lambda b c
+                        => under [b] (fun ns => aux (subst_ns ns c))
+                      | Constr.Unsafe.LetIn b v c
+                        => aux v;
+                           under [b] (fun ns => aux (subst_ns ns c))
+                      | Constr.Unsafe.App c l
+                        => let default () := aux c; Array.iter aux l in
+                           match Constr.Unsafe.kind c with
+                           | Constr.Unsafe.Var v
+                             => check_var v (Some l) default
+                           | _ => default ()
+                           end
+                      | Constr.Unsafe.Case _ x iv y bl
+                        => Array.iter aux bl;
+                           Constr.Unsafe.Case.iter_invert aux iv;
+                           aux x;
+                           aux y
+                      | Constr.Unsafe.Proj _p c => aux c
+                      | Constr.Unsafe.Array _u t def ty =>
+                          Array.iter aux t; aux def; aux ty
+                      | Constr.Unsafe.Fix _ _ tl bl =>
+                          under (Array.to_list tl)
+                                (fun ns => let subst_ns := subst_ns ns in
+                                           Array.iter (fun c => aux (subst_ns c)) bl)
+                      | Constr.Unsafe.CoFix _ tl bl =>
+                          under (Array.to_list tl)
+                                (fun ns => let subst_ns := subst_ns ns in
+                                           Array.iter (fun c => aux (subst_ns c)) bl)
+                      | Constr.Unsafe.Evar _ l => () (* not possible to iter in Ltac2... *)
+                      end) in
+              aux fv;
+              match res.(contents) with
+              | [] => Control.zero
+                        (Reification_failure
+                           (fprintf
+                              "Invalid (unknown location): %t" term))
+              | v :: vs
+                => Control.zero
+                     (Reification_failure
+                        (fprintf
+                           "Invalid (in %t):%s%a"
+                           term (String.newline ())
+                           (fun ()
+                            => List.fold_right
+                                 (fun (argn, msg) rest
+                                  => (fprintf "Invalid (arg %i): %a%s%a"
+                                              argn
+                                              (fun () x => x) msg
+                                              (String.newline ())
+                                              (fun () x => x) rest))
+                                 (Message.of_string ""))
+                           (v :: vs)))
+              end).
+
+      Ltac2 rec walk_term_under_binders_fail_invalid (term : constr) (free : Fresh.Free.t) (invalid : ident) (fv : constr) : unit :=
+        Reify.debug_wrap
+          "walk_term_under_binders_fail_invalid" Message.of_constr fv
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained None
+          (fun ()
+           => let recr ns :=
+                walk_term_under_binders_fail_invalid
+                  term
+                  (Fresh.Free.union free (Fresh.Free.of_ids ns))
+                  invalid in
+              let under (b : binder) (k : ident -> unit) : unit :=
+                let __ := Constr.in_fresh_context_avoiding
+                            @UNNAMED_BINDER false (Some free) [b]
+                            (fun ns =>
+                               let (n, t) := List.nth ns 0 in
+                               recr [] (* [] because we haven't added the name to the context at this point *) t;
+                               k n;
+                               Control.refine (fun () => 'I)) in
+                () in
+              let invalid := mkVar invalid in
+              (* recurse first?, err option *)
+              let (recurse_first, res)
+                := match! fv with
+                   | context[?invalid' _ _ ?x]
+                     => if Constr.equal_nounivs invalid' invalid
+                        then (false, Some (Reification_failure (fprintf "Invalid (in %t): Invalid:%s%t" term (String.newline ()) x)))
+                        else Control.zero Match_failure
+                   | context[?invalid' _ ?x]
+                     => if Constr.equal_nounivs invalid' invalid
+                        then (true, Some (Reification_failure (fprintf "Invalid (second arg) (in %t): Invalid:%s%t" term (String.newline ()) x)))
+                        else Control.zero Match_failure
+                   | context[?invalid']
+                     => if Constr.equal_nounivs invalid' invalid
+                        then (true, None)
+                        else Control.zero Match_failure
+                   | _ => (false, None)
+                   end in
+              (if recurse_first
+               then match Constr.Unsafe.kind_nocast fv with
+                    | Constr.Unsafe.App f xs
+                      => recr [] f;
+                         Array.iter (recr []) xs
+                    | Constr.Unsafe.Lambda b f
+                      => under b (fun n => recr [n] (Constr.Unsafe.substnl [mkVar n] 0 f))
+                    | Constr.Unsafe.Prod b f
+                      => under b (fun n => recr [n] (Constr.Unsafe.substnl [mkVar n] 0 f))
+                    | Constr.Unsafe.LetIn b v f
+                      => recr [] v;
+                         under b (fun n => recr [n] (Constr.Unsafe.substnl [mkVar n] 0 f))
+                    | _ => ()
+                    end
+               else ());
+              match res with
+              | Some err => Control.zero err
+              | None => ()
+              end).
+
+      Ltac2 strip_invalid_or_fail (term : constr) : constr :=
+        lazy_match! term with
+        | fun _ => ?f => f
+        | _
+          => match Constr.Unsafe.kind_nocast term with
+             | Constr.Unsafe.Lambda b f
+               => let free := Fresh.Free.union (Fresh.Free.of_goal ()) (Fresh.Free.of_constr term) in
+                  let invalid := Fresh.fresh free @INVALID in
+                  let free := Fresh.Free.union free (Fresh.Free.of_ids [invalid]) in
+                  let f := Constr.Unsafe.substnl [mkVar invalid] 0 f in
+                  let __ := Constr.in_context
+                              invalid (Constr.Binder.type b)
+                              (fun () => walk_term_under_binders_fail_invalid term free invalid f; Control.refine (fun () => 'I)) in
+                  Control.zero (Reification_failure (fprintf "Invalid (unknown subterm): %t" term))
+             | _
+               => Control.throw (Reification_panic (fprintf "strip_invalid_or_fail given non-lambda: %t" term))
              end
-        | _ => idtac
         end.
 
-      Ltac strip_invalid_or_fail_internal term :=
-        lazymatch term with
-        | fun _ => ?f => f
-        | fun invalid : ?T => ?f
-          => let f' := fresh in
-             constr:(fun invalid : T
-                     => match f return _ with
-                        | f'
-                          => ltac:(let f := (eval cbv [f'] in f') in
-                                   walk_term_under_binders_fail_invalid invalid term f;
-                                   fail 0 "Invalid (unknown subterm):" term)
-                        end)
-        end.
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac strip_invalid_or_fail term :=
-        constr:(ltac:(let res := strip_invalid_or_fail_internal term in exact res)).
+        let f := ltac2:(term
+                        |- Control.refine (fun () => strip_invalid_or_fail (Ltac1.get_to_constr "term" term))) in
+        constr:(ltac:(f term)).
 
       Definition pattern_base_subst_default_relax' {base} t evm P
         := @pattern.base.subst_default_relax base P t evm.
