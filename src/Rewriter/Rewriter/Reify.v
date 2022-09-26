@@ -776,7 +776,7 @@ Module Compilers.
                            Control.refine (fun () => substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq x)) in
         constr:(ltac:(f base_interp_beq only_eliminate_in_ctx full_ctx term beq x)).
 
-      Ltac remove_andb_true term :=
+      Ltac remove_andb_true_internal term :=
         let term := lazymatch (eval pattern andb, (andb true) in term) with
                     | ?f _ _ => (eval cbn [andb] in (f (fun x y => andb y x) (fun b => b)))
                     end in
@@ -784,31 +784,37 @@ Module Compilers.
                     | ?f _ _ => (eval cbn [andb] in (f (fun x y => andb y x) (fun b => b)))
                     end in
         term.
-      Ltac adjust_if_negb term :=
+      Ltac remove_andb_true term :=
+        constr:(ltac:(let res := remove_andb_true_internal term in exact res)).
+      Ltac adjust_if_negb_internal term :=
         lazymatch term with
         | context term'[if negb ?x then ?a else ?b]
           => let term := context term'[if x then b else a] in
-             adjust_if_negb term
+             adjust_if_negb_internal term
         | _ => term
         end.
-      Ltac substitute_bool_eqb term :=
+      Ltac adjust_if_negb term :=
+        constr:(ltac:(let res := adjust_if_negb_internal term in exact res)).
+      Ltac substitute_bool_eqb_internal term :=
         lazymatch term with
         | context term'[Bool.eqb ?x true]
           => let term := context term'[x] in
-             substitute_bool_eqb term
+             substitute_bool_eqb_internal term
         | context term'[Bool.eqb ?x false]
           => let term := context term'[negb x] in
-             substitute_bool_eqb term
+             substitute_bool_eqb_internal term
         | context term'[Bool.eqb true ?x]
           => let term := context term'[x] in
-             substitute_bool_eqb term
+             substitute_bool_eqb_internal term
         | context term'[Bool.eqb false ?x]
           => let term := context term'[negb x] in
-             substitute_bool_eqb term
+             substitute_bool_eqb_internal term
         | _ => term
         end.
+      Ltac substitute_bool_eqb term :=
+        constr:(ltac:(let res := substitute_bool_eqb_internal term in exact res)).
 
-      Ltac substitute_beq base_interp_beq only_eliminate_in_ctx full_ctx ctx term :=
+      Ltac substitute_beq_internal base_interp_beq only_eliminate_in_ctx full_ctx ctx term :=
         let base_interp_beq_head := head base_interp_beq in
         lazymatch ctx with
         | dynnil
@@ -825,16 +831,20 @@ Module Compilers.
                                 substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq v
                          | _ => term
                          end in
-             substitute_beq base_interp_beq only_eliminate_in_ctx full_ctx ctx term
+             substitute_beq_internal base_interp_beq only_eliminate_in_ctx full_ctx ctx term
         end.
+      Ltac substitute_beq base_interp_beq only_eliminate_in_ctx full_ctx ctx term :=
+        constr:(ltac:(let res := substitute_beq_internal base_interp_beq only_eliminate_in_ctx full_ctx ctx term in exact res)).
 
-      Ltac deep_substitute_beq base_interp_beq only_eliminate_in_ctx term :=
+      Ltac deep_substitute_beq_internal base_interp_beq only_eliminate_in_ctx term :=
         lazymatch term with
         | context term'[@Build_rewrite_rule_data ?base ?ident ?var ?pident ?pident_arg_types ?t ?p ?sda ?wo ?ul ?subterm]
           => let subterm := under_binders only_eliminate_in_ctx subterm ltac:(fun only_eliminate_in_ctx ctx term => substitute_beq base_interp_beq only_eliminate_in_ctx ctx ctx term) dynnil in
              let term := context term'[@Build_rewrite_rule_data base ident var pident pident_arg_types t p sda wo ul subterm] in
              term
         end.
+      Ltac deep_substitute_beq base_interp_beq only_eliminate_in_ctx term :=
+        constr:(ltac:(let res := deep_substitute_beq_internal base_interp_beq only_eliminate_in_ctx term in exact res)).
 
       Ltac clean_beq_internal base_interp_beq only_eliminate_in_ctx term :=
         let base_interp_beq_head := head base_interp_beq in
