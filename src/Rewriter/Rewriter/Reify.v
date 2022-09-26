@@ -609,25 +609,33 @@ Module Compilers.
                         |- Control.refine (fun () => replace_evar_map (Ltac1.get_to_constr "evm" evm) (Ltac1.get_to_constr "rewr" rewr))) in
         constr:(ltac:(f constr:(evm) rewr)).
 
-      Ltac adjust_type_variables_internal rewr :=
-        lazymatch rewr with
-        | context[@pattern.base.subst_default ?base (pattern.base.relax ?t) ?evm'']
-          => let t' := constr:(@pattern.base.subst_default base (pattern.base.relax t) evm'') in
-             let rewr :=
-                 lazymatch (eval pattern
-                                 t',
-                            (@pattern_base_subst_default_relax' base t evm''),
-                            (@pattern_base_unsubst_default_relax' base t evm'')
-                             in rewr)
-                 with
-                 | ?rewr _ _ _
-                   => (eval cbv beta in (rewr t (fun P x => x) (fun P x => x)))
-                 end in
-             adjust_type_variables_internal rewr
-        | _ => rewr
-        end.
+      Ltac2 rec adjust_type_variables (rewr : constr) : constr :=
+        Reify.debug_wrap
+          "adjust_type_variables" Message.of_constr rewr
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_type_variables" in
+              lazy_match! rewr with
+              | context[@pattern.base.subst_default ?base (@pattern.base.relax ?base ?t) ?evm'']
+                => let t' := debug_Constr_check (fun () => mkApp '@pattern.base.subst_default [base; mkApp '@pattern.base.relax [base; t]; evm'']) in
+                   let rewr :=
+                     lazy_match! (eval pattern
+                                       $t',
+                                   (@pattern_base_subst_default_relax' $base $t $evm''),
+                                   (@pattern_base_unsubst_default_relax' $base $t $evm'')
+                                   in $rewr)
+                     with
+                     | ?rewr _ _ _
+                       => (eval cbv beta in constr:($rewr $t (fun P x => x) (fun P x => x)))
+                     end in
+                   adjust_type_variables rewr
+              | _ => rewr
+              end).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac adjust_type_variables rewr :=
-        constr:(ltac:(let v := adjust_type_variables_internal rewr in refine v)).
+        let f := ltac2:(rewr
+                        |- Control.refine (fun () => adjust_type_variables (Ltac1.get_to_constr "rewr" rewr))) in
+        constr:(ltac:(f rewr)).
 
       Ltac replace_type_try_transport_internal term :=
         lazymatch term with
