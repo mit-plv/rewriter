@@ -380,7 +380,7 @@ Module Compilers.
         | _ => idtac
         end.
 
-      Ltac strip_invalid_or_fail term :=
+      Ltac strip_invalid_or_fail_internal term :=
         lazymatch term with
         | fun _ => ?f => f
         | fun invalid : ?T => ?f
@@ -393,6 +393,8 @@ Module Compilers.
                                    fail 0 "Invalid (unknown subterm):" term)
                         end)
         end.
+      Ltac strip_invalid_or_fail term :=
+        constr:(ltac:(let res := strip_invalid_or_fail_internal term in exact res)).
 
       Definition pattern_base_subst_default_relax' {base} t evm P
         := @pattern.base.subst_default_relax base P t evm.
