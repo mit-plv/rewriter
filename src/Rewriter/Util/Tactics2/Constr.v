@@ -12,17 +12,22 @@ Ltac2 is_sort(c: constr) :=
   | _ => false
   end.
 
-Import Constr.Unsafe.
+Module Unsafe.
+  Export Ltac2.Constr.Unsafe.
 
-Ltac2 rec kind_nocast_gen kind (x : constr) :=
-  let k := kind x in
-  match k with
-  | Cast x _ _ => kind_nocast_gen kind x
-  | _ => k
-  end.
+  Ltac2 rec kind_nocast_gen kind (x : constr) :=
+    let k := kind x in
+    match k with
+    | Cast x _ _ => kind_nocast_gen kind x
+    | _ => k
+    end.
+
+  Ltac2 kind_nocast (x : constr) : kind := kind_nocast_gen kind x.
+End Unsafe.
+Import Unsafe.
 
 Ltac2 rec equal_nounivs (x : constr) (y : constr) : bool :=
-  let kind := kind_nocast_gen kind in
+  let kind := Unsafe.kind_nocast in
   if Constr.equal x y
   then true
   else match kind x with
