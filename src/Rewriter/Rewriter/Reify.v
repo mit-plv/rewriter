@@ -704,7 +704,7 @@ Module Compilers.
         lazymatch (eval pattern y in term) with
         | (fun z => ?term) _ => constr:(match x return _ with z => term end)
         end.
-      Ltac substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq x :=
+      Ltac substitute_beq_with_internal base_interp_beq only_eliminate_in_ctx full_ctx term beq x :=
         let is_good y :=
             lazymatch full_ctx with
             | context[dyncons y _] => fail
@@ -737,6 +737,8 @@ Module Compilers.
              end
         | None => term
         end.
+      Ltac substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq x :=
+        constr:(ltac:(let res := substitute_beq_with_internal base_interp_beq only_eliminate_in_ctx full_ctx term beq x in exact res)).
       Ltac remove_andb_true term :=
         let term := lazymatch (eval pattern andb, (andb true) in term) with
                     | ?f _ _ => (eval cbn [andb] in (f (fun x y => andb y x) (fun b => b)))
