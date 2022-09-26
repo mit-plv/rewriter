@@ -776,16 +776,23 @@ Module Compilers.
                            Control.refine (fun () => substitute_beq_with base_interp_beq only_eliminate_in_ctx full_ctx term beq x)) in
         constr:(ltac:(f base_interp_beq only_eliminate_in_ctx full_ctx term beq x)).
 
-      Ltac remove_andb_true_internal term :=
-        let term := lazymatch (eval pattern andb, (andb true) in term) with
-                    | ?f _ _ => (eval cbn [andb] in (f (fun x y => andb y x) (fun b => b)))
-                    end in
-        let term := lazymatch (eval pattern andb, (andb true) in term) with
-                    | ?f _ _ => (eval cbn [andb] in (f (fun x y => andb y x) (fun b => b)))
-                    end in
-        term.
+      Ltac2 remove_andb_true (term : constr) : constr :=
+        Reify.debug_wrap
+          "remove_andb_true" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let term := lazy_match! (eval pattern 'andb, '(andb true) in '$term) with
+                          | ?f _ _ => (eval cbn [andb] in constr:($f (fun x y => andb y x) (fun b => b)))
+                          end in
+              let term := lazy_match! (eval pattern 'andb, '(andb true) in '$term) with
+                          | ?f _ _ => (eval cbn [andb] in constr:($f (fun x y => andb y x) (fun b => b)))
+                          end in
+              term).
+      #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac remove_andb_true term :=
-        constr:(ltac:(let res := remove_andb_true_internal term in exact res)).
+        let f := ltac2:(term
+                        |- Control.refine (fun () => remove_andb_true (Ltac1.get_to_constr "term" term))) in
+        constr:(ltac:(f term)).
       Ltac adjust_if_negb_internal term :=
         lazymatch term with
         | context term'[if negb ?x then ?a else ?b]
