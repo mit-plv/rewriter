@@ -1090,10 +1090,10 @@ Module Compilers.
       Export Rewriter.Compilers.RewriteRules.Make.
       Import pattern.ident.GoalType.
 
-      Ltac build_pident_pair exprExtraInfo pkg :=
+      Ltac2 build_pident_pair (exprExtraInfo : constr) (pkg : constr) : constr :=
         let v := (eval vm_compute in
-                     (fun A B => @of_typed_ident_of pkg _ (@ident.ident_pair _ _ _ (@Classes.buildIdent _ exprExtraInfo) A B))) in
-        let h := lazymatch v with fun A B => ?f _ _ => f end in
+                   constr:(match $pkg, $exprExtraInfo return _ with pkg, exprExtraInfo => fun A B => @of_typed_ident_of pkg _ (@ident.ident_pair _ _ _ (@Classes.buildIdent _ exprExtraInfo) A B) end)) in
+        let h := lazy_match! v with fun A B => ?f _ _ => f end in
         h.
       Section make_rewrite_rules.
         Import Compile.
@@ -1347,20 +1347,20 @@ Module Compilers.
         End bundled.
       End make_rewrite_rules.
 
-      Ltac build_interp_rewrite_rules exprInfo exprExtraInfo pkg :=
-        let exprInfo := (eval hnf in exprInfo) in
-        let exprExtraInfo := (eval hnf in exprExtraInfo) in
+      Ltac2 build_interp_rewrite_rules (exprInfo : constr) (exprExtraInfo : constr) (pkg : constr) : constr :=
+        let exprInfo := Std.eval_hnf exprInfo in
+        let exprExtraInfo := Std.eval_hnf exprExtraInfo in
         let pident_pair := build_pident_pair exprExtraInfo pkg in
-        let ident_interp := (eval cbv [Classes.ident_interp] in (@Classes.ident_interp exprInfo)) in
-        let ident_interp_head := head ident_interp in
-        let base_interp_beq := (eval cbv [Classes.base_interp_beq] in (@Classes.base_interp_beq exprInfo exprExtraInfo)) in
-        let base_interp_beq_head := head base_interp_beq in
-        let x := fresh "x" in
-        let v := (eval cbv -[ident_interp_head ident.smart_Literal base_interp_beq_head] in
-                     (fun var
-                      => @interp_rewrite_rules_folded
-                           exprInfo exprExtraInfo pkg var pident_pair (fun evm t x => Datatypes.fst x))) in
-        let v := (eval cbv [ident_interp_head ident.smart_Literal ident.ident_Literal ident.ident_tt ident.ident_pair] in v) in
+        let ident_interp := (eval cbv [Classes.ident_interp] in '(@Classes.ident_interp $exprInfo)) in
+        let ident_interp_head := head_reference ident_interp in
+        let base_interp_beq := (eval cbv [Classes.base_interp_beq] in '(@Classes.base_interp_beq $exprInfo $exprExtraInfo)) in
+        let base_interp_beq_head := head_reference base_interp_beq in
+        let v := (eval cbv -[$ident_interp_head ident.smart_Literal $base_interp_beq_head] in
+                   constr:(match @interp_rewrite_rules_folded $exprInfo $exprExtraInfo $pkg, $pident_pair return _ with
+                           | h, pident_pair
+                             => fun var => h var pident_pair (fun evm t x => Datatypes.fst x)
+                           end)) in
+        let v := (eval cbv [$ident_interp_head ident.smart_Literal ident.ident_Literal ident.ident_tt ident.ident_pair] in $v) in
         v.
 
       Module Import AdjustRewriteRulesForReduction.
@@ -1416,13 +1416,13 @@ Module Compilers.
             all_rewrite_rules.
       End AdjustRewriteRulesForReduction.
 
-      Ltac Reify reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs :=
+      Ltac2 _Reify (reify_package : constr) (exprInfo : constr) (exprExtraInfo : constr) (pkg : constr) (ident_is_var_like : constr) (include_interp : constr) (specs : constr) : constr :=
         let reify_base := Basic.Tactic.reify_base_via_reify_package reify_package in
-        let reify_ident := Basic.Tactic.reify_ident_via_reify_package reify_package in
-        let exprInfo := (eval hnf in exprInfo) in
-        let exprExtraInfo := (eval hnf in exprExtraInfo) in
-        let pkg := (eval hnf in pkg) in
-        lazymatch constr:((exprInfo, exprExtraInfo, pkg)) with
+        let reify_ident := Basic.Tactic.reify_ident_via_reify_package_opt reify_package in
+        let exprInfo := Std.eval_hnf exprInfo in
+        let exprExtraInfo := Std.eval_hnf exprExtraInfo in
+        let pkg := Std.eval_hnf pkg in
+        lazy_match! constr:(($exprInfo, $exprExtraInfo, $pkg)) with
         | ({| Classes.base := ?base
               ; Classes.ident := ?ident
               ; Classes.base_interp := ?base_interp
@@ -1443,24 +1443,32 @@ Module Compilers.
                 ; of_typed_ident_unfolded := ?of_typed_ident_unfolded
                 ; arg_types_of_typed_ident_unfolded := ?arg_types_of_typed_ident_unfolded
              |})
-          => let base_type := constr:(Compilers.base.type base) in
-             let reflect_ident_iota := constr:(@Compile.reflect_ident_iota base ident base_interp baseTypeHasNat buildIdent buildEagerIdent toRestrictedIdent toFromRestrictedIdent invertIdent baseHasNatCorrect try_make_transport_base_cps) in
-             let lems := Reify.Reify_list base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pattern_ident arg_types_unfolded type_of_list_arg_types_beq_unfolded of_typed_ident_unfolded arg_types_of_typed_ident_unfolded reflect_ident_iota (fun var t => @SubstVarLike.is_recursively_var_or_ident base_type ident var ident_is_var_like (type.base t)) specs in
-             lazymatch include_interp with
+          => let base_type := constr:(@Compilers.base.type $base) in
+             let reflect_ident_iota := constr:(@Compile.reflect_ident_iota $base $ident $base_interp $baseTypeHasNat $buildIdent $buildEagerIdent $toRestrictedIdent $toFromRestrictedIdent $invertIdent $baseHasNatCorrect $try_make_transport_base_cps) in
+             let lems := Reify._Reify_list base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pattern_ident arg_types_unfolded type_of_list_arg_types_beq_unfolded of_typed_ident_unfolded arg_types_of_typed_ident_unfolded reflect_ident_iota (constr:(match $base_type, $ident, $ident_is_var_like return _ with base_type', ident', ident_is_var_like' => fun var t => @SubstVarLike.is_recursively_var_or_ident base_type' ident' var ident_is_var_like' (type.base t) end)) specs in
+             lazy_match! include_interp with
              | true
-               => let myapp := (eval cbv [List.app] in (@List.app)) in
+               => let myapp := (eval cbv [Datatypes.app] in '(@Datatypes.app)) in
                   let interp_rewrite_rules := build_interp_rewrite_rules exprInfo exprExtraInfo pkg in
                   let res := (eval cbv beta iota in
-                                 (fun var => myapp _ (@interp_rewrite_rules var) (lems var))) in
-                  let len := lazymatch (eval compute in (fun var => List.length (@interp_rewrite_rules var))) with (fun _ => ?n) => n end in
-                  let adjusted_specs := (eval cbv [List.app List.repeat] in
-                                            (List.app
-                                               (List.repeat (false, forall A (x : A), x = x) len))) in
-                  constr:((len, adjusted_specs specs, res))
-             | false => constr:((O, specs, lems))
-             | _ => constr_fail_with ltac:(fun _ => fail 1 "Invalid value for include_interp (must be either true or false):" include_interp)
+                               constr:(match $myapp, $interp_rewrite_rules, $lems return _ with
+                                       | myapp', interp_rewrite_rules', lems'
+                                         => fun var => myapp' _ (@interp_rewrite_rules' var) (lems' var)
+                                       end)) in
+                  let len := lazy_match! (eval cbv in constr:(match $interp_rewrite_rules return _ with interp_rewrite_rules' => fun var => List.length (interp_rewrite_rules' var) end)) with (fun _ => ?n) => n end in
+                  let adjusted_specs := (eval cbv [Datatypes.app List.repeat] in
+                                          constr:(List.app
+                                                    (List.repeat (false, forall A (x : A), x = x) $len))) in
+                  constr:(($len, $adjusted_specs $specs, $res))
+             | false => constr:((O, $specs, $lems))
+             | _ => Control.throw (Reification_panic (fprintf "Invalid value for include_interp (must be either true or false): %t" include_interp))
              end
         end.
+      (* Note that this one doesn't need to be deprecated, because it doesn't incur much overhead *)
+      Ltac Reify reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs :=
+        let f := ltac2:(reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs
+                        |- Control.refine (fun () => _Reify (Ltac1.get_to_constr "reify_package" reify_package) (Ltac1.get_to_constr "exprInfo" exprInfo) (Ltac1.get_to_constr "exprExtraInfo" exprExtraInfo) (Ltac1.get_to_constr "pkg" pkg) (Ltac1.get_to_constr "ident_is_var_like" ident_is_var_like) (Ltac1.get_to_constr "include_interp" include_interp) (Ltac1.get_to_constr "specs" specs))) in
+        constr:(ltac:(f reify_package exprInfo exprExtraInfo pkg ident_is_var_like include_interp specs)).
 
       Ltac make_rewrite_head1 base_interp try_make_transport_base_cps base_beq pident_unify_unknown invert_bind_args_unknown rewrite_head0 pr2_rewrite_rules :=
         time_tac_in_constr_if_debug1
