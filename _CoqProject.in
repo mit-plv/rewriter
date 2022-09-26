@@ -112,6 +112,7 @@ src/Rewriter/Util/Tactics2/Char.v
 src/Rewriter/Util/Tactics2/Constr.v
 src/Rewriter/Util/Tactics2/Head.v
 src/Rewriter/Util/Tactics2/Ident.v
+src/Rewriter/Util/Tactics2/Iterate.v
 src/Rewriter/Util/Tactics2/List.v
 src/Rewriter/Util/Tactics2/Ltac1.v
 src/Rewriter/Util/Tactics2/Message.v
