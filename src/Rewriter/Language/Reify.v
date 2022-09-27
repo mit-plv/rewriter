@@ -171,6 +171,18 @@ Module Compilers.
            ().
     Ltac2 debug_print_args (funname : string) (pr : 'a -> message) (args : 'a)
       := debug_if should_debug_print_args (fun () => printf "%s: args: %a" funname (fun () => pr) args) ().
+    Module Constr.
+      Ltac2 debug_check (funname : string) (e : constr)
+        := debug_if
+             should_debug_check_app_early
+             (fun () => match Constr.Unsafe.check e with
+                        | Val e => e
+                        | Err err => Control.throw
+                                       (Reification_panic
+                                          (fprintf "Anomaly: %s:%s%t failed to check:%s%a" funname (String.newline ()) e (String.newline ()) (fun () => Message.of_exn) err))
+                        end)
+             e.
+    End Constr.
     Ltac2 debug_Constr_check (funname : string) (descr : constr -> constr -> exn -> message) (var : constr) (cache : (unit -> binder) list) (var_ty_ctx : constr list) (e : constr)
       := debug_if
            should_debug_check_app_early
