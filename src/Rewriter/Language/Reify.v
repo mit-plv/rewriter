@@ -109,6 +109,7 @@ Module Compilers.
     Ltac2 mutable should_debug_typing_failure_assume_well_typed () := Int.le 2 debug_level.
     Ltac2 mutable should_debug_check_app_early () := Int.le 6 debug_level.
     Ltac2 mutable should_debug_profile () := Int.le 1 debug_level.
+    Ltac2 mutable should_debug_with_holes () := Int.le 1 debug_level.
 
     Ltac2 debug_if (cond : unit -> bool) (tac : unit -> 'a) (default : 'a) :=
       if cond ()
@@ -171,6 +172,20 @@ Module Compilers.
            ().
     Ltac2 debug_print_args (funname : string) (pr : 'a -> message) (args : 'a)
       := debug_if should_debug_print_args (fun () => printf "%s: args: %a" funname (fun () => pr) args) ().
+
+    Ltac2 debug_wrap (funname : string) (pr_descr : 'a -> message) (descr : 'a) (should_debug_enter : unit -> bool) (should_debug_leave : unit -> bool) (pr_leave : ('b -> message) option) (tac : unit -> 'b) : 'b :=
+      let with_holes := if should_debug_with_holes () then Control.with_holes else fun tac cont => cont (tac ()) in
+      (if should_debug_enter () then printf "%s: %a" funname (fun () => pr_descr) descr else ());
+      with_holes
+        (fun () => Control.once (fun () => debug_profile funname tac))
+        (fun res => (if should_debug_leave ()
+                     then match pr_leave with
+                          | Some pr => printf "%s success (%a)" funname (fun () => pr) res
+                          | None => printf "%s success" funname
+                          end
+                     else ());
+                    res).
+
     Module Constr.
       Ltac2 debug_check (funname : string) (e : constr)
         := debug_if
