@@ -173,8 +173,29 @@ Module Compilers.
     Ltac2 debug_print_args (funname : string) (pr : 'a -> message) (args : 'a)
       := debug_if should_debug_print_args (fun () => printf "%s: args: %a" funname (fun () => pr) args) ().
 
+    Ltac2 Type exn ::= [ Internal_debug_wrap_no_holes (exn) ].
     Ltac2 debug_wrap (funname : string) (pr_descr : 'a -> message) (descr : 'a) (should_debug_enter : unit -> bool) (should_debug_leave : unit -> bool) (pr_leave : ('b -> message) option) (tac : unit -> 'b) : 'b :=
-      let with_holes := if should_debug_with_holes () then Control.with_holes else fun tac cont => cont (tac ()) in
+      let with_holes tac cont
+        := if should_debug_with_holes ()
+           then
+             match
+               Control.case
+                 (fun ()
+                  => Control.with_holes
+                       (fun () => match Control.case tac with
+                                  | Val v => let (v, _) := v in v
+                                  | Err err => Control.zero (Internal_debug_wrap_no_holes err)
+                                  end)
+                       cont)
+             with
+             | Val v => let (v, _) := v in v
+             | Err err
+               => match err with
+                  | Internal_debug_wrap_no_holes err => Control.zero err
+                  | _ => Control.throw (Reification_panic (fprintf "Failed to resolve holes in %s: %a" funname (fun () => Message.of_exn) err))
+                  end
+             end
+           else cont (tac ()) in
       (if should_debug_enter () then printf "%s: %a" funname (fun () => pr_descr) descr else ());
       with_holes
         (fun () => Control.once (fun () => debug_profile funname tac))
