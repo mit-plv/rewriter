@@ -208,7 +208,16 @@ Module Compilers.
                     res).
 
     Module Constr.
-      Ltac2 debug_check (funname : string) (e : constr)
+      Ltac2 debug_assert_hole_free (funname : string) (e : constr)
+        := debug_if
+             should_debug_check_app_early
+             (fun () => if Constr.has_evar e
+                        then Control.throw
+                               (Reification_panic
+                                  (fprintf "Anomaly: %s:%s%t has an unresolved evar" funname (String.newline ()) e))
+                        else e)
+             e.
+      Ltac2 debug_check_allow_holes (funname : string) (e : constr)
         := debug_if
              should_debug_check_app_early
              (fun () => match Constr.Unsafe.check e with
@@ -218,8 +227,10 @@ Module Compilers.
                                           (fprintf "Anomaly: %s:%s%t failed to check:%s%a" funname (String.newline ()) e (String.newline ()) (fun () => Message.of_exn) err))
                         end)
              e.
+      Ltac2 debug_check (funname : string) (e : constr)
+        := debug_assert_hole_free funname (debug_check_allow_holes funname e).
     End Constr.
-    Ltac2 debug_Constr_check (funname : string) (descr : constr -> constr -> exn -> message) (var : constr) (cache : (unit -> binder) list) (var_ty_ctx : constr list) (e : constr)
+    Ltac2 debug_Constr_check_allow_holes (funname : string) (descr : constr -> constr -> exn -> message) (var : constr) (cache : (unit -> binder) list) (var_ty_ctx : constr list) (e : constr)
       := debug_if
            should_debug_check_app_early
            (fun () => match Constr.Unsafe.check e with
@@ -239,6 +250,8 @@ Module Compilers.
                            e
                       end)
            e.
+    Ltac2 debug_Constr_check (funname : string) (descr : constr -> constr -> exn -> message) (var : constr) (cache : (unit -> binder) list) (var_ty_ctx : constr list) (e : constr)
+      := Constr.debug_assert_hole_free funname (debug_Constr_check_allow_holes funname descr var cache var_ty_ctx e).
   End Reify.
 
   Module type.
