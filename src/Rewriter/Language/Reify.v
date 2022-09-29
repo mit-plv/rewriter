@@ -229,6 +229,30 @@ Module Compilers.
              e.
       Ltac2 debug_check (funname : string) (e : constr)
         := debug_assert_hole_free funname (debug_check_allow_holes funname e).
+      Ltac2 debug_check_strict (funname : string) (e : unit -> constr) : constr
+        := let e () := debug_check funname (e ()) in
+           if should_debug_with_holes ()
+           then
+             match
+               Control.case
+                 (fun ()
+                  => Control.with_holes
+                       (fun () => match Control.case e with
+                                  | Val v => let (v, _) := v in v
+                                  | Err err => Control.zero (Internal_debug_wrap_no_holes err)
+                                  end)
+                       (fun a => a))
+             with
+             | Val v => let (v, _) := v in v
+             | Err err
+               => match err with
+                  | Internal_debug_wrap_no_holes err => Control.zero err
+                  | _ => let e := e () in
+                         Control.throw (Reification_panic (fprintf "Failed to resolve holes in %s:%s%t%s%a" funname (String.newline ()) e (String.newline ()) (fun () => Message.of_exn) err))
+                  end
+             end
+           else
+             e ().
     End Constr.
     Ltac2 debug_Constr_check_allow_holes (funname : string) (descr : constr -> constr -> exn -> message) (var : constr) (cache : (unit -> binder) list) (var_ty_ctx : constr list) (e : constr)
       := debug_if
