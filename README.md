@@ -5,7 +5,7 @@ Building
 -----
 [![CI (Coq)](https://github.com/mit-plv/rewriter/actions/workflows/coq.yml/badge.svg?branch=master)](https://github.com/mit-plv/rewriter/actions/workflows/coq.yml?query=branch%3Amaster)
 
-This repository requires Coq 8.11 or later, and requires that the version of OCaml used to build Coq be installed and accessible on the system.
+This repository requires Coq 8.15 or later, and requires that the version of OCaml used to build Coq be installed and accessible on the system.
 
 Git submodules are used for some dependencies. If you did not clone with `--recursive`, run
 
