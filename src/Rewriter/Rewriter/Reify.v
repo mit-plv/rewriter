@@ -655,7 +655,7 @@ Module Compilers.
                          end in
               match res with
               | Some v
-                => let term := lazy_match! (eval pattern $v in $term) with
+                => let term := lazy_match! (eval pattern v in term) with
                                | ?term _ => (eval cbv beta in '($term (@Some _)))
                                end in
                    replace_type_try_transport term
