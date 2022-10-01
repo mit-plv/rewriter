@@ -543,7 +543,7 @@ Module Compilers.
           "change_pattern_base_subst_default_relax" Message.of_constr term
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
-           => lazy_match! (eval pattern '@pattern.base.subst_default_relax, '@pattern.base.unsubst_default_relax in '$term) with
+           => lazy_match! (eval pattern '@pattern.base.subst_default_relax, '@pattern.base.unsubst_default_relax in term) with
               | ?f _ _
                 => (eval cbv beta in constr:($f (fun base P t evm => @pattern_base_subst_default_relax' base t evm P) (fun base P t evm => @pattern_base_unsubst_default_relax' base t evm P)))
               end).
