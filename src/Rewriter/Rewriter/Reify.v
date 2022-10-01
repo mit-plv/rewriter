@@ -781,10 +781,10 @@ Module Compilers.
           "remove_andb_true" Message.of_constr term
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
-           => let term := lazy_match! (eval pattern 'andb, '(andb true) in '$term) with
+           => let term := lazy_match! (eval pattern 'andb, '(andb true) in term) with
                           | ?f _ _ => (eval cbn [andb] in constr:($f (fun x y => andb y x) (fun b => b)))
                           end in
-              let term := lazy_match! (eval pattern 'andb, '(andb true) in '$term) with
+              let term := lazy_match! (eval pattern 'andb, '(andb true) in term) with
                           | ?f _ _ => (eval cbn [andb] in constr:($f (fun x y => andb y x) (fun b => b)))
                           end in
               term).
