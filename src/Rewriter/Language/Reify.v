@@ -580,7 +580,7 @@ Module Compilers.
       let handle_eliminator (motive : constr) (rect_arrow_nodep : constr option) (rect_nodep : constr option) (rect : constr) (mid_args : constr list) (cases_to_thunk : constr list)
         := let mkApp_thunked_cases f pre_args
              := Control.with_holes
-                  (fun () => mkApp f (List.append pre_args (List.append mid_args (List.map (fun arg => open_constr:(fun _ => $arg)) cases_to_thunk))))
+                  (fun () => mkApp f (List.append pre_args (List.append mid_args (List.map (fun arg => '(fun _ => $arg)) cases_to_thunk))))
                   (fun fv => match Constr.Unsafe.check fv with
                              | Val fv => fv
                              | Err err => Control.throw err
@@ -593,7 +593,7 @@ Module Compilers.
                               else mkApp rect (List.append args (List.append mid_args cases_to_thunk)))
              | None => Control.zero Match_failure
              end in
-           let (f, x) := match! (eval cbv beta in $motive) with
+           let (f, x) := match! (eval cbv beta in motive) with
                          | fun _ => ?a -> ?b
                            => opt_recr false rect_arrow_nodep [a; b]
                          | fun _ => ?t
