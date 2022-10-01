@@ -719,7 +719,7 @@ Module Compilers.
              (Cache.to_thunked_binder_context cache)
              var_ty_ctx e in
       let reify_ident_opt term
-        := Option.map (fun idc => debug_check (mkApp '(@Ident) [base_type; ident; var; open_constr:(_); idc]))
+        := Option.map (fun idc => debug_check (mkApp '@Ident [base_type; ident; var; '_; idc]))
                       (reify_ident_opt ctx_tys term) in
       Reify.debug_enter_reify "expr.reify_in_context" term;
       Reify.debug_print_args
