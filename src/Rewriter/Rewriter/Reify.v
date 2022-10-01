@@ -584,7 +584,8 @@ Module Compilers.
           "replace_evar_map" (fun (evm, rewr) => fprintf "(%t) in %t" evm rewr) (evm, rewr)
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
-           => let evm' := match! rewr with
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "replace_evar_map" in
+              let evm' := match! rewr with
                           | context[@pattern.base.lookup_default ?_base ?_p ?evm']
                             => if Constr.equal evm evm'
                                then Control.zero Match_failure
@@ -600,7 +601,7 @@ Module Compilers.
               | Some evm'
                 => Reify.debug_fine_grained "replace_evar_map" (fun () => fprintf "(%t) → (%t)" evm' evm);
                    let rewr := lazy_match! (eval pattern evm' in rewr) with
-                               | ?rewr _ => (eval cbv beta in '($rewr $evm))
+                               | ?rewr _ => (eval cbv beta in (debug_Constr_check (fun () => mkApp rewr [evm])))
                                end in
                    replace_evar_map evm rewr
               end).
