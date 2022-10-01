@@ -123,6 +123,7 @@ src/Rewriter/Util/Tactics2/Message.v
 src/Rewriter/Util/Tactics2/Notations.v
 src/Rewriter/Util/Tactics2/Option.v
 src/Rewriter/Util/Tactics2/Proj.v
+src/Rewriter/Util/Tactics2/ReplaceByPattern.v
 src/Rewriter/Util/Tactics2/String.v
 src/Rewriter/Util/Tactics2/Constr/Unsafe/MakeAbbreviations.v
 src/Rewriter/Util/plugins/RewriterBuildRegistryImports.v
