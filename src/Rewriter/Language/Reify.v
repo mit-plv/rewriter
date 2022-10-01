@@ -284,16 +284,17 @@ Module Compilers.
     Import Language.Compilers.type.
     Ltac2 rec reify (base_reify : constr -> constr) (base_type : constr) (ty : constr) :=
       Reify.debug_enter_reify "type.reify" ty;
+      let debug_Constr_check := Reify.Constr.debug_check_strict "type.reify" in
       let reify_rec (t : constr) := reify base_reify base_type t in
       let res :=
         lazy_match! (eval cbv beta in ty) with
         | ?a -> ?b
           => let ra := reify_rec a in
              let rb := reify_rec b in
-             '(@arrow $base_type $ra $rb)
+             debug_Constr_check (fun () => mkApp '@arrow [base_type; ra; rb])
         | @interp _ _ ?t => t
         | _ => let rt := base_reify ty in
-               '(@base $base_type $rt)
+               debug_Constr_check (fun () => mkApp '@base [base_type; rt])
         end in
       Reify.debug_leave_reify_success "type.reify" ty res;
       res.
