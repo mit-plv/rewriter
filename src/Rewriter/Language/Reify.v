@@ -290,10 +290,10 @@ Module Compilers.
         | ?a -> ?b
           => let ra := reify_rec a in
              let rb := reify_rec b in
-             (mkApp '@arrow [base_type; ra; rb])
+             '(@arrow $base_type $ra $rb)
         | @interp _ _ ?t => t
         | _ => let rt := base_reify ty in
-               (mkApp '@base [base_type; rt])
+               '(@base $base_type $rt)
         end in
       Reify.debug_leave_reify_success "type.reify" ty res;
       res.
