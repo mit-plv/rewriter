@@ -640,29 +640,38 @@ Module Compilers.
                         |- Control.refine (fun () => adjust_type_variables (Ltac1.get_to_constr "rewr" rewr))) in
         constr:(ltac:(f rewr)).
 
-      Ltac2 rec replace_type_try_transport (term : constr) : constr :=
+      Ltac2 replace_type_try_transport (term : constr) : constr :=
         Reify.debug_wrap
           "replace_type_try_transport" Message.of_constr term
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
            => let debug_Constr_check := Reify.Constr.debug_check_strict "replace_type_try_transport" in
-              let res := match! term with
-                         | context[?v]
-                           => lazy_match! v with
-                              | @type.try_transport ?base_type ?try_make_transport_base_type_cps ?p ?t ?t
-                                => Some (v, debug_Constr_check (fun () => mkApp p [t]))
-                              end
-                         | _ => None
-                         end in
-              match res with
-              | Some v
-                => let (v, pt) := v in
-                   let term := lazy_match! (eval pattern v in term) with
-                               | ?term _ => (eval cbv beta in
-                                              (debug_Constr_check (fun () => mkApp term [mkApp '@Some [pt] ])))
-                               end in
-                   replace_type_try_transport term
-              | None => term
+              let some := '@Some in
+              let rec aux (term : constr) (acc : constr list) : constr * constr list :=
+                let res := match! term with
+                           | context[?v]
+                             => lazy_match! v with
+                                | @type.try_transport ?base_type ?try_make_transport_base_type_cps ?p ?t ?t
+                                  => Some (v, p, t)
+                                end
+                           | _ => None
+                           end in
+                match res with
+                | Some v
+                  => let (v, p, t) := v in
+                     let some_pt := debug_Constr_check (fun () => mkApp some [ mkApp p [t] ]) in
+                     let term := lazy_match! (eval pattern v in term) with
+                                 | ?term _ => term
+                                 end in
+                     aux term (some_pt :: acc)
+                | None => (term, acc)
+                end in
+              let (term, args) := aux term [] in
+              match args with
+              | [] => term
+              | _ :: _
+                => (eval cbv beta in
+                     (debug_Constr_check (fun () => mkApp term args)))
               end).
       #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac replace_type_try_transport term :=
