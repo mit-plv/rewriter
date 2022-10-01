@@ -599,7 +599,7 @@ Module Compilers.
               | None => rewr
               | Some evm'
                 => Reify.debug_fine_grained "replace_evar_map" (fun () => fprintf "(%t) → (%t)" evm' evm);
-                   let rewr := lazy_match! (eval pattern '$evm' in '$rewr) with
+                   let rewr := lazy_match! (eval pattern evm' in rewr) with
                                | ?rewr _ => (eval cbv beta in '($rewr $evm))
                                end in
                    replace_evar_map evm rewr
