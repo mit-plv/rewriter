@@ -560,14 +560,18 @@ Module Compilers.
                         |- Control.refine (fun () => change_pattern_base_subst_default_relax (Ltac1.get_to_constr "term" term))) in
         constr:(ltac:(f term)).
 
+      Definition pattern_base_subst_default_reordered base p evm
+        := @pattern.base.subst_default base (pattern.base.type.var p) evm.
       Ltac2 adjust_lookup_default (rewr : constr) : constr :=
         Reify.debug_wrap
           "adjust_lookup_default" Message.of_constr rewr
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
-           => lazy_match! (eval pattern '@pattern.base.lookup_default in rewr) with
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_lookup_default" in
+              lazy_match! (eval pattern '@pattern.base.lookup_default in rewr) with
               | ?rewr _
-                => (eval cbv beta in constr:($rewr (fun base p evm => @pattern.base.subst_default base (pattern.base.type.var p) evm)))
+                => (eval cbv beta delta [pattern_base_subst_default_reordered] in
+                     (debug_Constr_check (fun () => mkApp rewr ['@pattern_base_subst_default_reordered])))
               end).
       #[deprecated(since="8.15",note="Use Ltac2 instead.")]
       Ltac adjust_lookup_default rewr :=
