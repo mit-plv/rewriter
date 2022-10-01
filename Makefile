@@ -37,7 +37,7 @@ $(COQ_VERSION_FILE)::
 endif
 
 _CoqProject: _CoqProject.in
-	sed 's/@ML4_OR_MLG@/$(ML4_OR_MLG)/g; s/@NATIVE_COMPILER_ARG@/$(NATIVE_COMPILER_ONDEMAND_COQPROJECT_FRAGMENT)/g ; s?@META@?$(META_FILE_FRAGMENT)?g' $< > $@
+	sed 's?@META@?$(META_FILE_FRAGMENT)?g' $< > $@
 
 # This target is used to update the _CoqProject file.
 # But it only works if we have git
@@ -45,9 +45,8 @@ ifneq (,$(wildcard .git/))
 SORT_COQPROJECT = sed 's,[^/]*/,~&,g' | env LC_COLLATE=C sort | sed 's,~,,g'
 EXISTING_COQPROJECT_CONTENTS_SORTED:=$(shell cat _CoqProject.in 2>&1 | $(SORT_COQPROJECT))
 WARNINGS_PLUS := +implicit-core-hint-db,+implicits-in-term,+non-reversible-notation,+deprecated-intros-until-0,+deprecated-focus,+unused-intro-pattern,+deprecated-hint-constr,+fragile-hint-constr,+variable-collision,+unexpected-implicit-declaration,+omega-is-deprecated,+deprecated-instantiate-syntax,+non-recursive,+deprecated-hint-rewrite-without-locality,+deprecated-hint-without-locality,+deprecated-instance-without-locality,+undeclared-scope,+deprecated-typeclasses-transparency-without-locality
-# Remove unsupported-attributes once we stop supporting < 8.14
 WARNINGS := $(WARNINGS_PLUS),unsupported-attributes
-COQPROJECT_CMD:=(echo @META@; echo '-R $(SRC_DIR) $(MOD_NAME)'; echo '-I $(PLUGINS_DIR)'; echo '-arg -w -arg $(WARNINGS)'; echo '@NATIVE_COMPILER_ARG@'; (git ls-files '$(SRC_DIR)/*.v' '$(SRC_DIR)/*.mlg' '$(SRC_DIR)/*.mllib' '$(SRC_DIR)/*.ml' '$(SRC_DIR)/*.mli' | $(SORT_COQPROJECT)); (echo '$(COMPATIBILITY_FILES_PATTERN)' | tr ' ' '\n'))
+COQPROJECT_CMD:=(echo @META@; echo '-R $(SRC_DIR) $(MOD_NAME)'; echo '-I $(PLUGINS_DIR)'; echo '-arg -w -arg $(WARNINGS)'; echo '-arg -native-compiler -arg ondemand'; (git ls-files '$(SRC_DIR)/*.v' '$(SRC_DIR)/*.mlg' '$(SRC_DIR)/*.mllib' '$(SRC_DIR)/*.ml' '$(SRC_DIR)/*.mli' | $(SORT_COQPROJECT)); (echo '$(COMPATIBILITY_FILES)' | tr ' ' '\n'))
 NEW_COQPROJECT_CONTENTS_SORTED:=$(shell $(COQPROJECT_CMD) | $(SORT_COQPROJECT))
 
 ifneq ($(EXISTING_COQPROJECT_CONTENTS_SORTED),$(NEW_COQPROJECT_CONTENTS_SORTED))

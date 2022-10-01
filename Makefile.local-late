@@ -11,8 +11,7 @@ $(COMPATIBILITY_FILES) : % : %$(EXPECTED_EXT) $(COQ_VERSION_FILE)
 # ensure that the ml compat files exist before we call coqdep on the corresponding .v files
 $(ALLDFILES): $(COMPATIBILITY_FILES) $(COQ_VERSION_FILE) _CoqProject
 
-# Remove -undeclared-scope once we stop supporting 8.9
-OTHERFLAGS += -w -notation-overridden,-undeclared-scope
+OTHERFLAGS += -w -notation-overridden
 ifneq ($(PROFILE),)
 OTHERFLAGS += -profile-ltac
 endif
