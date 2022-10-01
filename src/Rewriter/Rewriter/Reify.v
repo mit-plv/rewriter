@@ -600,9 +600,7 @@ Module Compilers.
               | None => rewr
               | Some evm'
                 => Reify.debug_fine_grained "replace_evar_map" (fun () => fprintf "(%t) → (%t)" evm' evm);
-                   let rewr := lazy_match! (eval pattern evm' in rewr) with
-                               | ?rewr _ => (eval cbv beta in (debug_Constr_check (fun () => mkApp rewr [evm])))
-                               end in
+                   let rewr := debug_Constr_check (fun () => Constr.Unsafe.replace_by_pattern [evm'] [evm] rewr) in
                    replace_evar_map evm rewr
               end).
       #[deprecated(since="8.15",note="Use Ltac2 instead.")]
