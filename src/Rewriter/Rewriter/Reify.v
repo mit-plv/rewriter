@@ -22,6 +22,7 @@ Require Import Rewriter.Util.Tactics.CacheTerm.
 Require Import Rewriter.Util.Tactics.DebugPrint.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Notations.
+Require Import Rewriter.Util.Tactics2.FixNotationsForPerformance.
 Require Import Rewriter.Util.Tactics2.InFreshContext.
 Import ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
 
