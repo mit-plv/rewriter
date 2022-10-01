@@ -406,7 +406,7 @@ Module Compilers.
         parameters as necessary. *)
     Ltac2 rec is_template_parameter (ctx_tys : binder list) (parameter_type : constr) : bool :=
       let do_red () :=
-        let t := Std.eval_hnf parameter_type in
+        let t := eval hnf in parameter_type in
         if Constr.equal t parameter_type
         then false
         else is_template_parameter ctx_tys t in
