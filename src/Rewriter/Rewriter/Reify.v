@@ -884,13 +884,8 @@ Module Compilers.
                    end
               | _ => side_conditions
               end).
-      Ltac2 adjust_side_conditions_for_gets_inlined (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (side_conditions : constr) : constr :=
-        let lookup_gets_inlined := Fresh.fresh (Fresh.Free.union
-                                                  (Fresh.Free.of_goal ())
-                                                  (Fresh.Free.union
-                                                     (Fresh.Free.of_constr side_conditions)
-                                                     (Fresh.Free.of_ids (List.map (fun (n, _, _) => n) value_ctx))))
-                                               @lookup_gets_inlined in
+      Ltac2 adjust_side_conditions_for_gets_inlined (avoid : Fresh.Free.t) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (side_conditions : constr) : constr :=
+        let lookup_gets_inlined := Fresh.fresh avoid @lookup_gets_inlined in
         Constr.in_context
           lookup_gets_inlined '(positive -> bool)
           (fun () => Control.refine
@@ -901,7 +896,7 @@ Module Compilers.
                         |- let value_ctx := Ltac1.get_to_constr "value_ctx" value_ctx in
                            let value_ctx := expr.value_ctx_to_list value_ctx in
                            let side_conditions := Ltac1.get_to_constr "side_conditions" side_conditions in
-                           Control.refine (fun () => adjust_side_conditions_for_gets_inlined value_ctx side_conditions)) in
+                           Control.refine (fun () => adjust_side_conditions_for_gets_inlined (Fresh.Free.of_goal ()) value_ctx side_conditions)) in
         constr:(ltac:(f value_ctx side_conditions)).
 
       Ltac reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx var gets_inlined should_do_again cur_i term value_ctx :=
