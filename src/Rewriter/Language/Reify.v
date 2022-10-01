@@ -286,7 +286,7 @@ Module Compilers.
       Reify.debug_enter_reify "type.reify" ty;
       let reify_rec (t : constr) := reify base_reify base_type t in
       let res :=
-        lazy_match! (eval cbv beta in $ty) with
+        lazy_match! (eval cbv beta in ty) with
         | ?a -> ?b
           => let ra := reify_rec a in
              let rb := reify_rec b in
