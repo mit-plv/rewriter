@@ -15,3 +15,6 @@ OTHERFLAGS += -w -notation-overridden
 ifneq ($(PROFILE),)
 OTHERFLAGS += -profile-ltac
 endif
+
+# Kludge around COQBUG(https://github.com/coq/coq/issues/16591)
+FINDLIBPKGS += -package coq-core.plugins.ltac2

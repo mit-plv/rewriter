@@ -45,7 +45,12 @@ COMPATIBILITY_FILES := \
 	src/Rewriter/Util/plugins/strategy_tactic.mli \
 	src/Rewriter/Util/plugins/strategy_tactic_plugin.mlg \
 	src/Rewriter/Util/plugins/strategy_tactic_plugin.mllib \
+	src/Rewriter/Util/plugins/ltac2_extra.ml \
+	src/Rewriter/Util/plugins/ltac2_extra.mli \
+	src/Rewriter/Util/plugins/ltac2_extra_plugin.mlg \
+	src/Rewriter/Util/plugins/ltac2_extra_plugin.mllib \
 	src/Rewriter/Util/plugins/RewriterBuildRegistry.v \
 	src/Rewriter/Util/plugins/RewriterBuild.v \
 	src/Rewriter/Util/plugins/StrategyTactic.v \
+	src/Rewriter/Util/plugins/Ltac2Extra.v \
 	#
