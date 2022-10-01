@@ -27,6 +27,7 @@ Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.Tactics2.Head.
 Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
+Require Import Rewriter.Util.Tactics2.ReplaceByPattern.
 Require Import Rewriter.Util.Tactics2.FixNotationsForPerformance.
 Require Import Rewriter.Util.Tactics2.InFreshContext.
 Require Import Rewriter.Util.Tactics2.Notations.
@@ -343,15 +344,7 @@ Module Compilers.
               match t_base_p_evm' with
               | Some t_base_p_evm'
                 => let (t, base, p, evm') := t_base_p_evm' in
-                   let pat :=
-                     lazy_match! (eval pattern t in pat) with
-                     | ?pat _
-                       => match Constr.Unsafe.kind_nocast pat with
-                          | Constr.Unsafe.Lambda _ pat
-                            => debug_Constr_check (fun () => Constr.Unsafe.substnl [mkApp '@pattern.base.type.var [base; p] ] 0 pat)
-                          | _ => Control.throw (Reification_panic (fprintf "adjust_pattern_type_variables': pattern produced a non-Lambda: %t" pat))
-                          end
-                     end in
+                   let pat := debug_Constr_check (fun () => Constr.Unsafe.replace_by_pattern [t] [mkApp '@pattern.base.type.var [base; p] ] pat) in
                    adjust_pattern_type_variables' pat
               | None => pat
               end).
