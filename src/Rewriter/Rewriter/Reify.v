@@ -209,13 +209,6 @@ Module Compilers.
             in @partial_lam_unif_rewrite_ruleTP_gen base ident var pident pident_arg_types value t p should_do_again true true.
       End with_var.
 
-      (* TODO: move? *)
-      Ltac2 binder_name_or_fresh_default (b : binder) (avoid : constr) (default_base : ident) : ident
-        := match Constr.Binder.name b with
-           | Some n => n
-           | None => Fresh.fresh (Fresh.Free.union (Fresh.Free.of_goal ()) (Fresh.Free.of_constr avoid)) default_base
-           end.
-
       Ltac2 Type exn ::= [ Cannot_eliminate_functional_dependencies (constr) ].
       Ltac2 strip_functional_dependency (term : constr) : constr :=
         lazy_match! term with
@@ -223,17 +216,16 @@ Module Compilers.
         | _ => Control.zero (Cannot_eliminate_functional_dependencies term)
         end.
 
-      Ltac2 rec refine_reify_under_forall_types' (base : constr) (base_type : constr) (base_type_interp : constr) (ty_ctx : constr) (cur_i : constr) (lem : constr) (cont : constr (* ty_ctx *) -> constr (* cur_i *) -> constr (* lem *) -> unit) : unit :=
+      Ltac2 rec refine_reify_under_forall_types' (base : constr) (base_type : constr) (base_type_interp : constr) (ty_ctx : constr) (avoid : Fresh.Free.t) (cur_i : constr) (lem : constr) (cont : Fresh.Free.t -> constr (* ty_ctx *) -> constr (* cur_i *) -> constr (* lem *) -> unit) : unit :=
         Reify.debug_wrap
           "refine_reify_under_forall_types'" Message.of_constr lem
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained None
           (fun ()
            => let debug_Constr_check := Reify.Constr.debug_check_strict "refine_reify_under_forall_types'" in
-              let default () := cont ty_ctx cur_i lem in
-              match Constr.Unsafe.kind lem with
-              | Constr.Unsafe.Cast lem _ _ => refine_reify_under_forall_types' base base_type base_type_interp ty_ctx cur_i lem cont
+              let default () := cont avoid ty_ctx cur_i lem in
+              match Constr.Unsafe.kind_nocast lem with
               | Constr.Unsafe.Prod b p
-                => let n := binder_name_or_fresh_default b lem @T in
+                => let n := Fresh.fresh avoid (Option.default @T (Constr.Binder.name b)) in
                    if Constr.is_sort (Constr.Binder.type b)
                    then
                      Control.refine
@@ -242,33 +234,34 @@ Module Compilers.
                              (Constr.in_context
                                 n base_type
                                 (fun ()
-                                 => let rt := mkVar n in
+                                 => let avoid := Fresh.Free.union avoid (Fresh.Free.of_ids [n]) in
+                                    let rt := mkVar n in
                                     let ty_ctx := debug_Constr_check (fun () => mkApp '@PositiveMap.add [base_type; cur_i; rt; ty_ctx]) in
                                     let t := debug_Constr_check (fun () => mkApp base_type_interp [mkApp '@pattern.base.lookup_default [base; cur_i; ty_ctx] ]) in
                                     let p := debug_Constr_check (fun () => Constr.Unsafe.substnl [t] 0 p) in
                                     let cur_i := (eval vm_compute in (mkApp 'Pos.succ [cur_i])) in
-                                    refine_reify_under_forall_types' base base_type base_type_interp ty_ctx cur_i p cont)))
+                                    refine_reify_under_forall_types' base base_type base_type_interp ty_ctx avoid cur_i p cont)))
                    else
                      default ()
               | _ => default ()
               end).
 
-      Ltac2 refine_reify_under_forall_types (base_type : constr) (base_type_interp : constr) (lem : constr) (cont : constr (* ty_ctx *) -> constr (* cur_i *) -> constr (* lem *) -> unit) : unit :=
+      Ltac2 refine_reify_under_forall_types (base_type : constr) (base_type_interp : constr) (avoid : Fresh.Free.t) (lem : constr) (cont : Fresh.Free.t -> constr (* ty_ctx *) -> constr (* cur_i *) -> constr (* lem *) -> unit) : unit :=
         let err () := Control.throw (Reification_panic (fprintf "refine_reify_under_forall_types: Invalid Argument: base_type (%t) not of the form `%t ?base`" base_type 'base.type)) in
         lazy_match! base_type with
         | base.type ?base
-          => refine_reify_under_forall_types' base base_type base_type_interp '(@PositiveMap.empty $base_type) '(1%positive) lem cont
+          => refine_reify_under_forall_types' base base_type base_type_interp '(@PositiveMap.empty $base_type) avoid '(1%positive) lem cont
         | _ => err ()
         end.
-      Ltac2 reify_under_forall_types (base_type : constr) (base_type_interp : constr) (lem : constr) (cont : constr (* ty_ctx *) -> constr (* cur_i *) -> constr (* lem *) -> constr) : constr :=
-        '(ltac2:(refine_reify_under_forall_types base_type base_type_interp lem (fun ty_ctx cur_i lem => Control.refine (fun () => cont ty_ctx cur_i lem)))).
+      Ltac2 reify_under_forall_types (base_type : constr) (base_type_interp : constr) (avoid : Fresh.Free.t) (lem : constr) (cont : Fresh.Free.t -> constr (* ty_ctx *) -> constr (* cur_i *) -> constr (* lem *) -> constr) : constr :=
+        '(ltac2:(refine_reify_under_forall_types base_type base_type_interp avoid lem (fun avoid ty_ctx cur_i lem => Control.refine (fun () => cont avoid ty_ctx cur_i lem)))).
 
       #[deprecated(since="8.15",note="Use Ltac2 instead.")]
        Ltac reify_under_forall_types base_type base_type_interp lem cont :=
         let f := ltac2:(base_type base_type_interp lem cont
-                        |- let cont ty_ctx cur_i lem
+                        |- let cont avoid ty_ctx cur_i lem
                              := Ltac1.apply cont [Ltac1.of_constr ty_ctx; Ltac1.of_constr cur_i; Ltac1.of_constr lem] Ltac1.run in
-                           refine_reify_under_forall_types (Ltac1.get_to_constr "base_type" base_type) (Ltac1.get_to_constr "base_type_interp" base_type_interp) (Ltac1.get_to_constr "lem" lem) cont) in
+                           refine_reify_under_forall_types (Ltac1.get_to_constr "base_type" base_type) (Ltac1.get_to_constr "base_type_interp" base_type_interp) (Fresh.Free.of_goal ()) (Ltac1.get_to_constr "lem" lem) cont) in
         constr:(ltac:(f base_type base_type_interp lem ltac:(fun ty_ctx cur_i lem => let v := cont ty_ctx cur_i lem in refine v))).
 
       Ltac prop_to_bool H := eval cbv [decb] in (decb H).
