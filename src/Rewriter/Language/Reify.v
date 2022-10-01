@@ -30,6 +30,7 @@ Require Rewriter.Util.Tactics2.Ident.
 Require Rewriter.Util.Tactics2.String.
 Require Rewriter.Util.Tactics2.Constr.
 Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
+Require Import Rewriter.Util.Tactics2.FixNotationsForPerformance.
 Import Coq.Lists.List ListNotations.
 Export Language.PreCommon.
 
