@@ -843,7 +843,7 @@ Module Compilers.
                            Control.refine (fun () => deep_substitute_beq base_interp_beq (Fresh.Free.of_goal ()) only_eliminate_in_ctx term)) in
         constr:(ltac:(f base_interp_beq only_eliminate_in_ctx term)).
 
-      Ltac2 clean_beq (base_interp_beq : constr) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (term : constr) : constr :=
+      Ltac2 clean_beq (base_interp_beq : constr) (avoid : Fresh.Free.t) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (term : constr) : constr :=
         Reify.debug_wrap
           "clean_beq" Message.of_constr term
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
@@ -851,7 +851,7 @@ Module Compilers.
            => let base_interp_beq_head := head_reference base_interp_beq in
               let term := (eval cbn [Prod.prod_beq] in term) in
               let term := (eval cbv [ident.literal] in term) in
-              let term := '(ltac2:(Control.refine (fun () => deep_substitute_beq base_interp_beq (Fresh.Free.of_goal ()) only_eliminate_in_ctx term))) in
+              let term := '(ltac2:(Control.refine (fun () => deep_substitute_beq base_interp_beq avoid only_eliminate_in_ctx term))) in
               let term := (eval cbv [base.interp_beq $base_interp_beq_head] in term) in
               let term := '(ltac2:(Control.refine (fun () => remove_andb_true term))) in
               term).
@@ -862,7 +862,7 @@ Module Compilers.
                            let only_eliminate_in_ctx := Ltac1.get_to_constr "only_eliminate_in_ctx" only_eliminate_in_ctx in
                            let only_eliminate_in_ctx := expr.value_ctx_to_list only_eliminate_in_ctx in
                            let term := Ltac1.get_to_constr "term" term in
-                           Control.refine (fun () => clean_beq base_interp_beq only_eliminate_in_ctx term)) in
+                           Control.refine (fun () => clean_beq base_interp_beq (Fresh.Free.of_goal ()) only_eliminate_in_ctx term)) in
         constr:(ltac:(f base_interp_beq only_eliminate_in_ctx term)).
 
       Ltac adjust_side_conditions_for_gets_inlined' value_ctx side_conditions lookup_gets_inlined :=
