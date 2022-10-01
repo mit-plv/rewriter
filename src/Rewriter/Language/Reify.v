@@ -355,24 +355,25 @@ Module Compilers.
 
       Ltac2 rec reify (base : constr) (reify_base : constr -> constr) (ty : constr) :=
         let reify_rec (ty : constr) := reify base reify_base ty in
+        let debug_Constr_check := Reify.Constr.debug_check_strict "pattern.base.reify" in
         Reify.debug_enter_reify "pattern.base.reify" ty;
         let res :=
           lazy_match! (eval cbv beta in $ty) with
-          | Datatypes.unit => '(@type.unit $base)
+          | Datatypes.unit => debug_Constr_check (fun () => mkApp '@type.unit [base])
           | Datatypes.prod ?a ?b
             => let ra := reify_rec a in
                let rb := reify_rec b in
-               '(@type.prod $base $ra $rb)
+               debug_Constr_check (fun () => mkApp '@type.prod [base; ra; rb])
           | Datatypes.list ?t
             => let rt := reify_rec t in
-               '(@type.list $base $rt)
+               debug_Constr_check (fun () => mkApp '@type.list [base; rt])
           | Datatypes.option ?t
             => let rt := reify_rec t in
-               '(@type.option $base $rt)
+               debug_Constr_check (fun () => mkApp '@type.option [base; rt])
           | @interp (*$base*)?base' ?base_interp ?lookup ?t => t
           | @einterp (@type (*$base*)?base') (@interp (*$base*)?base' ?base_interp ?lookup) (@Compilers.type.base (@type (*$base*)?base') ?t) => t
           | ?ty => let rt := reify_base ty in
-                   '(@type.type_base $base $rt)
+                   debug_Constr_check (fun () => mkApp '@type.type_base [base; rt])
           end in
         Reify.debug_leave_reify_success "pattern.base.reify" ty res;
         res.
