@@ -34,4 +34,13 @@ package "rewriter_build" (
   plugin(byte) = "rewriter_build_plugin.cma"
   plugin(native) = "rewriter_build_plugin.cmxs"
 )
+package "ltac2_extra" (
+  directory = "."
+  description = "Coq Ltac2 Extra Tactics"
+  requires = "coq-core.plugins.ltac2"
+  archive(byte) = "ltac2_extra_plugin.cma"
+  archive(native) = "ltac2_extra_plugin.cmxa"
+  plugin(byte) = "ltac2_extra_plugin.cma"
+  plugin(native) = "ltac2_extra_plugin.cmxs"
+)
 directory = "."

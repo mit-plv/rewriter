@@ -1,0 +1,10 @@
+Require Import Ltac2.Ltac2.
+
+Declare ML Module "coq-rewriter.ltac2_extra".
+
+Module Ltac2.
+  Module Constr.
+    Export Ltac2.Constr.
+    Ltac2 @ external equal_nounivs : constr -> constr -> bool := "ltac2" "constr_equal_nounivs".
+  End Constr.
+End Ltac2.

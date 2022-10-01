@@ -1,0 +1,19 @@
+open Ltac2_plugin
+open Tac2ffi
+open Tac2expr
+open Proofview.Notations
+
+let pname s = { mltac_plugin = "coq-core.plugins.ltac2"; mltac_tactic = s }
+
+let define_primitive name arity f =
+  Tac2env.define_primitive (pname name) (Tac2ffi.mk_closure arity f)
+
+let define2 name r0 r1 f = define_primitive name (arity_suc arity_one) begin fun x y ->
+  f (Tac2ffi.repr_to r0 x) (Tac2ffi.repr_to r1 y)
+end
+
+let () = define2 "constr_equal_nounivs" constr constr begin fun c1 c2 ->
+  Proofview.tclEVARMAP >>= fun sigma ->
+  let b = EConstr.eq_constr_nounivs sigma c1 c2 in
+  Proofview.tclUNIT (Tac2ffi.of_bool b)
+end
