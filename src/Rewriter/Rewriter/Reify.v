@@ -620,10 +620,10 @@ Module Compilers.
                 => let t' := debug_Constr_check (fun () => mkApp '@pattern.base.subst_default [base; mkApp '@pattern.base.relax [base; t]; evm'']) in
                    let rewr :=
                      lazy_match! (eval pattern
-                                       $t',
-                                   (@pattern_base_subst_default_relax' $base $t $evm''),
-                                   (@pattern_base_unsubst_default_relax' $base $t $evm'')
-                                   in $rewr)
+                                       t',
+                                   '(@pattern_base_subst_default_relax' $base $t $evm''),
+                                   '(@pattern_base_unsubst_default_relax' $base $t $evm'')
+                                   in rewr)
                      with
                      | ?rewr _ _ _
                        => (eval cbv beta in constr:($rewr $t (fun P x => x) (fun P x => x)))
