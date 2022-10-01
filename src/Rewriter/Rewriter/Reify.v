@@ -565,7 +565,7 @@ Module Compilers.
           "adjust_lookup_default" Message.of_constr rewr
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
-           => lazy_match! (eval pattern '@pattern.base.lookup_default in '$rewr) with
+           => lazy_match! (eval pattern '@pattern.base.lookup_default in rewr) with
               | ?rewr _
                 => (eval cbv beta in constr:($rewr (fun base p evm => @pattern.base.subst_default base (pattern.base.type.var p) evm)))
               end).
