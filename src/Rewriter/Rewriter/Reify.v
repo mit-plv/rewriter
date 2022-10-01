@@ -862,7 +862,7 @@ Module Compilers.
           (fun () => Control.refine
                        (fun () => adjust_side_conditions_for_gets_inlined' value_ctx side_conditions (mkVar lookup_gets_inlined))).
 
-      Ltac2 rec reify_to_pattern_and_replacement_in_context (base : constr) (reify_base : constr -> constr) (base_interp : constr) (base_interp_beq : constr) (try_make_transport_base_cps : constr) (ident : constr) (reify_ident_opt : binder list -> constr -> constr option) (pident : constr) (pident_arg_types : constr) (pident_type_of_list_arg_types_beq : constr) (pident_of_typed_ident : constr) (pident_arg_types_of_typed_ident : constr) (reflect_ident_iota : constr) (type_ctx : constr) (var : constr) (gets_inlined : constr) (should_do_again : constr) (cur_i : constr) (term : constr) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) : constr :=
+      Ltac2 rec reify_to_pattern_and_replacement_in_context (base : constr) (reify_base : constr -> constr) (base_interp : constr) (base_interp_beq : constr) (try_make_transport_base_cps : constr) (ident : constr) (reify_ident_opt : binder list -> constr -> constr option) (pident : constr) (pident_arg_types : constr) (pident_type_of_list_arg_types_beq : constr) (pident_of_typed_ident : constr) (pident_arg_types_of_typed_ident : constr) (reflect_ident_iota : constr) (avoid : Fresh.Free.t) (type_ctx : constr) (var : constr) (gets_inlined : constr) (should_do_again : constr) (cur_i : constr) (term : constr) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) : constr :=
         Reify.debug_wrap
           "reify_to_pattern_and_replacement_in_context" Message.of_constr term
           Reify.should_debug_enter_reify Reify.should_debug_leave_reify_success (Some Message.of_constr)
@@ -871,7 +871,7 @@ Module Compilers.
               let base_type := debug_Constr_check (fun () => mkApp 'base.type [base]) in
               let reify_base_type := Compilers.base.reify base reify_base in
               let base_interp_head := head_reference base_interp in
-              let reify_rec_gen := reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx var gets_inlined should_do_again in
+              let reify_rec_gen avoid := reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota avoid type_ctx var gets_inlined should_do_again in
               let var_pos := '(fun _ : type $base_type => positive) in
               let value := debug_Constr_check (fun () => mkApp '@value [base_type; ident; var]) in
               let cexpr_to_pattern_and_replacement_unfolded := debug_Constr_check (fun () => mkApp '@expr_to_pattern_and_replacement_unfolded [base; try_make_transport_base_cps; ident; var; pident; pident_arg_types; pident_type_of_list_arg_types_beq; pident_of_typed_ident; pident_arg_types_of_typed_ident; mkApp reflect_ident_iota [var]; gets_inlined; should_do_again; type_ctx]) in
@@ -895,20 +895,22 @@ Module Compilers.
                    let rT := Compilers.type.reify reify_base_type base_type t in
                    let next_i := (eval vm_compute in (debug_Constr_check (fun () => mkApp 'Pos.succ [cur_i]))) in
                    strip_functional_dependency
-                     (Constr.in_fresh_context
-                        @UNNAMED_VARIABLE [xb]
+                     (Constr.in_fresh_context_avoiding
+                        @UNNAMED_VARIABLE false (Some avoid) [xb]
                         (fun ns
-                         => let (x, _) := List.nth ns 0 in
+                         => let ns := List.map (fun (n, _) => n) ns in
+                            let avoid := Fresh.Free.union avoid (Fresh.Free.of_ids ns) in
+                            let x := List.nth ns 0 in
                             let f := debug_Constr_check (fun () => Constr.Unsafe.substnl [mkVar x] 0 f) in
                             let value_ctx := (x, rT, cur_i) :: value_ctx in
-                            let rf := reify_rec_gen next_i f value_ctx in
+                            let rf := reify_rec_gen avoid next_i f value_ctx in
                             Control.refine (fun () => rf)))
               | _
                 => lazy_match! term with
                    | (@eq ?t ?a ?b, ?side_conditions)
                      => let rA := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None in
                         let rB := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos b [] [] value_ctx [] None in
-                        let side_conditions := adjust_side_conditions_for_gets_inlined (Fresh.Free.of_goal ()) value_ctx side_conditions in
+                        let side_conditions := adjust_side_conditions_for_gets_inlined avoid value_ctx side_conditions in
                         let res := check "res"
                                          (fun () => mkLambda
                                                       (* Hack around COQBUG(https://github.com/coq/coq/issues/16419) *)
@@ -934,7 +936,6 @@ Module Compilers.
                                             (fun () => mkLambda (Constr.Binder.make (Some @invalid) '(match _ return Type with ev => ev end))
                                                                 (mkApp '@projT2 ['_; '_; mkApp res [mkRel 1] ]))))
                         (*(fun invalid => projT2 (res invalid))*) in
-                        let avoid := Fresh.Free.union (Fresh.Free.of_goal ()) (Fresh.Free.of_constr res) in
                         let invalid := Fresh.fresh avoid @invalid in
                         let evm' := Fresh.fresh avoid @evm' in
                         let res ()
@@ -972,7 +973,7 @@ Module Compilers.
                                                   (@rewrite_ruleTP $base $ident $var $pident $pident_arg_types)
                                                   {| pattern.pattern_of_anypattern := projT1 $res |}
                                                   {| rew_replacement := projT2 $res |})) in
-                        let res := clean_beq base_interp_beq (Fresh.Free.of_goal ()) value_ctx res in
+                        let res := clean_beq base_interp_beq avoid value_ctx res in
                         res
                    end
               end).
@@ -1001,7 +1002,7 @@ Module Compilers.
                            let term := Ltac1.get_to_constr "term" term in
                            let value_ctx := Ltac1.get_to_constr "value_ctx" value_ctx in
                            let value_ctx := expr.value_ctx_to_list value_ctx in
-                           Control.refine (fun () => reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx var gets_inlined should_do_again cur_i term value_ctx)) in
+                           Control.refine (fun () => reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota (Fresh.Free.of_goal ()) type_ctx var gets_inlined should_do_again cur_i term value_ctx)) in
         constr:(ltac:(f base reify_base base_interp base_interp_beq try_make_transport_base_cps ident ltac:(expr.wrap_reify_ident_cps reify_ident) pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota type_ctx constr:(var) gets_inlined should_do_again cur_i term value_ctx)).
 
       Ltac reify base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota var gets_inlined should_do_again lem :=
