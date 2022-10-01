@@ -450,19 +450,6 @@ Module Compilers.
                 :: value_ctx_to_list rest
          end.
 
-    Ltac2 eval_cbv_delta_only (i : Std.reference list) (c : constr) :=
-      Std.eval_cbv { Std.rBeta := false; Std.rMatch := false;
-                     Std.rFix := false; Std.rCofix := false;
-                     Std.rZeta := false; Std.rDelta := false;
-                     Std.rConst := i }
-                   c.
-    Ltac2 eval_cbv_beta (c : constr) :=
-      Std.eval_cbv { Std.rBeta := true; Std.rMatch := false;
-                     Std.rFix := false; Std.rCofix := false;
-                     Std.rZeta := false; Std.rDelta := false;
-                     Std.rConst := [] }
-                   c.
-
     (* f, f_ty, arg *)
     Ltac2 Type exn ::= [ Template_ctx_mismatch (constr, constr, constr) ].
     Ltac2 plug_template_ctx (ctx_tys : binder list) (f : constr) (template_ctx : constr list) :=
@@ -863,7 +850,7 @@ Module Compilers.
                                       | Val c
                                         => let (c, h) := c in
                                            Reify.debug_enter_reify_case "expr.reify_in_context" "App Constant (unfold)" term;
-                                           let term' := eval_cbv_delta_only [c] term in
+                                           let term' := (eval cbv delta [$c] in term) in
                                            if Constr.equal term term'
                                            then printf "Unrecognized (non-unfoldable) term: %t" term;
                                                 None
