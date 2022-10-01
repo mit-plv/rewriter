@@ -13,74 +13,39 @@ COQ_VERSION := $(firstword $(subst $(COQ_VERSION_PREFIX),,$(shell $(COQBIN)coqc 
 COQ_EXTENDED_VERSION := $(shell (echo | $(COQBIN)coqtop 2>/dev/null; $(COQBIN)coqc --version 2>/dev/null))
 COQ_EXTENDED_VERSION_OLD := $(shell cat $(COQ_VERSION_FILE) 2>/dev/null)
 
-ifneq (,$(filter 8.9%,$(COQ_VERSION)))
-EXPECTED_EXT:=.v89
-ML_DESCRIPTION := "Coq v8.9"
-ML4_OR_MLG := ml4
-NATIVE_COMPILER_ONDEMAND_COQPROJECT_FRAGMENT :=
-else
-ML4_OR_MLG := mlg
-NATIVE_COMPILER_ONDEMAND_COQPROJECT_FRAGMENT := -arg -native-compiler -arg ondemand
-ifneq (,$(filter 8.10%,$(COQ_VERSION)))
-EXPECTED_EXT:=.v810
-ML_DESCRIPTION := "Coq v8.10"
-else
-ifneq (,$(filter 8.11%,$(COQ_VERSION)))
-EXPECTED_EXT:=.v811
-ML_DESCRIPTION := "Coq v8.11"
-else
-ifneq (,$(filter 8.12%,$(COQ_VERSION)))
-EXPECTED_EXT:=.v812
-ML_DESCRIPTION := "Coq v8.12"
-else
-ifneq (,$(filter 8.13%,$(COQ_VERSION)))
-EXPECTED_EXT:=.v813
-ML_DESCRIPTION := "Coq v8.13"
-else
-ifneq (,$(filter 8.14%,$(COQ_VERSION)))
-EXPECTED_EXT:=.v814
-ML_DESCRIPTION := "Coq v8.14"
-else
 ifneq (,$(filter 8.15%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v815
 ML_DESCRIPTION := "Coq v8.15"
+META_FILE_FRAGMENT :=
 else
+META_FILE_FRAGMENT := src/Rewriter/Util/plugins/META.coq-rewriter
 ifneq (,$(filter 8.16%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v816
 ML_DESCRIPTION := "Coq v8.16"
-META_FILE_FRAGMENT := src/Rewriter/Util/plugins/META.coq-rewriter
 else
 EXPECTED_EXT:=.v817
 ML_DESCRIPTION := "Coq v8.17"
-META_FILE_FRAGMENT := src/Rewriter/Util/plugins/META.coq-rewriter
-endif
-endif
-endif
-endif
-endif
-endif
 endif
 endif
 
-COMPATIBILITY_FILES_PATTERN := \
+COMPATIBILITY_FILES := \
 	src/Rewriter/Util/plugins/definition_by_tactic.ml \
 	src/Rewriter/Util/plugins/definition_by_tactic.mli \
-	src/Rewriter/Util/plugins/definition_by_tactic_plugin.@ML4_OR_MLG@ \
+	src/Rewriter/Util/plugins/definition_by_tactic_plugin.mlg \
 	src/Rewriter/Util/plugins/definition_by_tactic_plugin.mllib \
 	src/Rewriter/Util/plugins/inductive_from_elim.ml \
 	src/Rewriter/Util/plugins/inductive_from_elim.mli \
-	src/Rewriter/Util/plugins/inductive_from_elim_plugin.@ML4_OR_MLG@ \
+	src/Rewriter/Util/plugins/inductive_from_elim_plugin.mlg \
 	src/Rewriter/Util/plugins/inductive_from_elim_plugin.mllib \
 	src/Rewriter/Util/plugins/rewriter_build.ml \
 	src/Rewriter/Util/plugins/rewriter_build.mli \
-	src/Rewriter/Util/plugins/rewriter_build_plugin.@ML4_OR_MLG@ \
+	src/Rewriter/Util/plugins/rewriter_build_plugin.mlg \
 	src/Rewriter/Util/plugins/rewriter_build_plugin.mllib \
 	src/Rewriter/Util/plugins/strategy_tactic.ml \
 	src/Rewriter/Util/plugins/strategy_tactic.mli \
-	src/Rewriter/Util/plugins/strategy_tactic_plugin.@ML4_OR_MLG@ \
+	src/Rewriter/Util/plugins/strategy_tactic_plugin.mlg \
 	src/Rewriter/Util/plugins/strategy_tactic_plugin.mllib \
 	src/Rewriter/Util/plugins/RewriterBuildRegistry.v \
+	src/Rewriter/Util/plugins/RewriterBuild.v \
 	src/Rewriter/Util/plugins/StrategyTactic.v \
-	src/Rewriter/Util/plugins/RewriterBuild.v
-
-COMPATIBILITY_FILES := $(subst @ML4_OR_MLG@,$(ML4_OR_MLG),$(COMPATIBILITY_FILES_PATTERN))
+	#
