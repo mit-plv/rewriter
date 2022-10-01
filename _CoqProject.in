@@ -110,6 +110,7 @@ src/Rewriter/Util/Tactics/WarnIfGoalsRemain.v
 src/Rewriter/Util/Tactics2/Array.v
 src/Rewriter/Util/Tactics2/Char.v
 src/Rewriter/Util/Tactics2/Constr.v
+src/Rewriter/Util/Tactics2/DecomposeLambda.v
 src/Rewriter/Util/Tactics2/FixNotationsForPerformance.v
 src/Rewriter/Util/Tactics2/Head.v
 src/Rewriter/Util/Tactics2/HeadReference.v
