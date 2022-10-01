@@ -645,18 +645,21 @@ Module Compilers.
           "replace_type_try_transport" Message.of_constr term
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
-           => let res := match! term with
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "replace_type_try_transport" in
+              let res := match! term with
                          | context[?v]
                            => lazy_match! v with
                               | @type.try_transport ?base_type ?try_make_transport_base_type_cps ?p ?t ?t
-                                => Some v
+                                => Some (v, debug_Constr_check (fun () => mkApp p [t]))
                               end
                          | _ => None
                          end in
               match res with
               | Some v
-                => let term := lazy_match! (eval pattern v in term) with
-                               | ?term _ => (eval cbv beta in '($term (@Some _)))
+                => let (v, pt) := v in
+                   let term := lazy_match! (eval pattern v in term) with
+                               | ?term _ => (eval cbv beta in
+                                              (debug_Constr_check (fun () => mkApp term [mkApp '@Some [pt] ])))
                                end in
                    replace_type_try_transport term
               | None => term
