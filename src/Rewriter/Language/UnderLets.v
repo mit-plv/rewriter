@@ -116,6 +116,7 @@ Module Compilers.
     End with_var.
     Module Export Notations.
       Global Arguments UnderLets : clear implicits.
+      Declare Scope under_lets_scope.
       Delimit Scope under_lets_scope with under_lets.
       Bind Scope under_lets_scope with UnderLets.UnderLets.
       Notation "x <-- y ; f" := (UnderLets.splice y (fun x => f%under_lets)) : under_lets_scope.

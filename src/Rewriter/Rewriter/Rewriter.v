@@ -339,6 +339,7 @@ Module Compilers.
     | App {s d} (f : pattern (s -> d)) (x : pattern s) : pattern d.
 
     Module Export Notations.
+      Declare Scope pattern_scope.
       Delimit Scope pattern_scope with pattern.
       Bind Scope pattern_scope with pattern.
       Infix "@" := App : pattern_scope.

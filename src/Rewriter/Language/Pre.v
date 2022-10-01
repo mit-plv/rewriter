@@ -81,6 +81,7 @@ Module RewriteRuleNotations.
         | ls' => ltac:(mymap_do_again ls')
         end) (only parsing).
 
+  Declare Scope rew_rules_scope.
   Delimit Scope rew_rules_scope with rew_rules.
   Notation "x ++ y"
     := (match x%rew_rules, y%rew_rules return _ with

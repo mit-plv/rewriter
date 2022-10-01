@@ -15,6 +15,7 @@ Fixpoint nth (n : nat) (l : hlist) {T} (default : T) {struct l} : nth_type n l T
   end.
 
 Module Export Notations.
+  Declare Scope hlist_scope.
   Delimit Scope hlist_scope with hlist.
   Bind Scope hlist_scope with hlist.
   Notation "[ ]" := nil (format "[ ]") : hlist_scope.

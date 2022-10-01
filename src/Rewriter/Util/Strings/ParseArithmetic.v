@@ -114,6 +114,7 @@ Redirect "log" Check let ls := [("-1234", -(1234):Q); ("0xF", 15:Q); ("10.5", (1
 
 Inductive Qexpr := Qv (_ : Q) | Qeopp (a : Qexpr) | Qeadd (a b : Qexpr) | Qesub (a b : Qexpr) | Qemul (a b : Qexpr) | Qediv (a b : Qexpr) | Qepow (b e : Qexpr).
 Coercion Qv : Q >-> Qexpr.
+Declare Scope Qexpr_scope.
 Delimit Scope Qexpr_scope with Qexpr.
 Bind Scope Qexpr_scope with Qexpr.
 Infix "^" := Qepow : Qexpr_scope.

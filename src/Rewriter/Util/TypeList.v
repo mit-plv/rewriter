@@ -8,6 +8,7 @@ Fixpoint nth (n : nat) (l : t) (default : Type) {struct l} :=
   end.
 
 Module Export Notations.
+  Declare Scope type_list_scope.
   Delimit Scope type_list_scope with type_list.
   Bind Scope type_list_scope with t.
   Notation "[ ]" := nil (format "[ ]") : type_list_scope.
