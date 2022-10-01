@@ -609,6 +609,7 @@ Module Compilers.
                         |- Control.refine (fun () => replace_evar_map (Ltac1.get_to_constr "evm" evm) (Ltac1.get_to_constr "rewr" rewr))) in
         constr:(ltac:(f constr:(evm) rewr)).
 
+      Definition adjust_type_variables_id base t (P : base.type base -> Type) (x : P t) := x.
       Ltac2 rec adjust_type_variables (rewr : constr) : constr :=
         Reify.debug_wrap
           "adjust_type_variables" Message.of_constr rewr
@@ -621,12 +622,14 @@ Module Compilers.
                    let rewr :=
                      lazy_match! (eval pattern
                                        t',
-                                   '(@pattern_base_subst_default_relax' $base $t $evm''),
-                                   '(@pattern_base_unsubst_default_relax' $base $t $evm'')
+                                   (mkApp '@pattern_base_subst_default_relax' [base; t; evm'']),
+                                   (mkApp '@pattern_base_unsubst_default_relax' [base; t; evm''])
                                    in rewr)
                      with
                      | ?rewr _ _ _
-                       => (eval cbv beta in constr:($rewr $t (fun P x => x) (fun P x => x)))
+                       => let id := debug_Constr_check (fun () => mkApp '@adjust_type_variables_id [base; t]) in
+                          (eval cbv beta delta [adjust_type_variables_id] in
+                            (debug_Constr_check (fun () => mkApp rewr [t; id; id])))
                      end in
                    adjust_type_variables rewr
               | _ => rewr
