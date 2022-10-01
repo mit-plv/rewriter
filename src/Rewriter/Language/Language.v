@@ -1530,22 +1530,40 @@ Module Compilers.
       {
         base_beq : base -> base -> bool;
         base_interp_beq : forall {t1 t2}, base_interp t1 -> base_interp t2 -> bool;
-        try_make_transport_base_cps :> type.try_make_transport_cpsT base;
-        baseHasNat :> base.type.BaseTypeHasNatT base;
-        buildIdent :> ident.BuildIdentT base_interp ident;
-        toRestrictedIdent :> ident.ToRestrictedIdentT ident;
-        buildEagerIdent :> ident.BuildEagerIdentT ident;
-        invertIdent :> InvertIdentT base_interp ident;
-        defaultBase :> @DefaultValue.type.base.DefaultT base base_interp;
-        reflect_base_beq :> reflect_rel (@eq base) base_beq;
-        reflect_base_interp_beq :> forall {t}, reflect_rel (@eq (base_interp t)) (@base_interp_beq t t);
-        try_make_transport_base_cps_correct :> type.try_make_transport_cps_correctT base;
-        baseHasNatCorrect :> base.BaseHasNatCorrectT base_interp;
-        toFromRestrictedIdent :> ident.ToFromRestrictedIdentT ident;
-        buildInvertIdentCorrect :> BuildInvertIdentCorrectT;
-        buildInterpIdentCorrect :> ident.BuildInterpIdentCorrectT ident_interp;
-        buildInterpEagerIdentCorrect :> ident.BuildInterpEagerIdentCorrectT ident_interp;
-        ident_interp_Proper :> forall t, Proper (eq ==> type.eqv) (ident_interp t)
+        try_make_transport_base_cps : type.try_make_transport_cpsT base;
+        baseHasNat : base.type.BaseTypeHasNatT base;
+        buildIdent : ident.BuildIdentT base_interp ident;
+        toRestrictedIdent : ident.ToRestrictedIdentT ident;
+        buildEagerIdent : ident.BuildEagerIdentT ident;
+        invertIdent : InvertIdentT base_interp ident;
+        defaultBase : @DefaultValue.type.base.DefaultT base base_interp;
+        reflect_base_beq : reflect_rel (@eq base) base_beq;
+        reflect_base_interp_beq : forall {t}, reflect_rel (@eq (base_interp t)) (@base_interp_beq t t);
+        try_make_transport_base_cps_correct : type.try_make_transport_cps_correctT base;
+        baseHasNatCorrect : base.BaseHasNatCorrectT base_interp;
+        toFromRestrictedIdent : ident.ToFromRestrictedIdentT ident;
+        buildInvertIdentCorrect : BuildInvertIdentCorrectT;
+        buildInterpIdentCorrect : ident.BuildInterpIdentCorrectT ident_interp;
+        buildInterpEagerIdentCorrect : ident.BuildInterpEagerIdentCorrectT ident_interp;
+        ident_interp_Proper : forall t, Proper (eq ==> type.eqv) (ident_interp t)
       }.
+    #[global]
+     Existing Instances
+     try_make_transport_base_cps
+     baseHasNat
+     buildIdent
+     toRestrictedIdent
+     buildEagerIdent
+     invertIdent
+     defaultBase
+     reflect_base_beq
+     reflect_base_interp_beq
+     try_make_transport_base_cps_correct
+     baseHasNatCorrect
+     toFromRestrictedIdent
+     buildInvertIdentCorrect
+     buildInterpIdentCorrect
+     buildInterpEagerIdentCorrect
+     ident_interp_Proper.
   End Classes.
 End Compilers.

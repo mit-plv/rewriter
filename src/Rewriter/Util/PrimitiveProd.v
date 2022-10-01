@@ -12,6 +12,8 @@ Require Import Rewriter.Util.GlobalSettings.
 
 Local Set Primitive Projections.
 
+Declare Scope primproj_type_scope.
+Declare Scope primproj_scope.
 Delimit Scope primproj_type_scope with primproj_type.
 Delimit Scope primproj_scope with primproj.
 
