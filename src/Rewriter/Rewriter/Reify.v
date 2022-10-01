@@ -537,15 +537,21 @@ Module Compilers.
         := @pattern.base.subst_default_relax base P t evm.
       Definition pattern_base_unsubst_default_relax' {base} t evm P
         := @pattern.base.unsubst_default_relax base P t evm.
+      Definition pattern_base_subst_default_relax'_reordered {base} P t evm
+        := @pattern_base_subst_default_relax' base t evm P.
+      Definition pattern_base_unsubst_default_relax'_reordered {base} P t evm
+        := @pattern_base_unsubst_default_relax' base t evm P.
 
       Ltac2 change_pattern_base_subst_default_relax (term : constr) : constr :=
         Reify.debug_wrap
           "change_pattern_base_subst_default_relax" Message.of_constr term
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
-           => lazy_match! (eval pattern '@pattern.base.subst_default_relax, '@pattern.base.unsubst_default_relax in term) with
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "change_pattern_base_subst_default_relax" in
+              lazy_match! (eval pattern '@pattern.base.subst_default_relax, '@pattern.base.unsubst_default_relax in term) with
               | ?f _ _
-                => (eval cbv beta in constr:($f (fun base P t evm => @pattern_base_subst_default_relax' base t evm P) (fun base P t evm => @pattern_base_unsubst_default_relax' base t evm P)))
+                => (eval cbv beta delta [pattern_base_subst_default_relax'_reordered pattern_base_unsubst_default_relax'_reordered] in
+                     (debug_Constr_check (fun () => mkApp f ['@pattern_base_subst_default_relax'_reordered; '@pattern_base_unsubst_default_relax'_reordered])))
               end).
 
       #[deprecated(since="8.15",note="Use Ltac2 instead.")]
