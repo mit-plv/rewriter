@@ -307,7 +307,7 @@ Module Compilers.
       := reified_ok : @interp base_type interp_base_type rv = v.
 
     Ltac2 reify_via_tc (base_type : constr) (interp_base_type : constr) (ty : constr) :=
-      let rv := '(_ : @reified_of $base_type $interp_base_type $ty _) in
+      let rv := constr:(_ : @reified_of $base_type $interp_base_type $ty _) in
       lazy_match! Constr.type rv with
       | @reified_of _ _ _ ?rv => rv
       end.
