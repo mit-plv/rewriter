@@ -19,6 +19,7 @@ Require Import Rewriter.Util.Bool.
 Require Import Rewriter.Util.Bool.Reflect.
 Require Rewriter.Util.TypeList.
 Require Rewriter.Util.PrimitiveHList.
+Require Rewriter.Util.Tactics2.Constr.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.Tactics.RunTacticAsConstr.
 Require Import Rewriter.Util.Tactics.DebugPrint.
@@ -500,7 +501,7 @@ Module Compilers.
            Reify.debug_enter_reify "reify_base_via_list" ty;
            let rty := match! all_base_and_interp with
                       | context[Datatypes.cons (?rty, ?ty')]
-                        => if Constr.equal ty ty'
+                        => if Constr.equal_nounivs ty ty'
                            then Some rty
                            else Control.zero Match_failure
                       | _ => None
@@ -511,15 +512,15 @@ Module Compilers.
              => (* work around COQBUG(https://github.com/coq/coq/issues/13962) *)
                match! ty with
                | ?base_interp' ?t
-                 => if Constr.equal base_interp' base_interp
+                 => if Constr.equal_nounivs base_interp' base_interp
                     then Some t
                     else Control.zero Match_failure
                | @base.interp ?base' ?base_interp' (@base.type.type_base ?base' ?t)
-                 => if Constr.equal base_interp' base_interp && Constr.equal base base
+                 => if Constr.equal_nounivs base_interp' base_interp && Constr.equal_nounivs base' base
                     then Some t
                     else Control.zero Match_failure
                | @type.interp (base.type ?base') (@base.interp ?base' ?base_interp') (@Compilers.type.base (base.type ?base') (@base.type.type_base ?base' ?t))
-                 => if Constr.equal base_interp' base_interp && Constr.equal base base
+                 => if Constr.equal_nounivs base_interp' base_interp && Constr.equal_nounivs base' base
                     then Some t
                     else Control.zero Match_failure
                | _ => None
@@ -1100,7 +1101,7 @@ Module Compilers.
       Ltac2 base_type_reified_hint (base_type : constr) (reify_type : constr -> constr) : unit :=
         lazy_match! goal with
         | [ |- @type.reified_of ?base_type' _ ?t ?e ]
-          => if Constr.equal base_type' base_type
+          => if Constr.equal_nounivs base_type' base_type
              then (* solve [ *) let rt := reify_type t in unify $e $rt; reflexivity (* | idtac "ERROR: Failed to reify" T ] *)
              else Control.zero Match_failure
         end.
@@ -1108,7 +1109,7 @@ Module Compilers.
       Ltac2 expr_reified_hint (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) :=
         lazy_match! goal with
         | [ |- @expr.Reified_of _ ?ident' _ _ ?t ?v ?e ]
-          => if Constr.equal ident ident'
+          => if Constr.equal_nounivs ident ident'
              then (*solve [ *) let rv := expr._Reify base_type ident reify_base_type reify_ident_opt v in unify $e $rv; reflexivity (* | idtac "ERROR: Failed to reify" v "(of type" t "); try setting Reify.debug_level to see output" ] *)
              else Control.zero Match_failure
         end.
@@ -1189,7 +1190,7 @@ Module Compilers.
         match Constr.Unsafe.kind term with
         | Constr.Unsafe.Cast term _ _ => is_recursively_constructor_or_literal term
         | Constr.Unsafe.App f args
-          => if Constr.equal f '@ident.literal
+          => if Constr.equal_nounivs f '@ident.literal
              then true
              else
                is_recursively_constructor_or_literal f
@@ -1225,7 +1226,7 @@ Module Compilers.
         (* [match term with ident_interp _ ?idc => Some idc | _ => None end], except robust against open terms *)
         lazy_match! term with
         | ?ident_interp' _ ?idc
-          => if Constr.equal ident_interp ident_interp'
+          => if Constr.equal_nounivs ident_interp ident_interp'
              then Some idc
              else None
         | _ => None
@@ -1239,7 +1240,7 @@ Module Compilers.
         let ident_Literal := let idc := '(@ident.literal) in
                              let found := match! all_ident_and_interp with
                                           | context[GallinaAndReifiedIdentList.cons ?ridc ?idc']
-                                            => if Constr.equal idc idc'
+                                            => if Constr.equal_nounivs idc idc'
                                                then Some ridc
                                                else Control.zero Match_failure
                                           | _ => None
@@ -1272,7 +1273,7 @@ Module Compilers.
                           => Reify.debug_enter_lookup_ident "reify_ident_via_list_opt" idc;
                              let found := match! all_ident_and_interp with
                                           | context[GallinaAndReifiedIdentList.cons ?ridc ?idc']
-                                            => if Constr.equal idc idc'
+                                            => if Constr.equal_nounivs idc idc'
                                                then Some ridc
                                                else Control.zero Match_failure
                                           | _ => None

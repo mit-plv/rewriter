@@ -28,7 +28,9 @@ Require Rewriter.Util.Tactics2.Ltac1.
 Require Rewriter.Util.Tactics2.Message.
 Require Rewriter.Util.Tactics2.Ident.
 Require Rewriter.Util.Tactics2.String.
+Require Rewriter.Util.Tactics2.Constr.
 Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
+Require Import Rewriter.Util.Tactics2.FixNotationsForPerformance.
 Import Coq.Lists.List ListNotations.
 Export Language.PreCommon.
 
@@ -284,7 +286,7 @@ Module Compilers.
       Reify.debug_enter_reify "type.reify" ty;
       let reify_rec (t : constr) := reify base_reify base_type t in
       let res :=
-        lazy_match! (eval cbv beta in $ty) with
+        lazy_match! (eval cbv beta in ty) with
         | ?a -> ?b
           => let ra := reify_rec a in
              let rb := reify_rec b in
@@ -305,7 +307,7 @@ Module Compilers.
       := reified_ok : @interp base_type interp_base_type rv = v.
 
     Ltac2 reify_via_tc (base_type : constr) (interp_base_type : constr) (ty : constr) :=
-      let rv := '(_ : @reified_of $base_type $interp_base_type $ty _) in
+      let rv := constr:(_ : @reified_of $base_type $interp_base_type $ty _) in
       lazy_match! Constr.type rv with
       | @reified_of _ _ _ ?rv => rv
       end.
@@ -316,24 +318,25 @@ Module Compilers.
 
     Ltac2 rec reify (base : constr) (reify_base : constr -> constr) (ty : constr) :=
       let reify_rec (ty : constr) := reify base reify_base ty in
+      let debug_Constr_check := Reify.Constr.debug_check_strict "base.reify" in
       Reify.debug_enter_reify "base.reify" ty;
       let res :=
-        lazy_match! (eval cbv beta in $ty) with
-        | Datatypes.unit => '(@type.unit $base)
+        lazy_match! (eval cbv beta in ty) with
+        | Datatypes.unit => debug_Constr_check (fun () => mkApp '@type.unit [base])
         | Datatypes.prod ?a ?b
           => let ra := reify_rec a in
              let rb := reify_rec b in
-             '(@type.prod $base $ra $rb)
+             debug_Constr_check (fun () => mkApp '@type.prod [base; ra; rb])
         | Datatypes.list ?t
           => let rt := reify_rec t in
-             '(@type.list $base $rt)
+             debug_Constr_check (fun () => mkApp '@type.list [base; rt])
         | Datatypes.option ?t
           => let rt := reify_rec t in
-             '(@type.option $base $rt)
+             debug_Constr_check (fun () => mkApp '@type.option [base; rt])
         | @interp (*$base*)?base' ?base_interp ?t => t
         | @einterp (@type (*$base*)?base') (@interp (*$base*)?base' ?base_interp) (@Compilers.type.base (@type (*$base*)?base') ?t) => t
         | ?ty => let rt := reify_base ty in
-                 '(@type.type_base $base $rt)
+                 debug_Constr_check (fun () => mkApp '@type.type_base [base; rt])
         end in
       Reify.debug_leave_reify_success "base.reify" ty res;
       res.
@@ -352,24 +355,25 @@ Module Compilers.
 
       Ltac2 rec reify (base : constr) (reify_base : constr -> constr) (ty : constr) :=
         let reify_rec (ty : constr) := reify base reify_base ty in
+        let debug_Constr_check := Reify.Constr.debug_check_strict "pattern.base.reify" in
         Reify.debug_enter_reify "pattern.base.reify" ty;
         let res :=
           lazy_match! (eval cbv beta in $ty) with
-          | Datatypes.unit => '(@type.unit $base)
+          | Datatypes.unit => debug_Constr_check (fun () => mkApp '@type.unit [base])
           | Datatypes.prod ?a ?b
             => let ra := reify_rec a in
                let rb := reify_rec b in
-               '(@type.prod $base $ra $rb)
+               debug_Constr_check (fun () => mkApp '@type.prod [base; ra; rb])
           | Datatypes.list ?t
             => let rt := reify_rec t in
-               '(@type.list $base $rt)
+               debug_Constr_check (fun () => mkApp '@type.list [base; rt])
           | Datatypes.option ?t
             => let rt := reify_rec t in
-               '(@type.option $base $rt)
+               debug_Constr_check (fun () => mkApp '@type.option [base; rt])
           | @interp (*$base*)?base' ?base_interp ?lookup ?t => t
           | @einterp (@type (*$base*)?base') (@interp (*$base*)?base' ?base_interp ?lookup) (@Compilers.type.base (@type (*$base*)?base') ?t) => t
           | ?ty => let rt := reify_base ty in
-                   '(@type.type_base $base $rt)
+                   debug_Constr_check (fun () => mkApp '@type.type_base [base; rt])
           end in
         Reify.debug_leave_reify_success "pattern.base.reify" ty res;
         res.
@@ -402,7 +406,7 @@ Module Compilers.
         parameters as necessary. *)
     Ltac2 rec is_template_parameter (ctx_tys : binder list) (parameter_type : constr) : bool :=
       let do_red () :=
-        let t := Std.eval_hnf parameter_type in
+        let t := eval hnf in parameter_type in
         if Constr.equal t parameter_type
         then false
         else is_template_parameter ctx_tys t in
@@ -445,19 +449,6 @@ Module Compilers.
               end
                 :: value_ctx_to_list rest
          end.
-
-    Ltac2 eval_cbv_delta_only (i : Std.reference list) (c : constr) :=
-      Std.eval_cbv { Std.rBeta := false; Std.rMatch := false;
-                     Std.rFix := false; Std.rCofix := false;
-                     Std.rZeta := false; Std.rDelta := false;
-                     Std.rConst := i }
-                   c.
-    Ltac2 eval_cbv_beta (c : constr) :=
-      Std.eval_cbv { Std.rBeta := true; Std.rMatch := false;
-                     Std.rFix := false; Std.rCofix := false;
-                     Std.rZeta := false; Std.rDelta := false;
-                     Std.rConst := [] }
-                   c.
 
     (* f, f_ty, arg *)
     Ltac2 Type exn ::= [ Template_ctx_mismatch (constr, constr, constr) ].
@@ -589,7 +580,7 @@ Module Compilers.
       let handle_eliminator (motive : constr) (rect_arrow_nodep : constr option) (rect_nodep : constr option) (rect : constr) (mid_args : constr list) (cases_to_thunk : constr list)
         := let mkApp_thunked_cases f pre_args
              := Control.with_holes
-                  (fun () => mkApp f (List.append pre_args (List.append mid_args (List.map (fun arg => open_constr:(fun _ => $arg)) cases_to_thunk))))
+                  (fun () => mkApp f (List.append pre_args (List.append mid_args (List.map (fun arg => '(fun _ => $arg)) cases_to_thunk))))
                   (fun fv => match Constr.Unsafe.check fv with
                              | Val fv => fv
                              | Err err => Control.throw err
@@ -602,7 +593,7 @@ Module Compilers.
                               else mkApp rect (List.append args (List.append mid_args cases_to_thunk)))
              | None => Control.zero Match_failure
              end in
-           let (f, x) := match! (eval cbv beta in $motive) with
+           let (f, x) := match! (eval cbv beta in motive) with
                          | fun _ => ?a -> ?b
                            => opt_recr false rect_arrow_nodep [a; b]
                          | fun _ => ?t
@@ -679,11 +670,11 @@ Module Compilers.
            { contents := (avoid, []) }.
       Ltac2 find_opt (term : constr) (cache : t) : elem option
         := let (_, cache) := cache.(contents) in
-           List.assoc_opt Constr.equal term cache.
+           List.assoc_opt Constr.equal_nounivs term cache.
       Ltac2 Type exn ::= [ Cache_contains_element (constr, constr, constr, elem) ].
       Ltac2 add (head_constant : constr) (term : constr) (rterm : constr) (cache : t) : ident (* newly bound name *)
         := let (avoid, known) := cache.(contents) in
-           match List.assoc_opt Constr.equal term known with
+           match List.assoc_opt Constr.equal_nounivs term known with
            | Some e => Control.throw (Cache_contains_element head_constant term rterm e)
 
            | None
@@ -728,7 +719,7 @@ Module Compilers.
              (Cache.to_thunked_binder_context cache)
              var_ty_ctx e in
       let reify_ident_opt term
-        := Option.map (fun idc => debug_check (mkApp '(@Ident) [base_type; ident; var; open_constr:(_); idc]))
+        := Option.map (fun idc => debug_check (mkApp '@Ident [base_type; ident; var; '_; idc]))
                       (reify_ident_opt ctx_tys term) in
       Reify.debug_enter_reify "expr.reify_in_context" term;
       Reify.debug_print_args
@@ -789,7 +780,7 @@ Module Compilers.
                             (reify_rec_gen f (x :: ctx_tys) (rt :: var_ty_ctx) template_ctx)))
                | Constr.Unsafe.App c args
                  => Reify.debug_enter_reify_case "expr.reify_in_context" "App (check LetIn)" term;
-                    if Constr.equal c '@Let_In
+                    if Constr.equal_nounivs c '@Let_In
                     then if Int.equal (Array.length args) 4
                          then Reify.debug_enter_reify_case "expr.reify_in_context" "LetIn" term;
                               let (ta, tb, a, b) := (Array.get args 0, Array.get args 1, Array.get args 2, Array.get args 3) in
@@ -859,7 +850,7 @@ Module Compilers.
                                       | Val c
                                         => let (c, h) := c in
                                            Reify.debug_enter_reify_case "expr.reify_in_context" "App Constant (unfold)" term;
-                                           let term' := eval_cbv_delta_only [c] term in
+                                           let term' := (eval cbv delta [$c] in term) in
                                            if Constr.equal term term'
                                            then printf "Unrecognized (non-unfoldable) term: %t" term;
                                                 None
