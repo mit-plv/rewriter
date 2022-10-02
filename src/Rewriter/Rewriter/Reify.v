@@ -873,6 +873,7 @@ Module Compilers.
                              let t := mkRel 2 in
                              let p := mkRel 1 in
                              debug_Constr_check (fun () => mkLambda tb (mkLambda pb (mkApp '@with_unif_rewrite_ruleTP_gen [base; ident; var; pident; pident_arg_types; value; t; p; should_do_again; 'true; 'true]))) in
+                        let rT := Compilers.type.reify reify_base_type base_type t in
                         let rA := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None in
                         let rB := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos b [] [] value_ctx [] None in
                         let side_conditions := adjust_side_conditions_for_gets_inlined avoid value_ctx side_conditions in
@@ -880,7 +881,7 @@ Module Compilers.
                                          (fun () => mkLambda
                                                       (* Hack around COQBUG(https://github.com/coq/coq/issues/16419) *)
                                                       (Constr.Binder.make (Some @invalid) '(match _ return Type with ev => ev end))
-                                                      (mkApp cexpr_to_pattern_and_replacement_unfolded [mkRel 1; '_; rA; rB; side_conditions])) in
+                                                      (mkApp cexpr_to_pattern_and_replacement_unfolded [mkRel 1; rT; rA; rB; side_conditions])) in
                         let res := let pident_arg_types := head_reference pident_arg_types in
                                    let pident_of_typed_ident := head_reference pident_of_typed_ident in
                                    let pident_type_of_list_arg_types_beq := head_reference pident_type_of_list_arg_types_beq in
