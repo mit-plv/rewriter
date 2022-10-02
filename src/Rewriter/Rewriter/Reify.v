@@ -201,8 +201,8 @@ Module Compilers.
                          then Some replacement
                          else None))).
 
-
-        Definition expr_to_pattern_and_replacement_unfolded gets_inlined should_do_again evm invalid {t} lhs rhs side_conditions
+        (** N.B. We must annotate the type of [invalid] to relax universe constraints *)
+        Definition expr_to_pattern_and_replacement_unfolded gets_inlined should_do_again evm {t} lhs rhs side_conditions (invalid : forall A B : Type, A -> B)
           := Eval cbv beta iota delta [expr_to_pattern_and_replacement lookup_expr_gets_inlined pattern_of_expr lam_unification_resultT' Pos.succ pair'_unification_resultT' PositiveMap.empty PositiveMap.fold Pos.max expr_pos_to_expr_value (* expr_value_to_rewrite_rule_replacement*) fold_left List.rev List.app value PositiveMap.add PositiveMap.xfoldi Pos.compare Pos.compare_cont FMapPositive.append projT1 projT2 PositiveMap.find Base_value (*UnderLets.map reify_expr_beta_iota reflect_expr_beta_iota*) lam_type_of_list fold_right list_rect pattern.type.relax pattern.type.subst_default pattern.type.subst_default_relax pattern.type.unsubst_default_relax option_map unification_resultT' with_unification_resultT' with_unif_rewrite_ruleTP_gen']
             in @expr_to_pattern_and_replacement gets_inlined should_do_again evm invalid t lhs rhs side_conditions.
 
@@ -863,12 +863,6 @@ Module Compilers.
                         let cpartial_lam_unif_rewrite_ruleTP_gen := debug_Constr_check (fun () => mkApp '@partial_lam_unif_rewrite_ruleTP_gen_unfolded [base; ident; var; pident; pident_arg_types; should_do_again]) in
                         let value := debug_Constr_check (fun () => mkApp '@value [base_type; ident; var]) in
                         let cinvalidT := '(forall A B : Type, A -> B) in
-                        let check name c
-                          := let c := debug_Constr_check c in
-                             match Constr.Unsafe.check c with
-                             | Val c => c
-                             | Err err => Control.throw (Reification_panic (fprintf "reify_to_pattern_and_replacement_in_context: Could not make %s from %t: %a" name c (fun () => Message.of_exn) err))
-                             end in
                         let cwith_unif_rewrite_ruleTP_gen
                           := let tb := Constr.Binder.make (Some @t) (debug_Constr_check (fun () => mkApp '@type.type [mkApp '@pattern.base.type.type [base] ])) in
                              (* can't check this one, it's not under binders *)
@@ -876,15 +870,19 @@ Module Compilers.
                              let t := mkRel 2 in
                              let p := mkRel 1 in
                              debug_Constr_check (fun () => mkLambda tb (mkLambda pb (mkApp '@with_unif_rewrite_ruleTP_gen [base; ident; var; pident; pident_arg_types; value; t; p; should_do_again; 'true; 'true]))) in
+                        let check name c
+                          := let c := debug_Constr_check c in
+                             match Constr.Unsafe.check c with
+                             | Val c => c
+                             | Err err => Control.throw (Reification_panic (fprintf "reify_to_pattern_and_replacement_in_context: Could not make %s from %t: %a" name c (fun () => Message.of_exn) err))
+                             end in
                         let rT := Compilers.type.reify reify_base_type base_type t in
                         let rA := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None in
                         let rB := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos b [] [] value_ctx [] None in
                         let side_conditions := adjust_side_conditions_for_gets_inlined avoid value_ctx side_conditions in
                         (* N.B. We need both check and η-expansion here to ... relax universe constraints? *)
                         let res := check "res"
-                                         (fun () => mkLambda
-                                                      (Constr.Binder.make (Some @invalid) cinvalidT)
-                                                      (mkApp cexpr_to_pattern_and_replacement_unfolded [mkRel 1; rT; rA; rB; side_conditions])) in
+                                         (fun () => mkApp cexpr_to_pattern_and_replacement_unfolded [rT; rA; rB; side_conditions]) in
                         let res := let pident_arg_types := head_reference pident_arg_types in
                                    let pident_of_typed_ident := head_reference pident_of_typed_ident in
                                    let pident_type_of_list_arg_types_beq := head_reference pident_type_of_list_arg_types_beq in
