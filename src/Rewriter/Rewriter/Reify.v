@@ -835,25 +835,7 @@ Module Compilers.
            => let debug_Constr_check := Reify.Constr.debug_check_strict "reify_to_pattern_and_replacement_in_context" in
               let base_type := debug_Constr_check (fun () => mkApp 'base.type [base]) in
               let reify_base_type := Compilers.base.reify base reify_base in
-              let base_interp_head := head_reference base_interp in
               let reify_rec_gen avoid := reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota avoid type_ctx var gets_inlined should_do_again in
-              let var_pos := '(fun _ : type $base_type => positive) in
-              let value := debug_Constr_check (fun () => mkApp '@value [base_type; ident; var]) in
-              let cexpr_to_pattern_and_replacement_unfolded := debug_Constr_check (fun () => mkApp '@expr_to_pattern_and_replacement_unfolded [base; try_make_transport_base_cps; ident; var; pident; pident_arg_types; pident_type_of_list_arg_types_beq; pident_of_typed_ident; pident_arg_types_of_typed_ident; mkApp reflect_ident_iota [var]; gets_inlined; should_do_again; type_ctx]) in
-              let cpartial_lam_unif_rewrite_ruleTP_gen := debug_Constr_check (fun () => mkApp '@partial_lam_unif_rewrite_ruleTP_gen_unfolded [base; ident; var; pident; pident_arg_types; should_do_again]) in
-              let check name c
-                := let c := debug_Constr_check c in
-                   match Constr.Unsafe.check c with
-                   | Val c => c
-                   | Err err => Control.throw (Reification_panic (fprintf "reify_to_pattern_and_replacement_in_context: Could not make %s from %t: %a" name c (fun () => Message.of_exn) err))
-                   end in
-              let cwith_unif_rewrite_ruleTP_gen
-                := let tb := Constr.Binder.make (Some @t) (debug_Constr_check (fun () => mkApp '@type.type [mkApp '@pattern.base.type.type [base] ])) in
-                   (* can't check this one, it's not under binders *)
-                   let pb := Constr.Binder.make (Some @p) (mkApp '@pattern.pattern [base; pident; mkRel 1]) in
-                   let t := mkRel 2 in
-                   let p := mkRel 1 in
-                   debug_Constr_check (fun () => mkLambda tb (mkLambda pb (mkApp '@with_unif_rewrite_ruleTP_gen [base; ident; var; pident; pident_arg_types; value; t; p; should_do_again; 'true; 'true]))) in
               match Constr.Unsafe.kind_nocast term with
               | Constr.Unsafe.Lambda xb f
                 => let t := Constr.Binder.type xb in
@@ -873,7 +855,25 @@ Module Compilers.
               | _
                 => lazy_match! term with
                    | (@eq ?t ?a ?b, ?side_conditions)
-                     => let rA := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None in
+                     => let base_interp_head := head_reference base_interp in
+                        let var_pos := '(fun _ : type $base_type => positive) in
+                        let cexpr_to_pattern_and_replacement_unfolded := debug_Constr_check (fun () => mkApp '@expr_to_pattern_and_replacement_unfolded [base; try_make_transport_base_cps; ident; var; pident; pident_arg_types; pident_type_of_list_arg_types_beq; pident_of_typed_ident; pident_arg_types_of_typed_ident; mkApp reflect_ident_iota [var]; gets_inlined; should_do_again; type_ctx]) in
+                        let cpartial_lam_unif_rewrite_ruleTP_gen := debug_Constr_check (fun () => mkApp '@partial_lam_unif_rewrite_ruleTP_gen_unfolded [base; ident; var; pident; pident_arg_types; should_do_again]) in
+                        let value := debug_Constr_check (fun () => mkApp '@value [base_type; ident; var]) in
+                        let check name c
+                          := let c := debug_Constr_check c in
+                             match Constr.Unsafe.check c with
+                             | Val c => c
+                             | Err err => Control.throw (Reification_panic (fprintf "reify_to_pattern_and_replacement_in_context: Could not make %s from %t: %a" name c (fun () => Message.of_exn) err))
+                             end in
+                        let cwith_unif_rewrite_ruleTP_gen
+                          := let tb := Constr.Binder.make (Some @t) (debug_Constr_check (fun () => mkApp '@type.type [mkApp '@pattern.base.type.type [base] ])) in
+                             (* can't check this one, it's not under binders *)
+                             let pb := Constr.Binder.make (Some @p) (mkApp '@pattern.pattern [base; pident; mkRel 1]) in
+                             let t := mkRel 2 in
+                             let p := mkRel 1 in
+                             debug_Constr_check (fun () => mkLambda tb (mkLambda pb (mkApp '@with_unif_rewrite_ruleTP_gen [base; ident; var; pident; pident_arg_types; value; t; p; should_do_again; 'true; 'true]))) in
+                        let rA := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None in
                         let rB := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos b [] [] value_ctx [] None in
                         let side_conditions := adjust_side_conditions_for_gets_inlined avoid value_ctx side_conditions in
                         let res := check "res"
