@@ -827,6 +827,8 @@ Module Compilers.
           (fun () => Control.refine
                        (fun () => adjust_side_conditions_for_gets_inlined' value_ctx side_conditions (mkVar lookup_gets_inlined))).
 
+      Definition lift_existT {X A B} (v : forall x : X, @sigT (A x) (B x))
+        := Eval cbv [projT1 projT2] in existT _ (fun x => projT1 (v x)) (fun x => projT2 (v x)).
       Ltac2 rec reify_to_pattern_and_replacement_in_context (base : constr) (reify_base : constr -> constr) (base_interp : constr) (base_interp_beq : constr) (try_make_transport_base_cps : constr) (ident : constr) (reify_ident_opt : binder list -> constr -> constr option) (pident : constr) (pident_arg_types : constr) (pident_type_of_list_arg_types_beq : constr) (pident_of_typed_ident : constr) (pident_arg_types_of_typed_ident : constr) (reflect_ident_iota : constr) (avoid : Fresh.Free.t) (type_ctx : constr) (var : constr) (gets_inlined : constr) (should_do_again : constr) (cur_i : constr) (term : constr) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) : constr :=
         Reify.debug_wrap
           "reify_to_pattern_and_replacement_in_context" Message.of_constr term
@@ -889,19 +891,11 @@ Module Compilers.
                                    (eval cbv [expr_to_pattern_and_replacement_unfolded $pident_arg_types $pident_of_typed_ident $pident_type_of_list_arg_types_beq $pident_arg_types_of_typed_ident (*reflect_ident_iota*)] in res) in
                         let res := (eval cbn [fst snd andb pattern.base.relax pattern.base.subst_default pattern.base.subst_default_relax] in res) in
                         let res := change_pattern_base_subst_default_relax res in
-                        let p := (eval cbv [projT1] in
-                                   (check "projT1_res"
-                                          (fun () => mkLambda (Constr.Binder.make (Some @invalid) '(match _ return Type with ev => ev end))
-                                                              (mkApp '@projT1 ['_; '_; mkApp res [mkRel 1] ]))))
-                        (*(fun invalid => projT1 (res invalid))*) in
+                        let (p, res) := lazy_match! (eval cbv [lift_existT] in constr:(@lift_existT _ _ _ $res)) with
+                                        | existT _ ?p ?res => (p, res)
+                                        end in
                         let p := strip_invalid_or_fail p in
                         let p := adjust_pattern_type_variables p in
-                        (* avoid capturing invalid *)
-                        let res := (eval cbv [projT2] in
-                                     (check "projT2_res"
-                                            (fun () => mkLambda (Constr.Binder.make (Some @invalid) '(match _ return Type with ev => ev end))
-                                                                (mkApp '@projT2 ['_; '_; mkApp res [mkRel 1] ]))))
-                        (*(fun invalid => projT2 (res invalid))*) in
                         let invalid := Fresh.fresh avoid @invalid in
                         let evm' := Fresh.fresh avoid @evm' in
                         let res ()
