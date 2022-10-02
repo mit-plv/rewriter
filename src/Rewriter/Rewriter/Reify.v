@@ -862,6 +862,7 @@ Module Compilers.
                         let cexpr_to_pattern_and_replacement_unfolded := debug_Constr_check (fun () => mkApp '@expr_to_pattern_and_replacement_unfolded [base; try_make_transport_base_cps; ident; var; pident; pident_arg_types; pident_type_of_list_arg_types_beq; pident_of_typed_ident; pident_arg_types_of_typed_ident; mkApp reflect_ident_iota [var]; gets_inlined; should_do_again; type_ctx]) in
                         let cpartial_lam_unif_rewrite_ruleTP_gen := debug_Constr_check (fun () => mkApp '@partial_lam_unif_rewrite_ruleTP_gen_unfolded [base; ident; var; pident; pident_arg_types; should_do_again]) in
                         let value := debug_Constr_check (fun () => mkApp '@value [base_type; ident; var]) in
+                        let cinvalidT := '(forall A B : Type, A -> B) in
                         let check name c
                           := let c := debug_Constr_check c in
                              match Constr.Unsafe.check c with
@@ -879,10 +880,10 @@ Module Compilers.
                         let rA := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None in
                         let rB := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos b [] [] value_ctx [] None in
                         let side_conditions := adjust_side_conditions_for_gets_inlined avoid value_ctx side_conditions in
+                        (* N.B. We need both check and η-expansion here to ... relax universe constraints? *)
                         let res := check "res"
                                          (fun () => mkLambda
-                                                      (* Hack around COQBUG(https://github.com/coq/coq/issues/16419) *)
-                                                      (Constr.Binder.make (Some @invalid) '(match _ return Type with ev => ev end))
+                                                      (Constr.Binder.make (Some @invalid) cinvalidT)
                                                       (mkApp cexpr_to_pattern_and_replacement_unfolded [mkRel 1; rT; rA; rB; side_conditions])) in
                         let res := let pident_arg_types := head_reference pident_arg_types in
                                    let pident_of_typed_ident := head_reference pident_of_typed_ident in
@@ -900,7 +901,7 @@ Module Compilers.
                         let evm' := Fresh.fresh avoid @evm' in
                         let res ()
                           := Constr.in_context
-                               invalid '_
+                               invalid cinvalidT
                                (fun ()
                                 => Control.refine
                                      (fun ()
@@ -909,13 +910,13 @@ Module Compilers.
                                            (fun ()
                                             => Control.refine
                                                  (fun ()
-                                                  => (* we must check here to unify the evar in the type of invalid, lest we run into COQBUG(https://github.com/coq/coq/issues/16540) *)
-                                                    let res := (eval cbv beta in (check "res invalid" (fun () => mkApp res [mkVar invalid]))) in
-                                                    let res := adjust_lookup_default res in
-                                                    let res := adjust_type_variables res in
-                                                    let res := replace_evar_map (mkVar evm') res in
-                                                    let res := replace_type_try_transport res in
-                                                    res)))) in
+                                                  => let res := (eval cbv beta in
+                                                                  (debug_Constr_check (fun () => mkApp res [mkVar invalid]))) in
+                                                     let res := adjust_lookup_default res in
+                                                     let res := adjust_type_variables res in
+                                                     let res := replace_evar_map (mkVar evm') res in
+                                                     let res := replace_type_try_transport res in
+                                                     res)))) in
                         let res := debug_Constr_check res in
                         let res := (eval cbv [UnderLets.map UnderLets.flat_map reify_expr_beta_iota reflect_expr_beta_iota reify_to_UnderLets] in res) in
                         let res := (eval cbn [reify reflect UnderLets.of_expr UnderLets.to_expr UnderLets.splice value' Base_value invert_Literal invert_ident_Literal splice_under_lets_with_value] in res) in
