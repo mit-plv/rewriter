@@ -32,6 +32,7 @@ Require Import Rewriter.Util.Tactics2.ReplaceByPattern.
 Require Import Rewriter.Util.Tactics2.FixNotationsForPerformance.
 Require Import Rewriter.Util.Tactics2.InFreshContext.
 Require Import Rewriter.Util.Tactics2.Notations.
+Require Import Rewriter.Util.Tactics2.DecomposeLambda.
 Require Rewriter.Util.Tactics2.Ltac1.
 Require Rewriter.Util.Tactics2.Constr.
 Import ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
@@ -202,9 +203,10 @@ Module Compilers.
                          else None))).
 
         (** N.B. We must annotate the type of [invalid] to relax universe constraints *)
-        Definition expr_to_pattern_and_replacement_unfolded gets_inlined should_do_again evm {t} lhs rhs side_conditions (invalid : forall A B : Type, A -> B)
+        Definition expr_to_pattern_and_replacement_unfolded_split gets_inlined should_do_again evm {t} lhs rhs side_conditions
           := Eval cbv beta iota delta [expr_to_pattern_and_replacement lookup_expr_gets_inlined pattern_of_expr lam_unification_resultT' Pos.succ pair'_unification_resultT' PositiveMap.empty PositiveMap.fold Pos.max expr_pos_to_expr_value (* expr_value_to_rewrite_rule_replacement*) fold_left List.rev List.app value PositiveMap.add PositiveMap.xfoldi Pos.compare Pos.compare_cont FMapPositive.append projT1 projT2 PositiveMap.find Base_value (*UnderLets.map reify_expr_beta_iota reflect_expr_beta_iota*) lam_type_of_list fold_right list_rect pattern.type.relax pattern.type.subst_default pattern.type.subst_default_relax pattern.type.unsubst_default_relax option_map unification_resultT' with_unification_resultT' with_unif_rewrite_ruleTP_gen']
-            in @expr_to_pattern_and_replacement gets_inlined should_do_again evm invalid t lhs rhs side_conditions.
+            in let f := fun (invalid : forall A B : Type, A -> B) => @expr_to_pattern_and_replacement gets_inlined should_do_again evm invalid t lhs rhs side_conditions in
+               existT _ (fun invalid => projT1 (f invalid)) (fun invalid => projT2 (f invalid)).
 
         Definition partial_lam_unif_rewrite_ruleTP_gen_unfolded should_do_again {t} p
           := Eval cbv beta iota delta [partial_lam_unif_rewrite_ruleTP_gen pattern.collect_vars pattern.type.lam_forall_vars partial_lam_unification_resultT pattern.type.collect_vars pattern.base.collect_vars PositiveSet.union PositiveSet.add PositiveSet.empty pattern.type.lam_forall_vars_gen List.rev PositiveSet.elements PositiveSet.xelements PositiveSet.rev PositiveSet.rev_append List.app orb fold_right PositiveMap.add PositiveMap.empty]
@@ -273,14 +275,17 @@ Module Compilers.
            => let debug_Constr_check := Reify.Constr.debug_check_strict "equation_to_parts'" in
               lazy_match! lem with
               | ?h -> ?p
-                => let t := Constr.type h in
-                   (if Constr.equal t 'Prop
-                    then ()
-                    else Control.zero (Reification_failure (fprintf "Invalid non-Prop non-dependent hypothesis of type %t : %t when reifying a lemma of type %t" h t lem)));
-                   let h := match Control.case (fun () => prop_to_bool h) with
-                            | Val h => let (h, _) := h in h
-                            | Err err => Control.zero (Reification_failure (fprintf "Missing Bool.reflect instance for %t: %a" lem (fun () => Message.of_exn) err))
-                            end in
+                => let h
+                     := match Control.case (fun () => prop_to_bool h) with
+                        | Val h => let (h, _) := h in h
+                        | Err err
+                          => let t := Constr.type h in
+                             Control.zero
+                               (Reification_failure
+                                  (if Constr.equal t 'Prop
+                                   then fprintf "Missing Bool.reflect instance for %t: %a" lem (fun () => Message.of_exn) err
+                                   else fprintf "Invalid non-Prop non-dependent hypothesis of type %t : %t when reifying a lemma of type %t" h t lem))
+                        end in
                    let side_conditions := push_side_conditions h side_conditions in
                    equation_to_parts' avoid p side_conditions
               | @eq ?t ?a ?b
@@ -529,7 +534,7 @@ Module Compilers.
                      (debug_Constr_check (fun () => mkApp f ['@pattern_base_subst_default_relax'_reordered; '@pattern_base_unsubst_default_relax'_reordered])))
               end).
 
-      Definition pattern_base_subst_default_reordered base p evm
+      Definition pattern_base_subst_default_var base p evm
         := @pattern.base.subst_default base (pattern.base.type.var p) evm.
       Ltac2 adjust_lookup_default (rewr : constr) : constr :=
         Reify.debug_wrap
@@ -539,8 +544,9 @@ Module Compilers.
            => let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_lookup_default" in
               lazy_match! (eval pattern '@pattern.base.lookup_default in rewr) with
               | ?rewr _
-                => (eval cbv beta delta [pattern_base_subst_default_reordered] in
-                     (debug_Constr_check (fun () => mkApp rewr ['@pattern_base_subst_default_reordered])))
+                => let pattern_base_subst_default_var_unfolded := (eval cbv delta [pattern_base_subst_default_var] in '@pattern_base_subst_default_var) in
+                   (eval cbv beta in
+                     (debug_Constr_check (fun () => mkApp rewr [pattern_base_subst_default_var_unfolded])))
               end).
 
       Ltac2 rec replace_evar_map (evm : constr) (rewr : constr) : constr :=
@@ -601,7 +607,7 @@ Module Compilers.
           (fun ()
            => let debug_Constr_check := Reify.Constr.debug_check_strict "replace_type_try_transport" in
               let some := '@Some in
-              let rec aux (term : constr) (acc : constr list) : constr * constr list :=
+              let rec aux (term : constr) : constr * constr list :=
                 let res := match! term with
                            | context[?v]
                              => lazy_match! v with
@@ -617,16 +623,16 @@ Module Compilers.
                      let term := lazy_match! (eval pattern v in term) with
                                  | ?term _ => term
                                  end in
-                     aux term (some_pt :: acc)
-                | None => (term, acc)
+                     let (term, args) := aux term in
+                     (term, some_pt :: args)
+                | None => (term, [])
                 end in
-              let (term, args) := aux term [] in
-              match args with
-              | [] => term
-              | _ :: _
-                => (eval cbv beta in
-                     (debug_Constr_check (fun () => mkApp term args)))
-              end).
+              let (term, args) := aux term in
+              let len := List.length args in
+              if Int.equal len 0
+              then term
+              else let (_, term) := Constr.Unsafe.decompose_lam_n_assum len term in
+                   (debug_Constr_check (fun () => Constr.Unsafe.substnl args 0 term))).
 
       Ltac2 rec under_binders (avoid : Fresh.Free.t) (term : constr) (cont : ident list -> constr -> constr) (ctx : ident list) : constr :=
         match Constr.Unsafe.kind_nocast term with
@@ -711,30 +717,27 @@ Module Compilers.
                    adjust_if_negb term
               | _ => term
               end).
-      Ltac2 rec substitute_bool_eqb (term : constr) : constr :=
+      Ltac2 substitute_bool_eqb (term : constr) : constr :=
         Reify.debug_wrap
           "substitute_bool_eqb" Message.of_constr term
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
-           => lazy_match! term with
-              | context term'[Bool.eqb ?x true]
-                => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found %t =? true" x);
-                   let term := Pattern.instantiate term' x in
-                   substitute_bool_eqb term
-              | context term'[Bool.eqb ?x false]
-                => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found %t =? false" x);
-                   let term := Pattern.instantiate term' (mkApp 'negb [x]) in
-                   substitute_bool_eqb term
-              | context term'[Bool.eqb true ?x]
-                => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found true =? %t" x);
-                   let term := Pattern.instantiate term' x in
-                   substitute_bool_eqb term
-              | context term'[Bool.eqb false ?x]
-                => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found false =? %t" x);
-                   let term := Pattern.instantiate term' (mkApp 'negb [x]) in
-                   substitute_bool_eqb term
-              | _ => term
-              end).
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "substitute_bool_eqb" in
+              let negb := 'negb in
+              let bool_eqb := 'Bool.eqb in
+              let bool_eqb_true := '(Bool.eqb true) in
+              let bool_eqb_false := '(Bool.eqb false) in
+              let bool_eqb_swap := '(fun x y : bool => Bool.eqb y x) in
+              let id_bool := '(fun x : bool => x) in
+              let sub_and_swap term :=
+                lazy_match! (eval pattern bool_eqb, bool_eqb_true, bool_eqb_false in term) with
+                | ?term _ _ _
+                  => (eval cbv beta in
+                       debug_Constr_check (fun () => mkApp term [bool_eqb_swap; id_bool; negb]))
+                end in
+              let term := sub_and_swap term in
+              let term := sub_and_swap term in
+              term).
 
       Ltac2 rec substitute_beq (base_interp_beq : constr) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (full_ctx : ident list) (ctx : ident list) (term : constr) : constr :=
         Reify.debug_wrap
@@ -827,8 +830,6 @@ Module Compilers.
           (fun () => Control.refine
                        (fun () => adjust_side_conditions_for_gets_inlined' value_ctx side_conditions (mkVar lookup_gets_inlined))).
 
-      Definition lift_existT {X A B} (v : forall x : X, @sigT (A x) (B x))
-        := Eval cbv [projT1 projT2] in existT _ (fun x => projT1 (v x)) (fun x => projT2 (v x)).
       Ltac2 rec reify_to_pattern_and_replacement_in_context (base : constr) (reify_base : constr -> constr) (base_interp : constr) (base_interp_beq : constr) (try_make_transport_base_cps : constr) (ident : constr) (reify_ident_opt : binder list -> constr -> constr option) (pident : constr) (pident_arg_types : constr) (pident_type_of_list_arg_types_beq : constr) (pident_of_typed_ident : constr) (pident_arg_types_of_typed_ident : constr) (reflect_ident_iota : constr) (avoid : Fresh.Free.t) (type_ctx : constr) (var : constr) (gets_inlined : constr) (should_do_again : constr) (cur_i : constr) (term : constr) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) : constr :=
         Reify.debug_wrap
           "reify_to_pattern_and_replacement_in_context" Message.of_constr term
@@ -859,7 +860,7 @@ Module Compilers.
                    | (@eq ?t ?a ?b, ?side_conditions)
                      => let base_interp_head := head_reference base_interp in
                         let var_pos := '(fun _ : type $base_type => positive) in
-                        let cexpr_to_pattern_and_replacement_unfolded := debug_Constr_check (fun () => mkApp '@expr_to_pattern_and_replacement_unfolded [base; try_make_transport_base_cps; ident; var; pident; pident_arg_types; pident_type_of_list_arg_types_beq; pident_of_typed_ident; pident_arg_types_of_typed_ident; mkApp reflect_ident_iota [var]; gets_inlined; should_do_again; type_ctx]) in
+                        let cexpr_to_pattern_and_replacement_unfolded_split := debug_Constr_check (fun () => mkApp '@expr_to_pattern_and_replacement_unfolded_split [base; try_make_transport_base_cps; ident; var; pident; pident_arg_types; pident_type_of_list_arg_types_beq; pident_of_typed_ident; pident_arg_types_of_typed_ident; mkApp reflect_ident_iota [var]; gets_inlined; should_do_again; type_ctx]) in
                         let cpartial_lam_unif_rewrite_ruleTP_gen := debug_Constr_check (fun () => mkApp '@partial_lam_unif_rewrite_ruleTP_gen_unfolded [base; ident; var; pident; pident_arg_types; should_do_again]) in
                         let value := debug_Constr_check (fun () => mkApp '@value [base_type; ident; var]) in
                         let cinvalidT := '(forall A B : Type, A -> B) in
@@ -876,21 +877,23 @@ Module Compilers.
                              | Val c => c
                              | Err err => Control.throw (Reification_panic (fprintf "reify_to_pattern_and_replacement_in_context: Could not make %s from %t: %a" name c (fun () => Message.of_exn) err))
                              end in
-                        let rT := Compilers.type.reify reify_base_type base_type t in
                         let rA := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None in
                         let rB := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos b [] [] value_ctx [] None in
+                        let rT := lazy_match! Constr.type rA with
+                                  | expr ?rT => rT
+                                  end in
                         let side_conditions := adjust_side_conditions_for_gets_inlined avoid value_ctx side_conditions in
-                        (* N.B. We need both check and η-expansion here to ... relax universe constraints? *)
+                        (* N.B. We need check here to ... relax universe constraints? *)
                         let res := check "res"
-                                         (fun () => mkApp cexpr_to_pattern_and_replacement_unfolded [rT; rA; rB; side_conditions]) in
+                                         (fun () => mkApp cexpr_to_pattern_and_replacement_unfolded_split [rT; rA; rB; side_conditions]) in
                         let res := let pident_arg_types := head_reference pident_arg_types in
                                    let pident_of_typed_ident := head_reference pident_of_typed_ident in
                                    let pident_type_of_list_arg_types_beq := head_reference pident_type_of_list_arg_types_beq in
                                    let pident_arg_types_of_typed_ident := head_reference pident_arg_types_of_typed_ident in
-                                   (eval cbv [expr_to_pattern_and_replacement_unfolded $pident_arg_types $pident_of_typed_ident $pident_type_of_list_arg_types_beq $pident_arg_types_of_typed_ident (*reflect_ident_iota*)] in res) in
+                                   (eval cbv [expr_to_pattern_and_replacement_unfolded_split $pident_arg_types $pident_of_typed_ident $pident_type_of_list_arg_types_beq $pident_arg_types_of_typed_ident (*reflect_ident_iota*)] in res) in
                         let res := (eval cbn [fst snd andb pattern.base.relax pattern.base.subst_default pattern.base.subst_default_relax] in res) in
                         let res := change_pattern_base_subst_default_relax res in
-                        let (p, res) := lazy_match! (eval cbv [lift_existT] in constr:(@lift_existT _ _ _ $res)) with
+                        let (p, res) := lazy_match! res with
                                         | existT _ ?p ?res => (p, res)
                                         end in
                         let p := strip_invalid_or_fail p in
