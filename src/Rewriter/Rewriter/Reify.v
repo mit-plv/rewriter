@@ -876,9 +876,11 @@ Module Compilers.
                              | Val c => c
                              | Err err => Control.throw (Reification_panic (fprintf "reify_to_pattern_and_replacement_in_context: Could not make %s from %t: %a" name c (fun () => Message.of_exn) err))
                              end in
-                        let rT := Compilers.type.reify reify_base_type base_type t in
                         let rA := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos a [] [] value_ctx [] None in
                         let rB := expr.reify_in_context base_type ident reify_base_type reify_ident_opt var_pos b [] [] value_ctx [] None in
+                        let rT := lazy_match! Constr.type rA with
+                                  | expr ?rT => rT
+                                  end in
                         let side_conditions := adjust_side_conditions_for_gets_inlined avoid value_ctx side_conditions in
                         (* N.B. We need both check and η-expansion here to ... relax universe constraints? *)
                         let res := check "res"
