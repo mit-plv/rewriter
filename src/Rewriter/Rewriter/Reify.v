@@ -275,14 +275,17 @@ Module Compilers.
            => let debug_Constr_check := Reify.Constr.debug_check_strict "equation_to_parts'" in
               lazy_match! lem with
               | ?h -> ?p
-                => let t := Constr.type h in
-                   (if Constr.equal t 'Prop
-                    then ()
-                    else Control.zero (Reification_failure (fprintf "Invalid non-Prop non-dependent hypothesis of type %t : %t when reifying a lemma of type %t" h t lem)));
-                   let h := match Control.case (fun () => prop_to_bool h) with
-                            | Val h => let (h, _) := h in h
-                            | Err err => Control.zero (Reification_failure (fprintf "Missing Bool.reflect instance for %t: %a" lem (fun () => Message.of_exn) err))
-                            end in
+                => let h
+                     := match Control.case (fun () => prop_to_bool h) with
+                        | Val h => let (h, _) := h in h
+                        | Err err
+                          => let t := Constr.type h in
+                             Control.zero
+                               (Reification_failure
+                                  (if Constr.equal t 'Prop
+                                   then fprintf "Missing Bool.reflect instance for %t: %a" lem (fun () => Message.of_exn) err
+                                   else fprintf "Invalid non-Prop non-dependent hypothesis of type %t : %t when reifying a lemma of type %t" h t lem))
+                        end in
                    let side_conditions := push_side_conditions h side_conditions in
                    equation_to_parts' avoid p side_conditions
               | @eq ?t ?a ?b
