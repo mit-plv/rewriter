@@ -219,7 +219,11 @@ Module Compilers.
         end.
 
       Ltac2 rec refine_reify_under_forall_types' (base : constr) (base_type : constr) (base_type_interp : constr) (ty_ctx : constr) (avoid : Fresh.Free.t) (cur_i : constr) (lem : constr) (cont : Fresh.Free.t -> constr (* ty_ctx *) -> constr (* cur_i *) -> constr (* lem *) -> unit) : unit :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "refine_reify_under_forall_types'" in
+        Reify.debug_wrap
+          "refine_reify_under_forall_types'" Message.of_constr lem
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained None
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "refine_reify_under_forall_types'" in
               let default () := cont avoid ty_ctx cur_i lem in
               match Constr.Unsafe.kind_nocast lem with
               | Constr.Unsafe.Prod b p
@@ -262,7 +266,11 @@ Module Compilers.
 
       Ltac2 Type exn ::= [ Reification_missing_reflect_instance (constr, exn) ].
       Ltac2 rec equation_to_parts' (avoid : Fresh.Free.t) (lem : constr) (side_conditions : constr) : constr :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "equation_to_parts'" in
+        Reify.debug_wrap
+          "equation_to_parts'" (fun (lem, side_conditions) => fprintf "%t (side: %t)" lem side_conditions) (lem, side_conditions)
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "equation_to_parts'" in
               lazy_match! lem with
               | ?h -> ?p
                 => let t := Constr.type h in
@@ -296,13 +304,21 @@ Module Compilers.
         equation_to_parts' avoid lem '(@nil bool).
 
       Ltac2 preadjust_pattern_type_variables (pat : constr) : constr :=
-             (let s := strategy:([pattern.type.relax pattern.type.subst_default pattern.type.subst_default_relax pattern.type.unsubst_default_relax]) in
+        Reify.debug_wrap
+          "preadjust_pattern_type_variables'" Message.of_constr pat
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let s := strategy:([pattern.type.relax pattern.type.subst_default pattern.type.subst_default_relax pattern.type.unsubst_default_relax]) in
               let pat := Std.eval_cbv s pat in
               let pat := Std.eval_cbn s pat in
               pat).
 
       Ltac2 rec adjust_pattern_type_variables' (pat : constr) : constr :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_pattern_type_variables'" in
+        Reify.debug_wrap
+          "adjust_pattern_type_variables'" Message.of_constr pat
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_pattern_type_variables'" in
               let t_base_p_evm' := match! pat with
                                    | context[?t]
                                      => lazy_match! t with
@@ -325,7 +341,11 @@ Module Compilers.
 
       (* this is fancy but probably too complicated to maintain *)
       Ltac2 walk_term_under_binders_fail_invalid_fast (term : constr) (free : Fresh.Free.t) (invalid : ident) (fv : constr) : unit :=
-             (let res : (int (* len *) * message) list ref := { contents := [] } in
+        Reify.debug_wrap
+          "walk_term_under_binders_fail_invalid_fast" Message.of_constr fv
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained None
+          (fun ()
+           => let res : (int (* len *) * message) list ref := { contents := [] } in
               let check_var i args k :=
                 if Ident.equal i invalid
                 then res.(contents) := match args with
@@ -413,7 +433,11 @@ Module Compilers.
               end).
 
       Ltac2 rec walk_term_under_binders_fail_invalid (term : constr) (free : Fresh.Free.t) (invalid : ident) (fv : constr) : unit :=
-             (let recr ns :=
+        Reify.debug_wrap
+          "walk_term_under_binders_fail_invalid" Message.of_constr fv
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained None
+          (fun ()
+           => let recr ns :=
                 walk_term_under_binders_fail_invalid
                   term
                   (Fresh.Free.union free (Fresh.Free.of_ids ns))
@@ -494,7 +518,11 @@ Module Compilers.
         := @pattern_base_unsubst_default_relax' base t evm P.
 
       Ltac2 change_pattern_base_subst_default_relax (term : constr) : constr :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "change_pattern_base_subst_default_relax" in
+        Reify.debug_wrap
+          "change_pattern_base_subst_default_relax" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "change_pattern_base_subst_default_relax" in
               lazy_match! (eval pattern '@pattern.base.subst_default_relax, '@pattern.base.unsubst_default_relax in term) with
               | ?f _ _
                 => (eval cbv beta delta [pattern_base_subst_default_relax'_reordered pattern_base_unsubst_default_relax'_reordered] in
@@ -504,7 +532,11 @@ Module Compilers.
       Definition pattern_base_subst_default_reordered base p evm
         := @pattern.base.subst_default base (pattern.base.type.var p) evm.
       Ltac2 adjust_lookup_default (rewr : constr) : constr :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_lookup_default" in
+        Reify.debug_wrap
+          "adjust_lookup_default" Message.of_constr rewr
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_lookup_default" in
               lazy_match! (eval pattern '@pattern.base.lookup_default in rewr) with
               | ?rewr _
                 => (eval cbv beta delta [pattern_base_subst_default_reordered] in
@@ -512,7 +544,11 @@ Module Compilers.
               end).
 
       Ltac2 rec replace_evar_map (evm : constr) (rewr : constr) : constr :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "replace_evar_map" in
+        Reify.debug_wrap
+          "replace_evar_map" (fun (evm, rewr) => fprintf "(%t) in %t" evm rewr) (evm, rewr)
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "replace_evar_map" in
               let evm' := match! rewr with
                           | context[@pattern.base.lookup_default ?_base ?_p ?evm']
                             => if Constr.equal evm evm'
@@ -534,7 +570,11 @@ Module Compilers.
 
       Definition adjust_type_variables_id base t (P : base.type base -> Type) (x : P t) := x.
       Ltac2 rec adjust_type_variables (rewr : constr) : constr :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_type_variables" in
+        Reify.debug_wrap
+          "adjust_type_variables" Message.of_constr rewr
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_type_variables" in
               lazy_match! rewr with
               | context[@pattern.base.subst_default ?base (@pattern.base.relax ?base ?t) ?evm'']
                 => let t' := debug_Constr_check (fun () => mkApp '@pattern.base.subst_default [base; mkApp '@pattern.base.relax [base; t]; evm'']) in
@@ -555,7 +595,11 @@ Module Compilers.
               end).
 
       Ltac2 replace_type_try_transport (term : constr) : constr :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "replace_type_try_transport" in
+        Reify.debug_wrap
+          "replace_type_try_transport" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "replace_type_try_transport" in
               let some := '@Some in
               let rec aux (term : constr) (acc : constr list) : constr * constr list :=
                 let res := match! term with
@@ -597,10 +641,18 @@ Module Compilers.
         | _ => cont ctx term
         end.
       Ltac2 substitute_with (term : constr) (x : constr) (y : constr) : constr :=
-             (Reify.Constr.debug_check_strict "substitute_with" (fun () => Constr.Unsafe.replace_by_pattern [y] [x] term)).
+        Reify.debug_wrap
+          "substitute_with" (fun () => fprintf "(%t) → (%t) in %t" y x term) ()
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => Reify.Constr.debug_check_strict "substitute_with" (fun () => Constr.Unsafe.replace_by_pattern [y] [x] term)).
 
       Ltac2 substitute_beq_with (base_interp_beq : constr) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (full_ctx : ident list) (term : constr) (beq : constr) (x : constr) : constr :=
-             (let only_eliminate_in_ctx := List.map (fun (n, _ty, _v) => n) only_eliminate_in_ctx in
+        Reify.debug_wrap
+          "substitute_beq_with" (fun () => fprintf "(%t) =? _ in %t" x term) ()
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let only_eliminate_in_ctx := List.map (fun (n, _ty, _v) => n) only_eliminate_in_ctx in
               let is_good (y : constr) :=
                 match Constr.Unsafe.kind_nocast y with
                 | Constr.Unsafe.Var y
@@ -637,7 +689,11 @@ Module Compilers.
               end).
 
       Ltac2 remove_andb_true (term : constr) : constr :=
-             (let term := lazy_match! (eval pattern 'andb, '(andb true) in term) with
+        Reify.debug_wrap
+          "remove_andb_true" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let term := lazy_match! (eval pattern 'andb, '(andb true) in term) with
                           | ?f _ _ => (eval cbn [andb] in constr:($f (fun x y => andb y x) (fun b => b)))
                           end in
               let term := lazy_match! (eval pattern 'andb, '(andb true) in term) with
@@ -645,14 +701,22 @@ Module Compilers.
                           end in
               term).
       Ltac2 rec adjust_if_negb (term : constr) : constr :=
-             (lazy_match! term with
+        Reify.debug_wrap
+          "adjust_if_negb" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => lazy_match! term with
               | context term'[if negb ?x then ?a else ?b]
                 => let term := Pattern.instantiate term' '(if $x then $b else $a) in
                    adjust_if_negb term
               | _ => term
               end).
       Ltac2 rec substitute_bool_eqb (term : constr) : constr :=
-             (lazy_match! term with
+        Reify.debug_wrap
+          "substitute_bool_eqb" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => lazy_match! term with
               | context term'[Bool.eqb ?x true]
                 => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found %t =? true" x);
                    let term := Pattern.instantiate term' x in
@@ -673,7 +737,11 @@ Module Compilers.
               end).
 
       Ltac2 rec substitute_beq (base_interp_beq : constr) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (full_ctx : ident list) (ctx : ident list) (term : constr) : constr :=
-             (let base_interp_beq_head := head_reference base_interp_beq in
+        Reify.debug_wrap
+          "substitute_beq" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let base_interp_beq_head := head_reference base_interp_beq in
               match ctx with
               | []
                 => let term := (eval cbv [base.interp_beq $base_interp_beq_head] in term) in
@@ -699,7 +767,11 @@ Module Compilers.
               end).
 
       Ltac2 deep_substitute_beq (base_interp_beq : constr) (avoid : Fresh.Free.t) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (term : constr) : constr :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "deep_substitute_beq" in
+        Reify.debug_wrap
+          "deep_substitute_beq" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "deep_substitute_beq" in
               lazy_match! term with
               | context term'[@Build_rewrite_rule_data ?base ?ident ?var ?pident ?pident_arg_types ?t ?p ?sda ?wo ?ul ?subterm]
                 => let subterm := under_binders avoid subterm (fun ctx term => substitute_beq base_interp_beq only_eliminate_in_ctx ctx ctx term) [] in
@@ -708,7 +780,11 @@ Module Compilers.
               end).
 
       Ltac2 clean_beq (base_interp_beq : constr) (avoid : Fresh.Free.t) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (term : constr) : constr :=
-             (let base_interp_beq_head := head_reference base_interp_beq in
+        Reify.debug_wrap
+          "clean_beq" Message.of_constr term
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let base_interp_beq_head := head_reference base_interp_beq in
               let term := (eval cbn [Prod.prod_beq] in term) in
               let term := (eval cbv [ident.literal] in term) in
               let term := deep_substitute_beq base_interp_beq avoid only_eliminate_in_ctx term in
@@ -717,7 +793,11 @@ Module Compilers.
               term).
 
       Ltac2 rec adjust_side_conditions_for_gets_inlined' (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (side_conditions : constr) (lookup_gets_inlined : constr) : constr :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_side_conditions_for_gets_inlined'" in
+        Reify.debug_wrap
+          "adjust_side_conditions_for_gets_inlined'" Message.of_constr side_conditions
+          Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_side_conditions_for_gets_inlined'" in
               lazy_match! side_conditions with
               | context sc[ident.gets_inlined _ ?x]
                 => match Constr.Unsafe.kind_nocast x with
@@ -750,7 +830,11 @@ Module Compilers.
       Definition lift_existT {X A B} (v : forall x : X, @sigT (A x) (B x))
         := Eval cbv [projT1 projT2] in existT _ (fun x => projT1 (v x)) (fun x => projT2 (v x)).
       Ltac2 rec reify_to_pattern_and_replacement_in_context (base : constr) (reify_base : constr -> constr) (base_interp : constr) (base_interp_beq : constr) (try_make_transport_base_cps : constr) (ident : constr) (reify_ident_opt : binder list -> constr -> constr option) (pident : constr) (pident_arg_types : constr) (pident_type_of_list_arg_types_beq : constr) (pident_of_typed_ident : constr) (pident_arg_types_of_typed_ident : constr) (reflect_ident_iota : constr) (avoid : Fresh.Free.t) (type_ctx : constr) (var : constr) (gets_inlined : constr) (should_do_again : constr) (cur_i : constr) (term : constr) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) : constr :=
-             (let debug_Constr_check := Reify.Constr.debug_check_strict "reify_to_pattern_and_replacement_in_context" in
+        Reify.debug_wrap
+          "reify_to_pattern_and_replacement_in_context" Message.of_constr term
+          Reify.should_debug_enter_reify Reify.should_debug_leave_reify_success (Some Message.of_constr)
+          (fun ()
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "reify_to_pattern_and_replacement_in_context" in
               let base_type := debug_Constr_check (fun () => mkApp 'base.type [base]) in
               let reify_base_type := Compilers.base.reify base reify_base in
               let reify_rec_gen avoid := reify_to_pattern_and_replacement_in_context base reify_base base_interp base_interp_beq try_make_transport_base_cps ident reify_ident_opt pident pident_arg_types pident_type_of_list_arg_types_beq pident_of_typed_ident pident_arg_types_of_typed_ident reflect_ident_iota avoid type_ctx var gets_inlined should_do_again in
