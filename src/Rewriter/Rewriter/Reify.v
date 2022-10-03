@@ -32,6 +32,7 @@ Require Import Rewriter.Util.Tactics2.ReplaceByPattern.
 Require Import Rewriter.Util.Tactics2.FixNotationsForPerformance.
 Require Import Rewriter.Util.Tactics2.InFreshContext.
 Require Import Rewriter.Util.Tactics2.Notations.
+Require Import Rewriter.Util.Tactics2.DecomposeLambda.
 Require Rewriter.Util.Tactics2.Ltac1.
 Require Rewriter.Util.Tactics2.Constr.
 Import ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
@@ -602,7 +603,7 @@ Module Compilers.
           (fun ()
            => let debug_Constr_check := Reify.Constr.debug_check_strict "replace_type_try_transport" in
               let some := '@Some in
-              let rec aux (term : constr) (acc : constr list) : constr * constr list :=
+              let rec aux (term : constr) : constr * constr list :=
                 let res := match! term with
                            | context[?v]
                              => lazy_match! v with
@@ -618,16 +619,16 @@ Module Compilers.
                      let term := lazy_match! (eval pattern v in term) with
                                  | ?term _ => term
                                  end in
-                     aux term (some_pt :: acc)
-                | None => (term, acc)
+                     let (term, args) := aux term in
+                     (term, some_pt :: args)
+                | None => (term, [])
                 end in
-              let (term, args) := aux term [] in
-              match args with
-              | [] => term
-              | _ :: _
-                => (eval cbv beta in
-                     (debug_Constr_check (fun () => mkApp term args)))
-              end).
+              let (term, args) := aux term in
+              let len := List.length args in
+              if Int.equal len 0
+              then term
+              else let (_, term) := Constr.Unsafe.decompose_lam_n_assum len term in
+                   (debug_Constr_check (fun () => Constr.Unsafe.substnl args 0 term))).
 
       Ltac2 rec under_binders (avoid : Fresh.Free.t) (term : constr) (cont : ident list -> constr -> constr) (ctx : ident list) : constr :=
         match Constr.Unsafe.kind_nocast term with
