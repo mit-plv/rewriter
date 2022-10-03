@@ -716,28 +716,22 @@ Module Compilers.
           "substitute_bool_eqb" Message.of_constr term
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
-           => let negb := 'negb in
-              let rec aux (term : constr) :=
-                lazy_match! term with
-                | context term'[Bool.eqb ?x true]
-                  => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found %t =? true" x);
-                     let term := Pattern.instantiate term' x in
-                     aux term
-                | context term'[Bool.eqb ?x false]
-                  => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found %t =? false" x);
-                     let term := Pattern.instantiate term' (mkApp negb [x]) in
-                     aux term
-                | context term'[Bool.eqb true ?x]
-                  => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found true =? %t" x);
-                     let term := Pattern.instantiate term' x in
-                     aux term
-                | context term'[Bool.eqb false ?x]
-                  => Reify.debug_fine_grained "substitute_bool_eqb" (fun () => fprintf "found false =? %t" x);
-                     let term := Pattern.instantiate term' (mkApp negb [x]) in
-                     aux term
-                | _ => term
+           => let debug_Constr_check := Reify.Constr.debug_check_strict "substitute_bool_eqb" in
+              let negb := 'negb in
+              let bool_eqb := 'Bool.eqb in
+              let bool_eqb_true := '(Bool.eqb true) in
+              let bool_eqb_false := '(Bool.eqb false) in
+              let bool_eqb_swap := '(fun x y : bool => Bool.eqb y x) in
+              let id_bool := '(fun x : bool => x) in
+              let sub_and_swap term :=
+                lazy_match! (eval pattern bool_eqb, bool_eqb_true, bool_eqb_false in term) with
+                | ?term _ _ _
+                  => (eval cbv beta in
+                       debug_Constr_check (fun () => mkApp term [bool_eqb_swap; id_bool; negb]))
                 end in
-              aux term).
+              let term := sub_and_swap term in
+              let term := sub_and_swap term in
+              term).
 
       Ltac2 rec substitute_beq (base_interp_beq : constr) (only_eliminate_in_ctx : (ident * constr (* ty *) * constr (* var *)) list) (full_ctx : ident list) (ctx : ident list) (term : constr) : constr :=
         Reify.debug_wrap
