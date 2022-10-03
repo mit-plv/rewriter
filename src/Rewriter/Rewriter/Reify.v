@@ -602,7 +602,7 @@ Module Compilers.
           (fun ()
            => let debug_Constr_check := Reify.Constr.debug_check_strict "replace_type_try_transport" in
               let some := '@Some in
-              let rec aux (term : constr) (acc : constr list) : constr * constr list :=
+              let rec aux (term : constr) : constr :=
                 let res := match! term with
                            | context[?v]
                              => lazy_match! v with
@@ -615,19 +615,11 @@ Module Compilers.
                 | Some v
                   => let (v, p, t) := v in
                      let some_pt := debug_Constr_check (fun () => mkApp some [ mkApp p [t] ]) in
-                     let term := lazy_match! (eval pattern v in term) with
-                                 | ?term _ => term
-                                 end in
-                     aux term (some_pt :: acc)
-                | None => (term, acc)
+                     let term := debug_Constr_check (fun () => Constr.Unsafe.replace_by_pattern [v] [some_pt] term) in
+                     aux term
+                | None => term
                 end in
-              let (term, args) := aux term [] in
-              match args with
-              | [] => term
-              | _ :: _
-                => (eval cbv beta in
-                     (debug_Constr_check (fun () => mkApp term args)))
-              end).
+              aux term).
 
       Ltac2 rec under_binders (avoid : Fresh.Free.t) (term : constr) (cont : ident list -> constr -> constr) (ctx : ident list) : constr :=
         match Constr.Unsafe.kind_nocast term with
