@@ -534,7 +534,7 @@ Module Compilers.
                      (debug_Constr_check (fun () => mkApp f ['@pattern_base_subst_default_relax'_reordered; '@pattern_base_unsubst_default_relax'_reordered])))
               end).
 
-      Definition pattern_base_subst_default_reordered base p evm
+      Definition pattern_base_subst_default_var base p evm
         := @pattern.base.subst_default base (pattern.base.type.var p) evm.
       Ltac2 adjust_lookup_default (rewr : constr) : constr :=
         Reify.debug_wrap
@@ -544,8 +544,9 @@ Module Compilers.
            => let debug_Constr_check := Reify.Constr.debug_check_strict "adjust_lookup_default" in
               lazy_match! (eval pattern '@pattern.base.lookup_default in rewr) with
               | ?rewr _
-                => (eval cbv beta delta [pattern_base_subst_default_reordered] in
-                     (debug_Constr_check (fun () => mkApp rewr ['@pattern_base_subst_default_reordered])))
+                => let pattern_base_subst_default_var_unfolded := (eval cbv delta [pattern_base_subst_default_var] in '@pattern_base_subst_default_var) in
+                   (eval cbv beta in
+                     (debug_Constr_check (fun () => mkApp rewr [pattern_base_subst_default_var_unfolded])))
               end).
 
       Ltac2 rec replace_evar_map (evm : constr) (rewr : constr) : constr :=
