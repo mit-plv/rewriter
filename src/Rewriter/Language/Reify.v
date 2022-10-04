@@ -933,9 +933,9 @@ Module Compilers.
             Control.refine (fun () => r)).
     Ltac2 _Reify_rhs (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (base_interp : constr) (interp_ident : constr) () : unit :=
       let rhs := lazy_match! goal with [ |- _ = ?rhs ] => rhs end in
-      let r := _Reify base_type ident reify_base_type reify_ident_opt rhs in
-      Std.transitivity '(@Interp $base_type $ident $base_interp $interp_ident _ $r)
-      > [ | reflexivity ].
+      let r := Reify.debug_profile "_Reify_rhs._Reify" (fun () => _Reify base_type ident reify_base_type reify_ident_opt rhs) in
+      Reify.debug_profile "_Reify_rhs.transitivity" (fun () => Std.transitivity '(@Interp $base_type $ident $base_interp $interp_ident _ $r))
+      > [ | Reify.debug_profile "_Reify_rhs.reflexivity" (fun () => reflexivity) ].
 
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx :=
