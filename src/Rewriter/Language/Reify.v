@@ -615,7 +615,7 @@ Module Compilers.
       end.
 
     Module Cache.
-      Ltac2 Type elem := { name : ident ; rterm : constr }.
+      Ltac2 Type elem := { name : ident ; rty : constr ; rterm : constr }.
       (* maps terms to elem *)
       Ltac2 Type t := (Fresh.Free.t * (constr * elem) list) ref.
       Ltac2 init (avoid : constr) : t
@@ -624,16 +624,16 @@ Module Compilers.
       Ltac2 find_opt (term : constr) (cache : t) : elem option
         := let (_, cache) := cache.(contents) in
            List.assoc_opt Constr.equal_nounivs term cache.
-      Ltac2 Type exn ::= [ Cache_contains_element (constr, constr, constr, elem) ].
-      Ltac2 add (head_constant : constr) (term : constr) (rterm : constr) (cache : t) : ident (* newly bound name *)
+      Ltac2 Type exn ::= [ Cache_contains_element (constr, constr, constr, constr, elem) ].
+      Ltac2 add (head_constant : constr) (term : constr) (rty : constr) (rterm : constr) (cache : t) : ident (* newly bound name *)
         := let (avoid, known) := cache.(contents) in
            match List.assoc_opt Constr.equal_nounivs term known with
-           | Some e => Control.throw (Cache_contains_element head_constant term rterm e)
+           | Some e => Control.throw (Cache_contains_element head_constant term rty rterm e)
 
            | None
              => let id := Fresh.fresh avoid (Ident.reified_of_constr head_constant) in
                 let avoid := Fresh.Free.union avoid (Fresh.Free.of_ids [id]) in
-                let e := { name := id ; rterm := rterm } in
+                let e := { name := id ; rty := rty ; rterm := rterm } in
                 (cache.(contents) := (avoid, (term, e) :: known));
                 id
            end.
@@ -678,7 +678,7 @@ Module Compilers.
          because they are used dependently (e.g., arguments of type
          [Type] or [_ -> Type]) *)
 
-    Ltac2 rec reify_in_context_opt (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (var : constr) (term : constr) (ctx_tys : binder list) (var_ty_ctx : constr list) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (template_ctx : constr list) (cache : Cache.t) : constr option :=
+    Ltac2 rec reify_in_context_opt (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (var : constr) (term : constr) (ctx_tys : binder list) (var_ty_ctx : constr list) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (template_ctx : constr list) (cache : Cache.t) : (constr (* ty *) * constr (* term *)) option :=
       let reify_rec_gen term ctx_tys var_ty_ctx template_ctx := reify_in_context_opt base_type ident reify_base_type reify_ident_opt var term ctx_tys var_ty_ctx value_ctx template_ctx cache in
       let reify_rec term := reify_rec_gen term ctx_tys var_ty_ctx template_ctx in
       let reify_rec_not_head term := reify_rec_gen term ctx_tys var_ty_ctx [] in
@@ -692,7 +692,7 @@ Module Compilers.
              (reify_ident_opt ctx_tys term)
              (fun idc
               => let rt := reified_type_of_ident ident idc in
-                 Some (debug_check (mkApp '@Ident [base_type; ident; var; rt; idc]))) in
+                 Some (rt, debug_check (mkApp '@Ident [base_type; ident; var; rt; idc]))) in
       Reify.debug_enter_reify "expr.reify_in_context" term;
       Reify.debug_print_args
         "expr.reify_in_context"
@@ -709,14 +709,14 @@ Module Compilers.
         | Constr.Unsafe.Rel n
           => Reify.debug_enter_reify_case "expr.reify_in_context" "Rel" term;
              let rt := List.nth var_ty_ctx (Int.sub n 1) in
-             Some (debug_check (mkApp ('@Var) [base_type; ident; var; rt; term]))
+             Some (rt, debug_check (mkApp ('@Var) [base_type; ident; var; rt; term]))
         | Constr.Unsafe.Var id
           => Reify.debug_enter_reify_case "expr.reify_in_context" "Var" term;
              Reify.debug_fine_grained "expr.reify_in_context" (fun () => fprintf "Searching in %a" (fun () => Message.of_list (fun (id', x, y) => fprintf "(%I, %t, %t)" id' x y)) value_ctx);
              Option.bind
                (List.find_opt (fun (id', _, _) => Ident.equal id' id) value_ctx)
                (fun (_, rt, rv)
-                => Some (debug_check (mkApp ('@Var) [base_type; ident; var; rt; rv])))
+                => Some (rt, debug_check (mkApp ('@Var) [base_type; ident; var; rt; rv])))
         | _ => None
         end in
       let res :=
@@ -745,11 +745,12 @@ Module Compilers.
                             end
                        else
                          (Reify.debug_enter_reify_case "expr.reify_in_context" "λ body" term;
-                          let rt := type.reify reify_base_type base_type t in
-                          let rx := Constr.Binder.make (Constr.Binder.name x) (debug_check (mkApp var [rt])) in
-                          Option.map
-                            (fun rf => debug_check (mkApp ('@Abs) [base_type; ident; var; rt; open_constr:(_); mkLambda rx rf]))
-                            (reify_rec_gen f (x :: ctx_tys) (rt :: var_ty_ctx) template_ctx)))
+                          let rtx := type.reify reify_base_type base_type t in
+                          let rx := Constr.Binder.make (Constr.Binder.name x) (debug_check (mkApp var [rtx])) in
+                          Option.bind
+                            (reify_rec_gen f (x :: ctx_tys) (rtx :: var_ty_ctx) template_ctx)
+                            (fun (rtf, rf) => Some (debug_check (mkApp '@type.arrow [base_type; rtx; rtf]),
+                                                     debug_check (mkApp ('@Abs) [base_type; ident; var; rtx; rtf; mkLambda rx rf])))))
                | Constr.Unsafe.App c args
                  => Reify.debug_enter_reify_case "expr.reify_in_context" "App (check LetIn)" term;
                     if Constr.equal_nounivs c '@Let_In
@@ -759,13 +760,13 @@ Module Compilers.
                               Some
                                 (Option.bind
                                    (reify_rec a)
-                                   (fun ra
+                                   (fun (rta, ra)
                                     => Option.bind
                                          (reify_rec b)
-                                         (fun rb
+                                         (fun (rtb, rb)
                                           => lazy_match! rb with
                                              | @Abs _ _ _ ?s ?d ?f
-                                               => Some (debug_check (mkApp ('@LetIn) [base_type; ident; var; s; d; ra; f]))
+                                               => Some (d, debug_check (mkApp ('@LetIn) [base_type; ident; var; s; d; ra; f]))
                                              | ?rb => Control.throw (Reification_panic (fprintf "Invalid non-Abs function reification of %t to %t" b rb))
                                              end)))
                          else None
@@ -803,11 +804,15 @@ Module Compilers.
                              (Reify.debug_enter_reify_case "expr.reify_in_context" "App (non-template)" term;
                               Option.bind
                                 (reify_rec_gen x ctx_tys var_ty_ctx [])
-                                (fun rx
+                                (fun (rtx, rx)
                                  => Option.bind
                                       (reify_rec_gen f ctx_tys var_ty_ctx template_ctx)
-                                      (fun rf
-                                       => Some (debug_check (mkApp '@App [base_type; ident; var; open_constr:(_); open_constr:(_); rf; rx])))))
+                                      (fun (rtf, rf)
+                                       => lazy_match! rtf with
+                                          | type.arrow ?s ?d
+                                            => Some (d, debug_check (mkApp '@App [base_type; ident; var; s; d; rf; rx]))
+                                          | _ => Control.throw (Reification_panic (fprintf "Reification of a λ (%t) did not return a thing of type type.arrow _ _: %t" rf rtf))
+                                          end)))
                        | _
                          => Reify.debug_enter_reify_case "expr.reify_in_context" "pre-plug template_ctx" term;
                             let term := plug_template_ctx ctx_tys term template_ctx in
@@ -816,7 +821,7 @@ Module Compilers.
                             | Some res => Some res
                             | None
                               => match Cache.find_opt term cache with
-                                 | Some id => Some (mkVar (id.(Cache.name)))
+                                 | Some id => Some (id.(Cache.rty), mkVar (id.(Cache.name)))
                                  | None
                                    => match head_reference_under_binders term with
                                       | Val c
@@ -829,8 +834,9 @@ Module Compilers.
                                            else
                                              match reify_rec term' with
                                              | Some rv
-                                               => let id := Cache.add h term rv cache in
-                                                  Some (mkVar id)
+                                               => let (rt, rv) := rv in
+                                                  let id := Cache.add h term rt rv cache in
+                                                  Some (rt, mkVar id)
                                              | None
                                                => printf "Failed to reify %t via unfolding to %t" term term';
                                                   None
@@ -846,18 +852,21 @@ Module Compilers.
         end in
       match res with
       | Some res
-        => Reify.debug_leave_reify_success "expr.reify_in_context" term res;
-           Some res
+        => let (rt, res) := res in
+           Reify.debug_leave_reify_success "expr.reify_in_context" term res;
+           Some (rt, res)
       | None
         => Reify.debug_leave_reify_failure "expr.reify_in_context" term;
            None
       end.
 
-    Ltac2 reify_let_bind_cache (rterm : constr) (cache : Cache.t) : constr :=
+    Ltac2 reify_let_bind_cache (rty_rterm : constr * constr) (cache : Cache.t) : constr :=
       Reify.debug_profile
         "reify_let_bind_cache"
         (fun ()
-         => let rec aux (elems : (_ * Cache.elem) list)
+         => let debug_Constr_check := Reify.Constr.debug_check_strict "expr.reify_let_bind_cache" in
+            let (rty, rterm) := rty_rterm in
+            let rec aux (elems : (_ * Cache.elem) list)
               := match elems with
                  | [] => rterm
                  | elem :: elems
@@ -867,13 +876,15 @@ Module Compilers.
                       let x := Constr.Binder.make (Some name) rty in
                       Reify.debug_let_bind "reify_let_bind_cache" name rty rv;
                       let rterm := Constr.in_context
-                                     name rty (fun () => let v := aux elems in Control.refine (fun () => v)) in
+                                     name rty (fun ()
+                                               => let v := debug_Constr_check (fun () => aux elems) in
+                                                  Control.refine (fun () => v)) in
                       let default () :=
                         printf "Warning: reify_let_bind_cache: not a lambda: %t" rterm;
                         rterm in
                       match Constr.Unsafe.kind rterm with
                       | Constr.Unsafe.Lambda x f
-                        => mkLetIn x rv f
+                        => debug_Constr_check (fun () => mkLetIn x rv f)
                       | _ => default ()
                       end
                  end in
