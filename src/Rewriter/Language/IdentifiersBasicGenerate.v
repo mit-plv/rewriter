@@ -1108,9 +1108,11 @@ Module Compilers.
 
       Ltac2 expr_reified_hint (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) :=
         lazy_match! goal with
-        | [ |- @expr.Reified_of _ ?ident' _ _ ?t ?v ?e ]
+        | [ |- @expr.Reified_of _ ?ident' ?base_interp ?interp_ident ?t ?v ?e ]
           => if Constr.equal_nounivs ident ident'
-             then (*solve [ *) let rv := expr._Reify base_type ident reify_base_type reify_ident_opt v in unify $e $rv; reflexivity (* | idtac "ERROR: Failed to reify" v "(of type" t "); try setting Reify.debug_level to see output" ] *)
+             then cbv [expr.Reified_of];
+                  expr._Reify_rhs base_type ident reify_base_type reify_ident_opt base_interp interp_ident ();
+                  reflexivity
              else Control.zero Match_failure
         end.
 
