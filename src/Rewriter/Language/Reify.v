@@ -124,8 +124,8 @@ Module Compilers.
       := debug_if should_debug_typing_failure_assume_well_typed (fun () => printf "Warning: %s: could not well-type %t due to underlying issue typechecking %t without relevant context %a, but assuming that it's well-typed because %t is not a template-parameter type" funname v term (fun () => Message.of_list Message.of_binder) ctx_tys ty) ().
     Ltac2 debug_profile (descr : string) (f : unit -> 'a) : 'a
       := if should_debug_profile ()
-         then Control.time (Some descr) f
-         else f ().
+         then Control.once (fun () => Control.time (Some descr) f)
+         else Control.once f.
     Ltac2 debug_fine_grained (funname : string) (msg : unit -> message)
       := debug_if should_debug_fine_grained (fun () => printf "%s: %a" funname (fun () => msg) ()) ().
     Ltac2 debug_enter_reify (funname : string) (e : constr)
