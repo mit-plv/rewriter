@@ -388,12 +388,6 @@ Module Compilers.
   Module expr.
     Import Language.Compilers.expr.
 
-    Module var_context.
-      Inductive list {base_type} {var : type base_type -> Type} :=
-      | nil
-      | cons {T t} (gallina_v : T) (v : var t) (ctx : list).
-    End var_context.
-
     (** Forms of abstraction in Gallina that our reflective language
         cannot handle get handled by specializing the code "template"
         to each particular application of that abstraction. In
@@ -426,29 +420,6 @@ Module Compilers.
         => do_red ()
       | _ => false
       end.
-    #[deprecated(since="8.15",note="Use Ltac2 is_template_parameter instead.")]
-    Ltac is_template_parameter parameter_type :=
-      let f := ltac2:(parameter_type |- Control.refine (fun () => if is_template_parameter [] (Ltac1.get_to_constr "parameter_type" parameter_type) then 'true else 'false)) in
-      constr:(ltac:(f parameter_type)).
-
-    Ltac2 rec template_ctx_to_list (template_ctx : constr) : constr list :=
-      lazy_match! template_ctx with
-      | tt => []
-      | (?arg, ?template_ctx')
-        => arg :: template_ctx_to_list template_ctx'
-      end.
-
-    Ltac2 rec value_ctx_to_list (value_ctx : constr) : (ident * constr (* ty *) * constr (* var *)) list
-      := lazy_match! value_ctx with
-         | var_context.nil => []
-         | @var_context.cons ?base_type ?var ?t ?rt ?v ?rv ?rest
-           => match Constr.Unsafe.kind v with
-              | Constr.Unsafe.Var c
-                => (c, rt, rv)
-              | _ => Control.zero (Invalid_argument (Some (fprintf "value_ctx_to_list: not a Var: %t (of type %t, mapped to %t : %t)" v t rv rt)))
-              end
-                :: value_ctx_to_list rest
-         end.
 
     (* f, f_ty, arg *)
     Ltac2 Type exn ::= [ Template_ctx_mismatch (constr, constr, constr) ].
@@ -482,13 +453,6 @@ Module Compilers.
         => let (_, args, close) := mkargs ctx_tys (Constr.type f) template_ctx in
            close (mkApp f args)
       end.
-   #[deprecated(since="8.15",note="Use Ltac2 plug_template_ctx instead.")]
-     Ltac plug_template_ctx f template_ctx :=
-      let plug := ltac2:(f template_ctx
-                         |- let template_ctx := (Ltac1.get_to_constr "template_ctx" template_ctx) in
-                            let template_ctx := template_ctx_to_list template_ctx in
-                            Control.refine (fun () => plug_template_ctx [] (Ltac1.get_to_constr "f" f) template_ctx)) in
-      constr:(ltac:(plug f template_ctx)).
 
     Ltac2 rec reify_preprocess (ctx_tys : binder list) (term : constr) : constr :=
       Reify.debug_enter_reify_preprocess "expr.reify_preprocess" term;
@@ -568,12 +532,6 @@ Module Compilers.
              reify_preprocess_extra ctx_tys term
       end.
 
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac reify_preprocess term :=
-        let f := ltac2:(term
-                        |- Control.refine (fun () => reify_preprocess [] (Ltac1.get_to_constr "term" term))) in
-        constr:(ltac:(f term)).
-
     Ltac2 rec reify_ident_preprocess (ctx_tys : binder list) (term : constr) : constr :=
       Reify.debug_enter_reify_ident_preprocess "expr.reify_ident_preprocess" term;
       let reify_ident_preprocess := reify_ident_preprocess ctx_tys in
@@ -626,11 +584,6 @@ Module Compilers.
         => reify_ident_preprocess '(ident.eagerly $f $x)
       | ?term => reify_ident_preprocess_extra ctx_tys term
       end.
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac reify_ident_preprocess term :=
-        let f := ltac2:(term
-                        |- Control.refine (fun () => reify_ident_preprocess [] (Ltac1.get_to_constr "term" term))) in
-        constr:(ltac:(f term)).
 
     Ltac2 Type exn ::= [ Reify_ident_cps_failed ].
     Ltac wrap_reify_ident_cps reify_ident_cps idc :=
@@ -944,21 +897,6 @@ Module Compilers.
                     end in
           Reify.debug_profile "_Reify_rhs.abstract exact_no_check eq_refl" (fun () => abstract (Std.exact_no_check pf)) ].
 
-    #[deprecated(since="8.15",note="Use Ltac2 instead.")]
-     Ltac reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx :=
-      let f := ltac2:(base_type ident reify_base_type reify_ident var term value_ctx template_ctx
-                      |- let template_ctx := Ltac1.get_to_constr "template_ctx" template_ctx in
-                         let value_ctx := Ltac1.get_to_constr "value_ctx" value_ctx in
-                         Reify.debug_print_args
-                           "ltac:expr.reify_in_context"
-                           (fun () => fprintf "{ template_ctx = %t ; value_ctx = %t }" template_ctx value_ctx)
-                           ();
-                         let template_ctx := template_ctx_to_list template_ctx in
-                         let value_ctx := value_ctx_to_list value_ctx in
-                         let reify_base_type := fun ty => Ltac1.apply_c reify_base_type [ty] in
-                         let reify_ident_opt := reify_ident_opt_of_cps reify_ident in
-                         Control.refine (fun () => reify_in_context (Ltac1.get_to_constr "base_type" base_type) (Ltac1.get_to_constr "ident" ident) reify_base_type reify_ident_opt (Ltac1.get_to_constr "var" var) (Ltac1.get_to_constr "term" term) [] [] value_ctx template_ctx None)) in
-      constr:(ltac:(f base_type ident reify_base_type ltac:(wrap_reify_ident_cps reify_ident) constr:(var) term value_ctx template_ctx)).
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac reify base_type ident reify_base_type reify_ident var term :=
       let f := ltac2:(base_type ident reify_base_type reify_ident var term
