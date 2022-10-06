@@ -263,4 +263,5 @@ Module Compilers.
     End reify.
   End UnderLets.
   Export UnderLets.Notations.
+  Global Strategy -1000 [UnderLets.to_expr].
 End Compilers.
