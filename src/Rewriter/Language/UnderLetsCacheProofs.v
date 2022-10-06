@@ -43,7 +43,7 @@ Module Compilers.
                  (fun t e v => expr.interp ident_interp e = v)
                  (fun e v => expr.interp ident_interp e = v)
                  v
-                 (expr.interp ident_interp (UnderLets.to_expr e) = v)
+                 (expr.interp ident_interp (UnderLets.to_expr_App e) = v)
                  e.
 
           Lemma cached_interp_related_impl {t} e v
