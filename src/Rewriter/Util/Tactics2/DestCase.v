@@ -1,0 +1,11 @@
+Require Import Ltac2.Ltac2.
+Require Export Rewriter.Util.FixCoqMistakes.
+Import Ltac2.Constr.Unsafe.
+
+Ltac2 Type exn ::= [ Not_a_case (kind) ].
+Ltac2 destCase (c : constr) :=
+  let k := kind c in
+  match k with
+  | Case a b c d e => (a, b, c, d, e)
+  | _ => Control.throw (Not_a_case k)
+  end.
