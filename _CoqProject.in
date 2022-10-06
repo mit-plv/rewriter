@@ -17,6 +17,7 @@ src/Rewriter/Language/PreCommon.v
 src/Rewriter/Language/PreLemmas.v
 src/Rewriter/Language/Reify.v
 src/Rewriter/Language/UnderLets.v
+src/Rewriter/Language/UnderLetsCacheProofs.v
 src/Rewriter/Language/UnderLetsProofs.v
 src/Rewriter/Language/Wf.v
 src/Rewriter/Rewriter/AllTactics.v
