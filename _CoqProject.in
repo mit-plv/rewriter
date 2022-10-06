@@ -134,6 +134,7 @@ src/Rewriter/Util/Tactics2/Head.v
 src/Rewriter/Util/Tactics2/HeadReference.v
 src/Rewriter/Util/Tactics2/Ident.v
 src/Rewriter/Util/Tactics2/InFreshContext.v
+src/Rewriter/Util/Tactics2/InstantiateEvar.v
 src/Rewriter/Util/Tactics2/Iterate.v
 src/Rewriter/Util/Tactics2/List.v
 src/Rewriter/Util/Tactics2/Ltac1.v
