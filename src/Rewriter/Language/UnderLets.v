@@ -107,6 +107,12 @@ Module Compilers.
            | UnderLet A x f
              => expr.LetIn x (fun v => @to_expr _ (f v))
            end.
+      Fixpoint to_expr_App {t} (x : @UnderLets (expr t)) : expr t
+        := match x with
+           | Base v => v
+           | UnderLet A x f
+             => expr.App (expr.Abs (fun v => @to_expr_App _ (f v))) x
+           end.
       Fixpoint of_expr {t} (x : expr t) : @UnderLets (expr t)
         := match x in expr.expr t return @UnderLets (expr t) with
            | expr.LetIn A B x f
@@ -263,5 +269,5 @@ Module Compilers.
     End reify.
   End UnderLets.
   Export UnderLets.Notations.
-  Global Strategy -1000 [UnderLets.to_expr].
+  Global Strategy -1000 [UnderLets.to_expr UnderLets.to_expr_App].
 End Compilers.
