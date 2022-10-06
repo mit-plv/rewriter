@@ -935,7 +935,14 @@ Module Compilers.
       let rhs := lazy_match! goal with [ |- _ = ?rhs ] => rhs end in
       let r := Reify.debug_profile "_Reify_rhs._Reify" (fun () => _Reify base_type ident reify_base_type reify_ident_opt rhs) in
       Reify.debug_profile "_Reify_rhs.transitivity" (fun () => Std.transitivity '(@Interp $base_type $ident $base_interp $interp_ident _ $r))
-      > [ | Reify.debug_profile "_Reify_rhs.reflexivity" (fun () => reflexivity) ].
+      > [
+        | clear;
+          let pf := lazy_match! goal with
+                    | [ |- @eq ?t ?orig ?reified ]
+                      => (* we assume orig is smaller *)
+                        mkApp '@eq_refl [t; orig]
+                    end in
+          Reify.debug_profile "_Reify_rhs.abstract exact_no_check eq_refl" (fun () => abstract (Std.exact_no_check pf)) ].
 
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac reify_in_context base_type ident reify_base_type reify_ident var term value_ctx template_ctx :=
