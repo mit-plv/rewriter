@@ -645,6 +645,22 @@ Module Compilers.
         := List.rev (List.map (fun (_, e) () => Constr.Binder.make (Some (e.(Cache.name))) (Constr.type (e.(Cache.rterm)))) (Cache.elements cache)).
     End Cache.
 
+    Ltac2 reified_type_of_ident (ident : constr) (idc : constr) : constr :=
+      let t := Constr.type idc in
+      let rt := lazy_match! t with
+                | ?ident' ?rt => if Constr.equal_nounivs ident ident'
+                                 then Some rt
+                                 else None
+                | _ => None
+                end in
+      match rt with
+      | Some rt => rt
+      | None
+        => let rt := '_ in
+           Std.unify (mkApp ident [rt]) t;
+           rt
+      end.
+
     (* - [ctx_tys] is the list of binders that correspond to free de
          Bruijn variables; they're the binders in the source term
          we've gone underneath without extending the ambient context
@@ -672,8 +688,11 @@ Module Compilers.
              (Cache.to_thunked_binder_context cache)
              var_ty_ctx e in
       let reify_ident_opt term
-        := Option.map (fun idc => debug_check (mkApp '@Ident [base_type; ident; var; '_; idc]))
-                      (reify_ident_opt ctx_tys term) in
+        := Option.bind
+             (reify_ident_opt ctx_tys term)
+             (fun idc
+              => let rt := reified_type_of_ident ident idc in
+                 Some (debug_check (mkApp '@Ident [base_type; ident; var; rt; idc]))) in
       Reify.debug_enter_reify "expr.reify_in_context" term;
       Reify.debug_print_args
         "expr.reify_in_context"
