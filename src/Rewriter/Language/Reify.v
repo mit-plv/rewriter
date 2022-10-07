@@ -8,6 +8,8 @@ Require Import Ltac2.Ltac2.
 Require Import Ltac2.Printf.
 Require Import Rewriter.Language.PreCommon.
 Require Import Rewriter.Language.Language.
+Require Import Rewriter.Language.UnderLets.
+Require Import Rewriter.Language.UnderLetsCacheProofs.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Util.Option.
@@ -29,6 +31,8 @@ Require Rewriter.Util.Tactics2.Message.
 Require Rewriter.Util.Tactics2.Ident.
 Require Rewriter.Util.Tactics2.String.
 Require Rewriter.Util.Tactics2.Constr.
+Require Import Rewriter.Util.Tactics2.DestEvar.
+Require Import Rewriter.Util.Tactics2.InstantiateEvar.
 Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
 Require Import Rewriter.Util.Tactics2.FixNotationsForPerformance.
 Import Coq.Lists.List ListNotations.
@@ -40,6 +44,8 @@ Import EqNotations.
 Module Compilers.
   Export Language.PreCommon.
   Export Language.Compilers.
+  Import UnderLets.Compilers.
+  Import UnderLetsCacheProofs.Compilers.
   Module Export Exports.
     Ltac2 Type exn ::= [ Reification_failure (message) ].
     Ltac2 Type exn ::= [ Reification_panic (message) ].
@@ -890,6 +896,36 @@ Module Compilers.
                  end in
             aux (List.rev (Cache.elements cache))).
 
+    Definition UnderLet_expr {base_type} {ident} {var} {T} {A} e f
+      := @UnderLets.UnderLet base_type ident var T A e (fun v => f (@Var base_type ident var _ v)).
+    Ltac2 reify_UnderLets_bind_cache (base_type : constr) (ident : constr) (var : constr) (rty_rterm : constr * constr) (cache : Cache.t) : constr (* result *) * ((constr * constr) list (* list of (reified type, interpreted cached constant) pairs, in order *)) :=
+      Reify.debug_profile
+        "reify_UnderLets_bind_cache"
+        (fun ()
+         => let debug_Constr_check := Reify.Constr.debug_check_strict "expr.reify_UnderLets_bind_cache" in
+            let (rty, rterm) := rty_rterm in
+            let _expr := '@expr.expr in
+            let expr := mkApp _expr [base_type; ident; var; rty] in
+            let mkUnderLet := let _UnderLet := (eval cbv delta [UnderLet_expr] in
+                                                 '@UnderLet_expr) in
+                              fun rt e f => mkApp _UnderLet [base_type; ident; var; expr; rt; e; f] in
+            let rec aux (elems : (_ * Cache.elem) list) (ids : ident list)
+              := match elems with
+                 | [] => (mkApp '@UnderLets.Base [base_type; ident; var; expr; Constr.Unsafe.closenl ids 1 rterm], [])
+                 | elem :: elems
+                   => let (val, elem) := elem in
+                      let (name, rt, rv) := (elem.(Cache.name), elem.(Cache.rty), elem.(Cache.rterm)) in
+                      Reify.debug_let_bind "reify_UnderLets_bind_cache" name rt rv;
+                      let (res, vals) := aux elems (name :: ids) in
+                      let rv := Constr.Unsafe.closenl ids 1 rv in
+                      let x := Constr.Binder.make (Some name) (mkApp _expr [base_type; ident; var; rt]) in
+                      (mkUnderLet rt rv (mkLambda x res), (rt, val) :: vals)
+                 end in
+            let (res, vals) := aux (List.rev (Cache.elements cache)) [] in
+            let res := debug_Constr_check (fun () => res) in
+            ((eval cbv beta in res),
+              vals)).
+
     Ltac2 reify_in_context (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (var : constr) (term : constr) (ctx_tys : binder list) (var_ty_ctx : constr list) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (template_ctx : constr list) (cache : Cache.t option) : constr :=
       let cache := match cache with
                    | Some cache => cache
@@ -903,8 +939,26 @@ Module Compilers.
       | None => Control.zero (Reification_failure (fprintf "Failed to reify: %t" term))
       end.
 
+    Ltac2 reify_in_context_and_cache (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (var : constr) (term : constr) (ctx_tys : binder list) (var_ty_ctx : constr list) (value_ctx : (ident * constr (* ty *) * constr (* var *)) list) (template_ctx : constr list) (cache : Cache.t option) : (constr (* rty *) * constr (* rterm *)) * ((constr * constr) list (* list of (reified type, interpreted cached constant) pairs, in order *)) :=
+      let cache := match cache with
+                   | Some cache => cache
+                   | None => Cache.init term
+                   end in
+      match Reify.debug_profile
+              "reify_in_context_opt"
+              (fun () => reify_in_context_opt base_type ident reify_base_type reify_ident_opt var term ctx_tys var_ty_ctx value_ctx template_ctx cache)
+      with
+      | Some v
+        => let (rty, _) := v in
+           let (res, ids) := reify_UnderLets_bind_cache base_type ident var v cache in
+           ((rty, res), ids)
+      | None => Control.zero (Reification_failure (fprintf "Failed to reify: %t" term))
+      end.
+
     Ltac2 reify (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (var : constr) (term : constr) (cache : Cache.t option) : constr :=
       reify_in_context base_type ident reify_base_type reify_ident_opt var term [] [] [] [] cache.
+    Ltac2 reify_and_cache (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (var : constr) (term : constr) (cache : Cache.t option) : (constr (* rty *) * constr (* rval *)) * ((constr * constr) list (* list of (reified type, interpreted cached constant) pairs, in order *)) :=
+      reify_in_context_and_cache base_type ident reify_base_type reify_ident_opt var term [] [] [] [] cache.
     (* TODO: come up with a better naming convention than prefix [_] to replace starting-with-capital-letters *)
     (* TODO: figure out how to share the cache between multiple reifications *)
     Ltac2 _Reify (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (term : constr) : constr :=
@@ -915,17 +969,68 @@ Module Compilers.
          => let r := reify base_type ident reify_base_type reify_ident_opt (mkVar var) term None in
             Control.refine (fun () => r)).
     Ltac2 _Reify_rhs (base_type : constr) (ident : constr) (reify_base_type : constr -> constr) (reify_ident_opt : binder list -> constr -> constr option) (base_interp : constr) (interp_ident : constr) () : unit :=
-      let rhs := lazy_match! goal with [ |- _ = ?rhs ] => rhs end in
-      let r := Reify.debug_profile "_Reify_rhs._Reify" (fun () => _Reify base_type ident reify_base_type reify_ident_opt rhs) in
-      Reify.debug_profile "_Reify_rhs.transitivity" (fun () => Std.transitivity '(@Interp $base_type $ident $base_interp $interp_ident _ $r))
+      Reify.debug_fine_grained "expr._Reify_rhs" (fun () => fprintf "Initial variable bindings");
+      let check c := match Constr.Unsafe.check c with
+                     | Val v => v
+                     | Err err => Control.throw (Reification_panic (fprintf "_Reify_rhs: failed to check %t: %a" c (fun () => Message.of_exn) err))
+                     end in
+      let type_interp := '@type.interp in
+      let eq_refl := '@eq_refl in
+      let mk_type_interp t := mkApp type_interp [base_type; base_interp; t] in
+      (* get the term we're reifying *)
+      let (t, rhs) := lazy_match! goal with [ |- @eq ?t ?lhs ?rhs ] => (t, rhs) end in
+      (* play some games to get an evar we can run [intro var] in for reification *)
+      let r := '_ in
+      let intermediate := Reify.debug_profile "_Reify_rhs.make intermediate" (fun () => '(@Interp $base_type $ident $base_interp $interp_ident _ $r)) in
+      (* in the evar, we reify the term and return the interpred constants from the cache, the reified type and the reified value *)
+      let (ev_r, _) := destEvar r in
+      let (ids, rty, under_lets_r)
+        := Reify.debug_profile
+             "_Reify_rhs.reify and refine"
+             (fun ()
+              => in_evar
+                   ev_r
+                   (fun ()
+                    => Reify.debug_fine_grained "expr._Reify_rhs" (fun () => fprintf "intro var in %t" (Control.goal ()));
+                       let var := Fresh.fresh (Fresh.Free.of_goal ()) @var in
+                       intro var;
+                       Reify.debug_fine_grained "expr._Reify_rhs" (fun () => fprintf "reify_and_cache");
+                       let (res, vals) := Reify.debug_profile
+                                            "_Reify_rhs.reify_and_cache"
+                                            (fun () => reify_and_cache base_type ident reify_base_type reify_ident_opt (mkVar var) rhs None) in
+                       let (rty, r) := res in
+                       Reify.debug_fine_grained "expr._Reify_rhs" (fun () => fprintf "adjust %I in %t" var r);
+                       (* instantiate var to type.interp for the return value of the reified term *)
+                       let r' := r in
+                       let r' := Constr.Unsafe.closenl [var] 1 r' in
+                       let r' := Constr.Unsafe.substnl ['(@type.interp $base_type $base_interp)] 0 r' in
+                       Reify.debug_fine_grained "expr._Reify_rhs" (fun () => fprintf "cbv [UnderLets.to_expr_App]");
+                       let r := (eval cbv [UnderLets.to_expr_App] in
+                                  constr:(UnderLets.to_expr_App $r)) in
+                       Reify.debug_fine_grained "expr._Reify_rhs" (fun () => fprintf "refine %t" r);
+                       Reify.debug_profile
+                         "_Reify_rhs.refine with reified"
+                         (fun () => Control.refine (fun () => r));
+                       (vals, rty, r'))) in
+      Reify.debug_fine_grained "expr._Reify_rhs" (fun () => fprintf "transitivity %t" intermediate);
+      Reify.debug_profile "_Reify_rhs.transitivity" (fun () => Std.transitivity intermediate)
       > [
-        | clear;
-          let pf := lazy_match! goal with
-                    | [ |- @eq ?t ?orig ?reified ]
-                      => (* we assume orig is smaller *)
-                        mkApp '@eq_refl [t; orig]
-                    end in
-          Reify.debug_profile "_Reify_rhs.abstract exact_no_check eq_refl" (fun () => abstract (Std.exact_no_check pf)) ].
+        | let pf := Reify.debug_profile
+                      "_Reify_rhs.make proof unsafe"
+                      (fun () =>
+                         mkApp '@UnderLets.cached_interp_related_impl
+                               (List.append
+                                  (List.append
+                                     [base_type; ident; base_interp; interp_ident; rty; under_lets_r; rhs]
+                                     (List.flat_map
+                                        (fun (rty, id) => [id; mkApp eq_refl [mk_type_interp rty; id] ])
+                                        ids))
+                                  [mkApp eq_refl [t; rhs] ])) in
+          let pf := Reify.debug_profile "_Reify_rhs.make proof check for universes" (fun () => check pf) in
+          Reify.debug_fine_grained "expr._Reify_rhs" (fun () => fprintf "clear");
+          clear;
+          Reify.debug_fine_grained "expr._Reify_rhs" (fun () => fprintf "abstract exact_no_check %t" pf);
+          Reify.debug_profile "_Reify_rhs.abstract exact_no_check UnderLets.cached_interp_related_impl..." (fun () => abstract (Std.exact_no_check pf)) ].
 
     #[deprecated(since="8.15",note="Use Ltac2 instead.")]
      Ltac reify base_type ident reify_base_type reify_ident var term :=
