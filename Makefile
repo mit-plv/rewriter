@@ -33,7 +33,11 @@ clean::
 ifneq ($(COQ_EXTENDED_VERSION),$(COQ_EXTENDED_VERSION_OLD))
 $(COQ_VERSION_FILE)::
 	$(SHOW)'echo $$COQ_VERSION_INFO ($(COQ_VERSION)) > $@'
-	$(HIDE)echo "$(COQ_EXTENDED_VERSION)" > $@
+ifneq (,$(strip $(COQ_EXTENDED_VERSION_OLD)))
+	$(SHOW)'Replacing $(COQ_EXTENDED_VERSION_OLD)'
+	$(SHOW)' with $(COQ_EXTENDED_VERSION)'
+endif
+	$(HIDE)echo '$(COQ_EXTENDED_VERSION)' > $@
 endif
 
 _CoqProject: _CoqProject.in
