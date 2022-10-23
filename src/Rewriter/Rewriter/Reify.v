@@ -213,11 +213,12 @@ Module Compilers.
             in @partial_lam_unif_rewrite_ruleTP_gen base ident var pident pident_arg_types value t p should_do_again true true.
       End with_var.
 
-      Ltac2 Type exn ::= [ Cannot_eliminate_functional_dependencies (constr) ].
+      (** Use [message] rather than [constr] to work around COQBUG(https://github.com/coq/coq/issues/16716) *)
+      Ltac2 Type exn ::= [ Cannot_eliminate_functional_dependencies (message) ].
       Ltac2 strip_functional_dependency (term : constr) : constr :=
         lazy_match! term with
         | fun _ => ?p => p
-        | _ => Control.zero (Cannot_eliminate_functional_dependencies term)
+        | _ => Control.zero (Cannot_eliminate_functional_dependencies (Message.of_constr term))
         end.
 
       Ltac2 rec refine_reify_under_forall_types' (base : constr) (base_type : constr) (base_type_interp : constr) (ty_ctx : constr) (avoid : Fresh.Free.t) (cur_i : constr) (lem : constr) (cont : Fresh.Free.t -> constr (* ty_ctx *) -> constr (* cur_i *) -> constr (* lem *) -> unit) : unit :=
