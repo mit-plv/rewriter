@@ -544,7 +544,7 @@ Module Compilers.
       let handle_eliminator (motive : constr) (rect_arrow_nodep : constr option) (rect_nodep : constr option) (rect : constr) (mid_args : constr list) (cases_to_thunk : constr list)
         := let mkApp_thunked_cases f pre_args
              := Control.with_holes
-                  (fun () => mkApp f (List.append pre_args (List.append mid_args (List.map (fun arg => '(fun _ => $arg)) cases_to_thunk))))
+                  (fun () => mkApp f (List.append pre_args (List.append mid_args (List.map (fun arg => '(match $arg with v => fun _ => v end)) cases_to_thunk))))
                   (fun fv => match Constr.Unsafe.check fv with
                              | Val fv => fv
                              | Err err => Control.throw err
