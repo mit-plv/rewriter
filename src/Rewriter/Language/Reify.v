@@ -543,12 +543,13 @@ Module Compilers.
       let reify_ident_preprocess := reify_ident_preprocess ctx_tys in
       let handle_eliminator (motive : constr) (rect_arrow_nodep : constr option) (rect_nodep : constr option) (rect : constr) (mid_args : constr list) (cases_to_thunk : constr list)
         := let mkApp_thunked_cases f pre_args
-             := Control.with_holes
-                  (fun () => mkApp f (List.append pre_args (List.append mid_args (List.map (fun arg => '(match $arg with v => fun _ => v end)) cases_to_thunk))))
-                  (fun fv => match Constr.Unsafe.check fv with
-                             | Val fv => fv
-                             | Err err => Control.throw err
-                             end) in
+             := let pr_cl := fun () => Message.of_list Message.of_constr in
+                Reify.debug_wrap
+                  "reify_ident_preprocess.mkApp_thunked_cases" (fun (f, pre_args, mid_args, cases_to_thunk) => fprintf "%t (%a) (%a) (%a)" f pr_cl pre_args pr_cl mid_args pr_cl cases_to_thunk) (f, pre_args, mid_args, cases_to_thunk)
+                  Reify.should_debug_enter_reify_preprocess Reify.should_debug_enter_reify_preprocess (Some Message.of_constr)
+                  (fun ()
+                   => let mkThunk v := Constr.Unsafe.substnl [v] 0 (mkLambda (Constr.Binder.make None 'unit) (mkRel 2)) in
+                      mkApp f (List.append pre_args (List.append mid_args (List.map mkThunk cases_to_thunk)))) in
            let opt_recr (thunked : bool) orect args :=
              match orect with
              | Some rect => (reify_ident_preprocess,
