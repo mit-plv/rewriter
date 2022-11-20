@@ -54,7 +54,7 @@ jobs:
     - name: all
       run: etc/ci/github-actions-make.sh ${EXTRA_GH_REPORTIFY} -j2 all
     - name: perf-SuperFast
-      run: etc/ci/github-actions-make.sh ${EXTRA_GH_REPORTIFY} -j2 perf-SuperFast
+      run: etc/ci/github-actions-make.sh ${EXTRA_GH_REPORTIFY} -j2 perf-Sanity
     - name: display timing info
       run: cat time-of-build-pretty.log
     - name: display per-line timing info

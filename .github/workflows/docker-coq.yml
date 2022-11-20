@@ -27,4 +27,4 @@ jobs:
           echo '::endgroup::'
           echo '::remove-matcher owner=coq-problem-matcher::'
           etc/ci/github-actions-make.sh --warnings -j2 all
-          etc/ci/github-actions-make.sh --warnings -j2 perf-SuperFast
+          etc/ci/github-actions-make.sh --warnings -j2 perf-Sanity
