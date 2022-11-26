@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     strategy:
+      fail-fast: false
       matrix:
         env:
         - { COQ_VERSION: "8.16.0", COQ_PACKAGE: "coq-8.16.0 libcoq-8.16.0-ocaml-dev", SKIP_VALIDATE: "" , PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-11" }
