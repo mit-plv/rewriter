@@ -1,7 +1,7 @@
 PERF_LIB:=Rewriter.Rewriter.Examples.PerfTesting
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 PERF_ABS_DIR := $(patsubst %/,%,$(dir $(mkfile_path)))
-PERF_DIR:=$(shell realpath --relative-to . $(PERF_ABS_DIR))
+PERF_DIR := $(patsubst $(abspath .)/%,%,$(PERF_ABS_DIR))
 
 include $(PERF_ABS_DIR)/Makefile.variables.kinds
 
