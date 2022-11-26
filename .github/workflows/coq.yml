@@ -14,7 +14,9 @@ jobs:
     strategy:
       matrix:
         env:
-        - { COQ_VERSION: "8.15.0", COQ_PACKAGE: "coq-8.15.0 libcoq-8.15.0-ocaml-dev", SKIP_VALIDATE: "" , PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-08" }
+        - { COQ_VERSION: "8.16.0", COQ_PACKAGE: "coq-8.16.0 libcoq-8.16.0-ocaml-dev", SKIP_VALIDATE: "" , PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-11" }
+        - { COQ_VERSION: "8.15.0", COQ_PACKAGE: "coq-8.15.0 libcoq-8.15.0-ocaml-dev", SKIP_VALIDATE: "" , PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-11" }
+        - { COQ_VERSION: "v8.16" , COQ_PACKAGE: "coq libcoq-ocaml-dev"              , SKIP_VALIDATE: "" , PPA: "ppa:jgross-h/coq-8.16-daily" }
         - { COQ_VERSION: "v8.15" , COQ_PACKAGE: "coq libcoq-ocaml-dev"              , SKIP_VALIDATE: "" , PPA: "ppa:jgross-h/coq-8.15-daily" }
 
     env: ${{ matrix.env }}
