@@ -542,8 +542,8 @@ Lemma list_bl_hetero {A B} {AB_beq : A -> B -> bool} {AB_R : A -> B -> Prop}
   : forall {x y},
     list_beq_hetero AB_beq x y = true -> list_eq AB_R x y.
 Proof using Type.
-  induction x, y; cbn in *; eauto; try congruence.
-  rewrite Bool.andb_true_iff; intuition eauto.
+  induction x, y; cbn in *; eauto; try congruence;
+  try (rewrite Bool.andb_true_iff; intuition eauto).
 Qed.
 
 Lemma list_lb_hetero {A B} {AB_beq : A -> B -> bool} {AB_R : A -> B -> Prop}
