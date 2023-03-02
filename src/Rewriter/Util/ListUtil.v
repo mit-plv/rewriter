@@ -2218,6 +2218,13 @@ Proof.
 Qed.
 Global Instance partition_Proper_eq {A} : Proper ((eq ==> eq) ==> eq ==> eq) (@List.partition A) | 1.
 Proof. repeat intro; subst; apply partition_Proper; repeat intro; eauto. Qed.
+Global Instance filter_Proper {A} : Proper (pointwise_relation _ eq ==> eq ==> eq) (@List.filter A).
+Proof.
+  cbv [pointwise_relation]; intros f g Hfg ls ls' ?; subst ls'.
+  induction ls as [|l ls IHls]; cbn [filter]; rewrite ?IHls, ?Hfg; reflexivity.
+Qed.
+Global Instance filter_Proper_eq {A} : Proper ((eq ==> eq) ==> eq ==> eq) (@List.filter A) | 1.
+Proof. repeat intro; subst; apply filter_Proper; repeat intro; eauto. Qed.
 Global Instance fold_right_Proper {A B} : Proper (pointwise_relation _ (pointwise_relation _ eq) ==> eq ==> eq ==> eq) (@fold_right A B) | 1.
 Proof.
   cbv [pointwise_relation]; intros f g Hfg x y ? ls ls' ?; subst y ls'; revert x.
