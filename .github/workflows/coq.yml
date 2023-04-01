@@ -14,7 +14,7 @@ jobs:
       matrix:
         os: [ ubuntu-latest ]
         env:
-         - { COQ_VERSION: "8.16.1", COQ_PACKAGE: "coq-8.16.1 libcoq-8.16.0-ocaml-dev", SKIP_VALIDATE: "" , PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-11" }
+         - { COQ_VERSION: "8.16.1", COQ_PACKAGE: "coq-8.16.1 libcoq-8.16.1-ocaml-dev", SKIP_VALIDATE: "" , PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-11" }
          - { COQ_VERSION: "8.15.2", COQ_PACKAGE: "coq-8.15.2 libcoq-8.15.2-ocaml-dev", SKIP_VALIDATE: "" , PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-08" }
         include:
         - env: { COQ_VERSION: "v8.15" , COQ_PACKAGE: "coq libcoq-ocaml-dev"              , SKIP_VALIDATE: "" , PPA: "ppa:jgross-h/coq-8.15-daily" }
