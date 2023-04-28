@@ -1,0 +1,1 @@
+DECLARE PLUGIN "coq-rewriter.ltac2_extra"
