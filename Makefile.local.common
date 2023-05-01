@@ -23,8 +23,13 @@ ifneq (,$(filter 8.16%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v816
 ML_DESCRIPTION := "Coq v8.16"
 else
+ifneq (,$(filter 8.17%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v817
 ML_DESCRIPTION := "Coq v8.17"
+else
+EXPECTED_EXT:=.v818
+ML_DESCRIPTION := "Coq v8.18"
+endif
 endif
 endif
 
