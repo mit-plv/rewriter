@@ -6,7 +6,7 @@ open Proofview.Notations
 let pname s = { mltac_plugin = "coq-rewriter.ltac2_extra"; mltac_tactic = s }
 
 let define_primitive name arity f =
-  Tac2env.define_primitive (pname name) (Tac2ffi.mk_closure arity f)
+  Tac2env.define_primitive (pname name) (Tac2ffi.mk_closure_val arity f)
 
 let define2 name r0 r1 f = define_primitive name (arity_suc arity_one) begin fun x y ->
   f (Tac2ffi.repr_to r0 x) (Tac2ffi.repr_to r1 y)
