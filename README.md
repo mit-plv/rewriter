@@ -1,6 +1,10 @@
 Rewriter
 =====
 
+Publications
+-----
+[Jason Gross, Andres Erbsen, Miraya Poddar-Agrawal, Jade Philipoom, Adam Chlipala. Accelerating Verified-Compiler Development with a Verified Rewriting Engine. Proceedings of the Interactive Theorem Proving - Thirteenth International Conference (ITP'22). August 2022.](http://adam.chlipala.net/papers/RewriterITP22/)
+
 Building
 -----
 [![CI (Coq)](https://github.com/mit-plv/rewriter/actions/workflows/coq.yml/badge.svg?branch=master)](https://github.com/mit-plv/rewriter/actions/workflows/coq.yml?query=branch%3Amaster)
