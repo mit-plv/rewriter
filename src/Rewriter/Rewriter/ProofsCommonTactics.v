@@ -498,70 +498,77 @@ Module Compilers.
                        fail 1 "Could not find Proper instance" G ] ]
         end.
 
-      Ltac handle_reified_rewrite_rules_interp exprInfo exprExtraInfo base_interp_head ident_interp_head ident_interp_Proper :=
+      Ltac handle_reified_rewrite_rules_interp_step exprInfo exprExtraInfo base_interp_head ident_interp_head ident_interp_Proper :=
         let not_arrow t := lazymatch t with _ -> _ => fail | _ => idtac end in
-        repeat first [ assumption
-                     | match goal with
-                       | [ |- UnderLets.interp_related _ _ (Reify.expr_value_to_rewrite_rule_replacement _ ?sda _) _ ]
-                         => refine (@Reify.expr_value_to_rewrite_rule_replacement_interp_related exprInfo exprExtraInfo sda _ _ _ _);
-                            cbv [Classes.base Classes.ident Classes.ident_interp Classes.base_interp Classes.ident_interp]
+        first [ assumption
+              | match goal with
+                | [ |- UnderLets.interp_related _ _ (Reify.expr_value_to_rewrite_rule_replacement _ ?sda _) _ ]
+                  => refine (@Reify.expr_value_to_rewrite_rule_replacement_interp_related exprInfo exprExtraInfo sda _ _ _ _);
+                     cbv [Classes.base Classes.ident Classes.ident_interp Classes.base_interp Classes.ident_interp]
 
-                       | [ |- UnderLets.interp_related_gen ?ii ?R (UnderLets.Base (#_(*ident.ident_list_rect*) @ _ @ _ @ _)%expr) (@list_rect ?A (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@Thunked.list_rect A P (fun _ => N) C ls)
-                       | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_list_rect*) @ _ @ _ @ _)%expr (@list_rect ?A (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@Thunked.list_rect A P (fun _ => N) C ls)
-                       | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_eager_list_rect*) @ _ @ _ @ _)%expr (@list_rect ?A (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@Thunked.list_rect A P (fun _ => N) C ls)
-                       | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_list_case*) @ _ @ _ @ _)%expr (@list_case ?A (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@list_case A (fun _ => P) N C ls) with (@Thunked.list_case A P (fun _ => N) C ls)
-                       | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_nat_rect*) @ _ @ _ @ _)%expr (@nat_rect (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@nat_rect (fun _ => P) N C ls) with (@Thunked.nat_rect P (fun _ => N) C ls)
-                       | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_eager_nat_rect*) @ _ @ _ @ _)%expr (@nat_rect (fun _ => ?P) ?N ?C ?ls) ]
-                         => not_arrow P; progress change (@nat_rect (fun _ => P) N C ls) with (@Thunked.nat_rect P (fun _ => N) C ls)
-                       | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_bool_rect*) @ _ @ _ @ _)%expr (@bool_rect (fun _ => ?P) ?T ?F ?b) ]
-                         => not_arrow P; progress change (@bool_rect (fun _ => P) T F b) with (@Thunked.bool_rect P (fun _ => T) (fun _ => F) b)
-                       | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_option_rect*) @ _ @ _ @ _)%expr (@option_rect ?A (fun _ => ?P) ?S ?N ?o) ]
-                         => not_arrow P; progress change (@option_rect A (fun _ => P) S N o) with (@Thunked.option_rect A P S (fun _ => N) o)
+                | [ |- UnderLets.interp_related_gen ?ii ?R (UnderLets.Base (#_(*ident.ident_list_rect*) @ _ @ _ @ _)%expr) (@list_rect ?A (fun _ => ?P) ?N ?C ?ls) ]
+                  => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@Thunked.list_rect A P (fun _ => N) C ls)
+                | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_list_rect*) @ _ @ _ @ _)%expr (@list_rect ?A (fun _ => ?P) ?N ?C ?ls) ]
+                  => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@Thunked.list_rect A P (fun _ => N) C ls)
+                | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_eager_list_rect*) @ _ @ _ @ _)%expr (@list_rect ?A (fun _ => ?P) ?N ?C ?ls) ]
+                  => not_arrow P; progress change (@list_rect A (fun _ => P) N C ls) with (@Thunked.list_rect A P (fun _ => N) C ls)
+                | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_list_case*) @ _ @ _ @ _)%expr (@list_case ?A (fun _ => ?P) ?N ?C ?ls) ]
+                  => not_arrow P; progress change (@list_case A (fun _ => P) N C ls) with (@Thunked.list_case A P (fun _ => N) C ls)
+                | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_nat_rect*) @ _ @ _ @ _)%expr (@nat_rect (fun _ => ?P) ?N ?C ?ls) ]
+                  => not_arrow P; progress change (@nat_rect (fun _ => P) N C ls) with (@Thunked.nat_rect P (fun _ => N) C ls)
+                | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_eager_nat_rect*) @ _ @ _ @ _)%expr (@nat_rect (fun _ => ?P) ?N ?C ?ls) ]
+                  => not_arrow P; progress change (@nat_rect (fun _ => P) N C ls) with (@Thunked.nat_rect P (fun _ => N) C ls)
+                | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_bool_rect*) @ _ @ _ @ _)%expr (@bool_rect (fun _ => ?P) ?T ?F ?b) ]
+                  => not_arrow P; progress change (@bool_rect (fun _ => P) T F b) with (@Thunked.bool_rect P (fun _ => T) (fun _ => F) b)
+                | [ |- expr.interp_related_gen ?ii ?R (#_(*ident.ident_option_rect*) @ _ @ _ @ _)%expr (@option_rect ?A (fun _ => ?P) ?S ?N ?o) ]
+                  => not_arrow P; progress change (@option_rect A (fun _ => P) S N o) with (@Thunked.option_rect A P S (fun _ => N) o)
 
-                       | [ |- match ?x with pair _ _ => _ end = prod_rect _ _ _ ]
-                         => cbv [prod_rect]; eta_expand
+                | [ |- match ?x with pair _ _ => _ end = prod_rect _ _ _ ]
+                  => cbv [prod_rect]; eta_expand
 
-                       | [ |- expr.interp_related_gen _ _ (expr.Var _) _ ]
-                         => cbn [expr.interp_related_gen]
-                       | [ |- expr.interp_related_gen _ _ (expr.Ident ?idc) ?rhs ]
-                         => let rhs' := open_constr:(_) in
-                            replace rhs with rhs';
-                            [ cbn [expr.interp_related_gen]; now refine (ident_interp_Proper _ idc idc eq_refl)
-                            | try reflexivity ]
-                       | [ |- expr.interp_related_gen _ _ (expr.Abs ?f) _ ]
-                         => let fh := fresh in set (fh := f); cbn [expr.interp_related_gen]; subst fh; cbv beta; intros
-                       | [ |- expr.interp_related_gen _ _ (expr.LetIn ?v ?f) (LetIn.Let_In ?V ?F) ]
-                         => rewrite (LetIn.unfold_Let_In V F);
-                            let vh := fresh in
-                            set (vh := v);
-                            let fh := fresh in
-                            set (fh := f);
-                            cbn [expr.interp_related_gen]; subst fh vh; cbv beta;
-                            exists F, V; repeat apply conj; intros
-                       | [ |- expr.interp_related_gen _ _ (?f @ ?x)%expr (?F ?X) ]
-                         => let fh := fresh in
-                            set (fh := f);
-                            let xh := fresh in
-                            set (xh := x);
-                            cbn [expr.interp_related_gen]; subst fh xh;
-                            exists F, X; repeat apply conj; [ | | try reflexivity ]
+                | [ |- expr.interp_related_gen _ _ (expr.Var _) _ ]
+                  => cbn [expr.interp_related_gen]
+                | [ |- expr.interp_related_gen _ _ (expr.Ident ?idc) ?rhs ]
+                  => let rhs' := open_constr:(_) in
+                     replace rhs with rhs';
+                     [ cbn [expr.interp_related_gen]; now refine (ident_interp_Proper _ idc idc eq_refl)
+                     | try reflexivity ]
+                | [ |- expr.interp_related_gen _ _ (expr.Abs ?f) _ ]
+                  => let fh := fresh in set (fh := f); cbn [expr.interp_related_gen]; subst fh; cbv beta; intros
+                | [ |- expr.interp_related_gen _ _ (expr.LetIn ?v ?f) (LetIn.Let_In ?V ?F) ]
+                  => rewrite (LetIn.unfold_Let_In V F);
+                     let vh := fresh in
+                     set (vh := v);
+                     let fh := fresh in
+                     set (fh := f);
+                     cbn [expr.interp_related_gen]; subst fh vh; cbv beta;
+                     exists F, V; repeat apply conj; intros
+                | [ |- expr.interp_related_gen _ _ (?f @ ?x)%expr (?F ?X) ]
+                  => let fh := fresh in
+                     set (fh := f);
+                     let xh := fresh in
+                     set (xh := x);
+                     cbn [expr.interp_related_gen]; subst fh xh;
+                     exists F, X; repeat apply conj; [ | | try reflexivity ]
 
-                       | [ |- _ = _ ] => solve [ fin_tac ]
-                       | [ |- type.eqv _ _ ] => cbn [ident_interp_head type.related]; cbv [respectful]; intros; subst
-                       end
-                     | progress repeat (do 2 eexists; repeat apply conj; [ | | reflexivity ])
-                     | prove_eq_by_Proper ];
-        [ >
-          idtac "============================";
-          idtac "WARNING: UNSOLVED GOAL:";
-          print_context_and_goal ();
-          idtac "============================"
-                .. ].
+                | [ |- _ = _ ] => solve [ fin_tac ]
+                | [ |- type.eqv _ _ ] => cbn [ident_interp_head type.related]; cbv [respectful]; intros; subst
+                end
+              | progress repeat (do 2 eexists; repeat apply conj; [ | | reflexivity ])
+              | prove_eq_by_Proper ].
+
+  Ltac handle_reified_rewrite_rules_interp exprInfo exprExtraInfo base_interp_head ident_interp_head ident_interp_Proper :=
+    first [ solve [ repeat handle_reified_rewrite_rules_interp_step exprInfo exprExtraInfo base_interp_head ident_interp_head ident_interp_Proper;
+      [ >
+        idtac "============================";
+        idtac "WARNING: UNSOLVED END GOAL:";
+        print_context_and_goal ();
+        idtac "============================"
+        .. ] ]
+      | idtac "============================";
+        idtac "WARNING: UNSOLVED INITIAL GOAL:";
+        print_context_and_goal ();
+        idtac "============================" ].
 
       Module Export Tactic.
         Ltac prove_interp_good _ :=
