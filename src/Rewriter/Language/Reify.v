@@ -422,9 +422,10 @@ Module Compilers.
         => do_red ()
       | Constr.Unsafe.Case _ _ _ _ _
         => do_red ()
-      | Constr.Unsafe.Proj _ _
-        => do_red ()
-      | _ => false
+      | _ (* use ifs for more version-compatibility as the kind representation changes *)
+        => if Constr.is_proj parameter_type
+           then do_red ()
+           else false
       end.
 
     (* f, f_ty, arg *)
