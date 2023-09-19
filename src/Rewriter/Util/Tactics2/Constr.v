@@ -35,6 +35,35 @@ Module Unsafe.
       end.
   End Case.
 
+  (** [iter f c] iters [f] on the immediate subterms of [c]; it is
+   not recursive and the order with which subterms are processed is
+   not specified *)
+  Ltac2 iter (f : constr -> unit) (c : constr) : unit :=
+    match kind c with
+    | Rel _ => () | Meta _ => () | Var _ => () | Sort _ => () | Constant _ _ => () | Ind _ _ => ()
+    | Constructor _ _ => () | Uint63 _ => () | Float _ => ()
+    | Cast c _ t => f c; f t
+    | Prod b c => f (Binder.type b); f c
+    | Lambda b c => f (Binder.type b); f c
+    | LetIn b t c => f (Binder.type b); f t; f c
+    | App c l => f c; Array.iter f l
+    | Evar _ l => () (* not possible to iter in Ltac2... *)
+    | Case _ x iv y bl
+      => Array.iter f bl;
+         Case.iter_invert f iv;
+         f x;
+         f y
+    | Proj _p c => f c
+    | Fix _ _ tl bl =>
+        Array.iter (fun b => f (Binder.type b)) tl;
+        Array.iter f bl
+    | CoFix _ tl bl =>
+        Array.iter (fun b => f (Binder.type b)) tl;
+        Array.iter f bl
+    | Array _u t def ty =>
+        Array.iter f t; f def; f ty
+    end.
+
   (** [iter_with_binders g f n c] iters [f n] on the immediate
    subterms of [c]; it carries an extra data [n] (typically a lift
    index) which is processed by [g] (which typically add 1 to [n]) at
