@@ -378,10 +378,7 @@ Module Compilers.
                                                Control.refine (fun () => 'I)) in
                         () in
                       match Constr.Unsafe.kind fv with
-                      | Constr.Unsafe.Rel _ => () | Constr.Unsafe.Meta _ => () | Constr.Unsafe.Sort _ => () | Constr.Unsafe.Constant _ _ => () | Constr.Unsafe.Ind _ _ => ()
-                      | Constr.Unsafe.Constructor _ _ => () | Constr.Unsafe.Uint63 _ => () | Constr.Unsafe.Float _ => ()
                       | Constr.Unsafe.Var v => check_var v None (fun () => ())
-                      | Constr.Unsafe.Cast c _ t => aux c; aux t
                       | Constr.Unsafe.Prod b c
                         => under [b] (fun ns => aux (subst_ns ns c))
                       | Constr.Unsafe.Lambda b c
@@ -396,14 +393,6 @@ Module Compilers.
                              => check_var v (Some l) default
                            | _ => default ()
                            end
-                      | Constr.Unsafe.Case _ x iv y bl
-                        => Array.iter aux bl;
-                           Constr.Unsafe.Case.iter_invert aux iv;
-                           aux x;
-                           aux y
-                      | Constr.Unsafe.Proj _p c => aux c
-                      | Constr.Unsafe.Array _u t def ty =>
-                          Array.iter aux t; aux def; aux ty
                       | Constr.Unsafe.Fix _ _ tl bl =>
                           under (Array.to_list tl)
                                 (fun ns => let subst_ns := subst_ns ns in
@@ -412,7 +401,8 @@ Module Compilers.
                           under (Array.to_list tl)
                                 (fun ns => let subst_ns := subst_ns ns in
                                            Array.iter (fun c => aux (subst_ns c)) bl)
-                      | Constr.Unsafe.Evar _ l => () (* not possible to iter in Ltac2... *)
+                      | _ => (* TODO: factor binder logic through something like [Constr.Unsafe.iter_with_full_binders] *)
+                          Constr.Unsafe.iter aux fv
                       end) in
               aux fv;
               match res.(contents) with
