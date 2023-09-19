@@ -43,6 +43,6 @@ jobs:
     if: always()
     steps:
     - run: echo 'The triggering workflow passed'
-      if: ${{ needs.build.result == 'success' }}
+      if: ${{ needs.build-docker.result == 'success' }}
     - run: echo 'The triggering workflow failed' && false
-      if: ${{ needs.build.result != 'success' }}
+      if: ${{ needs.build-docker.result != 'success' }}
