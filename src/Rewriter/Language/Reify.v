@@ -94,7 +94,7 @@ Module Compilers.
     aux tys [] (Fresh.Free.of_constr term).
 
   Module Reify.
-    Ltac2 debug_level := Pre.reify_debug_level.
+    Ltac2 Notation debug_level := Pre.reify_debug_level.
 
     Ltac2 mutable should_debug_enter_reify () := Int.le 3 debug_level.
     Ltac2 mutable should_debug_enter_reify_preprocess () := Int.le 3 debug_level.
