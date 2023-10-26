@@ -1,6 +1,7 @@
 Require Import Ltac2.Ltac2.
 Require Import Ltac2.Printf.
 Require Export Rewriter.Util.FixCoqMistakes.
+Require Rewriter.Util.Tactics2.List.
 
 Ltac2 of_list (pr : 'a -> message) (ls : 'a list) : message
   := fprintf
@@ -9,7 +10,7 @@ Ltac2 of_list (pr : 'a -> message) (ls : 'a list) : message
        (match ls with
         | [] => fprintf ""
         | x :: xs
-          => List.fold_left (fun init x => fprintf "%a, %a" (fun () a => a) init (fun () => pr) x) xs (pr x)
+          => List.fold_left (fun init x => fprintf "%a, %a" (fun () a => a) init (fun () => pr) x) (pr x) xs
         end).
 
 Ltac2 of_binder (b : binder) : message
