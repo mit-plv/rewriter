@@ -25,6 +25,7 @@ Require Import Rewriter.Util.Tactics.CacheTerm.
 Require Import Rewriter.Util.Tactics.DebugPrint.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Notations.
+Require Rewriter.Util.Tactics2.List.
 Require Import Rewriter.Util.Tactics2.Head.
 Require Import Rewriter.Util.Tactics2.HeadReference.
 Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
@@ -416,7 +417,7 @@ Module Compilers.
                         (fprintf
                            "Invalid (in %t):%s%a"
                            term (String.newline ())
-                           (fun ()
+                           (fun () x
                             => List.fold_right
                                  (fun (argn, msg) rest
                                   => (fprintf "Invalid (arg %i): %a%s%a"
@@ -424,6 +425,7 @@ Module Compilers.
                                               (fun () x => x) msg
                                               (String.newline ())
                                               (fun () x => x) rest))
+                                 x
                                  (Message.of_string ""))
                            (v :: vs)))
               end).
