@@ -53,7 +53,7 @@ Module Unsafe.
          Case.iter_invert f iv;
          f x;
          f y
-    | Proj _p c => f c
+    | Proj _p _ c => f c
     | Fix _ _ tl bl =>
         Array.iter (fun b => f (Binder.type b)) tl;
         Array.iter f bl
@@ -84,7 +84,7 @@ Module Unsafe.
          Case.iter_invert (f n) iv;
          f n x;
          f n y
-    | Proj _p c => f n c
+    | Proj _p _ c => f n c
     | Fix _ _ tl bl =>
         Array.iter (fun b => f n (Binder.type b)) tl;
         Array.iter (f (iterate g (Array.length tl) n)) bl
