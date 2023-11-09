@@ -51,7 +51,7 @@ Module Unsafe.
     | Case _ x iv y bl
       => Array.iter f bl;
          Case.iter_invert f iv;
-         f x;
+         match x with (x,_) => f x end;
          f y
     | Proj _p _ c => f c
     | Fix _ _ tl bl =>
@@ -82,7 +82,7 @@ Module Unsafe.
     | Case _ x iv y bl
       => Array.iter (f n) bl;
          Case.iter_invert (f n) iv;
-         f n x;
+         match x with (x,_) => f n x end;
          f n y
     | Proj _p _ c => f n c
     | Fix _ _ tl bl =>
