@@ -1,3 +1,4 @@
+Require Import Coq.Arith.PeanoNat.
 Require Import Coq.micromega.Lia.
 Require Import Coq.Strings.String.
 Require Import Coq.Strings.Ascii.
@@ -7,7 +8,8 @@ Local Open Scope list_scope.
 Local Open Scope string_scope.
 
 
-(** TODO: Remove this once we drop support for Coq 8.9 (it's in the stdlib in Coq 8.10 *)
+(** TODO: Remove this once we drop support for Coq 8.9
+    (it's in the stdlib in Coq 8.10 *)
 (** *** Conversion to/from [list ascii] *)
 
 Fixpoint string_of_list_ascii (s : list ascii) : string
@@ -117,7 +119,7 @@ Lemma length_substring n1 n2 s
 Proof.
   revert n1 n2; induction s as [|a s IHs]; intros; cbn.
   { destruct n1, n2; cbn; reflexivity. }
-  { destruct n1; [ destruct n2 | ]; cbn; rewrite ?IHs, <- ?Minus.minus_n_O; reflexivity. }
+  { destruct n1; [ destruct n2 | ]; cbn; rewrite ?IHs, ?Nat.sub_0_r; reflexivity. }
 Qed.
 
 Lemma length_append s1 s2 : length (s1 ++ s2) = length s1 + length s2.
