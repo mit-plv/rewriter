@@ -32,6 +32,7 @@ Require Rewriter.Util.Tactics2.Ident.
 Require Rewriter.Util.Tactics2.String.
 Require Rewriter.Util.Tactics2.Constr.
 Require Import Rewriter.Util.Tactics2.DestEvar.
+Require Import Rewriter.Util.Tactics2.DestCase.
 Require Import Rewriter.Util.Tactics2.InstantiateEvar.
 Require Import Rewriter.Util.Tactics2.Constr.Unsafe.MakeAbbreviations.
 Require Import Rewriter.Util.Tactics2.FixNotationsForPerformance.
@@ -510,8 +511,9 @@ Module Compilers.
                       reify_preprocess v
                   end
            end
-      | Constr.Unsafe.Case cinfo ret_ty cinv x branches
+      | Constr.Unsafe.Case _ _ _ _ _
         => Reify.debug_enter_reify_case "expr.reify_preprocess" "Case" term;
+           let (cinfo, ret_ty, cinv, x, branches) := destCase term in
            match Constr.Unsafe.kind ret_ty with
            | Constr.Unsafe.Lambda xb ret_ty
              => let ty := Constr.Unsafe.substnl [x] 0 ret_ty in

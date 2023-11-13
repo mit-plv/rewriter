@@ -122,6 +122,7 @@ src/Rewriter/Util/plugins/ltac2_extra_plugin.mlg
 src/Rewriter/Util/plugins/ltac2_extra_plugin.mllib
 
 src/Rewriter/Util/Tactics2/Constr.v
+src/Rewriter/Util/Tactics2/DestCase.v
 src/Rewriter/Util/Tactics2/DestProj.v
 src/Rewriter/Util/Tactics2/Proj.v
 
