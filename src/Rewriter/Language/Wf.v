@@ -758,11 +758,45 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
             -> wf3 G (expr.LetIn x1 f1) (expr.LetIn x2 f2) (expr.LetIn x3 f3).
       End with_var3.
 
+      Section with_var4.
+        Context {var1 var2 var3 var4 : type.type base_type -> Type}.
+        Local Notation wfvP := (fun t => (var1 t * var2 t * var3 t * var4 t)%type).
+        Local Notation wfvT := (list (sigT wfvP)).
+        Local Notation expr := (@expr.expr base_type ident). (* But can't use this to define other notations, see COQBUG(https://github.com/coq/coq/issues/8126) *)
+        Local Notation expr1 := (@expr.expr base_type ident var1).
+        Local Notation expr2 := (@expr.expr base_type ident var2).
+        Local Notation expr3 := (@expr.expr base_type ident var3).
+        Local Notation expr4 := (@expr.expr base_type ident var4).
+        Inductive wf4 : wfvT -> forall {t}, expr1 t -> expr2 t -> expr3 t -> expr4 t -> Prop :=
+        | Wf4Ident
+          : forall G {t} (idc : ident t), wf4 G (expr.Ident idc) (expr.Ident idc) (expr.Ident idc) (expr.Ident idc)
+        | Wf4Var
+          : forall G {t} (v1 : var1 t) (v2 : var2 t) (v3 : var3 t) (v4 : var4 t), List.In (existT _ t (v1, v2, v3, v4)) G -> wf4 G (expr.Var v1) (expr.Var v2) (expr.Var v3) (expr.Var v4)
+        | Wf4Abs
+          : forall G {s d} (f1 : var1 s -> expr1 d) (f2 : var2 s -> expr2 d) (f3 : var3 s -> expr3 d) (f4 : var4 s -> expr4 d),
+            (forall (v1 : var1 s) (v2 : var2 s) (v3 : var3 s) (v4 : var4 s), wf4 (existT _ s (v1, v2, v3, v4) :: G) (f1 v1) (f2 v2) (f3 v3) (f4 v4))
+            -> wf4 G (expr.Abs f1) (expr.Abs f2) (expr.Abs f3) (expr.Abs f4)
+        | Wf4App
+          : forall G {s d}
+                   (f1 : expr1 (s -> d)) (f2 : expr2 (s -> d)) (f3 : expr3 (s -> d)) (f4 : expr4 (s -> d)) (wf_f : wf4 G f1 f2 f3 f4)
+                   (x1 : expr1 s) (x2 : expr2 s) (x3 : expr3 s) (x4 : expr4 s) (wf_x : wf4 G x1 x2 x3 x4),
+            wf4 G (expr.App f1 x1) (expr.App f2 x2) (expr.App f3 x3) (expr.App f4 x4)
+        | Wf4LetIn
+          : forall G {A B}
+                   (x1 : expr1 A) (x2 : expr2 A) (x3 : expr3 A) (x4 : expr4 A) (wf_x : wf4 G x1 x2 x3 x4)
+                   (f1 : var1 A -> expr1 B) (f2 : var2 A -> expr2 B) (f3 : var3 A -> expr3 B) (f4 : var4 A -> expr4 B),
+            (forall (v1 : var1 A) (v2 : var2 A) (v3 : var3 A) (v4 : var4 A), wf4 (existT _ A (v1, v2, v3, v4) :: G) (f1 v1) (f2 v2) (f3 v3) (f4 v4))
+            -> wf4 G (expr.LetIn x1 f1) (expr.LetIn x2 f2) (expr.LetIn x3 f3) (expr.LetIn x4 f4).
+      End with_var4.
+
       Definition Wf {t} (e : @expr.Expr base_type ident t) : Prop
         := forall var1 var2, @wf var1 var2 nil t (e var1) (e var2).
 
       Definition Wf3 {t} (e : @expr.Expr base_type ident t) : Prop
         := forall var1 var2 var3, @wf3 var1 var2 var3 nil t (e var1) (e var2) (e var3).
+
+      Definition Wf4 {t} (e : @expr.Expr base_type ident t) : Prop
+        := forall var1 var2 var3 var4, @wf4 var1 var2 var3 var4 nil t (e var1) (e var2) (e var3) (e var4).
 
       Local Hint Constructors wf : wf.
       Lemma Wf_APP {s d f x} : @Wf (s -> d) f -> @Wf s x -> @Wf d (expr.APP f x).
@@ -953,6 +987,61 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
             eauto.
       Qed.
 
+      Lemma wf4_of_wf {var1 var2 var3 var4} G1 G2 G3 G4 G {t}
+            (HG1 : G1 = List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, (v1, v2, v3, v4))) G)
+            (HG2 : G2 = List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v2, (v1, v2, v3, v4))) G)
+            (HG3 : G3 = List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v3, (v1, v2, v3, v4))) G)
+            (HG4 : G4 = List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v4, (v1, v2, v3, v4))) G)
+            e1 e2 e3 e4 e1234
+            (Hwf1 : @wf var1 _ G1 t e1 e1234)
+            (Hwf2 : @wf var2 _ G2 t e2 e1234)
+            (Hwf3 : @wf var3 _ G3 t e3 e1234)
+            (Hwf4 : @wf var4 _ G4 t e4 e1234)
+        : @wf4 base_type ident var1 var2 var3 var4 G t e1 e2 e3 e4.
+      Proof using Type.
+        subst G2 G3 G4; revert dependent e4; revert dependent e3; revert dependent e2; revert dependent G; induction Hwf1; intros.
+        Time all: repeat first [ progress subst
+                               | progress cbn [projT1 projT2 fst snd eq_rect] in *
+                               | progress destruct_head' False
+                               | progress destruct_head'_sig
+                               | progress destruct_head'_and
+                               | progress destruct_head'_ex
+                               | progress destruct_head'_sigT
+                               | progress destruct_head'_prod
+                               | progress inversion_sigma
+                               | progress inversion_prod
+                               | progress expr.simpl_invert_expr_in_all
+                               | progress intros
+                               | assumption
+                               | progress inversion_wf_one_constr
+                               | progress expr.inversion_expr
+                               | progress expr.invert_match
+                               | progress expr.invert_subst
+                               | solve [ eauto ]
+                               | rewrite in_map_iff in *
+                               | match goal with
+                                 | [ H : forall x y G, _ :: _ = map _ G -> _ |- _ ]
+                                   => specialize (fun x y t a b c G => H x y (existT _ t (a, b, c) :: G)); cbn [map] in H
+                                 end
+                               | match goal with
+                                 | [ |- wf4 _ _ _ _ _ ] => constructor
+                                 end ].
+      Time Qed.
+
+      Lemma wf_of_wf4 {var1 var2} G {t}
+            (G1 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, v2)) G)
+            e1 e2 e3 e4
+            (Hwf : @wf4 base_type ident var1 var2 var2 var2 G t e1 e2 e3 e4)
+        : @wf _ _ G1 t e1 e2.
+      Proof using Type.
+        subst G1.
+        induction Hwf; cbn [map] in *; constructor; rewrite ?in_map_iff; intros;
+          try eexists (existT (fun t => _ * _ * _ * _)%type _ (_, _, _, _));
+          split_and;
+          repeat apply conj; try reflexivity; try eassumption;
+            eauto.
+      Qed.
+
       Lemma Wf_of_Wf3 {t} (e : expr.Expr t) : @Wf3 base_type ident t e -> @Wf base_type ident t e.
       Proof using Type. intros Hwf var1 var2; eapply wf_of_wf3 with (G:=nil), Hwf. Qed.
 
@@ -961,10 +1050,19 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
 
       Lemma Wf_iff_Wf3 {t} (e : expr.Expr t) : @Wf base_type ident t e <-> @Wf3 base_type ident t e.
       Proof using Type. split; (apply Wf_of_Wf3 + apply Wf3_of_Wf). Qed.
+
+      Lemma Wf_of_Wf4 {t} (e : expr.Expr t) : @Wf4 base_type ident t e -> @Wf base_type ident t e.
+      Proof using Type. intros Hwf var1 var2; eapply wf_of_wf4 with (G:=nil), Hwf. Qed.
+
+      Lemma Wf4_of_Wf {t} (e : expr.Expr t) : @Wf base_type ident t e -> @Wf4 base_type ident t e.
+      Proof using Type. intros Hwf var1 var2 var3 var4; eapply wf4_of_wf with (G:=nil); try eapply Hwf; reflexivity. Qed.
+
+      Lemma Wf_iff_Wf4 {t} (e : expr.Expr t) : @Wf base_type ident t e <-> @Wf4 base_type ident t e.
+      Proof using Type. split; (apply Wf_of_Wf4 + apply Wf4_of_Wf). Qed.
     End wf_properties.
-    Global Hint Immediate Wf_of_Wf3 : wf.
-    Global Hint Resolve Wf3_of_Wf : wf.
-    Global Hint Opaque Wf3 : wf interp rewrite.
+    Global Hint Immediate Wf_of_Wf3 Wf_of_Wf4 : wf.
+    Global Hint Resolve Wf3_of_Wf Wf4_of_Wf : wf.
+    Global Hint Opaque Wf3 Wf4 : wf interp rewrite.
 
     Section interp_gen.
       Context {base_type}
@@ -1997,6 +2095,9 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
 
   Ltac prove_Wf3_with extra_tac := apply expr.Wf3_of_Wf; prove_Wf_with extra_tac.
   Ltac prove_Wf3 _ := prove_Wf3_with ltac:(fun _ => idtac).
+
+  Ltac prove_Wf4_with extra_tac := apply expr.Wf4_of_Wf; prove_Wf_with extra_tac.
+  Ltac prove_Wf4 _ := prove_Wf4_with ltac:(fun _ => idtac).
 
   Global Hint Extern 0 (?x == ?x) => apply expr.Wf_Interp_Proper_gen : wf interp.
   #[global] Hint Resolve GeneralizeVar.Wf_FromFlat_ToFlat GeneralizeVar.Wf_GeneralizeVar : wf.
