@@ -972,20 +972,31 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
                                  end ].
       Time Qed.
 
+      Lemma wf_of_wf3_default {var1 var2 var3} G {t}
+            (G12 := List.map (fun '(existT t (v1, v2, v3)) => existT _ t (v1, v2)) G)
+            (G23 := List.map (fun '(existT t (v1, v2, v3)) => existT _ t (v2, v3)) G)
+            (G13 := List.map (fun '(existT t (v1, v2, v3)) => existT _ t (v1, v3)) G)
+            e1 e2 e3
+            (Hwf : @wf3 base_type ident var1 var2 var3 G t e1 e2 e3)
+        : ((forall t, var1 t -> var2 t -> var3 t) -> @wf _ _ G12 t e1 e2)
+          /\ ((forall t, var1 t -> var3 t -> var2 t) -> @wf _ _ G13 t e1 e3)
+          /\ ((forall t, var2 t -> var3 t -> var1 t) -> @wf _ _ G23 t e2 e3).
+      Proof using Type.
+        subst G12 G13 G23.
+        induction Hwf; cbn [map] in *; repeat apply conj; intros; constructor; rewrite ?in_map_iff; intros;
+          try eexists (existT (fun t => _ * _ * _)%type _ (_, _, _));
+          split_and;
+          repeat apply conj; try reflexivity; try eassumption;
+            eauto.
+      Qed.
+
       Lemma wf_of_wf3 {var1 var2} G {t}
             (G1 := List.map (fun '(existT t (v1, v2, v3)) => existT _ t (v1, v2)) G)
             (G2 := List.map (fun '(existT t (v1, v2, v3)) => existT _ t (v2, v3)) G)
             e1 e2 e3
             (Hwf : @wf3 base_type ident var1 var2 var2 G t e1 e2 e3)
         : @wf _ _ G1 t e1 e2.
-      Proof using Type.
-        subst G1 G2.
-        induction Hwf; cbn [map] in *; constructor; rewrite ?in_map_iff; intros;
-          try eexists (existT (fun t => _ * _ * _)%type _ (_, _, _));
-          split_and;
-          repeat apply conj; try reflexivity; try eassumption;
-            eauto.
-      Qed.
+      Proof using Type. eapply wf_of_wf3_default; eauto. Qed.
 
       Lemma wf4_of_wf {var1 var2 var3 var4} G1 G2 G3 G4 G {t}
             (HG1 : G1 = List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, (v1, v2, v3, v4))) G)
@@ -1028,19 +1039,70 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
                                  end ].
       Time Qed.
 
-      Lemma wf_of_wf4 {var1 var2} G {t}
-            (G1 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, v2)) G)
+      Lemma wf3_of_wf4_default {var1 var2 var3 var4} G {t}
+            (G123 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, v2, v3)) G)
+            (G124 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, v2, v4)) G)
+            (G134 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, v3, v4)) G)
+            (G234 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v2, v3, v4)) G)
             e1 e2 e3 e4
-            (Hwf : @wf4 base_type ident var1 var2 var2 var2 G t e1 e2 e3 e4)
-        : @wf _ _ G1 t e1 e2.
+            (Hwf : @wf4 base_type ident var1 var2 var3 var4 G t e1 e2 e3 e4)
+        : ((forall t, var1 t -> var2 t -> var3 t -> var4 t) -> @wf3 _ _ _ _ _ G123 t e1 e2 e3)
+          /\ ((forall t, var1 t -> var2 t -> var4 t -> var3 t) -> @wf3 _ _ _ _ _ G124 t e1 e2 e4)
+          /\ ((forall t, var1 t -> var3 t -> var4 t -> var2 t) -> @wf3 _ _ _ _ _ G134 t e1 e3 e4)
+          /\ ((forall t, var2 t -> var3 t -> var4 t -> var1 t) -> @wf3 _ _ _ _ _ G234 t e2 e3 e4).
       Proof using Type.
-        subst G1.
-        induction Hwf; cbn [map] in *; constructor; rewrite ?in_map_iff; intros;
+        subst G123 G124 G134 G234.
+        induction Hwf; cbn [map] in *; repeat apply conj; intros; constructor; rewrite ?in_map_iff; intros;
           try eexists (existT (fun t => _ * _ * _ * _)%type _ (_, _, _, _));
           split_and;
           repeat apply conj; try reflexivity; try eassumption;
             eauto.
       Qed.
+
+      Lemma wf3_of_wf4 {var1 var2 var3} G {t}
+            (G1 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, v2, v3)) G)
+            e1 e2 e3 e4
+            (Hwf : @wf4 base_type ident var1 var2 var3 var3 G t e1 e2 e3 e4)
+        : @wf3 _ _ _ _ _ G1 t e1 e2 e3.
+      Proof using Type. eapply wf3_of_wf4_default; eauto. Qed.
+
+      Lemma wf_of_wf4_default {var1 var2 var3 var4} G {t}
+            (G12 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, v2)) G)
+            (G13 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, v3)) G)
+            (G14 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, v4)) G)
+            (G23 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v2, v3)) G)
+            (G24 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v2, v4)) G)
+            (G34 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v3, v4)) G)
+            e1 e2 e3 e4
+            (Hwf : @wf4 base_type ident var1 var2 var3 var4 G t e1 e2 e3 e4)
+        : ((forall t, var1 t -> var2 t -> var3 t * var4 t)%type -> @wf _ _ G12 t e1 e2)
+          /\ ((forall t, var1 t -> var3 t -> var2 t * var4 t)%type -> @wf _ _ G13 t e1 e3)
+          /\ ((forall t, var1 t -> var4 t -> var2 t * var3 t)%type -> @wf _ _ G14 t e1 e4)
+          /\ ((forall t, var2 t -> var3 t -> var1 t * var4 t)%type -> @wf _ _ G23 t e2 e3)
+          /\ ((forall t, var2 t -> var4 t -> var1 t * var3 t)%type -> @wf _ _ G24 t e2 e4)
+          /\ ((forall t, var3 t -> var4 t -> var1 t * var2 t)%type -> @wf _ _ G34 t e3 e4).
+      Proof using Type.
+        apply wf3_of_wf4_default in Hwf; destruct_head'_and.
+        repeat apply conj; intros; split_prod.
+        all: repeat first [ match goal with
+                            | [ H : wf3 _ _ _ _ |- _ ] => apply wf_of_wf3_default in H; destruct_head'_and
+                            | [ H : wf ?G ?e1 ?e2 |- wf ?G' ?e1 ?e2 ] => replace G' with G; [ exact H | ]
+                            | [ H := _ |- _ = _ ] => subst H
+                            end
+                          | progress specialize_by eauto
+                          | rewrite List.map_map
+                          | match goal with
+                            | [ |- List.map _ ?x = List.map _ ?x ] => apply map_ext; intro; break_innermost_match
+                            end
+                          | reflexivity ].
+      Qed.
+
+      Lemma wf_of_wf4 {var1 var2} G {t}
+            (G1 := List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, v2)) G)
+            e1 e2 e3 e4
+            (Hwf : @wf4 base_type ident var1 var2 var2 var2 G t e1 e2 e3 e4)
+        : @wf _ _ G1 t e1 e2.
+      Proof using Type. eapply wf_of_wf4_default; eauto. Qed.
 
       Lemma Wf_of_Wf3 {t} (e : expr.Expr t) : @Wf3 base_type ident t e -> @Wf base_type ident t e.
       Proof using Type. intros Hwf var1 var2; eapply wf_of_wf3 with (G:=nil), Hwf. Qed.
@@ -1059,6 +1121,15 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
 
       Lemma Wf_iff_Wf4 {t} (e : expr.Expr t) : @Wf base_type ident t e <-> @Wf4 base_type ident t e.
       Proof using Type. split; (apply Wf_of_Wf4 + apply Wf4_of_Wf). Qed.
+
+      Lemma Wf4_of_Wf3 {t} (e : expr.Expr t) : @Wf3 base_type ident t e -> @Wf4 base_type ident t e.
+      Proof using Type. intro Hwf; apply Wf4_of_Wf, Wf_of_Wf3, Hwf. Qed.
+
+      Lemma Wf3_of_Wf4 {t} (e : expr.Expr t) : @Wf4 base_type ident t e -> @Wf3 base_type ident t e.
+      Proof using Type. intro Hwf; apply Wf3_of_Wf, Wf_of_Wf4, Hwf. Qed.
+
+      Lemma Wf3_iff_Wf4 {t} (e : expr.Expr t) : @Wf3 base_type ident t e <-> @Wf4 base_type ident t e.
+      Proof using Type. rewrite <- Wf_iff_Wf4, <- Wf_iff_Wf3; reflexivity. Qed.
     End wf_properties.
     Global Hint Immediate Wf_of_Wf3 Wf_of_Wf4 : wf.
     Global Hint Resolve Wf3_of_Wf Wf4_of_Wf : wf.
