@@ -158,8 +158,13 @@ Module Compilers.
          | type.arrow _ _ => false
          end.
 
-    Definition is_not_higher_order {base_type} : type base_type -> bool
-      := andb_each_lhs_of_arrow is_base.
+    Fixpoint is_not_higher_order_than (n : nat) {base_type} : type base_type -> bool
+      := match n with
+         | O => is_base
+         | S n => andb_each_lhs_of_arrow (is_not_higher_order_than n)
+         end.
+
+    Notation is_not_higher_order := (@is_not_higher_order_than 1).
 
     Section interpM.
       Context {base_type} (M : Type -> Type) (base_interp : base_type -> Type).
