@@ -166,6 +166,14 @@ Module Compilers.
 
     Notation is_not_higher_order := (@is_not_higher_order_than 1).
 
+    Lemma eqv_of_is_not_higher_order {base_type base_interp t}
+      (H : is_not_higher_order t = true)
+      : forall v, Proper (@related base_type base_interp (fun _ => eq) t) v.
+    Proof.
+      cbv [Proper]; induction t; cbn; eauto; try apply HR; repeat intro; cbn in *.
+      cbv [is_base Proper] in *; break_innermost_match_hyps; cbn in *; subst; try congruence; eauto.
+    Qed.
+
     Section interpM.
       Context {base_type} (M : Type -> Type) (base_interp : base_type -> Type).
       (** half-monadic denotation function; denote [type]s into their
