@@ -13,6 +13,7 @@ Require Import Rewriter.Util.Tactics.SplitInContext.
 Require Import Rewriter.Util.Tactics.SpecializeBy.
 Require Import Rewriter.Util.Tactics.SpecializeAllWays.
 Require Import Rewriter.Util.Tactics.SetoidSubst.
+Require Import Rewriter.Util.Tactics.DoWithHyp.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Sigma.
@@ -25,6 +26,7 @@ Require Import Rewriter.Util.Logic.ProdForall.
 Require Import Rewriter.Util.Decidable.
 Require Import Rewriter.Util.HProp.
 Require Import Rewriter.Util.Equality.
+Require Import Rewriter.Util.IffT.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Notations.
 Import Coq.Lists.List ListNotations. Local Open Scope list_scope.
@@ -82,6 +84,14 @@ Module Compilers.
 
       Global Instance eqv_Transitive {t} : Transitive (@eqv t) | 10 := _.
       Global Instance eqv_Symmetric {t} : Symmetric (@eqv t) | 10 := _.
+
+      Lemma eqv_of_is_not_higher_order {t}
+        (H : type.is_not_higher_order t = true)
+        : forall v, Proper (@eqv t) v.
+      Proof using Type.
+        cbv [Proper]; induction t; cbn; eauto; try apply HR; repeat intro; cbn in *.
+        cbv [type.is_base Proper] in *; break_innermost_match_hyps; cbn in *; subst; try congruence; eauto.
+      Qed.
 
       Local Ltac t :=
         try split; repeat intro; subst;
@@ -359,6 +369,24 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
       induction t; cbn [type.and_for_each_lhs_of_arrow]; intuition eauto.
     Qed.
 
+    Lemma and_for_each_lhs_of_arrow_Proper_impl_hetero1 {base_type f g}
+      : forall (R1 R2 : forall t, _ -> _ -> Prop) (_ : forall t F G, R1 t F G -> R2 t F F)
+               {t} F G,
+        @type.and_for_each_lhs_of_arrow base_type f g R1 t F G
+        -> @type.and_for_each_lhs_of_arrow base_type _ _ R2 t F F.
+    Proof.
+      intros; induction t; cbn [type.and_for_each_lhs_of_arrow] in *; intuition eauto.
+    Qed.
+
+    Lemma and_for_each_lhs_of_arrow_Proper_impl_hetero2 {base_type f g}
+      : forall (R1 R2 : forall t, _ -> _ -> Prop) (_ : forall t F G, R1 t F G -> R2 t G G)
+               {t} F G,
+        @type.and_for_each_lhs_of_arrow base_type f g R1 t F G
+        -> @type.and_for_each_lhs_of_arrow base_type _ _ R2 t G G.
+    Proof.
+      intros; induction t; cbn [type.and_for_each_lhs_of_arrow] in *; intuition eauto.
+    Qed.
+
     Lemma related_iff_app_curried {base_type base_interp R} t F G
       : (@type.related base_type base_interp R t F G)
         <-> (forall x y, type.and_for_each_lhs_of_arrow (@type.related base_type base_interp R) x y -> R (type.final_codomain t) (type.app_curried F x) (type.app_curried G y)).
@@ -401,6 +429,346 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
     Proof.
       induction t; cbn in *; rewrite ?Bool.andb_true_iff; destruct_head'_prod; cbn [fst snd]; split_iff; intuition.
     Qed.
+
+    Lemma andb_each_lhs_of_arrow_implb_true {base_type f g t}
+      : @type.andb_each_lhs_of_arrow base_type (fun t => implb (f t) (g t)) t = true
+        -> @type.andb_each_lhs_of_arrow base_type f t = true
+        -> @type.andb_each_lhs_of_arrow base_type g t = true.
+    Proof.
+      induction t; cbn; rewrite ?Bool.andb_true_iff, ?Bool.implb_true_iff; intuition auto.
+    Qed.
+
+    Lemma forall_andb_each_lhs_of_arrow_true {base_type f t}
+      (H : forall t, f t = true)
+      : @type.andb_each_lhs_of_arrow base_type f t = true.
+    Proof.
+      induction t; cbn; rewrite ?H; cbn; auto.
+    Qed.
+
+    Lemma is_not_higher_order_than_S {base_type} n t
+      : @type.is_not_higher_order_than n base_type t = true -> @type.is_not_higher_order_than (S n) base_type t = true.
+    Proof.
+      revert t; induction n as [|n IH], t as [|s d]; cbn in *; try congruence; [].
+      rewrite !Bool.andb_true_iff; intros; destruct_head'_and; split; auto; [].
+      eapply andb_each_lhs_of_arrow_implb_true; [ | eassumption ].
+      apply forall_andb_each_lhs_of_arrow_true; intros; rewrite Bool.implb_true_iff; auto.
+    Qed.
+(*
+    Lemma eqv_of_related_hetero_is_not_higher_order_than
+      n {base_type base_interp1 base_interp2 R t} {f1 : type.interp base_interp1 t} {f2 : type.interp base_interp2 t}
+      (*(HR : forall args1 args2, R (type.final_codomain t) (type.app_curried f1 args1) (type.app_curried f2 args2) -> Proper (R' (type.final_codomain t)) (type.app_curried f1 args1))*)
+      (H : type.is_not_higher_order_than n t = true)
+      : @type.related_hetero base_type base_interp1 base_interp2 R t f1 f2 -> f1 == f1 /\ f2 == f2.
+    Proof.
+      revert t H f1 f2; induction n as [|n IHn].
+      all: try now destruct t; cbn; try congruence; eauto using I, tt, conj.
+      intros t H f1 f2; rewrite !related_iff_app_curried.
+      induction t as [|s IHs d IHd].
+      all: try now cbn; try congruence; eauto using I, tt, conj.
+      cbn in H; rewrite Bool.andb_true_iff in H.
+      specialize (IHd ltac:(apply H)).
+      specialize (IHs ltac:(apply is_not_higher_order_than_S, H)).
+      cbn [type.is_not_higher_order_than type.related type.related_hetero]; cbv [respectful_hetero].
+      split; intros.
+      cbn.
+      cbn.
+      cbn. eauto.
+      { cb
+      induction t as [|s IHs d IHd]; cbn in *; cbv [respectful Proper respectful_hetero] in *; eauto using tt; [].
+      cbv [type.is_base] in *; break_innermost_match_hyps; cbn [andb] in *; try congruence; [].
+      cbn [type.related].
+      rewrite ?Bool.andb_true_iff in *.
+      destruct_head'_and.
+
+
+     (forall (t : base_type) (f1 : base_interp1 t) (f2 : base_interp2 t), R t f1 f2 -> R1 t f1 f1) ->
+  type.related_hetero R x0 y0 -> type.related R1 x0 x0*)
+    Section related_hetero_and_Proper.
+      Context {skip_base : bool} {base_type} {base_interp1 base_interp2 : base_type -> Type}.
+      Section with_R.
+        Context {R1 : forall t, relation (base_interp1 t)}
+          {R2 : forall t, relation (base_interp2 t)}
+          {R : forall t, base_interp1 t -> base_interp2 t -> Prop}.
+        #[local] Notation related_hetero_and_Proper := (@type.related_hetero_and_Proper skip_base base_type base_interp1 base_interp2 R1 R2 R).
+
+        Lemma related_hetero_and_Proper_proj1
+          (H : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          {t} f1 f2
+          : @related_hetero_and_Proper t f1 f2 -> Proper (type.related R1) f1.
+        Proof using Type.
+          induction t; cbn; destruct skip_base; intros; destruct_head'_and; cbv [Proper] in *; eauto.
+        Qed.
+
+        Lemma related_hetero_and_Proper_proj2
+          (H : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t} f1 f2
+          : @related_hetero_and_Proper t f1 f2 -> Proper (type.related R2) f2.
+        Proof using Type.
+          induction t; cbn; destruct skip_base; intros; destruct_head'_and; cbv [Proper] in *; eauto.
+        Qed.
+
+        Lemma related_hetero_and_Proper_iff_app_curried
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t f1 f2}
+          : @related_hetero_and_Proper t f1 f2
+            <-> (Proper (type.related R1) f1
+                 /\ Proper (type.related R2) f2
+                 /\ forall x y,
+                    type.and_for_each_lhs_of_arrow (@related_hetero_and_Proper) x y
+                    -> R _ (type.app_curried f1 x) (type.app_curried f2 y)).
+        Proof using Type.
+          induction t; cbn; cbv [respectful Proper respectful_hetero] in *.
+          { break_innermost_match; repeat split; intros; split_and; eauto using I, tt. }
+          { setoid_rewrite IHt1; clear IHt1.
+            setoid_rewrite IHt2; clear IHt2.
+            repeat split; intros; split_and; hnf; eauto.
+            match goal with H : _ |- _ => specialize (fun x y z w => H (x, y) (z, w)) end.
+            cbn [fst snd] in *.
+            eauto. }
+        Qed.
+
+        Lemma related_hetero_and_Proper_Proper_gen
+          (use_R1 : bool)
+          (use_R2 : bool)
+          (RP : relation Prop)
+          (HRP : RP = iff \/ RP = Basics.impl \/ RP = Basics.flip Basics.impl)
+          {R1_trans : forall t, Transitive (R1 t)}
+          {R1_sym : forall t, Symmetric (R1 t)}
+          {R2_trans : forall t, Transitive (R2 t)}
+          {R2_sym : forall t, Symmetric (R2 t)}
+          (R1' : forall t, relation (base_interp1 t) := if use_R1 then R1 else fun t => eq)
+          (R2' : forall t, relation (base_interp2 t) := if use_R2 then R2 else fun t => eq)
+          (related_R1' : forall t, relation (type.interp base_interp1 t) := if use_R1 then fun t => type.related R1 else fun t => eq)
+          (related_R2' : forall t, relation (type.interp base_interp2 t) := if use_R2 then fun t => type.related R2 else fun t => eq)
+          {R_Proper : forall t, Proper (R1' t ==> R2' t ==> RP) (R t)}
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t}
+          : Proper (related_R1' t ==> related_R2' t ==> RP) (@related_hetero_and_Proper t).
+        Proof using Type.
+          destruct use_R1, use_R2.
+          all: repeat intro.
+          all: destruct_head'_or; subst R1' R2' related_R1' related_R2'; subst; cbv beta in *.
+          all: rewrite !related_hetero_and_Proper_iff_app_curried.
+          all: repeat split; destruct_head'_and; subst; cbv [Proper respectful] in *; auto.
+          all: try now cbv [Proper]; etransitivity; (idtac + symmetry); eassumption.
+          all: (let H := multimatch goal with H : forall x : type.for_each_lhs_of_arrow _ _, _ |- _ => H end in
+                progress repeat (let x := fresh in intro x; specialize (H x))).
+          all: [ > (((erewrite <- R_Proper + erewrite -> R_Proper); [ eassumption | try reflexivity .. ]) + idtac);
+                 lazymatch goal with
+                 | [ |- ?R (type.app_curried _ _) ]
+                   => apply type.app_curried_Proper_gen; try eassumption
+                 | _ => idtac
+                 end .. ].
+          all: try first [ eapply and_for_each_lhs_of_arrow_Proper_impl_hetero1; [ | eassumption ]
+                         | eapply and_for_each_lhs_of_arrow_Proper_impl_hetero2; [ | eassumption ] ].
+          all: try now eapply related_hetero_and_Proper_proj1; assumption.
+          all: try now eapply related_hetero_and_Proper_proj2; assumption.
+          all: try now (idtac + symmetry).
+        Qed.
+
+        Lemma related_hetero_and_Proper_Proper_iff
+          {R1_trans : forall t, Transitive (R1 t)}
+          {R1_sym : forall t, Symmetric (R1 t)}
+          {R2_trans : forall t, Transitive (R2 t)}
+          {R2_sym : forall t, Symmetric (R2 t)}
+          {R_Proper : forall t, Proper (R1 t ==> R2 t ==> iff) (R t)}
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t}
+          : Proper (type.related R1 ==> type.related R2 ==> iff) (@related_hetero_and_Proper t).
+        Proof using Type.
+          eapply (@related_hetero_and_Proper_Proper_gen true true); auto.
+        Qed.
+
+        Lemma related_hetero_and_Proper_Proper_impl
+          {R1_trans : forall t, Transitive (R1 t)}
+          {R1_sym : forall t, Symmetric (R1 t)}
+          {R2_trans : forall t, Transitive (R2 t)}
+          {R2_sym : forall t, Symmetric (R2 t)}
+          {R_Proper : forall t, Proper (R1 t ==> R2 t ==> Basics.impl) (R t)}
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t}
+          : Proper (type.related R1 ==> type.related R2 ==> Basics.impl) (@related_hetero_and_Proper t).
+        Proof using Type.
+          eapply (@related_hetero_and_Proper_Proper_gen true true); auto.
+        Qed.
+
+        Lemma related_hetero_and_Proper_Proper_flip_impl
+          {R1_trans : forall t, Transitive (R1 t)}
+          {R1_sym : forall t, Symmetric (R1 t)}
+          {R2_trans : forall t, Transitive (R2 t)}
+          {R2_sym : forall t, Symmetric (R2 t)}
+          {R_Proper : forall t, Proper (R1 t ==> R2 t ==> Basics.flip Basics.impl) (R t)}
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t}
+          : Proper (type.related R1 ==> type.related R2 ==> Basics.flip Basics.impl) (@related_hetero_and_Proper t).
+        Proof using Type.
+          eapply (@related_hetero_and_Proper_Proper_gen true true); auto.
+        Qed.
+
+        Lemma related_hetero_and_Proper_Proper_iff1
+          {R1_trans : forall t, Transitive (R1 t)}
+          {R1_sym : forall t, Symmetric (R1 t)}
+          {R2_trans : forall t, Transitive (R2 t)}
+          {R2_sym : forall t, Symmetric (R2 t)}
+          {R_Proper : forall t, Proper (R1 t ==> eq ==> iff) (R t)}
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t}
+          : Proper (type.related R1 ==> eq ==> iff) (@related_hetero_and_Proper t).
+        Proof using Type.
+          eapply (@related_hetero_and_Proper_Proper_gen true false); auto.
+        Qed.
+
+        Lemma related_hetero_and_Proper_Proper_impl1
+          {R1_trans : forall t, Transitive (R1 t)}
+          {R1_sym : forall t, Symmetric (R1 t)}
+          {R2_trans : forall t, Transitive (R2 t)}
+          {R2_sym : forall t, Symmetric (R2 t)}
+          {R_Proper : forall t, Proper (R1 t ==> eq ==> Basics.impl) (R t)}
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t}
+          : Proper (type.related R1 ==> eq ==> Basics.impl) (@related_hetero_and_Proper t).
+        Proof using Type.
+          eapply (@related_hetero_and_Proper_Proper_gen true false); auto.
+        Qed.
+
+        Lemma related_hetero_and_Proper_Proper_flip_impl1
+          {R1_trans : forall t, Transitive (R1 t)}
+          {R1_sym : forall t, Symmetric (R1 t)}
+          {R2_trans : forall t, Transitive (R2 t)}
+          {R2_sym : forall t, Symmetric (R2 t)}
+          {R_Proper : forall t, Proper (R1 t ==> eq ==> Basics.flip Basics.impl) (R t)}
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t}
+          : Proper (type.related R1 ==> eq ==> Basics.flip Basics.impl) (@related_hetero_and_Proper t).
+        Proof using Type.
+          eapply (@related_hetero_and_Proper_Proper_gen true false); auto.
+        Qed.
+
+        Lemma related_hetero_and_Proper_Proper_iff2
+          {R1_trans : forall t, Transitive (R1 t)}
+          {R1_sym : forall t, Symmetric (R1 t)}
+          {R2_trans : forall t, Transitive (R2 t)}
+          {R2_sym : forall t, Symmetric (R2 t)}
+          {R_Proper : forall t, Proper (eq ==> R2 t ==> iff) (R t)}
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t}
+          : Proper (eq ==> type.related R2 ==> iff) (@related_hetero_and_Proper t).
+        Proof using Type.
+          eapply (@related_hetero_and_Proper_Proper_gen false true); auto.
+        Qed.
+
+        Lemma related_hetero_and_Proper_Proper_impl2
+          {R1_trans : forall t, Transitive (R1 t)}
+          {R1_sym : forall t, Symmetric (R1 t)}
+          {R2_trans : forall t, Transitive (R2 t)}
+          {R2_sym : forall t, Symmetric (R2 t)}
+          {R_Proper : forall t, Proper (eq ==> R2 t ==> Basics.impl) (R t)}
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t}
+          : Proper (eq ==> type.related R2 ==> Basics.impl) (@related_hetero_and_Proper t).
+        Proof using Type.
+          eapply (@related_hetero_and_Proper_Proper_gen false true); auto.
+        Qed.
+
+        Lemma related_hetero_and_Proper_Proper_flip_impl2
+          {R1_trans : forall t, Transitive (R1 t)}
+          {R1_sym : forall t, Symmetric (R1 t)}
+          {R2_trans : forall t, Transitive (R2 t)}
+          {R2_sym : forall t, Symmetric (R2 t)}
+          {R_Proper : forall t, Proper (eq ==> R2 t ==> Basics.flip Basics.impl) (R t)}
+          (H1 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1) else True)
+          (H2 : if skip_base then (forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2) else True)
+          {t}
+          : Proper (eq ==> type.related R2 ==> Basics.flip Basics.impl) (@related_hetero_and_Proper t).
+        Proof using Type.
+          eapply (@related_hetero_and_Proper_Proper_gen false true); auto.
+        Qed.
+
+        Lemma related_hetero_iff_related_hetero_and_Proper_not_higher_order
+          {t} x y
+          (H1 : forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1)
+          (H2 : forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2)
+          (H : type.is_not_higher_order t = true)
+          : @related_hetero_and_Proper t x y <-> (Proper (type.related R1) x /\ Proper (type.related R2) y /\ type.related_hetero R x y).
+        Proof using Type.
+          induction t as [|s IHs d IHd]; cbn; cbv [Proper respectful respectful_hetero] in *.
+          { break_innermost_match; intuition eauto. }
+          { destruct s; cbn in H; try congruence; [].
+            setoid_rewrite IHs; clear IHs; [ | reflexivity ].
+            setoid_rewrite IHd; clear IHd; [ | assumption ].
+            repeat split; intros; destruct_head'_and; eauto; [].
+            do_with_hyp' ltac:(fun H => apply H).
+            repeat split; cbn in *; eauto. }
+        Qed.
+
+        Lemma related_hetero_impl_related_hetero_and_Proper_not_higher_order_than_2
+          {t} x y
+          (H1 : forall t f1 f2, R t f1 f2 -> Proper (R1 t) f1)
+          (H2 : forall t f1 f2, R t f1 f2 -> Proper (R2 t) f2)
+          (H : type.is_not_higher_order_than 2 t = true)
+          : Proper (type.related R1) x
+            -> Proper (type.related R2) y
+            -> type.related_hetero R x y
+            -> @related_hetero_and_Proper t x y.
+        Proof using Type.
+          induction t as [|s IHs d IHd]; cbn; cbv [Proper respectful respectful_hetero] in *.
+          { break_innermost_match; intuition eauto. }
+          { cbn in H; rewrite Bool.andb_true_iff in H; destruct_head'_and.
+            setoid_rewrite (@related_hetero_iff_related_hetero_and_Proper_not_higher_order s); auto; [].
+            repeat split; intros; try apply IHd; auto.
+            all: cbv [Proper] in *; destruct_head'_and; auto. }
+        Qed.
+      End with_R.
+
+      Section with_eqv.
+        Context {R : forall t, base_interp1 t -> base_interp2 t -> Prop}.
+        #[local] Notation related_hetero_and_Proper := (@type.related_hetero_and_Proper skip_base base_type base_interp1 base_interp2 (fun t => eq) (fun t => eq) R).
+
+        Lemma related_hetero_iff_related_hetero_and_Proper_eqv_not_higher_order_than_2
+          {t} x y
+          (H : type.is_not_higher_order_than 2 t = true)
+          : @related_hetero_and_Proper t x y <-> (Proper type.eqv x /\ Proper type.eqv y /\ type.related_hetero R x y).
+        Proof using Type.
+          induction t as [|s IHs d IHd]; cbn; cbv [Proper respectful respectful_hetero] in *.
+          { break_innermost_match; intuition eauto. }
+          { cbn in H; rewrite Bool.andb_true_iff in H; destruct_head'_and.
+            setoid_rewrite @related_hetero_iff_related_hetero_and_Proper_not_higher_order with (t:=s); cbv [Proper]; auto; [].
+            specialize (fun x y => IHd x y ltac:(assumption)).
+            setoid_rewrite IHd; clear IHd.
+            repeat split; intros; auto.
+            all: cbv [Proper] in *; destruct_head'_and; auto.
+            do_with_hyp' ltac:(fun H => apply H; clear H).
+            repeat split; auto.
+            all: eapply eqv_of_is_not_higher_order; assumption. }
+        Qed.
+
+        Lemma related_hetero_impl_related_hetero_and_Proper_eqv_not_higher_order_than_3
+          {t} x y
+          (H : type.is_not_higher_order_than 3 t = true)
+          : Proper type.eqv x
+            -> Proper type.eqv y
+            -> type.related_hetero R x y
+            -> @related_hetero_and_Proper t x y.
+        Proof using Type.
+          induction t as [|s IHs d IHd]; cbn; cbv [Proper respectful respectful_hetero] in *.
+          { break_innermost_match; intuition eauto. }
+          { cbn in H; rewrite Bool.andb_true_iff in H; destruct_head'_and.
+            setoid_rewrite (@related_hetero_iff_related_hetero_and_Proper_eqv_not_higher_order_than_2 s); auto; [].
+            repeat split; intros; try apply IHd; auto.
+            all: cbv [Proper] in *; destruct_head'_and; auto. }
+        Qed.
+      End with_eqv.
+    End related_hetero_and_Proper.
   End type.
 
   Module expr.

@@ -100,6 +100,26 @@ Module Compilers.
          | arrow s d => respectful_hetero _ _ _ _ (@related_hetero _ _ _ R s) (fun _ _ => @related_hetero _ _ _ R d)
          end%signature.
 
+    Fixpoint related_hetero_and_Proper {skip_base : bool} {base_type} {base_interp1 base_interp2 : base_type -> Type}
+      (R1 : forall t, relation (base_interp1 t))
+      (R2 : forall t, relation (base_interp2 t))
+      (R : forall t, base_interp1 t -> base_interp2 t -> Prop) {t : type base_type}
+      : interp base_interp1 t -> interp base_interp2 t -> Prop
+      := match t return interp base_interp1 t -> interp base_interp2 t -> Prop with
+         | base t
+           => fun f1 f2
+              => if skip_base
+                 then R t f1 f2
+                 else Proper (R1 _) f1
+                      /\ Proper (R2 _) f2
+                      /\ R t f1 f2
+         | arrow s d
+           => fun f1 f2
+              => Proper (related R1) f1
+                 /\ Proper (related R2) f2
+                 /\ respectful_hetero _ _ _ _ (@related_hetero_and_Proper skip_base _ _ _ R1 R2 R s) (fun _ _ => @related_hetero_and_Proper skip_base _ _ _ R1 R2 R d) f1 f2
+         end%signature.
+
     Fixpoint related_hetero3 {base_type} {base_interp1 base_interp2 base_interp3 : base_type -> Type}
              (R : forall t, base_interp1 t -> base_interp2 t -> base_interp3 t -> Prop) {t : type base_type}
       : interp base_interp1 t -> interp base_interp2 t -> interp base_interp3 t -> Prop
@@ -165,14 +185,6 @@ Module Compilers.
          end.
 
     Notation is_not_higher_order := (@is_not_higher_order_than 1).
-
-    Lemma eqv_of_is_not_higher_order {base_type base_interp t}
-      (H : is_not_higher_order t = true)
-      : forall v, Proper (@related base_type base_interp (fun _ => eq) t) v.
-    Proof.
-      cbv [Proper]; induction t; cbn; eauto; try apply HR; repeat intro; cbn in *.
-      cbv [is_base Proper] in *; break_innermost_match_hyps; cbn in *; subst; try congruence; eauto.
-    Qed.
 
     Section interpM.
       Context {base_type} (M : Type -> Type) (base_interp : base_type -> Type).
