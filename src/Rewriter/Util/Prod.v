@@ -80,6 +80,9 @@ Definition prod_rect_nodep {A B P} : (A -> B -> P) -> A * B -> P
     [prod_rect] ought not be much more complicated than any of these *)
 Global Strategy expand [prod_rect_nodep].
 
+Lemma prod_rect_nodep_eta {A B C} f p : @prod_rect_nodep A B C f p = f (fst p) (snd p).
+Proof. case p; reflexivity. Qed.
+
 Definition fst_pair {A B} (a:A) (b:B) : fst (a,b) = a := eq_refl.
 Definition snd_pair {A B} (a:A) (b:B) : snd (a,b) = b := eq_refl.
 Create HintDb cancel_pair discriminated. #[global] Hint Rewrite @fst_pair @snd_pair : cancel_pair.
