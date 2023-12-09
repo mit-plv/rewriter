@@ -568,7 +568,8 @@ Module Compilers.
       | idtac "============================";
         idtac "WARNING: UNSOLVED INITIAL GOAL:";
         print_context_and_goal ();
-        idtac "============================" ].
+        idtac "============================";
+        idtac "Failed to solve goal with" "repeat" "Rewriter.ProofsCommonTactics.Compilers.RewriteRules.InterpTactics.handle_reified_rewrite_rules_interp_step" exprInfo exprExtraInfo base_interp_head ident_interp_head ident_interp_Proper ].
 
       Module Export Tactic.
         Ltac prove_interp_good _ :=
