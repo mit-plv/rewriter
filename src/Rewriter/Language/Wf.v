@@ -1965,6 +1965,15 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
           eapply eqv_of_interp_related in H; assumption.
         Qed.
 
+        Lemma reify_as_interp_related {t} v
+          : v == v -> expr_interp_related (GallinaReify.reify_as_interp (t:=t) v) v.
+        Proof using buildInterpIdentCorrect.
+          induction t as [|s IHs d IHd]; cbn [GallinaReify.reify_as_interp type.related interp expr.interp_related expr.interp_related_gen]; cbv [respectful]; eauto.
+          { now intros; apply reify_interp_related. }
+          { intros; eapply interp_related_Proper_eqv_impl; [ reflexivity | | eapply IHd ].
+            all: now (idtac + (etransitivity; (idtac + symmetry))); eauto. }
+        Qed.
+
         Lemma interp_reify_as_interp {t} v1 v2
           : v1 == v2 -> interp (GallinaReify.reify_as_interp (t:=t) v1) == v2.
         Proof using buildInterpIdentCorrect.
