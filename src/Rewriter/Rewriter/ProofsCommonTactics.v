@@ -417,6 +417,7 @@ Module Compilers.
                   => destruct (invert_expr.reflect_list ls) eqn:?
                 | [ |- context G[expr.interp_related_gen ?ident_interp (fun t : ?T => ?vii t ?b)] ]
                   => progress change (fun t : T => vii t b) with (fun t : T => @Compile.value_interp_related _ _ _ ident_interp t b)
+                | [ H : _ /\ Proper _ _ |- _ ] => destruct H
                 end ].
       Ltac preprocess base_interp_head := repeat preprocess_step base_interp_head.
 
