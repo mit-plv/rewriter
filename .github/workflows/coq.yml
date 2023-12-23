@@ -2,7 +2,12 @@ name: CI (Coq)
 
 on:
   push:
+    branches: [ master ]
   pull_request:
+  merge_group:
+  workflow_dispatch:
+  release:
+    types: [published]
   schedule:
     - cron: '0 0 1 * *'
 
