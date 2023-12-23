@@ -33,28 +33,7 @@ jobs:
         sudo apt-get -o Acquire::Retries=30 update -q
         sudo apt-get -o Acquire::Retries=30 install ocaml-findlib $COQ_PACKAGE -y --allow-unauthenticated
     - name: echo build params
-      run: |
-        echo "::group::lscpu"
-        lscpu
-        echo "::endgroup::"
-        echo "::group::uname -a"
-        uname -a
-        echo "::endgroup::"
-        echo "::group::lsb_release -a"
-        lsb_release -a
-        echo "::endgroup::"
-        echo "::group::ocamlc -config"
-        ocamlc -config
-        echo "::endgroup::"
-        echo "::group::coqc --config"
-        coqc --config
-        echo "::endgroup::"
-        echo "::group::coqc --version"
-        coqc --version
-        echo "::endgroup::"
-        echo "::group::echo | coqtop"
-        echo | coqtop
-        echo "::endgroup::"
+      run: etc/ci/describe-system-config.sh
     - uses: actions/checkout@v4
       with:
         submodules: recursive
