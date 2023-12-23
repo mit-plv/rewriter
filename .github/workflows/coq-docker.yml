@@ -38,7 +38,7 @@ jobs:
           etc/ci/github-actions-make.sh --warnings -j2 all
           etc/ci/github-actions-make.sh --warnings -j2 perf-Sanity
 
-  check-all-docker:
+  docker-check-all:
     runs-on: ubuntu-latest
     needs: build-docker
     if: always()
