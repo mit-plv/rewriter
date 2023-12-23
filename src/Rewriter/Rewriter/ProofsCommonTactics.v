@@ -490,8 +490,10 @@ Module Compilers.
              [ now
                  let H := fresh in
                  cbv [Proper respectful] in *;
-                 intro H; eapply H; intros; subst; eauto
+                 intro H; eapply H; intros; subst; eauto;
+                 prove_eq_by_Proper
              | first [ now typeclasses eauto
+                     | now cbv [Proper respectful] in *; typeclasses eauto with core
                      | idtac "WARNING: Could not find Proper instance";
                        clear;
                        print_context_and_goal ();
