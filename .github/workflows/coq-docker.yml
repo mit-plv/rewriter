@@ -34,6 +34,7 @@ jobs:
           eval $(opam env)
           echo '::endgroup::'
           echo '::remove-matcher owner=coq-problem-matcher::'
+          CI=1 etc/ci/describe-system-config.sh
           etc/ci/github-actions-make.sh --warnings -j2 all
           etc/ci/github-actions-make.sh --warnings -j2 perf-Sanity
 
