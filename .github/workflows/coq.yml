@@ -32,11 +32,11 @@ jobs:
         if [ ! -z "$PPA" ]; then sudo add-apt-repository "$PPA" -y; fi
         sudo apt-get -o Acquire::Retries=30 update -q
         sudo apt-get -o Acquire::Retries=30 install ocaml-findlib $COQ_PACKAGE -y --allow-unauthenticated
-    - name: echo build params
-      run: etc/ci/describe-system-config.sh
     - uses: actions/checkout@v4
       with:
         submodules: recursive
+    - name: echo build params
+      run: etc/ci/describe-system-config.sh
     - name: all
       run: etc/ci/github-actions-make.sh ${EXTRA_GH_REPORTIFY} -j2 all
     - name: perf-Sanity
