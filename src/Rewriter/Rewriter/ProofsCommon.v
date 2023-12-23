@@ -3083,6 +3083,8 @@ Module Compilers.
             : Prop
             := forall x y,
               related_unification_resultT (fun t => value_interp_related) x y
+              (* this next one is for convenience only *)
+              -> related_unification_resultT (fun t _ v => Proper type.eqv v) x y
               -> option_eq
                    (fun fx gy
                     => related_sigT_by_eq
@@ -3150,7 +3152,7 @@ Module Compilers.
             cbv [rewrite_rule_data_interp_goodT rewrite_rule_data_interp_goodT_curried].
             intro H.
             repeat (let x := fresh "x" in intro x; specialize (H x)).
-            intros X Y HXY.
+            intros X Y HXY HYY.
             pose proof (related_app_with_unification_resultT _ _ _ _ _ _ ltac:(eassumption) HXY) as H'.
             progress cbv [deep_rewrite_ruleTP_gen] in *.
             match goal with
