@@ -3083,8 +3083,6 @@ Module Compilers.
             : Prop
             := forall x y,
               related_unification_resultT (fun t => value_interp_related) x y
-              (* this next one is for convenience only *)
-              -> related_unification_resultT (fun t _ v => Proper type.eqv v) x y
               -> option_eq
                    (fun fx gy
                     => related_sigT_by_eq
@@ -3106,7 +3104,7 @@ Module Compilers.
                      {t} {p : pattern t} (r : @rewrite_rule_data t p)
             : Prop
             := under_with_unification_resultT_relation_hetero
-                 (fun _ => value_interp_related)
+                 (fun _ e v => value_interp_related e v /\ Proper type.eqv v)
                  (fun evm => deep_rewrite_ruleTP_gen_good_relation)
                  (rew_replacement r)
                  (pattern_default_interp p).
@@ -3152,8 +3150,13 @@ Module Compilers.
             cbv [rewrite_rule_data_interp_goodT rewrite_rule_data_interp_goodT_curried].
             intro H.
             repeat (let x := fresh "x" in intro x; specialize (H x)).
-            intros X Y HXY HYY.
-            pose proof (related_app_with_unification_resultT _ _ _ _ _ _ ltac:(eassumption) HXY) as H'.
+            intros X Y HXY.
+            assert (HYY : related_unification_resultT
+                            (fun _ e v => value_interp_related e v /\ Proper type.eqv v) X Y).
+            { eapply map_related_unification_resultT; [ | exact HXY ].
+              cbv beta; intros; split; try assumption.
+              eapply eqv_iff_value_interp_related1; eexists; eassumption. }
+            pose proof (related_app_with_unification_resultT _ _ _ _ _ _ ltac:(eassumption) HYY).
             progress cbv [deep_rewrite_ruleTP_gen] in *.
             match goal with
             | [ H : option_eq ?R ?x ?y |- option_eq ?R' ?x' ?y' ]

@@ -938,7 +938,7 @@ Module Compilers.
               v
               (H : rawexpr_interp_related (rApp r1 r2 (t:=t) alt) v)
           : rawexpr_interp_related (rApp r1' r2' (t:=t) alt) v.
-        Proof using Type.
+        Proof.
           cbn [rawexpr_interp_related] in *;
             repeat first [ assumption
                          | break_innermost_match_step
@@ -1237,14 +1237,7 @@ Module Compilers.
                        | match goal with
                          | [ H : unify_pattern _ _ _ _ _ = Some _ |- _ ] => eapply interp_unify_pattern in H; [ | eassumption | eassumption ]
                          | [ H : unification_resultT_interp_related _ _, Hrewr : rewrite_rule_data_interp_goodT _ |- _ ]
-                           => specialize (Hrewr _ _ H);
-                              let T := lazymatch type of Hrewr with ?T -> _ => T end in
-                              cut T;
-                              [ let H' := fresh in
-                                intro H'; specialize (Hrewr H')
-                              | eapply map_related_unification_resultT; [ | refine H ];
-                                cbv [Proper]; intros; eapply eqv_iff_value_interp_related1;
-                                eexists; eassumption ]
+                           => specialize (Hrewr _ _ H)
                          | [ H : option_eq _ ?x ?y, H' : ?x' = Some _ |- _ ]
                            => change x with x' in H; rewrite H' in H;
                               destruct y eqn:?; cbn [option_eq] in H
