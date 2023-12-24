@@ -40,6 +40,15 @@ group gcc -v
 group opam switch
 group opam list
 group ocamlc -config
+group ocamlc -where
+group ocamlfind list
+group ocamlfind query findlib
+group ocamlfind query zarith
+group ocamlfind query coq
+group ocamlfind query coq-core
+group ocamlfind query coq-core.plugins
+group ocamlfind query coq-core.plugins.ltac
+group "ocamlfind query coq | xargs find"
 group coqc --config
 group coqc --version
 group "true | coqtop"
