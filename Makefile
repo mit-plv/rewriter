@@ -34,10 +34,18 @@ ifneq ($(COQ_EXTENDED_VERSION),$(COQ_EXTENDED_VERSION_OLD))
 $(COQ_VERSION_FILE)::
 	$(SHOW)'echo $$COQ_VERSION_INFO ($(COQ_VERSION)) > $@'
 ifneq (,$(strip $(COQ_EXTENDED_VERSION_OLD)))
-	$(SHOW)'Replacing $(COQ_EXTENDED_VERSION_OLD)'
-	$(SHOW)' with $(COQ_EXTENDED_VERSION)'
+	@echo 'Replacing $(COQ_EXTENDED_VERSION_OLD)'
+	@echo ' with $(COQ_EXTENDED_VERSION)'
 endif
 	$(HIDE)echo '$(COQ_EXTENDED_VERSION)' > $@
+else
+ifeq (,$(wildcard $(COQ_VERSION_FILE)))
+$(COQ_VERSION_FILE)::
+	@echo 'Error: Invalid empty COQ_EXTENDED_VERSION:'
+	$(COQ_VERSION_COQC_CMD) || true
+	$(COQ_VERSION_COQTOP_CMD) || true
+	$(HIDE)exit 1
+endif
 endif
 
 _CoqProject: _CoqProject.in
