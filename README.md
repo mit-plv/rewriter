@@ -8,7 +8,7 @@ Publications
 
 Building
 -----
-This repository requires Coq 8.15 or later, and requires that the version of OCaml used to build Coq be installed and accessible on the system.
+This repository requires Coq 8.17 or later, and requires that the version of OCaml used to build Coq be installed and accessible on the system.
 
 Git submodules are used for some dependencies. If you did not clone with `--recursive`, run
 
