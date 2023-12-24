@@ -884,8 +884,8 @@ Module Compilers.
                                    let pident_of_typed_ident := head_reference pident_of_typed_ident in
                                    let pident_type_of_list_arg_types_beq := head_reference pident_type_of_list_arg_types_beq in
                                    let pident_arg_types_of_typed_ident := head_reference pident_arg_types_of_typed_ident in
-                                   (eval cbv [expr_to_pattern_and_replacement_unfolded_split $pident_arg_types $pident_of_typed_ident $pident_type_of_list_arg_types_beq $pident_arg_types_of_typed_ident (*reflect_ident_iota*)] in res) in
-                        let res := (debug ("reify_to_pattern_and_replacement_in_context:1") profile eval cbn [fst snd andb pattern.base.relax pattern.base.subst_default pattern.base.subst_default_relax] in res) in
+                                   (eval cbv [fst snd expr_to_pattern_and_replacement_unfolded_split $pident_arg_types $pident_of_typed_ident $pident_type_of_list_arg_types_beq $pident_arg_types_of_typed_ident (*reflect_ident_iota*)] in res) in
+                        let res := (debug ("reify_to_pattern_and_replacement_in_context:1") profile eval cbn [andb pattern.base.relax pattern.base.subst_default pattern.base.subst_default_relax] in res) in
                         let res := change_pattern_base_subst_default_relax res in
                         let (p, res) := lazy_match! res with
                                         | existT _ ?p ?res => (p, res)
