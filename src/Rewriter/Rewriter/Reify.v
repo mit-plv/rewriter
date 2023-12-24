@@ -49,6 +49,7 @@ Module Compilers.
   Export IdentifiersBasicGenerate.Compilers.
   Import invert_expr.
   Export Rewriter.Compilers.
+  Import Language.Reify.Compilers.Reify.Notations.
 
   Module RewriteRules.
     Export Rewriter.Compilers.RewriteRules.
@@ -317,7 +318,7 @@ Module Compilers.
           (fun ()
            => let s := strategy:([pattern.type.relax pattern.type.subst_default pattern.type.subst_default_relax pattern.type.unsubst_default_relax]) in
               let pat := Std.eval_cbv s pat in
-              let pat := Std.eval_cbn s pat in
+              let pat := Reify.debug_profile_eval_cbn "preadjust_pattern_type_variables" s pat in
               pat).
 
       Ltac2 rec adjust_pattern_type_variables' (pat : constr) : constr :=
@@ -693,10 +694,10 @@ Module Compilers.
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
            => let term := lazy_match! (eval pattern 'andb, '(andb true) in term) with
-                          | ?f _ _ => (eval cbn [andb] in constr:($f (fun x y => andb y x) (fun b => b)))
+                          | ?f _ _ => (debug ("remove_andb_true:1") profile eval cbn [andb] in constr:($f (fun x y => andb y x) (fun b => b)))
                           end in
               let term := lazy_match! (eval pattern 'andb, '(andb true) in term) with
-                          | ?f _ _ => (eval cbn [andb] in constr:($f (fun x y => andb y x) (fun b => b)))
+                          | ?f _ _ => (debug ("remove_andb_true:2") profile eval cbn [andb] in constr:($f (fun x y => andb y x) (fun b => b)))
                           end in
               term).
       Ltac2 rec adjust_if_negb (term : constr) : constr :=
@@ -781,7 +782,7 @@ Module Compilers.
           Reify.should_debug_fine_grained Reify.should_debug_fine_grained (Some Message.of_constr)
           (fun ()
            => let base_interp_beq_head := head_reference base_interp_beq in
-              let term := (eval cbn [Prod.prod_beq] in term) in
+              let term := (debug ("clean_beq:Prod.prod_beq") profile eval cbn [Prod.prod_beq] in term) in
               let term := (eval cbv [ident.literal] in term) in
               let term := deep_substitute_beq base_interp_beq avoid only_eliminate_in_ctx term in
               let term := (eval cbv [base.interp_beq $base_interp_beq_head] in term) in
@@ -884,7 +885,7 @@ Module Compilers.
                                    let pident_type_of_list_arg_types_beq := head_reference pident_type_of_list_arg_types_beq in
                                    let pident_arg_types_of_typed_ident := head_reference pident_arg_types_of_typed_ident in
                                    (eval cbv [expr_to_pattern_and_replacement_unfolded_split $pident_arg_types $pident_of_typed_ident $pident_type_of_list_arg_types_beq $pident_arg_types_of_typed_ident (*reflect_ident_iota*)] in res) in
-                        let res := (eval cbn [fst snd andb pattern.base.relax pattern.base.subst_default pattern.base.subst_default_relax] in res) in
+                        let res := (debug ("reify_to_pattern_and_replacement_in_context:1") profile eval cbn [fst snd andb pattern.base.relax pattern.base.subst_default pattern.base.subst_default_relax] in res) in
                         let res := change_pattern_base_subst_default_relax res in
                         let (p, res) := lazy_match! res with
                                         | existT _ ?p ?res => (p, res)
@@ -913,7 +914,7 @@ Module Compilers.
                                                      res)))) in
                         let res := debug_Constr_check res in
                         let res := (eval cbv [UnderLets.map UnderLets.flat_map reify_expr_beta_iota reflect_expr_beta_iota reify_to_UnderLets] in res) in
-                        let res := (eval cbn [reify reflect UnderLets.of_expr UnderLets.to_expr UnderLets.splice value' Base_value invert_Literal invert_ident_Literal splice_under_lets_with_value] in res) in
+                        let res := (debug ("reify_to_pattern_and_replacement_in_context:2") profile eval cbn [reify reflect UnderLets.of_expr UnderLets.to_expr UnderLets.splice value' Base_value invert_Literal invert_ident_Literal splice_under_lets_with_value] in res) in
                         let res := strip_invalid_or_fail res in
                         (* cbv here not strictly needed *)
                         let res := (eval cbv [partial_lam_unif_rewrite_ruleTP_gen_unfolded]
@@ -922,7 +923,7 @@ Module Compilers.
                                                   $p
                                                   ($cpartial_lam_unif_rewrite_ruleTP_gen _ $p $res))) in
                         (* not strictly needed *)
-                        let res := (eval cbn [pattern.base.subst_default pattern.base.lookup_default PositiveMap.find type.interp base.interp $base_interp_head] in res) in
+                        let res := (debug ("reify_to_pattern_and_replacement_in_context:3") profile eval cbn [pattern.base.subst_default pattern.base.lookup_default PositiveMap.find type.interp base.interp $base_interp_head] in res) in
                         let res := (eval cbv [projT1 projT2]
                                      in constr:(existT
                                                   (@rewrite_ruleTP $base $ident $var $pident $pident_arg_types)
