@@ -21,6 +21,7 @@ Module Export Pre.
   (** Change this with [Ltac2 Set reify_debug_level ::= 1.] to get
       more debugging. *)
   Ltac2 mutable reify_debug_level : int := 0.
+  Ltac2 mutable reify_profile_cbn : bool := false.
 
   Module ScrapedData.
     Local Set Primitive Projections.

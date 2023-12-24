@@ -96,6 +96,7 @@ Module Compilers.
 
   Module Reify.
     Ltac2 Notation debug_level := Pre.reify_debug_level.
+    Ltac2 Notation should_profile_cbn := Pre.reify_profile_cbn.
 
     Ltac2 mutable should_debug_enter_reify () := Int.le 3 debug_level.
     Ltac2 mutable should_debug_enter_reify_preprocess () := Int.le 3 debug_level.
@@ -124,6 +125,19 @@ Module Compilers.
       if cond ()
       then tac ()
       else default.
+
+    Ltac2 debug_profile_if (descr : string) (pr_a : 'a -> message) (pr_b : 'b -> message) (cond : unit -> bool) (tac : 'a -> 'b) (val : 'a) :=
+      if cond ()
+      then (let c' := Control.time (Some descr) (fun () => tac val) in
+            printf "Info: %s from %a to %a" descr (fun () => pr_a) val (fun () => pr_b) c';
+            c')
+      else tac val.
+
+    Ltac2 debug_profile_eval_cbn descr s c :=
+      let descr := String.concat " " ["eval cbn"; descr] in
+      debug_profile_if
+        descr Message.of_constr Message.of_constr
+        (fun () => should_profile_cbn) (Std.eval_cbn s) c.
 
     Ltac2 debug_typing_failure (funname : string) (x : constr) (err : exn)
       := debug_if should_debug_typing_failure (fun () => printf "Warning: %s: failure to typecheck %t: %a" funname x (fun () => Message.of_exn) err) ().
@@ -285,6 +299,11 @@ Module Compilers.
            e.
     Ltac2 debug_Constr_check (funname : string) (descr : constr -> constr -> exn -> message) (var : constr) (cache : (unit -> binder) list) (var_ty_ctx : constr list) (e : constr)
       := Constr.debug_assert_hole_free funname (debug_Constr_check_allow_holes funname descr var cache var_ty_ctx e).
+
+    Module Export Notations.
+      Ltac2 Notation "debug" "(" descr(tactic) ")" "profile" "eval" "cbn" s(strategy) "in" c(tactic(6)) :=
+        debug_profile_eval_cbn descr s c.
+    End Notations.
   End Reify.
 
   Module type.
