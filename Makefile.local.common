@@ -8,10 +8,13 @@ TIMER_FULL=$(if $(TIMED), $(STDTIME_FULL), $(TIMECMD_FULL))
 
 COQ_VERSION_FILE = .coq-version
 COQ_VERSION_PREFIX = The Coq Proof Assistant, version
-COQ_VERSION := $(firstword $(subst $(COQ_VERSION_PREFIX),,$(shell $(COQBIN)coqc --version 2>/dev/null)))
+COQ_VERSION_COQTOP_CMD := $(COQBIN)coqtop </dev/null
+COQ_VERSION_COQC_CMD := $(COQBIN)coqc --version
+COQC_VERSION_FULL := $(shell $(COQ_VERSION_COQC_CMD) 2>/dev/null)
+COQ_VERSION := $(firstword $(subst $(COQ_VERSION_PREFIX),,$(COQC_VERSION_FULL)))
 
-COQ_EXTENDED_VERSION := $(shell (echo | $(COQBIN)coqtop 2>/dev/null; $(COQBIN)coqc --version 2>/dev/null))
-COQ_EXTENDED_VERSION_OLD := $(shell cat $(COQ_VERSION_FILE) 2>/dev/null)
+COQ_EXTENDED_VERSION:=$(strip $(shell $(COQ_VERSION_COQTOP_CMD) 2>/dev/null) $(COQC_VERSION_FULL))
+COQ_EXTENDED_VERSION_OLD:=$(strip $(shell cat $(COQ_VERSION_FILE) 2>/dev/null))
 
 ifneq (,$(filter 8.15%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v815
