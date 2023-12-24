@@ -602,14 +602,18 @@ Module Compilers.
            => let debug_Constr_check := Reify.Constr.debug_check_strict "replace_type_try_transport" in
               let some := '@Some in
               let rec aux (term : constr) : constr * constr list :=
-                let res := match! term with
+                let res
+                  := Reify.debug_profile
+                       "replace_type_try_transport:match try_transport"
+                       (fun ()
+                        => match! term with
                            | context[?v]
                              => lazy_match! v with
                                 | @type.try_transport ?base_type ?try_make_transport_base_type_cps ?p ?t ?t
                                   => Some (v, p, t)
                                 end
                            | _ => None
-                           end in
+                           end) in
                 match res with
                 | Some v
                   => let (v, p, t) := v in
@@ -621,7 +625,10 @@ Module Compilers.
                      (term, some_pt :: args)
                 | None => (term, [])
                 end in
-              let (term, args) := aux term in
+              let (term, args)
+                := Reify.debug_profile
+                     "replace_type_try_transport:aux"
+                     (fun () => aux term) in
               let len := List.length args in
               if Int.equal len 0
               then term
