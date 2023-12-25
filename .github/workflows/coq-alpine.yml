@@ -2,7 +2,7 @@ name: CI (Coq, Alpine)
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master , alpine-testing ]
   pull_request:
   merge_group:
   workflow_dispatch:
