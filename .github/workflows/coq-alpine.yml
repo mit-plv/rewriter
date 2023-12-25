@@ -39,9 +39,67 @@ jobs:
         branch: ${{ matrix.alpine }}
         extra-repositories: https://dl-cdn.alpinelinux.org/alpine/edge/testing
         packages: git make jq gcc musl-dev python3 ocaml ocaml-findlib ghc cabal coq ocaml-zarith bash
+    # next two steps as per https://gitlab.alpinelinux.org/alpine/aports/-/merge_requests/57766#note_365103
+    - name: Download development Coq
+      shell: alpine.sh {0}
+      run: |
+        mkdir -p MR
+        wget 'https://gitlab.alpinelinux.org/JasonGross/aports/-/jobs/1224462/artifacts/download?file_type=archive' -O MR.zip
+        unzip MR.zip -d MR
+        ls -la MR
+        find MR
+    - name: Set up development Coq
+      shell: alpine.sh --root {0}
+      run: |
+        mv MR/keys/*.pub /etc/apk/keys/
+        echo '::group::cat /etc/apk/repositories'
+        cat /etc/apk/repositories
+        echo '::endgroup::'
+        printf '\n' >> /etc/apk/repositories
+        ls -d "$(pwd)"/MR/packages/* >> /etc/apk/repositories
+        echo '::group::cat /etc/apk/repositories'
+        cat /etc/apk/repositories
+        echo '::endgroup::'
+        apk update
+        apk add --upgrade coq
     - name: chroot build params
       shell: alpine.sh {0}
       run: etc/ci/describe-system-config.sh
+    - name: explore
+      shell: alpine.sh {0}
+      run: |
+        echo '::group::apk list --installed'
+        apk list --installed
+        echo '::endgroup::'
+        for pkg in coq dune ocaml-ppxlib; do
+          echo "::group::apk info -L $pkg"
+          apk info -L $pkg
+          echo '::endgroup::'
+        done
+        for f in $(find MR/packages -name "*.apk"); do
+          echo "::group::file $f"
+          file $f || echo $?
+          echo '::endgroup::'
+          echo "::group::tar --warning=no-unknown-keyword -tvf $f"
+          tar --warning=no-unknown-keyword -tvf $f || echo $?
+          echo '::endgroup::'
+        done
+        which coqc
+        dirname "$(which coqc)"
+        echo '::group::ocamlfind list'
+        ocamlfind list
+        echo '::endgroup::'
+        echo '::group::ocamlc -where'
+        ocamlc -where
+        echo '::endgroup::'
+        for q in findlib zarith ppxlib dune coq coq-core coq-core.plugins coq-core.plugins.ltac; do
+          echo "::group::ocamlfind query $q"
+          ocamlfind query $q || echo $?
+          echo '::endgroup::'
+          echo "::group::ocamlfind query $q | xargs find"
+          ( ocamlfind query $q | xargs find ) || echo $?
+          echo '::endgroup::'
+        done
     - name: make all
       shell: alpine.sh {0}
       run: etc/ci/github-actions-make.sh ALLOW_DIFF=1 -j2 all
