@@ -38,7 +38,7 @@ jobs:
       with:
         branch: ${{ matrix.alpine }}
         extra-repositories: https://dl-cdn.alpinelinux.org/alpine/edge/testing
-        packages: git make jq gcc musl-dev python3 ocaml ocaml-findlib ghc cabal coq ocaml-zarith bash
+        packages: git make jq gcc musl-dev python3 ocaml ocaml-findlib ghc cabal coq ocaml-zarith bash dune ocaml-ppxlib
     # next two steps as per https://gitlab.alpinelinux.org/alpine/aports/-/merge_requests/57766#note_365103
     - name: Download development Coq
       shell: alpine.sh {0}
