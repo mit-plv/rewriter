@@ -1,6 +1,8 @@
 Rewriter
 =====
 [![CI (Coq)](https://github.com/mit-plv/rewriter/actions/workflows/coq.yml/badge.svg?branch=master)](https://github.com/mit-plv/rewriter/actions/workflows/coq.yml?query=branch%3Amaster)
+[![CI (Coq, dev, Docker)](https://github.com/mit-plv/rewriter/actions/workflows/coq-docker.yml/badge.svg?branch=master)](https://github.com/mit-plv/rewriter/actions/workflows/coq-docker.yml?query=branch%3Amaster)
+[![CI (Coq, Alpine)](https://github.com/mit-plv/rewriter/actions/workflows/coq-alpine.yml/badge.svg?branch=master)](https://github.com/mit-plv/rewriter/actions/workflows/coq-alpine.yml?query=branch%3Amaster)
 
 Publications
 -----
