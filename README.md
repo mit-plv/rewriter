@@ -1,6 +1,8 @@
 Rewriter
 =====
 [![CI (Coq)](https://github.com/mit-plv/rewriter/actions/workflows/coq.yml/badge.svg?branch=master)](https://github.com/mit-plv/rewriter/actions/workflows/coq.yml?query=branch%3Amaster)
+[![CI (Coq, dev, Docker)](https://github.com/mit-plv/rewriter/actions/workflows/coq-docker.yml/badge.svg?branch=master)](https://github.com/mit-plv/rewriter/actions/workflows/coq-docker.yml?query=branch%3Amaster)
+[![CI (Coq, Alpine)](https://github.com/mit-plv/rewriter/actions/workflows/coq-alpine.yml/badge.svg?branch=master)](https://github.com/mit-plv/rewriter/actions/workflows/coq-alpine.yml?query=branch%3Amaster)
 
 Publications
 -----
@@ -89,19 +91,19 @@ The files contain:
 
   + `Language.v`: Defines parts of the PHOAS basic infrastructure
         parameterized over base types and identifiers including:
-    . PHOAS
-    . reification
-    . denotation/intepretation
-    . utilities for inverting PHOAS exprs
-    . default/dummy values of PHOAS exprs
-    . default instantiation of generic PHOAS types
-    . gallina reification of ground terms
-    . Flat/indexed syntax trees, and conversions to and from PHOAS
+    * PHOAS
+    * reification
+    * denotation/intepretation
+    * utilities for inverting PHOAS exprs
+    * default/dummy values of PHOAS exprs
+    * default instantiation of generic PHOAS types
+    * gallina reification of ground terms
+    * Flat/indexed syntax trees, and conversions to and from PHOAS
 
     Defines the passes:
-    . ToFlat
-    . FromFlat
-    . GeneralizeVar
+    * ToFlat
+    * FromFlat
+    * GeneralizeVar
 
   + `IdentifiersBasicLibrary.v`: Defines the package type holding basic
     identifier definitions.
@@ -117,9 +119,9 @@ The files contain:
     is used to ensure that when we output C code, aliasing the input
     and the output arrays doesn't cause issues).
     Defines the passes:
-    . SubstVar
-    . SubstVarLike
-    . SubstVarOrIdent
+    * SubstVar
+    * SubstVarLike
+    * SubstVarOrIdent
 
   The following files in `Language/` are used only by the rewriter:
 
