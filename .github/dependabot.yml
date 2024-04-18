@@ -8,10 +8,12 @@ updates:
     schedule:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
+      time: "07:00"
 
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     schedule:
       interval: "daily"
+      time: "07:00"
     labels:
       - "submodules"
