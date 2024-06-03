@@ -35,65 +35,13 @@ Module Unsafe.
       end.
   End Case.
 
-  (** [iter f c] iters [f] on the immediate subterms of [c]; it is
-   not recursive and the order with which subterms are processed is
-   not specified *)
-  Ltac2 iter (f : constr -> unit) (c : constr) : unit :=
-    match kind c with
-    | Rel _ => () | Meta _ => () | Var _ => () | Sort _ => () | Constant _ _ => () | Ind _ _ => ()
-    | Constructor _ _ => () | Uint63 _ => () | Float _ => ()
-    | Cast c _ t => f c; f t
-    | Prod b c => f (Binder.type b); f c
-    | Lambda b c => f (Binder.type b); f c
-    | LetIn b t c => f (Binder.type b); f t; f c
-    | App c l => f c; Array.iter f l
-    | Evar _ l => () (* not possible to iter in Ltac2... *)
-    | Case _ x iv y bl
-      => Array.iter f bl;
-         Case.iter_invert f iv;
-         match x with (x,_) => f x end;
-         f y
-    | Proj _p _ c => f c
-    | Fix _ _ tl bl =>
-        Array.iter (fun b => f (Binder.type b)) tl;
-        Array.iter f bl
-    | CoFix _ tl bl =>
-        Array.iter (fun b => f (Binder.type b)) tl;
-        Array.iter f bl
-    | Array _u t def ty =>
-        Array.iter f t; f def; f ty
-    end.
-
   (** [iter_with_binders g f n c] iters [f n] on the immediate
    subterms of [c]; it carries an extra data [n] (typically a lift
    index) which is processed by [g] (which typically add 1 to [n]) at
    each binder traversal; it is not recursive and the order with which
    subterms are processed is not specified *)
   Ltac2 iter_with_binders (g : 'a -> 'a) (f : 'a -> constr -> unit) (n : 'a) (c : constr) : unit :=
-    match kind c with
-    | Rel _ => () | Meta _ => () | Var _ => () | Sort _ => () | Constant _ _ => () | Ind _ _ => ()
-    | Constructor _ _ => () | Uint63 _ => () | Float _ => ()
-    | Cast c _ t => f n c; f n t
-    | Prod b c => f n (Binder.type b); f (g n) c
-    | Lambda b c => f n (Binder.type b); f (g n) c
-    | LetIn b t c => f n (Binder.type b); f n t; f (g n) c
-    | App c l => f n c; Array.iter (f n) l
-    | Evar _ l => () (* not possible to iter in Ltac2... *)
-    | Case _ x iv y bl
-      => Array.iter (f n) bl;
-         Case.iter_invert (f n) iv;
-         match x with (x,_) => f n x end;
-         f n y
-    | Proj _p _ c => f n c
-    | Fix _ _ tl bl =>
-        Array.iter (fun b => f n (Binder.type b)) tl;
-        Array.iter (f (iterate g (Array.length tl) n)) bl
-    | CoFix _ tl bl =>
-        Array.iter (fun b => f n (Binder.type b)) tl;
-        Array.iter (f (iterate g (Array.length tl) n)) bl
-    | Array _u t def ty =>
-        Array.iter (f n) t; f n def; f n ty
-    end.
+    iter_with_binders (fun x _ => g x) f n c.
 End Unsafe.
 Import Unsafe.
 
