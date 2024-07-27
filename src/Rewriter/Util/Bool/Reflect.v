@@ -1,12 +1,12 @@
 (** * Some lemmas about [Bool.reflect] *)
-Require Import Coq.Classes.CMorphisms.
-Require Import Coq.Strings.String.
-Require Import Coq.Strings.Ascii.
-Require Import Coq.Bool.Bool.
-Require Import Coq.Classes.RelationClasses.
-Require Import Coq.Arith.Arith.
-Require Import Coq.ZArith.BinInt Coq.ZArith.ZArith_dec.
-Require Import Coq.NArith.BinNat.
+From Coq Require Import CMorphisms.
+From Coq Require Import String.
+From Coq Require Import Ascii.
+From Coq Require Import Bool.
+From Coq Require Import RelationClasses.
+From Coq Require Import Arith.
+From Coq Require Import BinInt ZArith_dec.
+From Coq Require Import BinNat.
 Require Import Rewriter.Util.HProp.
 Require Import Rewriter.Util.Decidable.
 Require Import Rewriter.Util.Prod.

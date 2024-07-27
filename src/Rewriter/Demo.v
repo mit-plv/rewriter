@@ -9,7 +9,7 @@ Require Import Rewriter.Util.plugins.RewriterBuild.
 (** We will be working with examples involving arithmetic on [nat] and
     [Z], as well as some examples on [list], so we import the relevant
     files. *)
-Require Import Coq.Arith.Arith Coq.ZArith.ZArith Coq.Lists.List.
+From Coq Require Import Arith ZArith List.
 Import ListNotations. Local Open Scope list_scope.
 
 (** We [Unset Ltac Backtrace] to get prettier error messages. *)

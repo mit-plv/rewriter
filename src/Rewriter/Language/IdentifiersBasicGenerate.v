@@ -1,7 +1,7 @@
-Require Import Coq.ZArith.ZArith.
-Require Import Coq.Bool.Bool.
-Require Import Coq.Classes.Morphisms.
-Require Import Coq.Lists.List.
+From Coq Require Import ZArith.
+From Coq Require Import Bool.
+From Coq Require Import Morphisms.
+From Coq Require Import List.
 Require Import Ltac2.Ltac2.
 Require Import Ltac2.Bool.
 Require Import Ltac2.Printf.

@@ -5,7 +5,7 @@
     two such pairs, or when we want such an equality, we have a
     systematic way of reducing such equalities to equalities at
     simpler types. *)
-Require Import Coq.Classes.Morphisms.
+From Coq Require Import Morphisms.
 Require Import Rewriter.Util.IffT.
 Require Import Rewriter.Util.Equality.
 Require Import Rewriter.Util.GlobalSettings.

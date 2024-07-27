@@ -1,6 +1,6 @@
-Require Import Coq.Lists.List.
-Require Import Coq.Classes.Morphisms.
-Require Import Coq.Lists.SetoidList.
+From Coq Require Import List.
+From Coq Require Import Morphisms.
+From Coq Require Import SetoidList.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.Inversion.
 Require Import Rewriter.Language.Wf.

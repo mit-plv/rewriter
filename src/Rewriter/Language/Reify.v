@@ -1,9 +1,9 @@
-Require Import Coq.ZArith.ZArith.
-Require Import Coq.FSets.FMapPositive.
-Require Import Coq.Bool.Bool.
-Require Import Coq.Lists.List.
-Require Import Coq.Classes.Morphisms.
-Require Import Coq.Relations.Relation_Definitions.
+From Coq Require Import ZArith.
+From Coq Require Import FMapPositive.
+From Coq Require Import Bool.
+From Coq Require Import List.
+From Coq Require Import Morphisms.
+From Coq Require Import Relation_Definitions.
 Require Import Ltac2.Ltac2.
 Require Import Ltac2.Printf.
 Require Import Rewriter.Language.PreCommon.

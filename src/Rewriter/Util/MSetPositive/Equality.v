@@ -1,4 +1,4 @@
-Require Import Coq.MSets.MSetPositive.
+From Coq Require Import MSetPositive.
 Require Import Rewriter.Util.Bool.Equality.
 Require Import Rewriter.Util.Decidable.
 

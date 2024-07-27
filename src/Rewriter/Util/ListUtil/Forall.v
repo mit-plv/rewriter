@@ -1,6 +1,6 @@
-Require Import Coq.micromega.Lia.
-Require Import Coq.Classes.Morphisms.
-Require Import Coq.Lists.List.
+From Coq Require Import Lia.
+From Coq Require Import Morphisms.
+From Coq Require Import List.
 Require Import Rewriter.Util.Tactics.SpecializeBy.
 Require Import Rewriter.Util.Tactics.SplitInContext.
 Require Import Rewriter.Util.Tactics.DestructHead.

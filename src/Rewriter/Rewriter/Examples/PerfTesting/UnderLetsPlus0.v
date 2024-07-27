@@ -1,10 +1,10 @@
-Require Import Coq.micromega.Lia.
-Require Import Coq.ZArith.ZArith.
-Require Import Coq.QArith.QArith.
-Require Import Coq.Classes.Morphisms.
-Require Import Coq.Setoids.Setoid.
-Require Import Coq.Lists.List.
-Require Import Coq.Strings.String.
+From Coq Require Import Lia.
+From Coq Require Import ZArith.
+From Coq Require Import QArith.
+From Coq Require Import Morphisms.
+From Coq Require Import Setoid.
+From Coq Require Import List.
+From Coq Require Import String.
 Require Import Rewriter.Util.Option Rewriter.Util.Strings.ParseArithmetic.
 Require Import Rewriter.Rewriter.Examples.PerfTesting.Harness.
 Require Import Rewriter.Util.plugins.RewriterBuild.
