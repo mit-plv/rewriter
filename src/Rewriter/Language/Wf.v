@@ -1299,12 +1299,39 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
             variables they use. *)
       Abort.
 
+      Definition wf3_aux1 {var1 var2 var3}
+        (x:(sigT (fun t : type base_type => var1 t * var2 t * var3 t)%type))
+        := match x with
+             (existT t (v1, v2, v3)) =>
+               existT  (fun t => var1 t * (var1 t * var2 t * var3 t))%type
+                 t
+                 (v1, (v1, v2, v3))
+           end.
+
+      Definition wf3_aux2 {var1 var2 var3}
+        (x:(sigT (fun t : type base_type => var1 t * var2 t * var3 t)%type))
+        := match x with
+             (existT t (v1, v2, v3)) =>
+               existT  (fun t => var2 t * (var1 t * var2 t * var3 t))%type
+                 t
+                 (v2, (v1, v2, v3))
+           end.
+
+      Definition wf3_aux3 {var1 var2 var3}
+        (x:(sigT (fun t : type base_type => var1 t * var2 t * var3 t)%type))
+        := match x with
+             (existT t (v1, v2, v3)) =>
+               existT  (fun t => var3 t * (var1 t * var2 t * var3 t))%type
+                 t
+                 (v3, (v1, v2, v3))
+           end.
+
       (* Speeds up Qed by a couple seconds *)
       Local Strategy -100 [invert_expr.invert_Var invert_expr.invert_LetIn invert_expr.invert_App invert_expr.invert_LetIn invert_expr.invert_Ident invert_expr.invert_Abs invert_expr.invert_App_cps projT1 projT2 fst snd eq_rect].
       Lemma wf3_of_wf {var1 var2 var3} G1 G2 G3 G {t}
-            (HG1 : G1 = List.map (fun '(existT t (v1, v2, v3)) => existT _ t (v1, (v1, v2, v3))) G)
-            (HG2 : G2 = List.map (fun '(existT t (v1, v2, v3)) => existT _ t (v2, (v1, v2, v3))) G)
-            (HG3 : G3 = List.map (fun '(existT t (v1, v2, v3)) => existT _ t (v3, (v1, v2, v3))) G)
+            (HG1 : G1 = List.map wf3_aux1 G)
+            (HG2 : G2 = List.map wf3_aux2 G)
+            (HG3 : G3 = List.map wf3_aux3 G)
             e1 e2 e3 e123
             (Hwf1 : @wf var1 _ G1 t e1 e123)
             (Hwf2 : @wf var2 _ G2 t e2 e123)
@@ -1313,7 +1340,8 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
       Proof using Type.
         subst G2 G3; revert dependent e3; revert dependent e2; revert dependent G; induction Hwf1; intros.
         Time all: repeat first [ progress subst
-                               | progress cbn [projT1 projT2 fst snd eq_rect] in *
+                               | progress cbn [projT1 projT2 fst snd eq_rect
+                                                 wf3_aux1 wf3_aux2 wf3_aux3] in *
                                | progress destruct_head' False
                                | progress destruct_head'_sig
                                | progress destruct_head'_and
@@ -1366,11 +1394,47 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
         : @wf _ _ G1 t e1 e2.
       Proof using Type. eapply wf_of_wf3_default; eauto. Qed.
 
+      Definition wf4_aux1 {var1 var2 var3 var4}
+        (x:(sigT (fun t : type base_type => var1 t * var2 t * var3 t * var4 t)%type))
+        := match x with
+             (existT t (v1, v2, v3, v4)) =>
+               existT  (fun t => var1 t * (var1 t * var2 t * var3 t * var4 t))%type
+                 t
+                 (v1, (v1, v2, v3, v4))
+           end.
+
+      Definition wf4_aux2 {var1 var2 var3 var4}
+        (x:(sigT (fun t : type base_type => var1 t * var2 t * var3 t * var4 t)%type))
+        := match x with
+             (existT t (v1, v2, v3, v4)) =>
+               existT  (fun t => var2 t * (var1 t * var2 t * var3 t * var4 t))%type
+                 t
+                 (v2, (v1, v2, v3, v4))
+           end.
+
+      Definition wf4_aux3 {var1 var2 var3 var4}
+        (x:(sigT (fun t : type base_type => var1 t * var2 t * var3 t * var4 t)%type))
+        := match x with
+             (existT t (v1, v2, v3, v4)) =>
+               existT  (fun t => var3 t * (var1 t * var2 t * var3 t * var4 t))%type
+                 t
+                 (v3, (v1, v2, v3, v4))
+           end.
+
+      Definition wf4_aux4 {var1 var2 var3 var4}
+        (x:(sigT (fun t : type base_type => var1 t * var2 t * var3 t * var4 t)%type))
+        := match x with
+             (existT t (v1, v2, v3, v4)) =>
+               existT  (fun t => var4 t * (var1 t * var2 t * var3 t * var4 t))%type
+                 t
+                 (v4, (v1, v2, v3, v4))
+           end.
+
       Lemma wf4_of_wf {var1 var2 var3 var4} G1 G2 G3 G4 G {t}
-            (HG1 : G1 = List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v1, (v1, v2, v3, v4))) G)
-            (HG2 : G2 = List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v2, (v1, v2, v3, v4))) G)
-            (HG3 : G3 = List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v3, (v1, v2, v3, v4))) G)
-            (HG4 : G4 = List.map (fun '(existT t (v1, v2, v3, v4)) => existT _ t (v4, (v1, v2, v3, v4))) G)
+            (HG1 : G1 = List.map wf4_aux1 G)
+            (HG2 : G2 = List.map wf4_aux2 G)
+            (HG3 : G3 = List.map wf4_aux3 G)
+            (HG4 : G4 = List.map wf4_aux4 G)
             e1 e2 e3 e4 e1234
             (Hwf1 : @wf var1 _ G1 t e1 e1234)
             (Hwf2 : @wf var2 _ G2 t e2 e1234)
@@ -1380,7 +1444,8 @@ Proof. hnf; etransitivity; eassumption || symmetry; eassumption. Qed.
       Proof using Type.
         subst G2 G3 G4; revert dependent e4; revert dependent e3; revert dependent e2; revert dependent G; induction Hwf1; intros.
         Time all: repeat first [ progress subst
-                               | progress cbn [projT1 projT2 fst snd eq_rect] in *
+                               | progress cbn [projT1 projT2 fst snd eq_rect
+                                                 wf4_aux1 wf4_aux2 wf4_aux3 wf4_aux4] in *
                                | progress destruct_head' False
                                | progress destruct_head'_sig
                                | progress destruct_head'_and
