@@ -1,7 +1,7 @@
 (** * Examples of Using the Rewriter *)
-Require Import Coq.ZArith.ZArith.
-Require Import Coq.micromega.Lia.
-Require Import Coq.Lists.List.
+From Coq Require Import ZArith.
+From Coq Require Import Lia.
+From Coq Require Import List.
 Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.Notations.

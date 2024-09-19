@@ -1,5 +1,5 @@
-Require Import Coq.Classes.Morphisms.
-Require Import Coq.Relations.Relation_Definitions.
+From Coq Require Import Morphisms.
+From Coq Require Import Relation_Definitions.
 Require Import Rewriter.Util.Tactics.BreakMatch.
 Require Import Rewriter.Util.Tactics.DestructHead.
 Require Import Rewriter.Util.Notations.

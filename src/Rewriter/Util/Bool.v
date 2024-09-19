@@ -1,6 +1,6 @@
 (*** Boolean Utility Lemmas and Databases *)
-Require Import Coq.Bool.Bool.
-Require Import Coq.Classes.Morphisms.
+From Coq Require Import Bool.
+From Coq Require Import Morphisms.
 
 (* We would use [Scheme Minimality for bool Sort Type.], but we want
    [bool_rect_nodep] to unfold directly to [bool_rect] so that

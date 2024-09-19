@@ -1,4 +1,4 @@
-Require Import Coq.Lists.List.
+From Coq Require Import List.
 Require Import Rewriter.Util.PrimitiveProd.
 
 Import Primitive.Notations.

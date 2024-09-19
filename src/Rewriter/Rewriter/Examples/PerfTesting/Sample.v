@@ -1,14 +1,14 @@
 (** Utility file for subsampling large distributions *)
-Require Import Coq.Strings.String.
-Require Import Coq.Structures.Orders.
-Require Import Coq.micromega.Lia.
-Require Import Coq.Bool.Bool.
-Require Import Coq.Sorting.Mergesort.
-Require Import Coq.QArith.QArith Coq.QArith.Qround Coq.QArith.Qabs Coq.QArith.Qminmax.
-Require Import Coq.NArith.NArith.
-Require Import Coq.ZArith.ZArith.
-Require Import Coq.Arith.Arith.
-Require Import Coq.Lists.List.
+From Coq Require Import String.
+From Coq Require Import Orders.
+From Coq Require Import Lia.
+From Coq Require Import Bool.
+From Coq Require Import Mergesort.
+From Coq Require Import QArith Qround Qabs Qminmax.
+From Coq Require Import NArith.
+From Coq Require Import ZArith.
+From Coq Require Import Arith.
+From Coq Require Import List.
 Require Import Rewriter.Util.LetIn.
 Import ListNotations.
 Local Open Scope list_scope.

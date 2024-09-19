@@ -1,8 +1,8 @@
 (** * Examples of Using the Rewriter *)
-Require Import Coq.micromega.Lia.
-Require Import Coq.Classes.Morphisms.
-Require Import Coq.Setoids.Setoid.
-Require Import Coq.Lists.List.
+From Coq Require Import Lia.
+From Coq Require Import Morphisms.
+From Coq Require Import Setoid.
+From Coq Require Import List.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.NatUtil.

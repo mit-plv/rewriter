@@ -1,4 +1,4 @@
-Require Import Coq.Strings.Ascii Coq.Strings.String Coq.Lists.List.
+From Coq Require Import Ascii String List.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.Strings.String.
 Require Import Rewriter.Util.Notations.

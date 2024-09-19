@@ -1,4 +1,4 @@
-Require Import Coq.Setoids.Setoid.
+From Coq Require Import Setoid.
 Require Import Rewriter.Util.FixCoqMistakes.
 Require Import Rewriter.Util.Tactics.DestructHead.
 

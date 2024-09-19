@@ -1,9 +1,9 @@
-Require Import Coq.ZArith.ZArith.
-Require Import Coq.Lists.List.
-Require Import Coq.micromega.Lia.
-Require Import Coq.FSets.FMapPositive.
-Require Import Coq.Classes.Morphisms.
-Require Import Coq.Relations.Relations.
+From Coq Require Import ZArith.
+From Coq Require Import List.
+From Coq Require Import Lia.
+From Coq Require Import FMapPositive.
+From Coq Require Import Morphisms.
+From Coq Require Import Relations.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.Inversion.
 Require Import Rewriter.Util.Tactics.BreakMatch.

@@ -1,4 +1,4 @@
-Require Import Coq.Lists.List.
+From Coq Require Import List.
 Require Import Rewriter.Language.Pre.
 Require Import Rewriter.Util.Bool.
 Require Import Rewriter.Util.NatUtil.

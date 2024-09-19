@@ -1,6 +1,6 @@
-Require Import Coq.ZArith.ZArith.
-Require Import Coq.MSets.MSetPositive.
-Require Import Coq.FSets.FMapPositive.
+From Coq Require Import ZArith.
+From Coq Require Import MSetPositive.
+From Coq Require Import FMapPositive.
 Require Import Rewriter.Util.PrimitiveSigma.
 Require Import Rewriter.Util.MSetPositive.Facts.
 Require Import Rewriter.Util.CPSNotations.

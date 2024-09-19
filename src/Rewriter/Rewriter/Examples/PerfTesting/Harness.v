@@ -1,10 +1,10 @@
-Require Import Coq.QArith.QArith.
-Require Import Coq.Structures.Orders.
-Require Import Coq.micromega.Lia.
-Require Import Coq.Bool.Bool.
-Require Import Coq.Sorting.Mergesort.
-Require Export Coq.Lists.List.
-Require Export Coq.ZArith.ZArith.
+From Coq Require Import QArith.
+From Coq Require Import Orders.
+From Coq Require Import Lia.
+From Coq Require Import Bool.
+From Coq Require Import Mergesort.
+From Coq Require Export List.
+From Coq Require Export ZArith.
 Export ListNotations.
 
 Global Set Printing Width 1000.

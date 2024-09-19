@@ -1,10 +1,10 @@
-Require Import Coq.Lists.List.
-Require Import Coq.Lists.SetoidList.
-Require Import Coq.micromega.Lia.
-Require Import Coq.Arith.Peano_dec.
-Require Import Coq.ZArith.ZArith.
-Require Import Coq.Arith.Arith.
-Require Import Coq.Classes.Morphisms.
+From Coq Require Import List.
+From Coq Require Import SetoidList.
+From Coq Require Import Lia.
+From Coq Require Import Peano_dec.
+From Coq Require Import ZArith.
+From Coq Require Import Arith.
+From Coq Require Import Morphisms.
 Require Import Rewriter.Util.NatUtil.
 Require Import Rewriter.Util.Pointed.
 Require Import Rewriter.Util.Prod.
@@ -1977,7 +1977,7 @@ Qed.
 #[global] Hint Rewrite <- @firstn_update_nth : pull_firstn.
 #[global] Hint Rewrite <- @firstn_update_nth : push_update_nth.
 
-Require Import Coq.Lists.SetoidList.
+From Coq Require Import SetoidList.
 Global Instance Proper_nth_default : forall A eq,
   Proper (eq==>eqlistA eq==>Logic.eq==>eq) (nth_default (A:=A)).
 Proof.

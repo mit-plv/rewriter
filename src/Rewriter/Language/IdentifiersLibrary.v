@@ -1,9 +1,9 @@
-Require Import Coq.Bool.Bool.
-Require Import Coq.ZArith.ZArith.
-Require Import Coq.FSets.FMapPositive.
-Require Import Coq.MSets.MSetPositive.
-Require Import Coq.Lists.List.
-Require Import Coq.derive.Derive.
+From Coq Require Import Bool.
+From Coq Require Import ZArith.
+From Coq Require Import FMapPositive.
+From Coq Require Import MSetPositive.
+From Coq Require Import List.
+From Coq Require Import Derive.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.PrimitiveSigma.
