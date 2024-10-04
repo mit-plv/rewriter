@@ -17,8 +17,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        #coq-version: [ '8.16' ]
-        #extra-gh-reportify: [ '' ]
+        coq-version: [ '8.18', '8.19', '8.20' ]
+        extra-gh-reportify: [ '' ]
+        skip-validate: [ '' ]
         include:
         - coq-version: 'dev'
           extra-gh-reportify: '--warnings'
@@ -51,6 +52,33 @@ jobs:
           CI=1 etc/ci/describe-system-config.sh
           etc/ci/github-actions-make.sh ${{ matrix.extra-gh-reportify }} -j2 all
           etc/ci/github-actions-make.sh ${{ matrix.extra-gh-reportify }} -j2 perf-Sanity
+    - name: display timing info
+      run: cat time-of-build-pretty.log
+    - name: display per-line timing info
+      run: etc/ci/github-actions-display-per-line-timing.sh
+#    - name: upload timing and .vo info
+#      uses: actions/upload-artifact@v1
+#      with:
+#        name: build-outputs-${{ matrix.env.COQ_VERSION }}
+#        path: .
+#      if: always ()
+    - name: validate
+      uses: coq-community/docker-coq-action@v1
+      with:
+        coq_version: ${{ matrix.coq-version }}
+        ocaml_version: default
+        custom_script: |
+          sudo chmod -R a=u .
+          # Work around https://github.com/actions/checkout/issues/766
+          git config --global --add safe.directory "*"
+          echo '::group::install general dependencies'
+          sudo apt-get update -y
+          sudo apt-get install -y python-is-python3 python3
+          eval $(opam env)
+          echo '::endgroup::'
+          echo '::remove-matcher owner=coq-problem-matcher::'
+          etc/ci/github-actions-make.sh TIMED=1 validate COQCHKFLAGS="-o"
+      if: matrix.skip-validate == '' && github.event_name != 'pull_request'
 
   docker-check-all:
     runs-on: ubuntu-latest
