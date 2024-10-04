@@ -6,7 +6,8 @@ Rewriter
 
 Publications
 -----
-[Jason Gross, Andres Erbsen, Miraya Poddar-Agrawal, Jade Philipoom, Adam Chlipala. Accelerating Verified-Compiler Development with a Verified Rewriting Engine. Proceedings of the Interactive Theorem Proving - Thirteenth International Conference (ITP'22). August 2022.](http://adam.chlipala.net/papers/RewriterITP22/)
+- [Jason Gross, Andres Erbsen, Miraya Poddar-Agrawal, Jade Philipoom, Adam Chlipala. Accelerating Verified-Compiler Development with a Verified Rewriting Engine. Proceedings of the Interactive Theorem Proving - Thirteenth International Conference (ITP'22). August 2022.](http://adam.chlipala.net/papers/RewriterITP22/)
+- [Jason Gross, Andres Erbsen, Jade Philipoom, Rajashree Agrawal, and Adam Chlipala. Towards Towards a Scalable Proof Engine: A Performant Prototype Rewriting Primitive for Coq. Journal of Automated Reasoning, 68(3):19, Aug 2024.](https://jasongross.github.io/publications/#gross2023scalable)
 
 Building
 -----
