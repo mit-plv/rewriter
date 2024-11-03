@@ -1,7 +1,7 @@
 From Coq Require Import Ascii String List.
 From Coq Require Import BinNums.
 From Coq Require Import QArith.
-From Coq Require Import BinInt.
+From Coq Require Import ZArith.
 Require Import Rewriter.Util.Option.
 From Coq Require BinaryString.
 From Coq Require OctalString.
