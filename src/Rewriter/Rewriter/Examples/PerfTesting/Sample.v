@@ -60,7 +60,7 @@ Lemma continued_fraction_correct v n
   : eval_continued_fraction (continued_fraction v n) == v.
 Proof.
   cbv [eval_continued_fraction].
-  revert v; induction n; intro; cbn; destruct (Qeq_bool 0 v) eqn:H; cbn.
+  revert v; induction n; intro; cbn -[Qeq_bool]; case Qeq_bool eqn:H.
   all: rewrite ?Qeq_bool_iff in H; rewrite <- ?H.
   all: try reflexivity.
   { rewrite (surjective_pairing (continued_fraction _ _)); cbn.
