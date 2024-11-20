@@ -3674,7 +3674,7 @@ Module Compilers.
                            [ now eauto | intros | reflexivity ];
                            try solve [ fin_t ]
                          | progress (cbn [UnderLets.interp_related UnderLets.interp_related_gen expr.interp_related expr.interp_related_gen];
-                                     repeat (eexists; [> idtac ]; eexists; repeat apply conj; intros))
+                                     repeat (eexists; []; eexists; repeat apply conj; intros))
                          | solve
                              [ repeat
                                  first
