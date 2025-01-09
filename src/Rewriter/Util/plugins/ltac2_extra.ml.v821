@@ -1,10 +1,9 @@
 open Ltac2_plugin
 open Tac2ffi
 open Tac2val
-open Tac2expr
 open Proofview.Notations
 
-let pname s = { mltac_plugin = "coq-rewriter.ltac2_extra"; mltac_tactic = s }
+let pname s = Tac2env.ml_tactic_name ~plugin:"coq-rewriter.ltac2_extra" s
 
 let define_primitive name arity f =
   Tac2env.define_primitive (pname name) (Tac2val.mk_closure_val arity f)
