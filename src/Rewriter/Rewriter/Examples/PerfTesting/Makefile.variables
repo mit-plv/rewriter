@@ -49,7 +49,11 @@ $$($(1)_PERF_VFILES) : $(PERF_DIR)/$(1)/_%.v : $(PERF_DIR)/Template.v.in
 	$$(HIDE)mkdir -p $$(dir $$@)
 	$$(HIDE)sed 's/@EXAMPLE@/$(1)/g; s/@ARGS@/$$(subst _, ,$$*)/g' $$< > $$@
 
-$$($(1)_PERF_LOGS) : %.log : %.v $(PERF_DIR)/$(1).vo
+$$($(1)_PERF_LOGS) : %.log : %.v
+
+ifneq ($(EXTERNAL_PERF_DEPENDENCIES),1)
+$$($(1)_PERF_LOGS): $(PERF_DIR)/$(1).vo
+endif
 
 .PHONY: perf-$(1)
 perf-$(1):: $($(1)_PERF_LOGS)
