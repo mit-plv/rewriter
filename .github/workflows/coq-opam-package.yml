@@ -1,0 +1,160 @@
+name: CI (Coq, opam)
+
+# Note that we must split up each command into a separate step for Windows, because otherwise we don't get error code
+# See also https://github.com/avsm/setup-ocaml/issues/72
+
+on:
+  push:
+    branches:
+    - master
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  install:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        coq-version: ['dev', '8.20.0', '8.19.0', '8.18.0']
+        os: [{name: 'Ubuntu',
+              runs-on: 'ubuntu-latest',
+              ocaml-compiler: '4.09.1',
+              ocamlfind-pin: '',
+              opam-jobs-flag: ''},
+             {name: 'macOS',
+              runs-on: 'macos-latest',
+              ocaml-compiler: '4.14.2',
+              ocamlfind-pin: '',
+              opam-jobs-flag: ''},
+             {name: 'Windows',
+              runs-on: 'windows-latest',
+              ocaml-compiler: '4.13.1',
+              ocamlfind-pin: 'git+https://github.com/ocaml/ocamlfind.git#master',
+              opam-jobs-flag: '-j 1'}]
+
+    runs-on: ${{ matrix.os.runs-on }}
+
+    env:
+      OPAMYES: "true"
+      OPAMCONFIRMLEVEL: "unsafe-yes"
+
+    steps:
+    - name: Work around https://github.com/ocaml/opam-repository/pull/26891#issuecomment-2486598516
+      run: |
+        # Alternative: brew update; brew upgrade; brew install pkgconf
+        brew unlink pkg-config
+        brew install pkgconf
+        brew unlink pkgconf
+        brew link pkg-config
+      if: ${{ runner.os == 'macOS' }}
+
+    - name: Set up OCaml
+      uses: ocaml/setup-ocaml@v3
+      with:
+        ocaml-compiler: ${{ matrix.os.ocaml-compiler }}
+
+    - name: echo Linux build params
+      run: |
+        echo "::group::lscpu"
+        lscpu
+        echo "::endgroup::"
+        echo "::group::uname -a"
+        uname -a
+        echo "::endgroup::"
+        echo "::group::lsb_release -a"
+        lsb_release -a
+        echo "::endgroup::"
+        echo "::group::gcc -v"
+        gcc -v
+        echo "::endgroup::"
+      if: ${{ runner.os == 'Linux' }}
+
+    - name: echo macOS build params
+      run: |
+        echo "::group::sysctl -n machdep.cpu.brand_string"
+        sysctl -n machdep.cpu.brand_string
+        echo "::endgroup::"
+        echo "::group::sysctl -a | grep machdep.cpu"
+        sysctl -a | grep machdep.cpu
+        echo "::endgroup::"
+        echo "::group::uname -a"
+        uname -a
+        echo "::endgroup::"
+        echo "::group::sw_vers -productVersion"
+        sw_vers -productVersion
+        echo "::endgroup::"
+        echo "::group::system_profiler SPSoftwareDataType"
+        system_profiler SPSoftwareDataType
+        echo "::endgroup::"
+      if: ${{ runner.os == 'macOS' }}
+
+    - name: echo Windows build params
+      run: |
+        echo ::group::wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status
+        wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status
+        echo ::endgroup::
+        echo ::group::wmic cpu list /format:list
+        wmic cpu list /format:list
+        echo ::endgroup::
+      shell: cmd
+      if: ${{ runner.os == 'Windows' }}
+
+    - name: Work around https://github.com/actions/checkout/issues/766 / https://github.com/ocaml/setup-ocaml/issues/479 / https://github.com/actions/checkout/issues/767 / https://github.com/actions/checkout/issues/760
+      run: opam exec -- bash -l -c 'git config --global --add safe.directory "*"'
+      if: ${{ runner.os == 'Windows' }}
+
+    - name: echo opam build params
+      run: |
+        echo ::group::ocamlc -config
+        opam exec -- ocamlc -config
+        echo ::endgroup::
+        echo ::group::opam list
+        opam list
+        echo ::endgroup::
+
+    - run: opam repo add coq-core-dev https://coq.inria.fr/opam/core-dev
+    - run: opam repo add coq-released https://coq.inria.fr/opam/released
+    - run: opam repo add coq-extra-dev https://coq.inria.fr/opam/extra-dev
+    - run: opam update
+    - run: opam pin add ocamlfind '${{ matrix.os.ocamlfind-pin }}'
+      if: matrix.os.ocamlfind-pin != ''
+    - run: opam pin --kind=version add coq ${{ matrix.coq-version }}
+
+    - name: echo more build params
+      run: |
+        echo ::group::opam list
+        opam list
+        echo ::endgroup::
+        echo ::group::coqc --config
+        opam exec -- coqc --config
+        echo ::endgroup::
+        echo ::group::coqc --version
+        opam exec -- coqc --version
+        echo ::endgroup::
+        echo ::group::echo ~ coqtop
+        echo "" | opam exec -- coqtop
+        echo ::endgroup::
+
+    - run: opam install coq-rewriter ${{ matrix.os.opam-jobs-flag }}
+    - run: opam install coq-rewriter-perf-SuperFast ${{ matrix.os.opam-jobs-flag }}
+    - run: opam install coq-rewriter-perf-Fast ${{ matrix.os.opam-jobs-flag }}
+      if: matrix.coq-version == 'dev'
+
+    - name: cat opam logs (Linux, Mac)
+      run: |
+        for i in $(find ~/.opam/log/ -type f); do echo "::group::$i"; cat "$i"; echo "::endgroup::"; done
+      if: ${{ always() && ( runner.os == 'Linux' || runner.os == 'macOS' ) }}
+
+    - name: cat opam logs (Windows, native)
+      run: |
+        opam exec -- cat ~/.opam/log/*
+        true
+      if: ${{ always() && runner.os == 'Windows' }}
+
+    - name: cat opam logs (Windows)
+      run: opam exec -- bash -l -c 'for i in $(find ~/.opam/log/ -type f); do echo "::group::$i"; cat "$i"; echo "::endgroup::"; done'
+      if: ${{ always() && runner.os == 'Windows' }}
+
+    - run: opam list
