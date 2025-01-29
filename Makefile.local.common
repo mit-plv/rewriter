@@ -1,9 +1,20 @@
 TIMED?=
 TIMECMD?=
-STDTIME?=/usr/bin/time -f "$@ (real: %e, user: %U, sys: %S, mem: %M ko)"
+# Use command time on linux, gtime on Mac OS
+TIMEFMT?="$(if $(findstring undefined, $(flavor 1)),$@,$(1)) (real: %e, user: %U, sys: %S, mem: %M ko)"
+ifeq (0,$(shell command time -f "" true >/dev/null 2>/dev/null; echo $$?))
+STDTIME_FULL?=command time -f $(TIMEFMT)
+else
+ifeq (0,$(shell gtime -f "" true >/dev/null 2>/dev/null; echo $$?))
+STDTIME_FULL?=gtime -f $(TIMEFMT)
+else
+STDTIME_FULL?=command time
+endif
+endif
+STDTIME?=$(STDTIME_FULL)
+
 TIMER=$(if $(TIMED), $(STDTIME), $(TIMECMD))
 TIMECMD_FULL?=
-STDTIME_FULL?=/usr/bin/time -f "$@ (real: %e, user: %U, sys: %S, mem: %M ko)"
 TIMER_FULL=$(if $(TIMED), $(STDTIME_FULL), $(TIMECMD_FULL))
 
 COQ_VERSION_FILE = .coq-version
