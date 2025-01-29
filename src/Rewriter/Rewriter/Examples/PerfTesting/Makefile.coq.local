@@ -1,6 +1,12 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 PERF_ABS_DIR := $(patsubst %/,%,$(dir $(mkfile_path)))
 
+ifeq ($(EXTERNAL_PERF_DEPENDENCIES),1)
+# work around https://github.com/coq/coq/pull/20154#pullrequestreview-2579725354 by removing -I flags
+OCAMLLIBS:=
+COQLIBS:=$(COQLIBS_NOML)
+endif
+
 include $(PERF_ABS_DIR)/Makefile.timing
 include $(PERF_ABS_DIR)/Makefile.generated-files
 include $(PERF_ABS_DIR)/Makefile.coq-versions-files
