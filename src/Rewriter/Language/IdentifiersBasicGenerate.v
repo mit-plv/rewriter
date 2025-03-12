@@ -161,6 +161,7 @@ Module Compilers.
         end.
 
       Module Export Hints.
+        Local Set Default Proof Mode "Classic".
         Global Hint Extern 0 (rules_proofsT_with_args _) => make_rules_proofsT_with_args : typeclass_instances.
       End Hints.
 
@@ -1637,6 +1638,7 @@ Module Compilers.
              end
         end.
       Module Export Hints.
+        Local Set Default Proof Mode "Classic".
         Global Hint Extern 0 (GoalType.base_elim_with_args _) => make_base_elim : typeclass_instances.
       End Hints.
 
@@ -1660,6 +1662,7 @@ Module Compilers.
         make_ident_from_build ltac:(fun base base_type_list_named all_ident_named_interped => build_raw_ident_elim all_ident_named_interped).
 
       Module Export Hints.
+        Local Set Default Proof Mode "Classic".
         Global Hint Extern 0 (GoalType.ident_elim_with_args _ _) => make_ident_elim : typeclass_instances.
         Global Hint Extern 0 (GoalType.pattern_ident_elim_with_args _ _) => make_pattern_ident_elim : typeclass_instances.
         Global Hint Extern 0 (GoalType.raw_ident_elim_with_args _ _) => make_raw_ident_elim : typeclass_instances.
@@ -1820,6 +1823,7 @@ Module Compilers.
              make_package_of_scraped scraped_data var_like_idents base ident
         end.
       Module Export Hints.
+        Local Set Default Proof Mode "Classic".
         Global Hint Extern 0 (GoalType.package_with_args _ _ _ _) => make_package : typeclass_instances.
       End Hints.
       Ltac cache_build_package_of_scraped scraped_data var_like_idents base ident :=
