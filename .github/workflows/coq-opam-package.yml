@@ -139,8 +139,8 @@ jobs:
 
     - run: opam install coq-rewriter ${{ matrix.os.opam-jobs-flag }}
     - run: opam install coq-rewriter-perf-SuperFast ${{ matrix.os.opam-jobs-flag }}
-    - run: opam install coq-rewriter-perf-Fast ${{ matrix.os.opam-jobs-flag }}
-      if: matrix.coq-version == 'dev'
+    # - run: opam install coq-rewriter-perf-Fast ${{ matrix.os.opam-jobs-flag }}
+      # if: matrix.coq-version == 'dev'
 
     - name: cat opam logs (Linux, Mac)
       run: |
