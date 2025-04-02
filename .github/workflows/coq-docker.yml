@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        coq-version: [ '8.18', '8.19', '8.20' , '9.0' ]
+        coq-version: [ '8.18', '8.19', '8.20' ]
         extra-gh-reportify: [ '' ]
         skip-validate: [ '' ]
         include:
