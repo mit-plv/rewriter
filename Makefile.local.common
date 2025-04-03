@@ -19,10 +19,11 @@ TIMER_FULL=$(if $(TIMED), $(STDTIME_FULL), $(TIMECMD_FULL))
 
 COQ_VERSION_FILE = .coq-version
 COQ_VERSION_PREFIX = The Coq Proof Assistant, version
+ROCQ_VERSION_PREFIX = The Rocq Prover, version
 COQ_VERSION_COQTOP_CMD := $(COQBIN)coqtop </dev/null
 COQ_VERSION_COQC_CMD := $(COQBIN)coqc --version
 COQC_VERSION_FULL := $(shell $(COQ_VERSION_COQC_CMD) 2>/dev/null)
-COQ_VERSION := $(firstword $(subst $(COQ_VERSION_PREFIX),,$(COQC_VERSION_FULL)))
+COQ_VERSION := $(firstword $(subst $(ROCQ_VERSION_PREFIX),,$(subst $(COQ_VERSION_PREFIX),,$(COQC_VERSION_FULL))))
 
 COQ_EXTENDED_VERSION:=$(strip $(shell $(COQ_VERSION_COQTOP_CMD) 2>/dev/null) $(COQC_VERSION_FULL))
 COQ_EXTENDED_VERSION_OLD:=$(strip $(shell cat $(COQ_VERSION_FILE) 2>/dev/null))
@@ -53,8 +54,18 @@ ifneq (,$(filter 8.20%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v820
 ML_DESCRIPTION := "Coq v8.20"
 else
+ifneq (,$(filter 8.%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v821
 ML_DESCRIPTION := "Coq v8.21"
+else
+ifneq (,$(filter 9.0.% 9.0+%,$(COQ_VERSION)))
+EXPECTED_EXT:=.v90
+ML_DESCRIPTION := "Coq v9.0"
+else
+EXPECTED_EXT:=.v91
+ML_DESCRIPTION := "Coq v9.1"
+endif
+endif
 endif
 endif
 endif
