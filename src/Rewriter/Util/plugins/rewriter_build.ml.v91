@@ -45,7 +45,7 @@ let rules_proofs_with_args_tac = tactic_of_name "make_rules_proofs_with_args"
 let name_or name default_name =
   match name with
   | Some name -> name
-  | None -> Namegen.next_global_ident_away (Names.Id.of_string default_name) Id.Set.empty
+  | None -> Namegen.next_global_ident_away (Global.safe_env ()) (Names.Id.of_string default_name) Id.Set.empty
 
 let rec projT2_skip_cast env sigma c =
   match EConstr.kind sigma c with
