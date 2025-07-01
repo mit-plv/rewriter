@@ -20,7 +20,7 @@ jobs:
         coq-version: ['dev', '8.20.0', '8.19.0', '8.18.0']
         os: [{name: 'Ubuntu',
               runs-on: 'ubuntu-latest',
-              ocaml-compiler: '4.09.1',
+              ocaml-compiler: '4.14.0',
               ocamlfind-pin: '',
               opam-jobs-flag: ''},
              {name: 'macOS',
@@ -30,7 +30,7 @@ jobs:
               opam-jobs-flag: ''},
              {name: 'Windows',
               runs-on: 'windows-latest',
-              ocaml-compiler: '4.13.1',
+              ocaml-compiler: '4.14.0',
               ocamlfind-pin: 'git+https://github.com/ocaml/ocamlfind.git#master',
               opam-jobs-flag: '-j 1'}]
 
