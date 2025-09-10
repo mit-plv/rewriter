@@ -292,7 +292,7 @@ Module Compilers.
          end.
 *)
   End type.
-  Notation type := type.type.
+  #[global] Notation type := type.type.
   Declare Scope etype_scope.
   Delimit Scope etype_scope with etype.
   Bind Scope etype_scope with type.type.
@@ -579,7 +579,7 @@ Module Compilers.
   End expr.
   Export expr.Notations.
   Notation expr := expr.expr.
-  Notation Expr := expr.Expr.
+  #[global] Notation Expr := expr.Expr.
 
   Module ident.
     Section generic.
