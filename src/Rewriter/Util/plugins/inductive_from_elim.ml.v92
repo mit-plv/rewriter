@@ -1,0 +1,82 @@
+open Constr
+open Genredexpr
+open Names
+open Context
+open Entries
+
+let rec make_constructor_types env sigma (avoid : Id.Set.t) (body : EConstr.t) =
+  match EConstr.kind sigma body with
+  | Prod (cname, cty, body) ->
+    if EConstr.Vars.noccurn sigma 1 body
+    then (* the rest does not depend on this term, so we treat it as a constructor *)
+      (* We pass the empty set on the inner next_name because we care about avoiding other constructor names, which we treat as extra global identifiers *)
+      let cname = Namegen.next_global_ident_away (Global.safe_env ()) (Namegen.next_name_away cname.binder_name Id.Set.empty) avoid in
+      let avoid = Id.Set.add cname avoid in
+      let dummy_arg = EConstr.mkProp in
+      let (sigma, avoid, rest_ctors) = make_constructor_types env sigma avoid (EConstr.Vars.subst1 dummy_arg body) in
+      (sigma, avoid, (cname, cty) :: rest_ctors)
+    else
+      (* the rest does depend on this argument, so we treat it as part of the final conclusion, and consider ourselves done *)
+      (sigma, avoid, [])
+  | Var _ ->
+    (* we are at the end of the inductive chain *)
+    (sigma, avoid, [])
+  | _ ->
+    CErrors.user_err Pp.(str "Invalid non-arrow component of eliminator type:" ++ Printer.pr_econstr_env env sigma body)
+
+let make_inductive_from_elim sigma (name : Names.Id.t option) (elim_ty : EConstr.t) =
+  let env = Global.env () in
+  let (hnffun, _) = Redexpr.reduction_of_red_expr env Hnf in
+  let (sigma, elim_ty) = hnffun env sigma elim_ty in
+  match EConstr.kind sigma elim_ty with
+  | Prod (ind_name, ind_ty, body) ->
+    (* If the user gives a name explicitly, we use exactly that name;
+       if the user gives a name via a binder name, we are more fuzzy
+       and search for the next free global identifier *)
+    let name = match name with
+      | Some name -> name
+      | None -> Namegen.next_global_ident_away (Global.safe_env ()) (Namegen.next_name_away ind_name.binder_name Id.Set.empty) Id.Set.empty
+    in
+    let body = EConstr.Vars.subst1 (EConstr.mkVar name) body in
+    let (sigma, _, ctor_types) = make_constructor_types env sigma (Id.Set.singleton name) body in
+    let ctor_type_to_constr cty =
+      EConstr.to_constr sigma (EConstr.Vars.subst_var sigma name cty)
+    in
+    let univs, ubinders = Evd.check_univ_decl ~poly:false sigma UState.default_univ_decl in
+    let uctx = match univs with
+    | UState.Monomorphic_entry ctx ->
+      let () = Global.push_context_set ctx in
+      Entries.Monomorphic_ind_entry
+    | UState.Polymorphic_entry uctx -> Entries.Polymorphic_ind_entry uctx
+    in
+    let mie = {
+      mind_entry_record = None;
+      mind_entry_finite = Declarations.Finite;
+      mind_entry_params = [];
+      mind_entry_inds = [{
+          mind_entry_typename = name;
+          mind_entry_arity = EConstr.to_constr sigma ind_ty;
+          mind_entry_consnames = List.map (fun (cname, cty) -> cname) ctor_types;
+          mind_entry_lc = List.map (fun (cname, cty) -> ctor_type_to_constr cty) ctor_types
+        }];
+      mind_entry_universes = uctx;
+      mind_entry_variance = None;
+      mind_entry_private = None;
+    } in
+    let sigma =
+      let uctx = Evd.evar_universe_context sigma in
+      let uctx = UState.demote_global_univ_entry univs uctx in
+      Evd.set_universe_context sigma uctx
+    in
+    (sigma,
+     (DeclareInd.declare_mutual_inductive_with_eliminations
+        mie (univs, UnivNames.empty_binders) [([], List.map (fun _ -> []) ctor_types)],
+      0))
+  | _ ->
+    CErrors.user_err Pp.(str "Invalid non-arrow eliminator type:" ++ Printer.pr_econstr_env env sigma elim_ty)
+
+let vernac_make_inductive_from_elim name elim_ty =
+  let env = Global.env () in
+  let sigma = Evd.from_env env in
+  let (sigma, elim_ty) = Constrintern.interp_constr_evars env sigma elim_ty in
+  ignore(make_inductive_from_elim sigma name elim_ty)
