@@ -92,13 +92,13 @@ jobs:
 
     - name: echo Windows build params
       run: |
-        echo ::group::wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status
-        wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status
-        echo ::endgroup::
-        echo ::group::wmic cpu list /format:list
-        wmic cpu list /format:list
-        echo ::endgroup::
-      shell: cmd
+        echo "::group::Get-CimInstance Win32_Processor"
+        Get-CimInstance Win32_Processor | Select-Object Name, DeviceID, Description, NumberOfCores, MaxClockSpeed, Status | Format-Table -AutoSize
+        echo "::endgroup::"
+        echo "::group::Get-CimInstance Win32_Processor (detailed)"
+        Get-CimInstance Win32_Processor | Format-List
+        echo "::endgroup::"
+      shell: pwsh
       if: ${{ runner.os == 'Windows' }}
 
     - name: Work around https://github.com/actions/checkout/issues/766 / https://github.com/ocaml/setup-ocaml/issues/479 / https://github.com/actions/checkout/issues/767 / https://github.com/actions/checkout/issues/760
