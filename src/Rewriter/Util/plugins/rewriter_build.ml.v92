@@ -103,7 +103,7 @@ let rewriter_emit_inductives sigma ~poly (scraped_data : EConstr.t) (base_name :
   let base_name = name_or base_name "base" in
   let (sigma, base) = make_inductive_from_elim sigma (Some base_name) (EConstr.of_constr base_elim) in
   let env = Global.env () in
-  let base = mkInd base in
+  let base = UnsafeMonomorphic.mkInd base in
   let ident_elim_ty = mkApp (ident_elim_with_args, [|scraped_data;base|]) in
   let pattern_ident_elim_ty = mkApp (pattern_ident_elim_with_args, [|scraped_data;base|]) in
   let raw_ident_elim_ty = mkApp (raw_ident_elim_with_args, [|scraped_data;base|]) in
@@ -121,7 +121,7 @@ let rewriter_emit_inductives sigma ~poly (scraped_data : EConstr.t) (base_name :
   let (sigma, pattern_ident) = make_inductive_from_elim sigma (Some pattern_ident_name) (EConstr.of_constr pattern_ident_elim) in
   let raw_ident_name = name_or raw_ident_name "raw_ident" in
   let (sigma, raw_ident) = make_inductive_from_elim sigma (Some raw_ident_name) (EConstr.of_constr raw_ident_elim) in
-  (sigma, (base, mkInd ident, mkInd raw_ident, mkInd pattern_ident))
+  (sigma, (base, UnsafeMonomorphic.mkInd ident, UnsafeMonomorphic.mkInd raw_ident, UnsafeMonomorphic.mkInd pattern_ident))
 
 let head sigma c =
   match EConstr.kind sigma c with
@@ -139,7 +139,7 @@ let set_strategy_of_package sigma level verified_rewriter_package =
   match EConstr.kind sigma exprInfo with
   | App (_build, [|base; ident; base_interp; ident_interp|]) ->
     let local = false in
-    let evaluable_head v = Tacred.evaluable_of_global_reference env (Patternops.head_of_constr_reference sigma (head sigma v)) in
+    let evaluable_head v = Tacred.evaluable_of_global_reference env (fst @@ EConstr.destRef sigma (head sigma v)) in
     Redexpr.set_strategy local
       [(Conv_oracle.Level level,
         List.map evaluable_head [base_interp; ident_interp])];
@@ -160,7 +160,7 @@ let make_rewriter_of_scraped_and_ind sigma ~poly package_name scraped_data var_l
   let _ = Evd.univ_entry ~poly sigma in
   let verified_rewriter_name = make_definition_by_tactic sigma ~poly package_name verified_rewriter_ty verified_rewriter_with_args_tac in
   let sigma = Evd.from_env (Global.env ()) in
-  let verified_rewriter = mkConst verified_rewriter_name in
+  let verified_rewriter = UnsafeMonomorphic.mkConst verified_rewriter_name in
   let sigma = set_strategy_of_package sigma (-1000) verified_rewriter in
   (sigma, verified_rewriter)
 
