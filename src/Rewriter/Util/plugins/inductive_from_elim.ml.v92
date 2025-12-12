@@ -42,6 +42,7 @@ let make_inductive_from_elim sigma (name : Names.Id.t option) (elim_ty : EConstr
     let ctor_type_to_constr cty =
       EConstr.to_constr sigma (EConstr.Vars.subst_var sigma name cty)
     in
+    let sigma = Evd.collapse_sort_variables sigma in
     let univs, ubinders = Evd.check_univ_decl ~poly:false sigma UState.default_univ_decl in
     let uctx = match univs with
     | UState.Monomorphic_entry ctx ->
