@@ -2,10 +2,10 @@ open Ltac_plugin
 
 val make_definition_by_tactic
   : Evd.evar_map
-  -> poly:bool
+  -> poly:PolyFlags.t
   -> Names.Id.t
   -> EConstr.t
   -> unit Proofview.tactic
   -> Names.Constant.t
 
-val vernac_make_definition_by_tactic : poly:bool -> Names.Id.t -> Constrexpr.constr_expr -> Tacexpr.raw_tactic_expr -> unit
+val vernac_make_definition_by_tactic : poly:PolyFlags.t -> Names.Id.t -> Constrexpr.constr_expr -> Tacexpr.raw_tactic_expr -> unit
