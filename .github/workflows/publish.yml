@@ -19,7 +19,7 @@ jobs:
   publish-opam:
     runs-on: ubuntu-latest
     environment:
-      name: opam-publish
+      name: release
     steps:
       - uses: actions/create-github-app-token@v2
         id: app-token
