@@ -30,7 +30,7 @@ jobs:
           repositories: opam-coq-archive
 
       - name: Checkout current repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Determine version
         id: version
