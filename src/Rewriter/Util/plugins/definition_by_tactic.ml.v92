@@ -1,3 +1,5 @@
+# 2 "src/Rewriter/Util/plugins/definition_by_tactic.ml.v92"
+
 open Ltac_plugin
 
 let make_definition_by_tactic sigma ~poly (name : Names.Id.t) (ty : EConstr.t) (tac : unit Proofview.tactic) =

@@ -1,3 +1,5 @@
+# 2 "src/Rewriter/Util/plugins/strategy_tactic.ml.v818"
+
 let tclSTRATEGY ~local v (q : Names.GlobRef.t list) =
   Proofview.Goal.enter begin
     fun gl ->
