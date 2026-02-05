@@ -1,3 +1,5 @@
+# 2 "src/Rewriter/Util/plugins/inductive_from_elim.ml.v816"
+
 open Constr
 open Genredexpr
 open Names

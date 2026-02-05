@@ -1,0 +1,19 @@
+# 2 "src/Rewriter/Util/plugins/definition_by_tactic.ml.v93"
+
+open Ltac_plugin
+
+let make_definition_by_tactic sigma ~poly (name : Names.Id.t) (ty : EConstr.t) (tac : unit Proofview.tactic) =
+  let cinfo = Declare.CInfo.make ~name ~typ:ty () in
+  let info = Declare.Info.make ~poly () in
+  let lemma = Declare.Proof.start ~cinfo ~info sigma in
+  let lemma, _ = Declare.Proof.by (Global.env ()) tac lemma in
+  let ids = Declare.Proof.save_regular ~proof:lemma ~opaque:Vernacexpr.Transparent ~idopt:None in
+  match ids with
+  | [Names.GlobRef.ConstRef cst] -> cst
+  | _ -> CErrors.user_err (Pp.str "Internal error in make_definition_by_tactic")
+
+let vernac_make_definition_by_tactic ~poly (name : Names.Id.t) (ty : Constrexpr.constr_expr) tac =
+  let env = Global.env () in
+  let sigma = Evd.from_env env in
+  let (sigma, ty) = Constrintern.interp_constr_evars env sigma ty in
+  ignore(make_definition_by_tactic sigma ~poly name ty (Tacinterp.interp tac))
