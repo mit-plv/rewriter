@@ -62,7 +62,7 @@ let rewriter_heuristic_process_rules_proofs env sigma ~poly rules_proofs =
   let (sigma, rules_proofs_ty) = Typing.type_of env sigma rules_proofs in
   let (sigma, rules_proofs_with_args) = Evd.fresh_global env sigma (r_rules_proofs_with_args ()) in
   let rules_proofs_with_args = mkApp (rules_proofs_with_args, [|rules_proofs_ty; rules_proofs|]) in
-  let uctx = Evd.evar_universe_context sigma in
+  let uctx = Evd.ustate sigma in
   let (rules_proofs_sig, _maybe_type, _univs, _uses_unsafe_tactic, uctx) =
     Declare.build_by_tactic env ~uctx ~poly ~typ:rules_proofs_with_args rules_proofs_with_args_tac in
   let sigma = Evd.from_ctx uctx in (* XXX IS THIS RIGHT? *)
@@ -83,7 +83,7 @@ let rewriter_scrape_data env sigma ~poly (rules_proofs : EConstr.t) (extra : ECo
   let rules_ty = rules_ty_of_rules_proofs env sigma rules_proofs in
   let (sigma, extra_ty) = Typing.type_of env sigma extra in
   let scraped_data_ty = mkApp (scraped_data_with_args, [|rules_ty; rules_proofs; extra_ty; extra|]) in
-  let uctx = Evd.evar_universe_context sigma in
+  let uctx = Evd.ustate sigma in
   let (scraped_data, _maybe_type, _univs, _uses_unsafe_tactic, uctx) =
     Declare.build_by_tactic env ~uctx ~poly ~typ:scraped_data_ty scraped_data_with_args_tac in
   let sigma = Evd.from_ctx uctx in (* XXX IS THIS RIGHT? *)
@@ -98,7 +98,7 @@ let rewriter_emit_inductives sigma ~poly (scraped_data : EConstr.t) (base_name :
   let (sigma, ident_elim_with_args) = Evd.fresh_global env sigma (r_ident_elim_with_args ()) in
   let (sigma, pattern_ident_elim_with_args) = Evd.fresh_global env sigma (r_pattern_ident_elim_with_args ()) in
   let (sigma, raw_ident_elim_with_args) = Evd.fresh_global env sigma (r_raw_ident_elim_with_args ()) in
-  let uctx = Evd.evar_universe_context sigma in
+  let uctx = Evd.ustate sigma in
   let (base_elim, _maybe_type, _univs, _uses_unsafe_tactic, uctx) =
     Declare.build_by_tactic env ~uctx ~poly ~typ:base_elim_ty base_elim_with_args_tac in
   let sigma = Evd.from_ctx uctx in (* XXX IS THIS RIGHT? *)
@@ -108,7 +108,7 @@ let rewriter_emit_inductives sigma ~poly (scraped_data : EConstr.t) (base_name :
   let ident_elim_ty = mkApp (ident_elim_with_args, [|scraped_data;base|]) in
   let pattern_ident_elim_ty = mkApp (pattern_ident_elim_with_args, [|scraped_data;base|]) in
   let raw_ident_elim_ty = mkApp (raw_ident_elim_with_args, [|scraped_data;base|]) in
-  let uctx = Evd.evar_universe_context sigma in
+  let uctx = Evd.ustate sigma in
   let (ident_elim, _maybe_type, _univs, _uses_unsafe_tactic, uctx) =
     Declare.build_by_tactic env ~uctx ~poly ~typ:ident_elim_ty ident_elim_with_args_tac in
   let (pattern_ident_elim, _maybe_type, _univs, _uses_unsafe_tactic, uctx) =
