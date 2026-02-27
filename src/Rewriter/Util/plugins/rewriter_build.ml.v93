@@ -141,7 +141,7 @@ let set_strategy_of_package sigma level verified_rewriter_package =
   match EConstr.kind sigma exprInfo with
   | App (_build, [|base; ident; base_interp; ident_interp|]) ->
     let local = false in
-    let evaluable_head v = Tacred.evaluable_of_global_reference env (fst @@ EConstr.destRef sigma (head sigma v)) in
+    let evaluable_head v = Tacred.evaluable_of_global_reference (fst @@ EConstr.destRef sigma (head sigma v)) in
     Redexpr.set_strategy local
       [(Conv_oracle.Level level,
         List.map evaluable_head [base_interp; ident_interp])];
