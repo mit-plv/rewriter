@@ -231,12 +231,14 @@ Module Compilers.
               (He : forall G' a1 a2, (exists seg, G' = seg ++ G) -> P G' a1 a2 -> @wf _ _ Q G' (e1 a1) (e2 a2))
           : @wf _ _ Q G (splice x1 e1) (splice x2 e2).
         Proof.
+          assert (forall A (P : list A -> Prop), P nil -> exists l, P l).
+          { intros; now eapply (ex_intro _ nil). }
           induction Hx; cbn [splice]; [ | constructor ];
-            eauto using (ex_intro _ nil); intros.
+            eauto; intros.
           match goal with H : _ |- _ => eapply H end;
             intros; destruct_head'_ex; subst.
           rewrite ListUtil.app_cons_app_app in *.
-          eauto using (ex_intro _ nil).
+          eauto.
         Qed.
 
         Lemma wf_splice_list {A1 B1 A2 B2}
@@ -258,10 +260,12 @@ Module Compilers.
               (He : forall G' a1 a2, (exists seg, G' = seg ++ G) -> P G' a1 a2 -> @wf _ _ Q G' (e1 a1) (e2 a2))
           : @wf _ _ Q G (splice_list x1 e1) (splice_list x2 e2).
         Proof.
+          assert (forall A (P : list A -> Prop), P nil -> exists l, P l).
+          { intros; now eapply (ex_intro _ nil). }
           revert dependent P; revert dependent P_parts; revert dependent G; revert dependent e1; revert dependent e2; revert dependent x2;
             induction x1 as [|x1 xs1 IHx1], x2 as [|x2 xs2];
             cbn [splice_list length nth_error]; intros; try congruence.
-          { eapply He; [ exists nil; reflexivity | eapply HP; eauto using (ex_intro _ nil) ].
+          { eapply He; [ exists nil; reflexivity | eapply HP; eauto ].
             intros []; cbn [nth_error]; intros; congruence. }
           { inversion Hx_len; clear Hx_len.
             pose proof (fun n => Hx (S n)) as Hxs.
