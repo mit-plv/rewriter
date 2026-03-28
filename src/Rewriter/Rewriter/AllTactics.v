@@ -101,6 +101,7 @@ Module Compilers.
               let HInterp_gen := _ in
               @Build_VerifiedRewriter exprInfo exprReifyInfo RewriterOptions default_rewriter_options (fun opts => @Rewriter.Compilers.RewriteRules.GoalType.Rewrite exprInfo exprExtraInfo pkg R (use_decision_tree opts) (use_precomputed_functions opts)) HWf HInterp_gen _ _ (@GeneralizeVar.Wf_via_flat _ ident _ _ _ _ _));
         [ | clear HWf ]; intros.
+
       all: abstract (
                rewrite Rewrite_eq; cbv [Make.Rewrite rewrite_head_gen];
                rewrite rewrite_head_eq, rewrite_head_no_dtree_eq;
@@ -118,8 +119,9 @@ Module Compilers.
                          with nocore typeclass_instances
                      | apply (Compile.InterpRewrite _); [ | assumption ];
                        intros; eapply Compile.interp_assemble_identifier_rewriters with (pident_to_typed:=@to_typed);
+                       pose proof (@pattern.ident.unify_to_typed _ _ _ pkg);
                        eauto using
-                             (pattern.ident.unify_to_typed (pkg:=pkg)), pattern.Raw.ident.to_typed_invert_bind_args, pattern.ident.eta_ident_cps_correct,
+                             pattern.Raw.ident.to_typed_invert_bind_args, pattern.ident.eta_ident_cps_correct,
                        eq_refl
                          with nocore ]
              ).
