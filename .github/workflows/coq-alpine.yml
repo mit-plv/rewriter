@@ -38,7 +38,7 @@ jobs:
       with:
         branch: ${{ matrix.alpine }}
         extra-repositories: https://dl-cdn.alpinelinux.org/alpine/edge/testing
-        packages: git make jq gcc musl-dev python3 ocaml ocaml-findlib ghc cabal coq ocaml-zarith bash
+        packages: git make jq gcc musl-dev python3 ocaml ocaml-findlib ghc cabal rocq-stdlib ocaml-zarith bash
     - name: chroot build params
       shell: alpine.sh {0}
       run: etc/ci/describe-system-config.sh
