@@ -5,9 +5,9 @@
     between two such pairs, or when we want such an equality, we have
     a systematic way of reducing such equalities to equalities at
     simpler types. *)
-From Coq Require Import Morphisms.
-From Coq Require Import Setoid.
-From Coq Require Import Bool.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import Setoid.
+From Stdlib Require Import Bool.
 Require Import Rewriter.Util.IffT.
 Require Import Rewriter.Util.Equality.
 Require Import Rewriter.Util.GlobalSettings.

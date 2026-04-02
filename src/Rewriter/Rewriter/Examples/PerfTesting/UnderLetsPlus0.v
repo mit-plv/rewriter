@@ -1,10 +1,10 @@
-From Coq Require Import Lia.
-From Coq Require Import ZArith.
-From Coq Require Import QArith.
-From Coq Require Import Morphisms.
-From Coq Require Import Setoid.
-From Coq Require Import List.
-From Coq Require Import String.
+From Stdlib Require Import Lia.
+From Stdlib Require Import ZArith.
+From Stdlib Require Import QArith.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import Setoid.
+From Stdlib Require Import List.
+From Stdlib Require Import String.
 Require Import Rewriter.Util.Option Rewriter.Util.Strings.ParseArithmetic.
 Require Import Rewriter.Rewriter.Examples.PerfTesting.Harness.
 Require Import Rewriter.Util.plugins.RewriterBuild.

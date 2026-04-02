@@ -1,9 +1,9 @@
-From Coq Require Import ZArith.
-From Coq Require Import List.
-From Coq Require Import Lia.
-From Coq Require Import FMapPositive.
-From Coq Require Import Morphisms.
-From Coq Require Import Relations.
+From Stdlib Require Import ZArith.
+From Stdlib Require Import List.
+From Stdlib Require Import Lia.
+From Stdlib Require Import FMapPositive.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import Relations.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.Inversion.
 Require Import Rewriter.Util.Tactics.BreakMatch.
@@ -29,7 +29,7 @@ Require Import Rewriter.Util.Equality.
 Require Import Rewriter.Util.IffT.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Notations.
-Import Coq.Lists.List ListNotations. Local Open Scope list_scope.
+Import Stdlib.Lists.List ListNotations. Local Open Scope list_scope.
 
 Import EqNotations.
 Module Compilers.

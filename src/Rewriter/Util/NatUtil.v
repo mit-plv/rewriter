@@ -1,9 +1,9 @@
-From Coq Require Eqdep_dec.
-From Coq Require Import NArith.
-From Coq Require Import Arith.
-From Coq Require Import Morphisms.
-From Coq Require Import Relation_Definitions.
-From Coq Require Import Lia.
+From Stdlib Require Eqdep_dec.
+From Stdlib Require Import NArith.
+From Stdlib Require Import Arith.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import Relation_Definitions.
+From Stdlib Require Import Lia.
 Import Nat.
 
 Scheme Equality for nat.

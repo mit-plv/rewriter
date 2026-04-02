@@ -1,6 +1,6 @@
-From Coq Require Import List.
-From Coq Require Import Morphisms.
-From Coq Require Import SetoidList.
+From Stdlib Require Import List.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import SetoidList.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.Inversion.
 Require Import Rewriter.Language.Wf.
@@ -15,7 +15,7 @@ Require Import Rewriter.Util.Tactics.SpecializeAllWays.
 Require Import Rewriter.Util.Tactics.SpecializeBy.
 Require Import Rewriter.Util.Tactics.SplitInContext.
 Require Import Rewriter.Util.Tactics.SetoidSubst.
-Import Coq.Lists.List ListNotations. Local Open Scope list_scope.
+Import Stdlib.Lists.List ListNotations. Local Open Scope list_scope.
 
 Import EqNotations.
 Module Compilers.

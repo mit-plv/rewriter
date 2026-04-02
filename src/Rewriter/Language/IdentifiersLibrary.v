@@ -1,9 +1,9 @@
-From Coq Require Import Bool.
-From Coq Require Import ZArith.
-From Coq Require Import FMapPositive.
-From Coq Require Import MSetPositive.
-From Coq Require Import List.
-From Coq Require Import Derive.
+From Stdlib Require Import Bool.
+From Stdlib Require Import ZArith.
+From Stdlib Require Import FMapPositive.
+From Stdlib Require Import MSetPositive.
+From Stdlib Require Import List.
+From Stdlib Require Import Derive.
 Require Import Rewriter.Util.CPSNotations.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.PrimitiveSigma.
