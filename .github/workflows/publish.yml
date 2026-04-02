@@ -29,6 +29,14 @@ jobs:
           owner: JasonGross
           repositories: opam-coq-archive
 
+      - uses: actions/create-github-app-token@v3
+        id: app-token-upstream
+        with:
+          app-id: ${{ vars.OPAM_VERSION_BUMPER_APP_ID }}
+          private-key: ${{ secrets.OPAM_VERSION_BUMPER_PRIVATE_KEY }}
+          owner: rocq-prover
+          repositories: opam
+
       - name: Checkout current repository
         uses: actions/checkout@v6
 
@@ -91,4 +99,4 @@ jobs:
             --title "Add ${{ env.PACKAGE_NAME }}.${{ steps.version.outputs.num }}" \
             --body-file /tmp/pr-body.md
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.app-token-upstream.outputs.token }}
