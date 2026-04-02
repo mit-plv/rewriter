@@ -358,7 +358,7 @@ Module Compilers.
       | App (f x : pattern).
     End Raw.
 
-    Global Arguments Wildcard {base ident}%type t%ptype.
+    Global Arguments Wildcard {base ident}%_type t%_ptype.
 
     Fixpoint to_raw {base ident raw_ident}
              {to_raw_ident : forall t, ident t -> raw_ident}
