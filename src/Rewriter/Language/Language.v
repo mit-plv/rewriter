@@ -296,7 +296,7 @@ Module Compilers.
   Declare Scope etype_scope.
   Delimit Scope etype_scope with etype.
   Bind Scope etype_scope with type.type.
-  Global Arguments type.base {_} _%etype.
+  Global Arguments type.base {_} _%_etype.
   Infix "->" := type.arrow : etype_scope.
   Infix "==" := type.eqv : type_scope.
   Module base.
@@ -911,7 +911,7 @@ Module Compilers.
     Module Export Notations.
       Declare Scope ident_scope.
       Delimit Scope ident_scope with ident.
-      Global Arguments expr.Ident {base_type%type ident%function var%function t%etype} idc%ident.
+      Global Arguments expr.Ident {base_type%_type ident%_function var%_function t%_etype} idc%_ident.
       Notation "# x" := (expr.Ident x) (only parsing) : expr_pat_scope.
       Notation "# x" := (@expr.Ident _ _ _ _ x) : expr_scope.
       Notation "x @ y" := (expr.App x%expr_pat y%expr_pat) (only parsing) : expr_pat_scope.
