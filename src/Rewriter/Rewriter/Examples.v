@@ -1,7 +1,7 @@
 (** * Examples of Using the Rewriter *)
-From Coq Require Import ZArith.
-From Coq Require Import Lia.
-From Coq Require Import List.
+From Stdlib Require Import ZArith.
+From Stdlib Require Import Lia.
+From Stdlib Require Import List.
 Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.Notations.
