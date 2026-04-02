@@ -26,6 +26,8 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    name: ${{ matrix.coq-version }}
+
     concurrency:
       group: ${{ github.workflow }}-${{ matrix.coq-version }}-${{ github.head_ref || github.run_id }}
       cancel-in-progress: true
