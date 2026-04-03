@@ -1,11 +1,11 @@
-From Coq Require Import ZArith.
-From Coq Require Import Lia.
-From Coq Require Import SetoidList.
-From Coq Require Import List.
-From Coq Require Import Morphisms.
-From Coq Require Import MSetPositive.
-From Coq Require Import FMapPositive.
-From Coq.Program Require Import Tactics.
+From Stdlib Require Import ZArith.
+From Stdlib Require Import Lia.
+From Stdlib Require Import SetoidList.
+From Stdlib Require Import List.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import MSetPositive.
+From Stdlib Require Import FMapPositive.
+From Stdlib Require Import Program.Tactics.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.Inversion.
 Require Import Rewriter.Language.Wf.
@@ -44,7 +44,7 @@ Require Import Rewriter.Util.Bool.
 Require Import Rewriter.Util.NatUtil.
 Require Rewriter.Util.InductiveHList.
 Require Rewriter.Util.PrimitiveHList.
-Import Coq.Lists.List ListNotations. Local Open Scope list_scope.
+Import Stdlib.Lists.List ListNotations. Local Open Scope list_scope.
 Local Open Scope Z_scope.
 
 Import EqNotations.

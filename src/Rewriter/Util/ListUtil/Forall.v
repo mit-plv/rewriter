@@ -1,6 +1,6 @@
-From Coq Require Import Lia.
-From Coq Require Import Morphisms.
-From Coq Require Import List.
+From Stdlib Require Import Lia.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import List.
 Require Import Rewriter.Util.Tactics.SpecializeBy.
 Require Import Rewriter.Util.Tactics.SplitInContext.
 Require Import Rewriter.Util.Tactics.DestructHead.

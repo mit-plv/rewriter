@@ -1,6 +1,6 @@
-From Coq Require Import List.
-From Coq Require Import Morphisms.
-From Coq Require Import Setoid.
+From Stdlib Require Import List.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import Setoid.
 
 Global Instance list_rect_Proper_dep_gen {A P} (RP : forall x : list A, P x -> P x -> Prop)
   : Proper (RP nil ==> forall_relation (fun x => forall_relation (fun xs => RP xs ==> RP (cons x xs))) ==> forall_relation RP) (@list_rect A P) | 10.

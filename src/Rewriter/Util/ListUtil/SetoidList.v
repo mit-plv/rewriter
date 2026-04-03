@@ -1,6 +1,6 @@
-From Coq Require Import List.
-From Coq Require Import Setoid.
-From Coq Require Import SetoidList.
+From Stdlib Require Import List.
+From Stdlib Require Import Setoid.
+From Stdlib Require Import SetoidList.
 Require Import Rewriter.Util.Option.
 
 Import ListNotations.
