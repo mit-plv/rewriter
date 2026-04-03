@@ -97,7 +97,7 @@ jobs:
             --base master \
             --head "JasonGross:$BRANCH_NAME" \
             --title "Add ${{ env.PACKAGE_NAME }}.${{ steps.version.outputs.num }}" \
-            --body-file /tmp/pr-body.md
+            --body-file /tmp/pr-body.md \
             --no-maintainer-edit
         env:
           GH_TOKEN: ${{ steps.app-token-upstream.outputs.token }}
