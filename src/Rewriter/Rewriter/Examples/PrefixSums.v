@@ -1,8 +1,8 @@
 (** * Examples of Using the Rewriter *)
-From Coq Require Import Lia.
-From Coq Require Import Morphisms.
-From Coq Require Import Setoid.
-From Coq Require Import List.
+From Stdlib Require Import Lia.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import Setoid.
+From Stdlib Require Import List.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.Notations.
 Require Import Rewriter.Util.NatUtil.

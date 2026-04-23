@@ -1,11 +1,11 @@
-From Coq Require Import Ascii String List.
-From Coq Require Import BinNums.
-From Coq Require Import QArith.
-From Coq Require Import ZArith.
+From Stdlib Require Import Ascii String List.
+From Stdlib Require Import BinNums.
+From Stdlib Require Import QArith.
+From Stdlib Require Import ZArith.
 Require Import Rewriter.Util.Option.
-From Coq Require BinaryString.
-From Coq Require OctalString.
-From Coq Require HexString.
+From Stdlib Require BinaryString.
+From Stdlib Require OctalString.
+From Stdlib Require HexString.
 Require Import Rewriter.Util.Strings.Decimal.
 Require Import Rewriter.Util.Strings.Parse.Common.
 Require Import Rewriter.Util.Notations.

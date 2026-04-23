@@ -1,7 +1,7 @@
-From Coq Require Import PeanoNat.
-From Coq Require Import Lia.
-From Coq Require Import String.
-From Coq Require Import Ascii.
+From Stdlib Require Import PeanoNat.
+From Stdlib Require Import Lia.
+From Stdlib Require Import String.
+From Stdlib Require Import Ascii.
 Require Import Rewriter.Util.Strings.Ascii.
 
 Local Open Scope list_scope.

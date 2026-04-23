@@ -1,12 +1,12 @@
 (** Typeclass for decidable propositions *)
 
-From Coq Require Import Eqdep_dec.
-From Coq Require Import List.
+From Stdlib Require Import Eqdep_dec.
+From Stdlib Require Import List.
 Require Import Rewriter.Util.FixCoqMistakes.
 Require Import Rewriter.Util.Sigma.
 Require Import Rewriter.Util.HProp.
-From Coq Require Import BinInt ZArith_dec.
-From Coq Require Import BinNat.
+From Stdlib Require Import BinInt ZArith_dec.
+From Stdlib Require Import BinNat.
 
 Local Open Scope type_scope.
 

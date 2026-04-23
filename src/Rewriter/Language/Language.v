@@ -1,9 +1,9 @@
-From Coq Require Import ZArith.
-From Coq Require Import FMapPositive.
-From Coq Require Import Bool.
-From Coq Require Import List.
-From Coq Require Import Morphisms.
-From Coq Require Import Relation_Definitions.
+From Stdlib Require Import ZArith.
+From Stdlib Require Import FMapPositive.
+From Stdlib Require Import Bool.
+From Stdlib Require Import List.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import Relation_Definitions.
 Require Import Rewriter.Language.PreCommon.
 Require Import Rewriter.Util.LetIn.
 Require Import Rewriter.Util.ListUtil.
@@ -17,7 +17,7 @@ Require Import Rewriter.Util.Bool.
 Require Import Rewriter.Util.ListUtil.
 Require Import Rewriter.Util.Prod.
 Require Import Rewriter.Util.Notations.
-Import Coq.Lists.List ListNotations.
+Import Stdlib.Lists.List ListNotations.
 Export Language.PreCommon.
 
 Local Set Primitive Projections.
