@@ -49,6 +49,9 @@ group ocamlfind query coq
 group ocamlfind query coq-core
 group ocamlfind query coq-core.plugins
 group ocamlfind query coq-core.plugins.ltac
+group ocamlfind query rocq-runtime
+group ocamlfind query rocq-runtime.plugins
+group ocamlfind query rocq-runtime.plugins.ltac
 group "ocamlfind query coq | xargs find"
 group coqc --config
 group coqc --version
