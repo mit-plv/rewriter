@@ -28,6 +28,14 @@ COQ_VERSION := $(firstword $(subst $(ROCQ_VERSION_PREFIX),,$(subst $(COQ_VERSION
 COQ_EXTENDED_VERSION:=$(strip $(shell $(COQ_VERSION_COQTOP_CMD) 2>/dev/null) $(COQC_VERSION_FULL))
 COQ_EXTENDED_VERSION_OLD:=$(strip $(shell cat $(COQ_VERSION_FILE) 2>/dev/null))
 
+# Extract "major.minor" robustly from version strings like "9.2", "9.2.0",
+# "9.2+rc1", "9.2.0+dfsg", or "8.20.1": split on the separators ".", "+",
+# "-", "~" and rejoin the first two components.  Exact equality on this
+# (rather than prefix patterns like 9.1%) keeps 9.10 from matching 9.1.
+coq_version_empty :=
+coq_version_space := $(coq_version_empty) $(coq_version_empty)
+COQ_VERSION_MAJOR_MINOR := $(subst $(coq_version_space),.,$(strip $(wordlist 1,2,$(subst ., ,$(subst +, ,$(subst -, ,$(subst ~, ,$(COQ_VERSION))))))))
+
 ifneq (,$(filter 8.15%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v815
 ML_DESCRIPTION := "Coq v8.15"
@@ -56,15 +64,15 @@ ifneq (,$(filter 8.%,$(COQ_VERSION)))
 EXPECTED_EXT:=.v821
 ML_DESCRIPTION := "Coq v8.21"
 else
-ifneq (,$(filter 9.0%,$(COQ_VERSION)))
+ifeq (9.0,$(COQ_VERSION_MAJOR_MINOR))
 EXPECTED_EXT:=.v90
 ML_DESCRIPTION := "Coq v9.0"
 else
-ifneq (,$(filter 9.1%,$(COQ_VERSION)))
+ifeq (9.1,$(COQ_VERSION_MAJOR_MINOR))
 EXPECTED_EXT:=.v91
 ML_DESCRIPTION := "Coq v9.1"
 else
-ifneq (,$(filter 9.2%,$(COQ_VERSION)))
+ifeq (9.2,$(COQ_VERSION_MAJOR_MINOR))
 EXPECTED_EXT:=.v92
 ML_DESCRIPTION := "Coq v9.2"
 else
