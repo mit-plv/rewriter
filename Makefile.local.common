@@ -89,6 +89,33 @@ endif
 endif
 endif
 
+# Rocq exposes its plugins to findlib under coq-core.plugins.* up to 9.2 and
+# under rocq-runtime.plugins.* from 9.3 on, so the version we selected above
+# normally determines the right prefix.  That correspondence is a property of
+# the *packaging*, not of the Rocq version: Debian's rocq 9.2 registers only the
+# rocq-runtime.* names (its coq-core META covers coq-core.kernel alone), so the
+# version-derived guess does not resolve there.  Ask ocamlfind, and keep the
+# version-derived answer whenever it works or whenever ocamlfind is unavailable,
+# so this can only ever turn a failing build into a working one.
+ifeq (,$(COQ_PLUGIN_PKG_PREFIX))
+OCAMLFIND?=ocamlfind
+ifneq (,$(filter .v815 .v816 .v817 .v818 .v819 .v820 .v821 .v90 .v91 .v92,$(EXPECTED_EXT)))
+COQ_PLUGIN_PKG_PREFIX_DEFAULT := coq-core
+else
+COQ_PLUGIN_PKG_PREFIX_DEFAULT := rocq-runtime
+endif
+COQ_PLUGIN_PKG_PREFIX := $(shell \
+	if $(OCAMLFIND) query $(COQ_PLUGIN_PKG_PREFIX_DEFAULT).plugins.ltac2 >/dev/null 2>&1; then \
+		echo $(COQ_PLUGIN_PKG_PREFIX_DEFAULT); \
+	elif $(OCAMLFIND) query rocq-runtime.plugins.ltac2 >/dev/null 2>&1; then \
+		echo rocq-runtime; \
+	elif $(OCAMLFIND) query coq-core.plugins.ltac2 >/dev/null 2>&1; then \
+		echo coq-core; \
+	else \
+		echo $(COQ_PLUGIN_PKG_PREFIX_DEFAULT); \
+	fi)
+endif
+
 COMPATIBILITY_FILES := \
 	src/Rewriter/Util/plugins/META.coq-rewriter \
 	src/Rewriter/Util/plugins/definition_by_tactic.ml \

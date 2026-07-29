@@ -4,9 +4,19 @@ include Makefile.local.common
 
 $(VOFILES) $(CMOFILES) $(CMXFILES) $(OFILES) $(CMAFILES) $(CMIFILES) $(CMXSFILES): $(COQ_VERSION_FILE)
 
-$(COMPATIBILITY_FILES) : % : %$(EXPECTED_EXT) $(COQ_VERSION_FILE)
+META_FILE := src/Rewriter/Util/plugins/META.coq-rewriter
+
+$(filter-out $(META_FILE),$(COMPATIBILITY_FILES)) : % : %$(EXPECTED_EXT) $(COQ_VERSION_FILE)
 	$(SHOW)'CP $@{$(EXPECTED_EXT),}'
 	$(HIDE)cp $< $@
+
+# The checked-in META files spell the findlib prefix that goes with their Rocq
+# version; rewrite it to the one that actually resolves here (see
+# COQ_PLUGIN_PKG_PREFIX in Makefile.local.common).  On installations where the
+# guess was already right this is a no-op.
+$(META_FILE) : % : %$(EXPECTED_EXT) $(COQ_VERSION_FILE)
+	$(SHOW)'CP $@{$(EXPECTED_EXT),} ($(COQ_PLUGIN_PKG_PREFIX).plugins)'
+	$(HIDE)sed -E 's/(coq-core|rocq-runtime)\.plugins/$(COQ_PLUGIN_PKG_PREFIX).plugins/g' $< > $@
 
 # ensure that the ml compat files exist before we call coqdep on the corresponding .v files
 $(ALLDFILES): $(COMPATIBILITY_FILES) $(COQ_VERSION_FILE) _CoqProject
@@ -17,8 +27,4 @@ OTHERFLAGS += -profile-ltac
 endif
 
 # Kludge around COQBUG(https://github.com/coq/coq/issues/16591)
-ifneq (,$(filter .v815 .v816 .v817 .v818 .v819 .v820 .v821 .v90 .v91 .v92,$(EXPECTED_EXT)))
-FINDLIBPKGS += -package coq-core.plugins.ltac2
-else
-FINDLIBPKGS += -package rocq-runtime.plugins.ltac2
-endif
+FINDLIBPKGS += -package $(COQ_PLUGIN_PKG_PREFIX).plugins.ltac2
