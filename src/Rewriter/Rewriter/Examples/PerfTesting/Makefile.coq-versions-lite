@@ -10,10 +10,10 @@ COQ_VERSION_SHORT_DATE_FILE = .coq-version-short-date
 COQ_VERSION_CONFIG_FILE := .coq-version-config
 COQ_VERSION_OCAML_VERSION_FILE := .coq-version-ocaml-version
 COQ_VERSION_OCAML_CONFIG_FILE := .coq-version-ocaml-config
-COQ_VERSION_PREFIX = The Coq Proof Assistant, version
-COQ_VERSION_FULL := $(subst $(COQ_VERSION_PREFIX),,$(shell $(COQBIN)coqc --version 2>/dev/null))
+COQ_VERSION_PREFIX = The Rocq Prover, version
+COQ_VERSION_FULL := $(subst $(COQ_VERSION_PREFIX),,$(shell "$(COQBIN)rocq" --version 2>/dev/null))
 COQ_VERSION := $(firstword $(COQ_VERSION_FULL))
-COQ_VERSION_CONFIG_CMD = $(COQBIN)coqc -config 2>/dev/null
+COQ_VERSION_CONFIG_CMD = "$(COQBIN)rocq" compile -config 2>/dev/null
 COQ_VERSION_DATE := $(subst $(OPEN_PAREN),,$(subst $(CLOSE_PAREN),,$(wordlist 2, 3, $(COQ_VERSION_FULL))))
 COQ_VERSION_COMPILATION := $(subst $(JOINER)with,$(SPACE)with,$(subst $(SPACE),$(JOINER),$(wordlist 4, $(words $(COQ_VERSION_FULL)),$(COQ_VERSION_FULL))))
 COQ_VERSION_COMPILATION_DATE := $(subst $(JOINER),$(SPACE),$(subst compiled$(JOINER)on$(JOINER),,$(firstword $(COQ_VERSION_COMPILATION))))
@@ -23,7 +23,7 @@ VERSION_FILES := $(COQ_VERSION_FILE) $(COQ_VERSION_SHORT_FILE) $(COQ_VERSION_SHO
 MACHINE_FILE = .machine
 MACHINE_EXTENDED_FILE = .machine-extended
 
-COQ_EXTENDED_VERSION := $(shell (true | $(COQBIN)coqtop 2>/dev/null; $(COQBIN)coqc --version 2>/dev/null))
+COQ_EXTENDED_VERSION := $(shell (true | "$(COQBIN)rocq" top 2>/dev/null; "$(COQBIN)rocq" --version 2>/dev/null))
 COQ_EXTENDED_VERSION_OLD := $(shell cat $(COQ_VERSION_FILE) 2>/dev/null)
 
 HAS_LTAC2:=

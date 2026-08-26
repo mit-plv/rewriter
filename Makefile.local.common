@@ -18,14 +18,16 @@ TIMECMD_FULL?=
 TIMER_FULL=$(if $(TIMED), $(STDTIME_FULL), $(TIMECMD_FULL))
 
 COQ_VERSION_FILE = .coq-version
-COQ_VERSION_PREFIX = The Coq Proof Assistant, version
 ROCQ_VERSION_PREFIX = The Rocq Prover, version
-COQ_VERSION_COQTOP_CMD := $(COQBIN)coqtop </dev/null
-COQ_VERSION_COQC_CMD := $(COQBIN)coqc --version
-COQC_VERSION_FULL := $(shell $(COQ_VERSION_COQC_CMD) 2>/dev/null)
-COQ_VERSION := $(firstword $(subst $(ROCQ_VERSION_PREFIX),,$(subst $(COQ_VERSION_PREFIX),,$(COQC_VERSION_FULL))))
+COQ_VERSION_PREFIX = The Coq Proof Assistant, version
+ROCQ ?= "$(COQBIN)rocq"
+COQ_VERSION_COQTOP_CMD := $(ROCQ) top </dev/null
+COQ_VERSION_COQC_CMD := $(ROCQ) --version
+ROCQ_VERSION_FULL := $(shell $(COQ_VERSION_COQC_CMD) 2>/dev/null)
+COQC_VERSION_FULL := $(ROCQ_VERSION_FULL)
+COQ_VERSION := $(firstword $(subst $(ROCQ_VERSION_PREFIX),,$(subst $(COQ_VERSION_PREFIX),,$(ROCQ_VERSION_FULL))))
 
-COQ_EXTENDED_VERSION:=$(strip $(shell $(COQ_VERSION_COQTOP_CMD) 2>/dev/null) $(COQC_VERSION_FULL))
+COQ_EXTENDED_VERSION:=$(strip $(shell $(COQ_VERSION_COQTOP_CMD) 2>/dev/null) $(ROCQ_VERSION_FULL))
 COQ_EXTENDED_VERSION_OLD:=$(strip $(shell cat $(COQ_VERSION_FILE) 2>/dev/null))
 
 # Extract "major.minor" robustly from version strings like "9.2", "9.2.0",
