@@ -29,7 +29,7 @@ jobs:
     name: ${{ matrix.coq-version }}
 
     concurrency:
-      group: ${{ github.workflow }}-${{ matrix.coq-version }}-${{ github.head_ref || github.run_id }}
+      group: ${{ github.workflow }}-${{ matrix.coq-version }}-${{ github.event.pull_request.number || github.head_ref || github.run_id }}
       cancel-in-progress: true
 
     steps:
