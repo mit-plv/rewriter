@@ -25,7 +25,7 @@ jobs:
     name: alpine-${{ matrix.alpine }}
 
     concurrency:
-      group: ${{ github.workflow }}-alpine-${{ matrix.alpine }}-${{ github.head_ref || github.run_id }}
+      group: ${{ github.workflow }}-alpine-${{ matrix.alpine }}-${{ github.event.pull_request.number || github.head_ref || github.run_id }}
       cancel-in-progress: true
 
     steps:

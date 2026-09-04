@@ -53,9 +53,9 @@ group ocamlfind query rocq-runtime
 group ocamlfind query rocq-runtime.plugins
 group ocamlfind query rocq-runtime.plugins.ltac
 group "ocamlfind query coq | xargs find"
-group coqc --config
-group coqc --version
-group "true | coqtop"
+group rocq --config
+group rocq --version
+group "true | rocq top"
 group etc/machine.sh
 group "echo PATH=$PATH"
 group "echo SHELL=$SHELL"
