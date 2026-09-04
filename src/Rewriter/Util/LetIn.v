@@ -1,5 +1,5 @@
 Require Import Rewriter.Util.FixCoqMistakes.
-From Coq Require Import Morphisms Relation_Definitions.
+From Stdlib Require Import Morphisms Relation_Definitions.
 Require Import Rewriter.Util.Tactics.GetGoal.
 Require Import Rewriter.Util.Notations.
 

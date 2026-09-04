@@ -1,4 +1,4 @@
-From Coq Require Import FMapPositive.
+From Stdlib Require Import FMapPositive.
 Require Import Rewriter.Util.Bool.Equality.
 Require Import Rewriter.Util.Decidable.
 

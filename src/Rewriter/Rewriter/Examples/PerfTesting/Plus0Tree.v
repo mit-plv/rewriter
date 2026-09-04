@@ -1,10 +1,10 @@
-From Coq Require Import Lia.
-From Coq Require Import ZArith.
-From Coq Require Import QArith.
-From Coq Require Import Morphisms.
-From Coq Require Import Setoid.
-From Coq Require Import String.
-From Coq Require Import List.
+From Stdlib Require Import Lia.
+From Stdlib Require Import ZArith.
+From Stdlib Require Import QArith.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import Setoid.
+From Stdlib Require Import String.
+From Stdlib Require Import List.
 Require Import Rewriter.Util.Option Rewriter.Util.Strings.ParseArithmetic.
 Require Import Rewriter.Rewriter.Examples.PerfTesting.Harness.
 Require Import Rewriter.Util.plugins.RewriterBuild.
@@ -421,7 +421,7 @@ Ltac describe_goal nm :=
 
 Ltac do_coq_rewrite _ := rewrite -> !Z.add_0_r.
 
-From Coq Require Import ssreflect.
+From Stdlib Require Import ssreflect.
 
 Ltac do_ssr_rewrite _ := rewrite !Z.add_0_r.
 

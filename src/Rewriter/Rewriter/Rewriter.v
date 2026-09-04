@@ -1,7 +1,7 @@
-From Coq Require Import ZArith.
-From Coq Require Import FMapPositive.
-From Coq Require Import MSetPositive.
-From Coq Require Import List.
+From Stdlib Require Import ZArith.
+From Stdlib Require Import FMapPositive.
+From Stdlib Require Import MSetPositive.
+From Stdlib Require Import List.
 Require Import Rewriter.Language.Language.
 Require Import Rewriter.Language.UnderLets.
 Require Import Rewriter.Language.IdentifiersLibrary.

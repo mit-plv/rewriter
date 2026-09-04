@@ -1,5 +1,5 @@
-From Coq Require Import NArith.
-From Coq Require Import Ascii.
+From Stdlib Require Import NArith.
+From Stdlib Require Import Ascii.
 Require Import Rewriter.Util.Notations.
 
 Local Open Scope bool_scope.
