@@ -1,0 +1,8 @@
+# 2 "src/Rewriter/Util/plugins/strategy_tactic.ml.v94"
+
+let tclSTRATEGY ~local v (q : Names.GlobRef.t list) =
+  Proofview.Goal.enter begin
+    fun gl ->
+      Redexpr.set_strategy local [(Conv_oracle.Level v, List.map Tacred.evaluable_of_global_reference q)];
+      Proofview.tclUNIT ()
+  end

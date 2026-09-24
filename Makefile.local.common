@@ -78,8 +78,13 @@ ifeq (9.2,$(COQ_VERSION_MAJOR_MINOR))
 EXPECTED_EXT:=.v92
 ML_DESCRIPTION := "Coq v9.2"
 else
+ifeq (9.3,$(COQ_VERSION_MAJOR_MINOR))
 EXPECTED_EXT:=.v93
 ML_DESCRIPTION := "Coq v9.3"
+else
+EXPECTED_EXT:=.v94
+ML_DESCRIPTION := "Coq v9.4"
+endif
 endif
 endif
 endif
