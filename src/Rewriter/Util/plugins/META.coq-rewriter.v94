@@ -1,0 +1,46 @@
+package "strategy_tactic" (
+  directory = "."
+  description = "Coq Strategy Tactic"
+  requires = "rocq-runtime.plugins.ltac"
+  archive(byte) = "strategy_tactic_plugin.cma"
+  archive(native) = "strategy_tactic_plugin.cmxa"
+  plugin(byte) = "strategy_tactic_plugin.cma"
+  plugin(native) = "strategy_tactic_plugin.cmxs"
+)
+package "definition_by_tactic" (
+  directory = "."
+  description = "Coq Definition By Tactic"
+  requires = "rocq-runtime.plugins.ltac"
+  archive(byte) = "definition_by_tactic_plugin.cma"
+  archive(native) = "definition_by_tactic_plugin.cmxa"
+  plugin(byte) = "definition_by_tactic_plugin.cma"
+  plugin(native) = "definition_by_tactic_plugin.cmxs"
+)
+package "inductive_from_elim" (
+  directory = "."
+  description = "Coq Inductive From Elim"
+  requires = "rocq-runtime.plugins.ltac"
+  archive(byte) = "inductive_from_elim_plugin.cma"
+  archive(native) = "inductive_from_elim_plugin.cmxa"
+  plugin(byte) = "inductive_from_elim_plugin.cma"
+  plugin(native) = "inductive_from_elim_plugin.cmxs"
+)
+package "rewriter_build" (
+  directory = "."
+  description = "Coq Rewriter Build"
+  requires = "rocq-runtime.plugins.ltac"
+  archive(byte) = "rewriter_build_plugin.cma"
+  archive(native) = "rewriter_build_plugin.cmxa"
+  plugin(byte) = "rewriter_build_plugin.cma"
+  plugin(native) = "rewriter_build_plugin.cmxs"
+)
+package "ltac2_extra" (
+  directory = "."
+  description = "Coq Ltac2 Extra Tactics"
+  requires = "rocq-runtime.plugins.ltac2"
+  archive(byte) = "ltac2_extra_plugin.cma"
+  archive(native) = "ltac2_extra_plugin.cmxa"
+  plugin(byte) = "ltac2_extra_plugin.cma"
+  plugin(native) = "ltac2_extra_plugin.cmxs"
+)
+directory = "."
