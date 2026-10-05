@@ -1,7 +1,7 @@
-From Coq Require Import ZArith.
-From Coq Require Import Bool.
-From Coq Require Import Morphisms.
-From Coq Require Import List.
+From Stdlib Require Import ZArith.
+From Stdlib Require Import Bool.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import List.
 Require Import Ltac2.Ltac2.
 Require Import Ltac2.Bool.
 Require Import Ltac2.Printf.
@@ -30,7 +30,7 @@ Require Import Rewriter.Util.Tactics.PrintGoal.
 Require Import Rewriter.Util.Tactics.CacheTerm.
 Require Import Rewriter.Util.Tactics2.Notations.
 Require Import Rewriter.Util.HProp.
-Import Coq.Lists.List ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
+Import Stdlib.Lists.List ListNotations. Local Open Scope bool_scope. Local Open Scope Z_scope.
 
 Import EqNotations.
 Module Compilers.
