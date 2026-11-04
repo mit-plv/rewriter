@@ -16,7 +16,7 @@ install: [make "install"]
 depends: [
   "conf-findutils" {build}
   "ocaml"
-  "rocq-core" {>= "9.0~"}
+  "rocq-core" {>= "9.1~"}
   "rocq-stdlib" {>= "9.0~"}
 ]
 dev-repo: "git+https://github.com/mit-plv/rewriter.git"
