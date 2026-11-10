@@ -175,9 +175,9 @@ Module Compilers.
       := debug_if should_debug_leave_lookup_ident_success (fun () => printf "%s: Success in looking up ident: %t as %t" funname e ret) ().
     Ltac2 debug_leave_lookup_ident_failure (funname : string) (e : constr) (ls : constr)
       := if should_debug_leave_lookup_ident_failure_verbose ()
-         then printf "%s: Failure in looking up:" funname; printf "%t (in %t)" e ls
+         then (printf "%s: Failure in looking up:" funname; printf "%t (in %t)" e ls)
          else if should_debug_leave_lookup_ident_failure ()
-              then printf "%s: Failure in looking up:" funname; printf "%t" e
+              then (printf "%s: Failure in looking up:" funname; printf "%t" e)
               else ().
     Ltac2 debug_enter_plug_template_ctx (funname : string) (e : constr) (template_ctx : constr list)
       := debug_if
@@ -575,9 +575,9 @@ Module Compilers.
            let opt_recr (thunked : bool) orect args :=
              match orect with
              | Some rect => (reify_ident_preprocess,
-                              if thunked
+                              (if thunked
                               then mkApp_thunked_cases rect args
-                              else mkApp rect (List.append args (List.append mid_args cases_to_thunk)))
+                              else mkApp rect (List.append args (List.append mid_args cases_to_thunk))))
              | None => Control.zero Match_failure
              end in
            let (f, x) := match! (eval cbv beta in motive) with
@@ -784,7 +784,7 @@ Module Compilers.
                  => Reify.debug_enter_reify_case "expr.reify_in_context" "App (check LetIn)" term;
                     if Constr.equal_nounivs c '@Let_In
                     then if Int.equal (Array.length args) 4
-                         then Reify.debug_enter_reify_case "expr.reify_in_context" "LetIn" term;
+                         then (Reify.debug_enter_reify_case "expr.reify_in_context" "LetIn" term;
                               let (ta, tb, a, b) := (Array.get args 0, Array.get args 1, Array.get args 2, Array.get args 3) in
                               Some
                                 (Option.bind
@@ -797,7 +797,7 @@ Module Compilers.
                                              | @Abs _ _ _ ?s ?d ?f
                                                => Some (d, debug_check (mkApp ('@LetIn) [base_type; ident; var; s; d; ra; f]))
                                              | ?rb => Control.throw (Reification_panic (fprintf "Invalid non-Abs function reification of %t to %t" b rb))
-                                             end)))
+                                             end))))
                          else None
                     else None
                | _ => None
@@ -827,8 +827,8 @@ Module Compilers.
                                 end in
                            if x_is_template_arg
                            then (* we can't reify things of type [Type], so we save it for later to plug in *)
-                             Reify.debug_enter_reify_case "expr.reify_in_context" "accumulate template" term;
-                             reify_rec_gen f ctx_tys var_ty_ctx (x :: template_ctx)
+                             (Reify.debug_enter_reify_case "expr.reify_in_context" "accumulate template" term;
+                             reify_rec_gen f ctx_tys var_ty_ctx (x :: template_ctx))
                            else
                              (Reify.debug_enter_reify_case "expr.reify_in_context" "App (non-template)" term;
                               Option.bind
@@ -858,8 +858,8 @@ Module Compilers.
                                            Reify.debug_enter_reify_case "expr.reify_in_context" "App Constant (unfold)" term;
                                            let term' := (eval cbv delta [$c] in term) in
                                            if Constr.equal term term'
-                                           then printf "Unrecognized (non-unfoldable) term: %t" term;
-                                                None
+                                           then (printf "Unrecognized (non-unfoldable) term: %t" term;
+                                                None)
                                            else
                                              match reify_rec term' with
                                              | Some rv

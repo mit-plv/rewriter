@@ -107,7 +107,7 @@ Local Notation "'eta_kind' ( k' => f ) k"
      | simpl => subst! simpl for k' in f
      | rewrite_lhs_for => subst! rewrite_lhs_for for k' in f
      end
-       (only parsing, at level 70, k' ident).
+       (only parsing, at level 10, k' ident).
 
 Local Lemma sanity : forall T f k, eta_kind (k => f k) k = f k :> T.
 Proof. intros; repeat match goal with |- context[match ?e with _ => _ end] => destruct e end; reflexivity. Qed.
