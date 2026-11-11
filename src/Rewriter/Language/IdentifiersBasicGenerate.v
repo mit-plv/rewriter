@@ -1111,9 +1111,9 @@ Module Compilers.
         lazy_match! goal with
         | [ |- @expr.Reified_of _ ?ident' ?base_interp ?interp_ident ?t ?v ?e ]
           => if Constr.equal_nounivs ident ident'
-             then cbv [expr.Reified_of];
+             then (cbv [expr.Reified_of];
                   expr._Reify_rhs base_type ident reify_base_type reify_ident_opt base_interp interp_ident ();
-                  reflexivity
+                  reflexivity)
              else Control.zero Match_failure
         end.
 

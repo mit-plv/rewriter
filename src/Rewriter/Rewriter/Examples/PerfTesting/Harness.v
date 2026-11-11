@@ -43,7 +43,7 @@ Notation "'eta_size' ( sz' => f ) sz"
      | Medium => subst! Medium for sz' in f
      | Slow => subst! Slow for sz' in f
      | VerySlow => subst! VerySlow for sz' in f
-     end (only parsing, at level 70, sz' ident).
+     end (only parsing, at level 10, sz' ident).
 
 Local Lemma eta_size_sanity : forall T f k, eta_size (k => f k) k = f k :> T.
 Proof. intros; repeat match goal with |- context[match ?e with _ => _ end] => destruct e end; reflexivity. Qed.
