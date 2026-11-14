@@ -1,9 +1,9 @@
-From Coq Require Import Setoid.
-From Coq Require Import Morphisms.
-From Coq Require Import List.
-From Coq Require Import SetoidList.
-From Coq Require Import MSetPositive.
-From Coq Require Import MSetFacts.
+From Stdlib Require Import Setoid.
+From Stdlib Require Import Morphisms.
+From Stdlib Require Import List.
+From Stdlib Require Import SetoidList.
+From Stdlib Require Import MSetPositive.
+From Stdlib Require Import MSetFacts.
 Require Import Rewriter.Util.Tactics.BreakMatch.
 Require Import Rewriter.Util.Tactics.SplitInContext.
 Require Import Rewriter.Util.Tactics.SpecializeBy.

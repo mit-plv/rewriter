@@ -1,10 +1,10 @@
-From Coq Require Import QArith.
-From Coq Require Import Orders.
-From Coq Require Import Lia.
-From Coq Require Import Bool.
-From Coq Require Import Mergesort.
-From Coq Require Export List.
-From Coq Require Export ZArith.
+From Stdlib Require Import QArith.
+From Stdlib Require Import Orders.
+From Stdlib Require Import Lia.
+From Stdlib Require Import Bool.
+From Stdlib Require Import Mergesort.
+From Stdlib Require Export List.
+From Stdlib Require Export ZArith.
 Export ListNotations.
 
 Global Set Printing Width 1000.

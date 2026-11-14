@@ -1,8 +1,8 @@
-From Coq Require Import Ascii String.
-From Coq Require Import BinNums.
-From Coq Require Import DecimalString.
-From Coq Require DecimalN.
-From Coq Require DecimalZ.
+From Stdlib Require Import Ascii String.
+From Stdlib Require Import BinNums.
+From Stdlib Require Import DecimalString.
+From Stdlib Require DecimalN.
+From Stdlib Require DecimalZ.
 Import BinPosDef.
 Import BinIntDef.
 Import BinNatDef.

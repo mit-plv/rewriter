@@ -1,4 +1,4 @@
-From Coq Require Import List.
+From Stdlib Require Import List.
 Require Import Rewriter.Util.Option.
 Require Import Rewriter.Util.Notations.
 

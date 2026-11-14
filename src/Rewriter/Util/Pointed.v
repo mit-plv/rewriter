@@ -1,4 +1,4 @@
-From Coq Require Import BinNums.
+From Stdlib Require Import BinNums.
 
 Local Generalizable All Variables.
 
